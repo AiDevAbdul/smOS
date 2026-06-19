@@ -1,0 +1,13 @@
+{
+  "name": "smos",
+  "owner": {
+    "name": "smOS"
+  },
+  "plugins": [
+    {
+      "name": "smos",
+      "source": "./",
+      "description": "Autonomous Social Media Operating System — Meta ads management, organic social, reporting, and daily optimization via Claude Code"
+    }
+  ]
+}
