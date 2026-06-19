@@ -7,3 +7,6 @@ node_modules/
 clients/*/private/
 data/cache/
 reports/*.pdf
+
+# Prospect working data (scrapes, raw HTML, per-prospect renders)
+prospects/
