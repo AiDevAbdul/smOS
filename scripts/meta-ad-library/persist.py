@@ -19,6 +19,10 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+from load_env import load_env  # noqa: E402
+load_env()
+
 TABLE_COMPETITOR = "competitor_snapshots"
 TABLE_MARKET = "market_snapshots"
 TABLE_PROSPECT = "prospect_audits"

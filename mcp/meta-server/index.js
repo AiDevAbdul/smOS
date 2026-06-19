@@ -1,4 +1,5 @@
-import "dotenv/config";
+import { loadEnv } from "../../scripts/lib/load-env.js";
+loadEnv();
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";

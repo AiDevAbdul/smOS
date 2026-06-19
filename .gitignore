@@ -3,6 +3,7 @@
 .env.local
 *.local
 node_modules/
+__pycache__/
 .DS_Store
 *.log
 clients/*/private/

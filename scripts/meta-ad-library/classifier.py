@@ -17,6 +17,10 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+from load_env import load_env  # noqa: E402
+load_env()
+
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 MODEL = "claude-sonnet-4-6"
 TAXONOMY = ["pain", "aspiration", "social_proof", "urgency", "price", "authority"]

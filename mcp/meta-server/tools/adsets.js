@@ -49,6 +49,21 @@ export const tools = [
           type: "array",
           description: "Default: [{ event_type: 'CLICK_THROUGH', window_days: 7 }, { event_type: 'VIEW_THROUGH', window_days: 1 }]",
         },
+        is_sac_cfca_terms_certified: {
+          type: "boolean",
+          description: "v22+: REQUIRED true when targeting includes a customer-file (CFCA) custom audience, else creation fails. Confirms client accepted Meta's Custom Audience Terms.",
+        },
+        targeting_automation: {
+          type: "object",
+          description: "v24+ Advantage+ levers. e.g. { advantage_audience: 1 } enables Advantage+ Audience. Pair with publisher_platforms omitted for Advantage+ Placements.",
+          properties: {
+            advantage_audience: { type: "number", enum: [0, 1], description: "1 = enable Advantage+ Audience expansion" },
+          },
+        },
+        advantage_plus: {
+          type: "boolean",
+          description: "Shortcut: when true, sets Advantage+ Audience + Advantage+ Placements automatically (clears publisher_platforms, sets targeting_automation.advantage_audience=1).",
+        },
       },
       required: ["ad_account_id", "campaign_id", "name", "optimization_goal", "targeting"],
     },
@@ -114,11 +129,24 @@ const INSIGHT_FIELDS = "impressions,clicks,spend,reach,ctr,cpc,cpm,frequency,act
 export async function handle(toolName, args, client) {
   switch (toolName) {
     case "create_adset": {
-      const { ad_account_id, ...body } = args;
+      const { ad_account_id, advantage_plus, ...body } = args;
       if (body.daily_budget) body.daily_budget = String(body.daily_budget);
       if (body.lifetime_budget) body.lifetime_budget = String(body.lifetime_budget);
       if (body.bid_amount) body.bid_amount = String(body.bid_amount);
-      if (body.targeting) body.targeting = JSON.stringify(body.targeting);
+
+      // v24+ Advantage+ unified framework: merge automation levers into targeting spec
+      const targeting = body.targeting || {};
+      if (advantage_plus) {
+        targeting.targeting_automation = { ...(targeting.targeting_automation || {}), advantage_audience: 1 };
+        delete targeting.publisher_platforms;
+        delete targeting.facebook_positions;
+        delete targeting.instagram_positions;
+      } else if (body.targeting_automation) {
+        targeting.targeting_automation = body.targeting_automation;
+      }
+      delete body.targeting_automation;
+      body.targeting = JSON.stringify(targeting);
+
       if (body.promoted_object) body.promoted_object = JSON.stringify(body.promoted_object);
       if (body.attribution_spec) {
         body.attribution_spec = JSON.stringify(body.attribution_spec);
@@ -128,6 +156,15 @@ export async function handle(toolName, args, client) {
           { event_type: "VIEW_THROUGH", window_days: 1 },
         ]);
       }
+
+      // v22+ CLCA: required when targeting a customer-file custom audience
+      const usesCustomList = Array.isArray(targeting.custom_audiences) && targeting.custom_audiences.length > 0;
+      if (usesCustomList && body.is_sac_cfca_terms_certified === undefined) {
+        throw new Error(
+          "v22+ requires is_sac_cfca_terms_certified=true when create_adset uses a custom_audiences targeting list. Confirm the client has accepted Meta's Custom Audience Terms, then pass is_sac_cfca_terms_certified: true."
+        );
+      }
+
       return client.post(`/${client.act(ad_account_id)}/adsets`, body);
     }
 

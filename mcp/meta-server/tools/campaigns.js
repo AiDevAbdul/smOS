@@ -27,7 +27,7 @@ export const tools = [
         objective: {
           type: "string",
           enum: ["OUTCOME_TRAFFIC", "OUTCOME_SALES", "OUTCOME_LEADS", "OUTCOME_ENGAGEMENT", "OUTCOME_AWARENESS", "OUTCOME_APP_PROMOTION"],
-          description: "Campaign objective",
+          description: "Campaign objective. NOTE (v24+): legacy Advantage+ Shopping (smart_promotion_type=AUTOMATED_SHOPPING_ADS) and AAC are deprecated. For Advantage+ Sales, use OUTCOME_SALES + is_advantage_plus_shopping=true and configure Advantage+ levers at the adset (advantage_plus shortcut on create_adset).",
         },
         status: { type: "string", enum: ["ACTIVE", "PAUSED"], default: "PAUSED" },
         daily_budget: { type: "number", description: "Daily budget in account currency (smallest unit, e.g. cents for USD)" },
@@ -45,6 +45,10 @@ export const tools = [
         },
         start_time: { type: "string", description: "ISO 8601 start time. Omit to start immediately." },
         stop_time: { type: "string", description: "ISO 8601 end time. Required if using lifetime_budget." },
+        is_advantage_plus_shopping: {
+          type: "boolean",
+          description: "v24+: marks this as an Advantage+ Sales campaign under the new unified framework. Pair with OUTCOME_SALES objective and Advantage+ levers on the adset.",
+        },
       },
       required: ["ad_account_id", "name", "objective", "special_ad_categories"],
     },

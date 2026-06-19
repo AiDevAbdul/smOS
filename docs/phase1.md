@@ -41,7 +41,7 @@ Schema designed from scratch to match smOS data requirements (section 09 of the 
 
 ### 1. Meta MCP Server (`mcp/meta-server/`)
 
-Node.js MCP server using `@modelcontextprotocol/sdk`. Communicates with Claude Code via stdio transport. Wraps the Meta Marketing API v21.0.
+Node.js MCP server using `@modelcontextprotocol/sdk`. Communicates with Claude Code via stdio transport. Wraps the Meta Marketing API v25.0.
 
 **29 tools across 6 modules:**
 

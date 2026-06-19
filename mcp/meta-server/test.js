@@ -1,4 +1,5 @@
-import "dotenv/config";
+import { loadEnv } from "../../scripts/lib/load-env.js";
+loadEnv();
 import { createMetaClient } from "./meta-client.js";
 
 const client = createMetaClient();

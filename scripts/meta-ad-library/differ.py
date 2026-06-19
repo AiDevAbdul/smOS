@@ -20,6 +20,10 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+from load_env import load_env  # noqa: E402
+load_env()
+
 
 def _load_local(path: str) -> dict:
     return json.loads(Path(path).read_text())

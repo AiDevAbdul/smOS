@@ -12,6 +12,10 @@ from pathlib import Path
 
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+from load_env import load_env  # noqa: E402
+load_env()
+
 API_BASE = "https://graph.facebook.com/v21.0/ads_archive"
 DEFAULT_FIELDS = (
     "id,page_id,page_name,ad_creation_time,ad_delivery_start_time,"

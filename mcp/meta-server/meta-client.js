@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_VERSION = "v21.0";
+const API_VERSION = "v25.0";
 const BASE_URL = `https://graph.facebook.com/${API_VERSION}`;
 
 export function createMetaClient() {

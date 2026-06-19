@@ -107,7 +107,8 @@ export async function handle(toolName, args, client) {
     case "get_saved_audiences": {
       const { ad_account_id } = args;
       return client.get(`/${client.act(ad_account_id)}/saved_audiences`, {
-        fields: "id,name,targeting,approximate_count,time_updated",
+        // v21+ replaced approximate_count with bounded fields
+        fields: "id,name,targeting,approximate_count_lower_bound,approximate_count_upper_bound,time_updated",
         limit: 100,
       });
     }
