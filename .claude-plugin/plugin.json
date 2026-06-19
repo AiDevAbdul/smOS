@@ -1,0 +1,49 @@
+{
+  "name": "smos",
+  "version": "1.0.0",
+  "description": "Autonomous Social Media Operating System — Meta ads management, organic social, reporting, and daily optimization via Claude Code",
+  "author": {
+    "name": "smOS"
+  },
+  "homepage": "https://github.com/smOS",
+  "keywords": ["meta-ads", "facebook-ads", "instagram-ads", "social-media", "marketing", "agency", "automation"],
+
+  "mcpServers": {
+    "meta": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/meta-server/index.js"],
+      "env": {
+        "META_ACCESS_TOKEN": "${META_ACCESS_TOKEN}",
+        "META_APP_ID": "${META_APP_ID}",
+        "META_APP_SECRET": "${META_APP_SECRET}"
+      }
+    }
+  },
+
+  "requiredEnv": [
+    "META_ACCESS_TOKEN",
+    "META_APP_ID",
+    "META_APP_SECRET",
+    "SUPABASE_URL",
+    "SUPABASE_SERVICE_KEY",
+    "SLACK_BOT_TOKEN",
+    "SLACK_DEFAULT_CHANNEL"
+  ],
+
+  "optionalEnv": [
+    "ANTHROPIC_API_KEY",
+    "GOOGLE_DRIVE_FOLDER_ID",
+    "GMAIL_FROM_ADDRESS",
+    "NOTION_TOKEN"
+  ],
+
+  "permissions": [
+    "network",
+    "filesystem:read",
+    "filesystem:write:clients/",
+    "filesystem:write:prospects/",
+    "filesystem:write:scripts/",
+    "filesystem:write:data/",
+    "filesystem:write:.cache/"
+  ]
+}

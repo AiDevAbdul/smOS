@@ -1,0 +1,142 @@
+{
+  "business_name": "Sample Roofing Co",
+  "niche": "roofing",
+  "description": "Residential + light commercial roofing — full roof replacement, repair, storm/insurance claims, commercial flat roof, gutters, metal/specialty, inspection.",
+  "categories": [
+    {
+      "key": "replacement",
+      "label": "Residential Roof Replacement",
+      "search_terms": ["roof replacement", "new roof"],
+      "file": "cat_roof_replacement_new_roof.json",
+      "icon": "🏠",
+      "color": "#0071e3"
+    },
+    {
+      "key": "repair",
+      "label": "Roof Repair",
+      "search_terms": ["roof repair", "leak repair"],
+      "file": "cat_roof_repair_leak_repair.json",
+      "icon": "🔧",
+      "color": "#ff375f"
+    },
+    {
+      "key": "storm",
+      "label": "Storm Damage / Insurance Claims",
+      "search_terms": ["hail damage roof", "storm damage roof"],
+      "file": "cat_hail_damage_roof_storm_damage_roof.json",
+      "icon": "🌪️",
+      "color": "#34c759"
+    },
+    {
+      "key": "commercial",
+      "label": "Commercial / Flat Roof",
+      "search_terms": ["commercial roofing", "flat roof"],
+      "file": "cat_commercial_roofing_flat_roof.json",
+      "icon": "🏢",
+      "color": "#ff9f0a"
+    },
+    {
+      "key": "gutters",
+      "label": "Gutters",
+      "search_terms": ["gutter installation", "gutter replacement"],
+      "file": "cat_gutter_installation_gutter_replacement.json",
+      "icon": "💧",
+      "color": "#af52de"
+    },
+    {
+      "key": "metal",
+      "label": "Metal / Specialty Roofing",
+      "search_terms": ["metal roof", "standing seam roof"],
+      "file": "cat_metal_roof_standing_seam_roof.json",
+      "icon": "⛓️",
+      "color": "#5ac8fa"
+    },
+    {
+      "key": "inspection",
+      "label": "Roof Inspection",
+      "search_terms": ["free roof inspection", "roof inspection"],
+      "file": "cat_free_roof_inspection_roof_inspection.json",
+      "icon": "🔍",
+      "color": "#30d158"
+    }
+  ],
+  "strategy": [
+    {
+      "category": "Residential Roof Replacement",
+      "icon": "🏠",
+      "bullets": [
+        "<strong>Hook:</strong> \"Roof over 15 years old? Replace now and save before next storm season.\" Age-anchored urgency works",
+        "<strong>Format:</strong> Drone before/after video of a recent install — proof of capability beats every other format",
+        "<strong>CTA:</strong> \"Get a Free Roof Estimate\" — never use \"Book Now\" on a $15K+ purchase",
+        "<strong>Offer:</strong> 0% financing for 24 months + free drone inspection — financing is the killer feature, not discount",
+        "<strong>Angle:</strong> Target homeowners 35–70, home value $300K+, 10+ years in home; layer in 'home renovation' interest"
+      ]
+    },
+    {
+      "category": "Roof Repair",
+      "icon": "🔧",
+      "bullets": [
+        "<strong>Hook:</strong> \"Small leak today, ceiling damage tomorrow.\" Fear-of-escalation beats price framing",
+        "<strong>Format:</strong> Quick diagnostic video — \"3 signs your roof is leaking before you see water\"",
+        "<strong>CTA:</strong> \"Schedule a Same-Week Repair\" — repair is urgent intent, not consideration",
+        "<strong>Offer:</strong> Free leak diagnosis + transparent flat-rate pricing posted in ad creative",
+        "<strong>Angle:</strong> Boost after every major rainstorm in geo — weather-triggered campaigns dominate this category"
+      ]
+    },
+    {
+      "category": "Storm Damage / Insurance Claims",
+      "icon": "🌪️",
+      "bullets": [
+        "<strong>Hook:</strong> \"Hail in [city] last week? Most homeowners don't realize they have damage.\" Hyper-local timing",
+        "<strong>Format:</strong> Single image with damage close-up + \"We handle the insurance claim for you\" overlay",
+        "<strong>CTA:</strong> \"Get a Free Storm Damage Inspection\" — 100% claim-eligible homeowners convert at 8–12%",
+        "<strong>Offer:</strong> Free inspection + claim filing + deductible-only out-of-pocket where state allows",
+        "<strong>Angle:</strong> Spin up campaigns within 48 hrs of NOAA hail/wind events; geo-fence the storm path; high CPM tolerance"
+      ]
+    },
+    {
+      "category": "Commercial / Flat Roof",
+      "icon": "🏢",
+      "bullets": [
+        "<strong>Hook:</strong> \"Tired of patching the same leak every spring?\" Lead with operational pain, not product spec",
+        "<strong>Format:</strong> Case study lead-form ad — commercial buyers want references and warranty depth",
+        "<strong>CTA:</strong> \"Request a Site Walkthrough\" — never phone CTA for commercial",
+        "<strong>Offer:</strong> Free roof life assessment with thermal scan — opens door to a 7-figure replacement",
+        "<strong>Angle:</strong> Job-title (facility manager, property mgmt, building owner) + B2B interests; commercial roof life is 15–20 yrs, so age the building"
+      ]
+    },
+    {
+      "category": "Gutters",
+      "icon": "💧",
+      "bullets": [
+        "<strong>Hook:</strong> \"Overflowing gutters in last storm? You're one rainfall from foundation damage.\"",
+        "<strong>Format:</strong> Static before/after of gutter guards or clean install — simple, cheap to test variants",
+        "<strong>CTA:</strong> \"Get a Free Gutter Quote\" — easy yes, low-ticket adds to existing roof job",
+        "<strong>Offer:</strong> Free gutters with full roof replacement — bundle play, never sell standalone in cold ads",
+        "<strong>Angle:</strong> Retarget every roof-replacement form fill with a gutter add-on offer — pure margin uplift"
+      ]
+    },
+    {
+      "category": "Metal / Specialty Roofing",
+      "icon": "⛓️",
+      "bullets": [
+        "<strong>Hook:</strong> \"Last roof you'll ever buy — 50-year warranty, hail-rated.\" Lifetime-value angle",
+        "<strong>Format:</strong> High-production drone reel of finished metal roof — premium product needs premium creative",
+        "<strong>CTA:</strong> \"Book a Premium Roof Consultation\" — language elevates perceived quality",
+        "<strong>Offer:</strong> Lock in pre-season pricing + warranty transfer for resale — long-term value framing",
+        "<strong>Angle:</strong> Higher income (100K+), home value (500K+), 'sustainable home' interest stack; longer sales cycle, retarget hard"
+      ]
+    },
+    {
+      "category": "Roof Inspection",
+      "icon": "🔍",
+      "bullets": [
+        "<strong>Hook:</strong> \"Free 21-point roof inspection — drone + thermal, no pressure.\" Specificity sells the freebie",
+        "<strong>Format:</strong> Reel of the actual drone-inspection process — demystify what they're signing up for",
+        "<strong>CTA:</strong> \"Book My Free Inspection\" — lowest-friction entry point in roofing; use as top-of-funnel for all other categories",
+        "<strong>Offer:</strong> Free written report with photos emailed within 24 hours — sets you apart from \"free estimate\" competitors",
+        "<strong>Angle:</strong> Run year-round at low budget — inspection leads convert downstream into repair, replacement, gutters, insurance"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "slug": "blue-rose-auto",
+  "name": "Blue Rose Auto Care & Repair Services",
+  "status": "planning",
+  "engagement_start_date": "2026-06-18",
+  "business": {
+    "product_description": "Full-service automotive facility: mechanical repair, engine diagnostics, collision, detailing, ceramic coating, PPF, window tint, custom paint, wraps, upfitting.",
+    "price_low": 150,
+    "price_high": 3500,
+    "blended_avg_ticket": 700,
+    "business_model": "local_service",
+    "usp": "30+ years experience · ASE-certified · Tesla-capable · premium materials · precision craftsmanship",
+    "conversion_events": ["Lead", "Schedule"],
+    "primary_cta": ["Book Now", "Get a Quote"],
+    "service_categories": {
+      "mechanical": { "price_low": 150, "price_high": 800 },
+      "cosmetic": { "price_low": 300, "price_high": 3500 }
+    },
+    "seasonality": "steady_year_round"
+  },
+  "location": {
+    "address": "3436 Olympic St, Springfield, OR 97478",
+    "city": "Springfield",
+    "state": "OR",
+    "country": "US",
+    "service_radius_miles": 30,
+    "service_area": ["Springfield", "Eugene", "Junction City", "Coburg", "Santa Clara", "Veneta", "Cottage Grove", "Creswell", "Harrisburg", "Lowell"]
+  },
+  "audience": {
+    "primary_customers": ["everyday_drivers_repair", "cosmetic_spend_owners_luxury_tesla"],
+    "age_range": [28, 60],
+    "gender": "balanced",
+    "income_layering": {
+      "repair_adsets": "mid_broad",
+      "cosmetic_adsets": "higher_income_zips_plus_luxury_interest"
+    }
+  },
+  "voice": {
+    "tone": ["confident", "hands-on", "no-nonsense", "craftsman"],
+    "avoid": ["salesy hype", "fake urgency", "miracle", "guaranteed", "cure", "best ever"],
+    "signature_phrases": ["30+ years", "ASE-certified", "Tesla-capable", "precision craftsmanship"]
+  },
+  "accounts": {
+    "website": "https://blueroseauto.com/",
+    "facebook_handle": "BlueRoseAuto",
+    "facebook_page_id": "TBD_FB_PAGE_ID",
+    "instagram_handle": "blueroseauto",
+    "instagram_business_id": "TBD_IG_BUSINESS_ID",
+    "ad_account_id": "TBD_AD_ACCOUNT_ID",
+    "pixel_id": "TBD_PIXEL_ID",
+    "timezone": "America/Los_Angeles",
+    "currency": "USD"
+  },
+  "contacts": {
+    "phone": "(541) 641-8877",
+    "primary_email": "contact@blueroseauto.com"
+  },
+  "kpis": {
+    "aware": { "cpm_max": 15, "frequency_7d_min": 1.5, "frequency_7d_max": 3.0 },
+    "leads": {
+      "target_cpa": 35,
+      "target_ctr_link": 1.0,
+      "target_roas": 1.5,
+      "ltv_assumed": 175
+    },
+    "pause_thresholds_overrides": {}
+  },
+  "monthly_budget": {
+    "planning_assumption_low": 1500,
+    "planning_assumption_high": 3000,
+    "client_confirmed": null
+  },
+  "objectives": ["OUTCOME_AWARENESS", "OUTCOME_LEADS"],
+  "competitors": [],
+  "research_mode": "generic_keyword_search",
+  "approvals": {
+    "channel": "in_thread_planning_mode",
+    "budget_increase_cap_daily": 200,
+    "budget_increase_cap_weekly": 500,
+    "operating_hours_local": [6, 21]
+  },
+  "special_ad_categories": [],
+  "assets": {
+    "logo": "scrape_from_website",
+    "existing_meta_creative": "none",
+    "vehicle_photos": "client_to_provide"
+  },
+  "blockers_before_live": [
+    "facebook_page_id",
+    "instagram_business_id",
+    "ad_account_id",
+    "pixel_id",
+    "confirmed_monthly_budget",
+    "slack_approvals_channel"
+  ]
+}

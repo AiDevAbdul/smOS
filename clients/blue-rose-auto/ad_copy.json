@@ -1,0 +1,212 @@
+{
+  "client_slug": "blue-rose-auto",
+  "generated_at": "2026-06-18",
+  "strategy_brief_ref": "strategy_brief.json (2026-06)",
+  "compliance_check": {
+    "restricted_words_screened": ["miracle", "guaranteed", "cure", "best ever", "lowest prices"],
+    "primary_text_limit": 500,
+    "headline_limit": 40,
+    "description_limit": 30
+  },
+  "scoring_rubric": "clarity / specificity / emotional_trigger / cta_strength on 0-10 each; composite is the average",
+  "angles": [
+    {
+      "angle_id": "AWARE_LEGACY",
+      "campaign": "AWARE_BROADGEO_202606",
+      "hook_family": "Trust / Legacy",
+      "design_brief": {
+        "primary_format": "Reel 15-30s",
+        "sizes": ["1080x1920 (Reels/Stories)", "1080x1080 (Feed)"],
+        "shot_list": [
+          "Wide shot: shop floor with bay lights on, vehicle being worked on",
+          "Mid shot: technician hands on engine / paint / sander",
+          "Close: ASE-certified patch on uniform",
+          "Beauty shot: completed vehicle leaving the bay"
+        ],
+        "text_overlay_pct_max": 20,
+        "music": "Calm instrumental, not stock-shop-rock"
+      },
+      "hooks": [
+        "30 years in one shop. Same hands. Same standard.",
+        "Most local shops send their hard jobs here. Here's why.",
+        "Springfield's been bringing us their cars since 1995.",
+        "ASE-certified. Tesla-capable. Old-school discipline.",
+        "Watch what 30 years of practice looks like."
+      ],
+      "primary_text": [
+        {
+          "text": "Three decades in the same Springfield shop. ASE-certified technicians, Tesla-capable, and the only place around Eugene where the work outlives the paint job. Precision craftsmanship — every car, every time.",
+          "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 7, "cta_strength": 6, "composite": 7.75 }
+        },
+        {
+          "text": "Blue Rose Auto. 30+ years of hands-on work on every kind of vehicle that's rolled into Eugene — daily drivers, lifted trucks, Teslas, classics. One shop. One standard. No shortcuts.",
+          "score": { "clarity": 9, "specificity": 8, "emotional_trigger": 8, "cta_strength": 5, "composite": 7.5 }
+        },
+        {
+          "text": "When other shops can't (or won't) take the job, it ends up here. ASE-certified technicians. Tesla-capable bay. Built on 30 years of doing it right the first time.",
+          "score": { "clarity": 8, "specificity": 9, "emotional_trigger": 8, "cta_strength": 6, "composite": 7.75 }
+        }
+      ],
+      "headlines": [
+        { "text": "30+ Years. One Shop.", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 8, "cta_strength": 5, "composite": 8.0 } },
+        { "text": "Springfield's Auto Craftsmen", "score": { "clarity": 9, "specificity": 8, "emotional_trigger": 8, "cta_strength": 5, "composite": 7.5 } },
+        { "text": "Built to Outlast the Paint Job", "score": { "clarity": 8, "specificity": 9, "emotional_trigger": 8, "cta_strength": 5, "composite": 7.5 } }
+      ],
+      "descriptions": [
+        { "text": "ASE-certified · Springfield, OR", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 6, "cta_strength": 5, "composite": 7.5 } },
+        { "text": "Tesla-capable bay", "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 6, "cta_strength": 5, "composite": 7.25 } },
+        { "text": "30 years in one place", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 8, "cta_strength": 4, "composite": 7.75 } }
+      ],
+      "ctas": ["LEARN_MORE", "SEE_MORE", "BOOK_NOW"]
+    },
+    {
+      "angle_id": "LEADS_LUXCOS_TRANSFORM",
+      "campaign": "CONV_LUXCOS_202606",
+      "hook_family": "Before/After Transformation",
+      "design_brief": {
+        "primary_format": "Carousel 4-6 cards",
+        "sizes": ["1080x1080", "1200x628"],
+        "shot_list": [
+          "Card 1: Vehicle on arrival (dull, scratched, or pre-ceramic)",
+          "Card 2: In-progress detail / sanding / ceramic application",
+          "Card 3: After — same angle, dramatic gloss",
+          "Card 4: Owner-handoff or close-up of finish",
+          "Card 5 (optional): Service summary + Get a Quote"
+        ]
+      },
+      "hooks": [
+        "This Porsche came in dull. Watch the gloss.",
+        "14 hours of ceramic. One angle, two cars.",
+        "Before. After. The same Tesla.",
+        "Eugene's nicest cars get their finish here.",
+        "PPF that stays invisible. Until the rock hits."
+      ],
+      "primary_text": [
+        {
+          "text": "Swipe to see what 14 hours of ceramic looks like on a Porsche 911 — taken in by Blue Rose last week. ASE-certified detailing crew, premium-tier ceramic, finish guaranteed by hand-applied work, not assembly-line speed. Send us your vehicle photos for a free quote.",
+          "score": { "clarity": 9, "specificity": 10, "emotional_trigger": 9, "cta_strength": 9, "composite": 9.25 }
+        },
+        {
+          "text": "PPF. Ceramic coating. Custom paint. Wraps. Window tint. Every premium cosmetic service Eugene's auto enthusiasts need, in one Springfield shop with 30 years of practice. Tap below and send us photos — we'll quote you in 24 hours.",
+          "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 7, "cta_strength": 9, "composite": 8.5 }
+        },
+        {
+          "text": "The difference between a $200 wash and Blue Rose's ceramic isn't 6 weeks. It's 6 years. ASE-certified application, premium tier materials, hand-finish only. Get a quote in 24 hours.",
+          "score": { "clarity": 9, "specificity": 10, "emotional_trigger": 8, "cta_strength": 9, "composite": 9.0 }
+        }
+      ],
+      "headlines": [
+        { "text": "Premium Ceramic. Hand-Applied.", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 8, "cta_strength": 7, "composite": 8.5 } },
+        { "text": "PPF, Ceramic, Wraps — Eugene", "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 7, "cta_strength": 8, "composite": 8.25 } },
+        { "text": "Send Photos. Get a Quote.", "score": { "clarity": 10, "specificity": 8, "emotional_trigger": 7, "cta_strength": 10, "composite": 8.75 } }
+      ],
+      "descriptions": [
+        { "text": "Free quote · Springfield, OR", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 6, "cta_strength": 9, "composite": 8.5 } },
+        { "text": "24-hour turnaround on quotes", "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 6, "cta_strength": 9, "composite": 8.25 } },
+        { "text": "ASE-certified detailing", "score": { "clarity": 9, "specificity": 8, "emotional_trigger": 6, "cta_strength": 6, "composite": 7.25 } }
+      ],
+      "ctas": ["GET_QUOTE", "LEARN_MORE", "MESSAGE_PAGE"]
+    },
+    {
+      "angle_id": "LEADS_TESLAEV_WHITESPACE",
+      "campaign": "CONV_TESLAEV_202606",
+      "hook_family": "Specialist / Whitespace",
+      "design_brief": {
+        "primary_format": "Reel 15-30s",
+        "sizes": ["1080x1920 (Reels)"],
+        "shot_list": [
+          "Open on Tesla nose at the bay door",
+          "Cut to wheel-off underbody / pack diagnostic plug",
+          "Cut to ceramic application on Tesla paint (Tesla paint is famously thin — call this out)",
+          "Beauty close: Tesla leaving the bay"
+        ]
+      },
+      "hooks": [
+        "Your Tesla deserves better than the dealer wait.",
+        "Tesla paint is thinner than you think. Here's how we protect it.",
+        "We've serviced more Teslas in Springfield than anyone.",
+        "Diagnostics, ceramic, PPF — one Tesla-capable shop in Eugene.",
+        "Stop driving to Portland for Tesla service."
+      ],
+      "primary_text": [
+        {
+          "text": "Tesla service shouldn't mean a 2-week dealer wait. Blue Rose has been Tesla-capable since the Model S launched — diagnostics, paint protection film, ceramic coating, suspension. ASE-certified, Springfield-based, 30+ years on every kind of vehicle. Book a slot below.",
+          "score": { "clarity": 10, "specificity": 10, "emotional_trigger": 9, "cta_strength": 9, "composite": 9.5 }
+        },
+        {
+          "text": "Tesla paint is some of the thinnest factory paint on the road — every rock chip is permanent unless it's protected. Blue Rose has been applying PPF and ceramic to Tesla owners across Eugene + Springfield for years. Send us your VIN, get a quote in 24 hours.",
+          "score": { "clarity": 9, "specificity": 10, "emotional_trigger": 9, "cta_strength": 9, "composite": 9.25 }
+        },
+        {
+          "text": "EV owners — repair, detail, PPF, ceramic, wraps. The only Tesla-capable bay between Eugene and Portland that's also ASE-certified for mechanical work. Get a quote.",
+          "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 8, "cta_strength": 8, "composite": 8.5 } }
+      ],
+      "headlines": [
+        { "text": "Tesla-Capable. Springfield.", "score": { "clarity": 10, "specificity": 10, "emotional_trigger": 8, "cta_strength": 8, "composite": 9.0 } },
+        { "text": "Skip the Dealer Wait", "score": { "clarity": 9, "specificity": 8, "emotional_trigger": 9, "cta_strength": 8, "composite": 8.5 } },
+        { "text": "PPF for Tesla Paint", "score": { "clarity": 10, "specificity": 10, "emotional_trigger": 8, "cta_strength": 7, "composite": 8.75 } }
+      ],
+      "descriptions": [
+        { "text": "Tesla service + cosmetic", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 7, "cta_strength": 7, "composite": 8.25 } },
+        { "text": "Eugene + Springfield", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 6, "cta_strength": 6, "composite": 7.75 } },
+        { "text": "ASE-certified · 30+ years", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 7, "cta_strength": 6, "composite": 8.0 } }
+      ],
+      "ctas": ["GET_QUOTE", "BOOK_NOW", "LEARN_MORE"]
+    },
+    {
+      "angle_id": "LEADS_MECH_TRUST",
+      "campaign": "CONV_MECHBROAD_202606",
+      "hook_family": "Trust / Practical",
+      "design_brief": {
+        "primary_format": "Single image",
+        "sizes": ["1080x1080", "1200x628"],
+        "shot_list": [
+          "Hero image: technician at work under a hood — shop-floor lighting, ASE patch visible on uniform"
+        ],
+        "text_overlay_pct_max": 15
+      },
+      "hooks": [
+        "Brakes. Engine. Diagnostics. 30+ years.",
+        "ASE-certified. No upsell games.",
+        "Most local shops send the hard jobs here.",
+        "Same shop. Same hands. Since '95.",
+        "Book your inspection. We'll show you the issue, not invent one."
+      ],
+      "primary_text": [
+        {
+          "text": "ASE-certified mechanics. 30+ years in Springfield. We'll show you exactly what your car needs — and what it doesn't. Book an inspection below.",
+          "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 9, "cta_strength": 10, "composite": 9.5 }
+        },
+        {
+          "text": "Brake job. Engine light. Pre-purchase inspection. Diagnostic. Whatever your car needs, Blue Rose has 30+ years of hands-on practice on every make and model that rolls through Eugene. ASE-certified, no upsell games, Tesla-capable for EV folks too. Book below.",
+          "score": { "clarity": 9, "specificity": 9, "emotional_trigger": 8, "cta_strength": 9, "composite": 8.75 }
+        },
+        {
+          "text": "If you've been told you need work and want a second opinion before you spend the money — bring it to Blue Rose. We'll inspect it, show you what's actually wrong, and quote honest. 30+ years in Springfield.",
+          "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 9, "cta_strength": 9, "composite": 9.25 }
+        }
+      ],
+      "headlines": [
+        { "text": "30+ Years. ASE-Certified.", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 8, "cta_strength": 6, "composite": 8.25 } },
+        { "text": "Book a Free Inspection", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 8, "cta_strength": 10, "composite": 9.25 } },
+        { "text": "Honest Diagnostics", "score": { "clarity": 9, "specificity": 8, "emotional_trigger": 9, "cta_strength": 7, "composite": 8.25 } }
+      ],
+      "descriptions": [
+        { "text": "Springfield · 30+ years", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 7, "cta_strength": 6, "composite": 8.0 } },
+        { "text": "ASE-certified mechanics", "score": { "clarity": 10, "specificity": 9, "emotional_trigger": 7, "cta_strength": 6, "composite": 8.0 } },
+        { "text": "Book your inspection", "score": { "clarity": 10, "specificity": 8, "emotional_trigger": 6, "cta_strength": 9, "composite": 8.25 } }
+      ],
+      "ctas": ["BOOK_NOW", "GET_QUOTE", "LEARN_MORE"]
+    }
+  ],
+  "summary": {
+    "total_angles": 4,
+    "total_hooks": 20,
+    "total_primary_text": 12,
+    "total_headlines": 12,
+    "total_descriptions": 12,
+    "highest_scoring_primary": "Tesla service shouldn't mean a 2-week dealer wait... (9.5)",
+    "highest_scoring_headline": "Book a Free Inspection (9.25)",
+    "compliance_violations": 0
+  }
+}

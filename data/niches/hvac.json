@@ -1,0 +1,142 @@
+{
+  "business_name": "Sample HVAC Co",
+  "niche": "hvac",
+  "description": "Heating, ventilation, and air conditioning — residential + light commercial. AC repair, heating/furnace, install, maintenance plans, indoor air quality, emergency service.",
+  "categories": [
+    {
+      "key": "ac_repair",
+      "label": "AC Repair",
+      "search_terms": ["ac repair", "air conditioning repair"],
+      "file": "cat_ac_repair_air_conditioning_repair.json",
+      "icon": "❄️",
+      "color": "#0071e3"
+    },
+    {
+      "key": "heating",
+      "label": "Heating / Furnace",
+      "search_terms": ["furnace repair", "heating repair"],
+      "file": "cat_furnace_repair_heating_repair.json",
+      "icon": "🔥",
+      "color": "#ff375f"
+    },
+    {
+      "key": "install",
+      "label": "System Install / Replacement",
+      "search_terms": ["hvac installation", "ac installation"],
+      "file": "cat_hvac_installation_ac_installation.json",
+      "icon": "🏠",
+      "color": "#34c759"
+    },
+    {
+      "key": "maintenance",
+      "label": "Maintenance Plans",
+      "search_terms": ["hvac maintenance plan", "ac tune up"],
+      "file": "cat_hvac_maintenance_plan_ac_tune_up.json",
+      "icon": "🛠️",
+      "color": "#ff9f0a"
+    },
+    {
+      "key": "iaq",
+      "label": "Indoor Air Quality",
+      "search_terms": ["air purifier installation", "duct cleaning"],
+      "file": "cat_air_purifier_installation_duct_cleaning.json",
+      "icon": "🌬️",
+      "color": "#af52de"
+    },
+    {
+      "key": "commercial",
+      "label": "Commercial HVAC",
+      "search_terms": ["commercial hvac", "rooftop hvac unit"],
+      "file": "cat_commercial_hvac_rooftop_hvac_unit.json",
+      "icon": "🏢",
+      "color": "#5ac8fa"
+    },
+    {
+      "key": "emergency",
+      "label": "Emergency / 24-7 Service",
+      "search_terms": ["24 hour hvac", "emergency ac repair"],
+      "file": "cat_24_hour_hvac_emergency_ac_repair.json",
+      "icon": "🚨",
+      "color": "#30d158"
+    }
+  ],
+  "strategy": [
+    {
+      "category": "AC Repair",
+      "icon": "❄️",
+      "bullets": [
+        "<strong>Hook:</strong> Pain-led — \"AC blowing warm air? We can be there today.\" Match the weather forecast in copy",
+        "<strong>Format:</strong> Short vertical video of a tech diagnosing in 60 seconds — beats static for cost-per-lead",
+        "<strong>CTA:</strong> \"Book Same-Day Service\" — same-day availability is the #1 conversion lever",
+        "<strong>Offer:</strong> $89 diagnostic fee waived with repair; free second opinion on quotes over $500",
+        "<strong>Angle:</strong> Geo-targeted by ZIP + heat-index trigger — spend heaviest on 90°F+ days"
+      ]
+    },
+    {
+      "category": "Heating / Furnace",
+      "icon": "🔥",
+      "bullets": [
+        "<strong>Hook:</strong> \"Furnace not turning on? Don't sleep cold.\" Lead with the worst-case emotional outcome",
+        "<strong>Format:</strong> Carousel — diagnostic checklist (5 things to check before you call us) earns trust",
+        "<strong>CTA:</strong> \"Book a Tune-Up\" pre-season (Sept–Oct); \"Emergency Service\" Nov–Feb",
+        "<strong>Offer:</strong> $49 pre-season furnace tune-up — loss-leader to capture maintenance plan signups",
+        "<strong>Angle:</strong> Safety angle (CO detection, old furnace) converts older homeowners better than price"
+      ]
+    },
+    {
+      "category": "System Install / Replacement",
+      "icon": "🏠",
+      "bullets": [
+        "<strong>Hook:</strong> \"Energy bill spiked? Your system may be on its last summer.\" Educate, then offer estimate",
+        "<strong>Format:</strong> Lead-gen form ads with calculator-style headline (\"See your replacement cost in 60 sec\")",
+        "<strong>CTA:</strong> \"Get a Free In-Home Estimate\" — high-ticket, never use \"Book Now\" here",
+        "<strong>Offer:</strong> 0% financing for 12 months + utility rebate handling — financing beats discount on $8K+ tickets",
+        "<strong>Angle:</strong> Target homeowners 35–65, home value $300K+, with home-improvement intent layered in"
+      ]
+    },
+    {
+      "category": "Maintenance Plans",
+      "icon": "🛠️",
+      "bullets": [
+        "<strong>Hook:</strong> \"Skip the emergency call. Two visits a year, priority service, no surprises.\"",
+        "<strong>Format:</strong> Static comparison image — Without Plan vs With Plan side-by-side savings",
+        "<strong>CTA:</strong> \"Join the Comfort Club\" or \"Enroll Today\" — branded plan name lifts perceived value",
+        "<strong>Offer:</strong> First-year discount or free filter for life — recurring revenue is the prize, not the first sale",
+        "<strong>Angle:</strong> Retarget anyone who got a repair in last 90 days — highest-converting segment by far"
+      ]
+    },
+    {
+      "category": "Indoor Air Quality",
+      "icon": "🌬️",
+      "bullets": [
+        "<strong>Hook:</strong> \"Allergies worse indoors than outside?\" — health angle outperforms duct-cleanliness angle",
+        "<strong>Format:</strong> Before/after dust-in-duct photo carousel — visceral, drives saves and shares",
+        "<strong>CTA:</strong> \"Schedule a Free Air Quality Test\" — low-commitment entry to whole-home filtration upsell",
+        "<strong>Offer:</strong> Free duct inspection with any HVAC service — bundle play, not standalone",
+        "<strong>Angle:</strong> Target parents of young kids + allergy/asthma interest stack — converts 2× the broad audience"
+      ]
+    },
+    {
+      "category": "Commercial HVAC",
+      "icon": "🏢",
+      "bullets": [
+        "<strong>Hook:</strong> \"Restaurant comfort issues killing your reviews?\" Lead with business pain, not equipment",
+        "<strong>Format:</strong> Long-form lead form ad — commercial buyers want detail, single-image works fine",
+        "<strong>CTA:</strong> \"Request a Site Visit\" — never a phone CTA for commercial, decision-makers prefer email",
+        "<strong>Offer:</strong> Free preventive maintenance audit — opens the door to a service contract",
+        "<strong>Angle:</strong> Job-title targeting (facility manager, GM, owner) + B2B interest stack; LinkedIn-style copy"
+      ]
+    },
+    {
+      "category": "Emergency / 24-7 Service",
+      "icon": "🚨",
+      "bullets": [
+        "<strong>Hook:</strong> \"No AC? No heat? We answer 24/7 — local, licensed, here in under 2 hours.\"",
+        "<strong>Format:</strong> Single-image with phone number burned into the creative — call-driving, not click-driving",
+        "<strong>CTA:</strong> \"Call Now\" with Click-to-Call ad — every minute matters when their HVAC is dead",
+        "<strong>Offer:</strong> No after-hours upcharge — emotional differentiator against incumbents",
+        "<strong>Angle:</strong> Always-on geo-targeted campaign — bid up during nights/weekends/holidays"
+      ]
+    }
+  ]
+}

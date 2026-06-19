@@ -1,0 +1,142 @@
+{
+  "business_name": "Blue Rose Auto",
+  "niche": "auto services",
+  "description": "Automotive service businesses — mechanic, detailing, collision, wraps, tinting, coatings, PPF",
+  "categories": [
+    {
+      "key": "mechanic",
+      "label": "Mechanic / Auto Repair",
+      "search_terms": ["mechanic shop", "auto repair"],
+      "file": "cat_auto_repair_mechanic_shop.json",
+      "icon": "🔧",
+      "color": "#0071e3"
+    },
+    {
+      "key": "collision",
+      "label": "Collision / Auto Body",
+      "search_terms": ["auto body shop", "collision repair"],
+      "file": "cat_auto_body_collision_repair.json",
+      "icon": "🚗",
+      "color": "#ff375f"
+    },
+    {
+      "key": "detailing",
+      "label": "Auto Detailing",
+      "search_terms": ["auto detailing", "car detailing"],
+      "file": "cat_auto_detailing_car_detailing.json",
+      "icon": "✨",
+      "color": "#34c759"
+    },
+    {
+      "key": "wrap",
+      "label": "Vehicle Wrap",
+      "search_terms": ["vehicle wrap", "commercial wrap"],
+      "file": "cat_vehicle_wrap_commercial_wrap.json",
+      "icon": "🎨",
+      "color": "#ff9f0a"
+    },
+    {
+      "key": "tinting",
+      "label": "Window Tinting",
+      "search_terms": ["window tinting", "car tint"],
+      "file": "cat_window_tinting_car_tint.json",
+      "icon": "🪟",
+      "color": "#af52de"
+    },
+    {
+      "key": "ceramic",
+      "label": "Ceramic Coating",
+      "search_terms": ["ceramic coating", "paint coating"],
+      "file": "cat_ceramic_coating_paint_coating.json",
+      "icon": "💎",
+      "color": "#5ac8fa"
+    },
+    {
+      "key": "ppf",
+      "label": "Paint Protection Film (PPF)",
+      "search_terms": ["paint protection film", "PPF"],
+      "file": "cat_paint_protection_film_PPF.json",
+      "icon": "🛡️",
+      "color": "#30d158"
+    }
+  ],
+  "strategy": [
+    {
+      "category": "Mechanic / Repair",
+      "icon": "🔧",
+      "bullets": [
+        "<strong>Hook:</strong> Lead with a pain point — \"Is your check engine light on?\" or \"Tired of overpriced dealership repairs?\"",
+        "<strong>Format:</strong> Short video (before/after inspection) performs best",
+        "<strong>CTA:</strong> \"Book Now\" or \"Get a Free Estimate\"",
+        "<strong>Offer:</strong> Free multi-point inspection or $X off first service drives clicks",
+        "<strong>Angle:</strong> Local trust — show your team, shop, real reviews"
+      ]
+    },
+    {
+      "category": "Collision / Body Shop",
+      "icon": "🚗",
+      "bullets": [
+        "<strong>Hook:</strong> \"We work directly with all insurance companies\"",
+        "<strong>Format:</strong> Before/after carousel — dramatic transformations win",
+        "<strong>CTA:</strong> \"Free Estimate\" is the #1 CTA in this category",
+        "<strong>Offer:</strong> Free rental car / free tow partnership adds perceived value",
+        "<strong>Angle:</strong> Insurance claim expertise removes customer fear"
+      ]
+    },
+    {
+      "category": "Auto Detailing",
+      "icon": "✨",
+      "bullets": [
+        "<strong>Hook:</strong> Transformation content — dirty vs. clean is highly shareable",
+        "<strong>Format:</strong> Video reels get the most organic boost; use for ads too",
+        "<strong>CTA:</strong> \"Book Today\" + urgency (\"Only 3 slots left this week\")",
+        "<strong>Offer:</strong> Package bundles (interior + exterior) with a discount perform well",
+        "<strong>Angle:</strong> Mobile detailing angle (\"We come to you\") is a strong differentiator"
+      ]
+    },
+    {
+      "category": "Vehicle Wraps",
+      "icon": "🎨",
+      "bullets": [
+        "<strong>Hook:</strong> \"Turn your vehicle into a moving billboard\"",
+        "<strong>Format:</strong> Portfolio carousel — show your best work",
+        "<strong>CTA:</strong> \"Get a Free Quote\" — high-consideration purchase",
+        "<strong>Offer:</strong> Lead with portfolio + social proof, not discounts",
+        "<strong>Angle:</strong> Target local business owners for commercial wraps (fleet)"
+      ]
+    },
+    {
+      "category": "Window Tinting",
+      "icon": "🪟",
+      "bullets": [
+        "<strong>Hook:</strong> \"Beat the heat. Protect your interior.\"",
+        "<strong>Format:</strong> Static image — clear before/after with shade comparison",
+        "<strong>CTA:</strong> \"Book Now\" with same-day availability",
+        "<strong>Offer:</strong> Seasonal promotions (summer heat) drive urgency",
+        "<strong>Angle:</strong> UV protection + privacy + energy savings (multiple pain points)"
+      ]
+    },
+    {
+      "category": "Ceramic Coating",
+      "icon": "💎",
+      "bullets": [
+        "<strong>Hook:</strong> \"Your car's paint deserves better than wax\"",
+        "<strong>Format:</strong> High-quality video showing water beading / gloss",
+        "<strong>CTA:</strong> \"Get a Free Consultation\" — high-ticket, educate first",
+        "<strong>Offer:</strong> Limited-time pricing or bundle with PPF",
+        "<strong>Angle:</strong> Long-term value (\"Protects for 5+ years\") justifies price"
+      ]
+    },
+    {
+      "category": "Paint Protection Film (PPF)",
+      "icon": "🛡️",
+      "bullets": [
+        "<strong>Hook:</strong> \"Protect your investment from day one\"",
+        "<strong>Format:</strong> Side-by-side comparison video or scratch demo",
+        "<strong>CTA:</strong> \"Get a Free Quote\" — PPF is a premium, researched purchase",
+        "<strong>Offer:</strong> Bundle PPF + ceramic coating for package pricing",
+        "<strong>Angle:</strong> New car owners are the #1 target — catch them early"
+      ]
+    }
+  ]
+}

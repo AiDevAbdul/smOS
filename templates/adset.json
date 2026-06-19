@@ -1,0 +1,33 @@
+{
+  "campaign_id": "{{campaign_id}}",
+  "name": "{{placement_code}}_{{age_range}}_{{interest_code}}",
+  "status": "PAUSED",
+  "daily_budget": "{{daily_budget_cents}}",
+  "billing_event": "IMPRESSIONS",
+  "optimization_goal": "{{optimization_goal}}",
+  "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+  "targeting": {
+    "geo_locations": { "countries": "{{geo_targets}}" },
+    "age_min": "{{age_low}}",
+    "age_max": "{{age_high}}",
+    "genders": "{{genders}}",
+    "flexible_spec": "{{interest_and_behavior_spec}}",
+    "custom_audiences": "{{custom_audience_ids}}",
+    "excluded_custom_audiences": "{{excluded_audience_ids}}",
+    "publisher_platforms": "{{publisher_platforms}}",
+    "facebook_positions": "{{facebook_positions}}",
+    "instagram_positions": "{{instagram_positions}}"
+  },
+  "attribution_spec": [
+    { "event_type": "CLICK_THROUGH", "window_days": 7 },
+    { "event_type": "VIEW_THROUGH", "window_days": 1 }
+  ],
+  "promoted_object": {
+    "pixel_id": "{{pixel_id}}",
+    "custom_event_type": "{{conversion_event}}"
+  },
+  "_meta": {
+    "client_slug": "{{client_slug}}",
+    "audience_source": "{{audience_source}}"
+  }
+}

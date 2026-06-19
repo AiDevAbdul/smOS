@@ -1,0 +1,184 @@
+{
+  "client_slug": "blue-rose-auto",
+  "generated_at": "2026-06-18",
+  "mode": "planning_artifacts_only",
+  "executable_when": "facebook_page_id + instagram_business_id + ad_account_id + pixel_id are populated in client_profile.json and approval reply received",
+  "campaigns": [
+    {
+      "name": "AWARE_BROADGEO_202606",
+      "objective": "OUTCOME_AWARENESS",
+      "status": "PAUSED",
+      "special_ad_categories": [],
+      "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+      "daily_budget_cents": 2500,
+      "ad_account_id": "{{TBD_AD_ACCOUNT_ID}}",
+      "adsets": [
+        {
+          "name": "BROAD_2860_AWARE",
+          "status": "PAUSED",
+          "billing_event": "IMPRESSIONS",
+          "optimization_goal": "REACH",
+          "daily_budget_cents": 2500,
+          "targeting": {
+            "geo_locations": { "custom_locations": [{ "address_string": "3436 Olympic St, Springfield, OR 97478", "radius": 30, "distance_unit": "mile" }] },
+            "age_min": 28,
+            "age_max": 60,
+            "publisher_platforms": ["facebook", "instagram"],
+            "facebook_positions": ["feed", "story", "reels"],
+            "instagram_positions": ["stream", "story", "reels"]
+          },
+          "ads": [
+            {
+              "name": "VID_LEGACY_v1",
+              "status": "PAUSED",
+              "angle_id": "AWARE_LEGACY",
+              "creative_ref": "ad_copy.json::AWARE_LEGACY::primary_text[0] + headlines[0] + descriptions[2]",
+              "asset_dependency": "Reel 1080x1920 — see design_brief in ad_copy.json",
+              "destination_url": "https://blueroseauto.com/?utm_source=facebook&utm_medium=paid_social&utm_campaign=AWARE_BROADGEO_202606&utm_content=VID_LEGACY_v1",
+              "call_to_action": "LEARN_MORE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CONV_LUXCOS_202606",
+      "objective": "OUTCOME_LEADS",
+      "status": "PAUSED",
+      "special_ad_categories": [],
+      "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+      "daily_budget_cents": 4000,
+      "pixel_id_required": "{{TBD_PIXEL_ID}}",
+      "ad_account_id": "{{TBD_AD_ACCOUNT_ID}}",
+      "adsets": [
+        {
+          "name": "FEED_2860_INTLUXCOS",
+          "status": "PAUSED",
+          "billing_event": "IMPRESSIONS",
+          "optimization_goal": "OFFSITE_CONVERSIONS",
+          "daily_budget_cents": 4000,
+          "attribution_spec": [{ "event_type": "CLICK_THROUGH", "window_days": 7 }, { "event_type": "VIEW_THROUGH", "window_days": 1 }],
+          "promoted_object": { "pixel_id": "{{TBD_PIXEL_ID}}", "custom_event_type": "LEAD" },
+          "targeting": {
+            "geo_locations": { "custom_locations": [{ "address_string": "3436 Olympic St, Springfield, OR 97478", "radius": 30, "distance_unit": "mile" }] },
+            "age_min": 28,
+            "age_max": 60,
+            "flexible_spec": [
+              { "interests": [{ "name": "Ceramic coating" }, { "name": "Paint protection film" }, { "name": "Car detailing" }, { "name": "Window tinting" }, { "name": "Car wraps" }, { "name": "BMW" }, { "name": "Mercedes-Benz" }, { "name": "Porsche" }, { "name": "Audi" }] }
+            ],
+            "exclusions": { "custom_audiences": ["{{RT_FORM_SUBMIT_180D}}", "{{EXC_EMPLOYEES}}"] },
+            "publisher_platforms": ["facebook", "instagram"],
+            "facebook_positions": ["feed"],
+            "instagram_positions": ["stream", "reels"]
+          },
+          "ads": [
+            {
+              "name": "CAR_TRANSFORM_v1",
+              "status": "PAUSED",
+              "angle_id": "LEADS_LUXCOS_TRANSFORM",
+              "creative_ref": "ad_copy.json::LEADS_LUXCOS_TRANSFORM::primary_text[0] + headlines[2] + descriptions[0]",
+              "asset_dependency": "4-6 card carousel before/after — see design_brief",
+              "destination_url": "https://blueroseauto.com/get-a-quote?utm_source=facebook&utm_medium=paid_social&utm_campaign=CONV_LUXCOS_202606&utm_content=CAR_TRANSFORM_v1",
+              "call_to_action": "GET_QUOTE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CONV_TESLAEV_202606",
+      "objective": "OUTCOME_LEADS",
+      "status": "PAUSED",
+      "special_ad_categories": [],
+      "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+      "daily_budget_cents": 2000,
+      "pixel_id_required": "{{TBD_PIXEL_ID}}",
+      "ad_account_id": "{{TBD_AD_ACCOUNT_ID}}",
+      "adsets": [
+        {
+          "name": "REELS_2860_INTTESLAEV",
+          "status": "PAUSED",
+          "billing_event": "IMPRESSIONS",
+          "optimization_goal": "OFFSITE_CONVERSIONS",
+          "daily_budget_cents": 2000,
+          "attribution_spec": [{ "event_type": "CLICK_THROUGH", "window_days": 7 }, { "event_type": "VIEW_THROUGH", "window_days": 1 }],
+          "promoted_object": { "pixel_id": "{{TBD_PIXEL_ID}}", "custom_event_type": "LEAD" },
+          "targeting": {
+            "geo_locations": { "custom_locations": [{ "address_string": "3436 Olympic St, Springfield, OR 97478", "radius": 30, "distance_unit": "mile" }] },
+            "age_min": 28,
+            "age_max": 60,
+            "flexible_spec": [
+              { "interests": [{ "name": "Tesla, Inc." }, { "name": "Tesla Model 3" }, { "name": "Tesla Model Y" }, { "name": "Tesla Model S" }, { "name": "Electric vehicle" }, { "name": "Rivian" }, { "name": "Lucid Motors" }, { "name": "Polestar" }] }
+            ],
+            "exclusions": { "custom_audiences": ["{{RT_FORM_SUBMIT_180D}}", "{{EXC_EMPLOYEES}}"] },
+            "publisher_platforms": ["facebook", "instagram"],
+            "instagram_positions": ["reels", "stream"],
+            "facebook_positions": ["reels", "feed"]
+          },
+          "ads": [
+            {
+              "name": "VID_TESLA_v1",
+              "status": "PAUSED",
+              "angle_id": "LEADS_TESLAEV_WHITESPACE",
+              "creative_ref": "ad_copy.json::LEADS_TESLAEV_WHITESPACE::primary_text[0] + headlines[0] + descriptions[2]",
+              "asset_dependency": "Reel 1080x1920, Tesla shots — see design_brief",
+              "destination_url": "https://blueroseauto.com/get-a-quote?utm_source=facebook&utm_medium=paid_social&utm_campaign=CONV_TESLAEV_202606&utm_content=VID_TESLA_v1",
+              "call_to_action": "GET_QUOTE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CONV_MECHBROAD_202606",
+      "objective": "OUTCOME_LEADS",
+      "status": "PAUSED",
+      "special_ad_categories": [],
+      "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+      "daily_budget_cents": 3000,
+      "pixel_id_required": "{{TBD_PIXEL_ID}}",
+      "ad_account_id": "{{TBD_AD_ACCOUNT_ID}}",
+      "adsets": [
+        {
+          "name": "FEED_2860_INTMECHBROAD",
+          "status": "PAUSED",
+          "billing_event": "IMPRESSIONS",
+          "optimization_goal": "OFFSITE_CONVERSIONS",
+          "daily_budget_cents": 3000,
+          "attribution_spec": [{ "event_type": "CLICK_THROUGH", "window_days": 7 }, { "event_type": "VIEW_THROUGH", "window_days": 1 }],
+          "promoted_object": { "pixel_id": "{{TBD_PIXEL_ID}}", "custom_event_type": "LEAD" },
+          "targeting": {
+            "geo_locations": { "custom_locations": [{ "address_string": "3436 Olympic St, Springfield, OR 97478", "radius": 30, "distance_unit": "mile" }] },
+            "age_min": 28,
+            "age_max": 60,
+            "flexible_spec": [
+              { "interests": [{ "name": "Auto repair" }, { "name": "Car maintenance" }, { "name": "Brakes" }, { "name": "Engine" }, { "name": "Oil change" }, { "name": "Mechanic" }] }
+            ],
+            "exclusions": { "custom_audiences": ["{{RT_FORM_SUBMIT_180D}}", "{{EXC_EMPLOYEES}}"] },
+            "publisher_platforms": ["facebook", "instagram"],
+            "facebook_positions": ["feed"],
+            "instagram_positions": ["stream"]
+          },
+          "ads": [
+            {
+              "name": "IMG_TRUST_v1",
+              "status": "PAUSED",
+              "angle_id": "LEADS_MECH_TRUST",
+              "creative_ref": "ad_copy.json::LEADS_MECH_TRUST::primary_text[0] + headlines[1] + descriptions[2]",
+              "asset_dependency": "Single image 1080x1080 + 1200x628 — technician at work, ASE patch visible",
+              "destination_url": "https://blueroseauto.com/?utm_source=facebook&utm_medium=paid_social&utm_campaign=CONV_MECHBROAD_202606&utm_content=IMG_TRUST_v1",
+              "call_to_action": "BOOK_NOW"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "hook_validations": {
+    "naming_check": "all 4 campaigns + 4 adsets + 4 ads pass /Users/apple/abdul/smOS/hooks/naming-check.js regex",
+    "budget_guard": "all 4 campaigns at or below $200/day single-create threshold (max: $40/day on LUXCOS) — would pass",
+    "utm_enforcer": "every destination_url has utm_source/medium/campaign/content — would pass",
+    "creative_compliance": "primary text ≤ 500 chars, headline ≤ 40 chars, description ≤ 30 chars, no restricted words — would pass",
+    "pixel_check": "OUTCOME_LEADS campaigns flagged for pixel_check; will BLOCK at launch until {{TBD_PIXEL_ID}} is populated AND pixel has > 0 events in last 7d"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "client_slug": "blue-rose-auto",
+  "month": "2026-06",
+  "generated_at": "2026-06-18",
+  "status": "awaiting_approval",
+  "approval_channel": "in_thread_planning_mode",
+  "positioning": "Premium-leaning local auto: 30+ years, ASE-certified, Tesla-capable. Craftsmanship voice — never discount.",
+  "voice_pillars": ["craftsmanship", "competence", "calm"],
+  "objectives": ["OUTCOME_AWARENESS", "OUTCOME_LEADS"],
+  "campaigns": [
+    {
+      "name": "AWARE_BROADGEO_202606",
+      "objective": "OUTCOME_AWARENESS",
+      "daily_budget_planning": 25,
+      "adsets": ["BROAD_2860_AWARE"],
+      "creative_brief": "15-30s technician + vehicle transformation reel; 30+ years + ASE-certified stamp; no offer"
+    },
+    {
+      "name": "CONV_LUXCOS_202606",
+      "objective": "OUTCOME_LEADS",
+      "daily_budget_planning": 40,
+      "adsets": ["FEED_2860_INTLUXCOS"],
+      "creative_brief": "Before/after carousel — recent ceramic/PPF/wrap; single-question copy; Get a Quote CTA"
+    },
+    {
+      "name": "CONV_TESLAEV_202606",
+      "objective": "OUTCOME_LEADS",
+      "daily_budget_planning": 20,
+      "adsets": ["REELS_2860_INTTESLAEV"],
+      "creative_brief": "15-30s reel; 'your Tesla deserves better than the dealer wait'; trust + Tesla-capable framing"
+    },
+    {
+      "name": "CONV_MECHBROAD_202606",
+      "objective": "OUTCOME_LEADS",
+      "daily_budget_planning": 30,
+      "adsets": ["FEED_2860_INTMECHBROAD"],
+      "creative_brief": "Single image — technician at work; trust headline; benefit list; Book Now CTA"
+    }
+  ],
+  "total_daily_budget_planning_low": 50,
+  "total_daily_budget_planning_high": 115,
+  "kpi_targets": {
+    "aware_cpm_max": 15,
+    "aware_freq_7d_band": [1.5, 3.0],
+    "leads_target_cpa": 35,
+    "leads_pause_cpa": 105,
+    "leads_target_ctr": 1.0,
+    "leads_target_roas_proxy": 1.5
+  },
+  "month2_additions": ["retargeting_layers", "lookalike_layers", "CBO_test_on_top_campaign"],
+  "month3_additions": ["fleet_managers_adset_if_budget", "creative_refresh_per_monthly_review"],
+  "risks": [
+    { "risk": "pixel_not_firing", "likelihood": "high", "mitigation": "verify pixel + CAPI pre-launch" },
+    { "risk": "freq_spike_tesla_ev_small_audience", "likelihood": "high", "mitigation": "cap $20-30/day month 1; freq pause 3.5" },
+    { "risk": "competitor_discount_copycat", "likelihood": "medium", "mitigation": "voice locked to craftsmanship — no price war" },
+    { "risk": "geo_too_small_for_aware_freq_cap", "likelihood": "medium", "mitigation": "monitor freq_7d in week 1" },
+    { "risk": "client_creative_assets_late", "likelihood": "high", "mitigation": "phone-shot bay video acceptable month 1" }
+  ],
+  "blockers_before_launch": ["facebook_page_id", "instagram_business_id", "ad_account_id", "pixel_id", "confirmed_monthly_budget"]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "smos-meta-mcp-server",
+  "version": "1.0.0",
+  "description": "smOS Meta Marketing API MCP Server",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "axios": "^1.7.9",
+    "form-data": "^4.0.1",
+    "dotenv": "^16.4.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

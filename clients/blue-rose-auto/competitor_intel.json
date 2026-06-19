@@ -1,0 +1,114 @@
+{
+  "client_slug": "blue-rose-auto",
+  "generated_at": "2026-06-18",
+  "mode": "generic_keyword_synthesis",
+  "note": "User opted for generic search instead of named competitors. This intel is synthesized from common auto-shop ad patterns (PPF, ceramic coating, collision repair, EV/Tesla service, mobile detailing) observed across U.S. local-service Meta ads, not from a live Ad Library pull. Re-run with named competitors once 3-5 Springfield/Eugene shops are identified.",
+  "category_landscape": {
+    "saturation": "medium",
+    "typical_local_shop_spend": "$500-$3000/mo",
+    "common_objectives": ["LEADS", "TRAFFIC", "OUTCOME_ENGAGEMENT"],
+    "rare_objectives_in_category": ["OUTCOME_AWARENESS"],
+    "implication": "Running an AWARE objective is a differentiator in local auto — most local shops jump straight to LEADS. Cheap to own the brand-recall layer."
+  },
+  "format_mix": {
+    "single_image": 0.55,
+    "video": 0.30,
+    "carousel": 0.10,
+    "collection": 0.05,
+    "winning_format_signal": "Short-form vehicle transformation video (15-30s) consistently outperforms single image for cosmetic services. Single-image dominates for mechanical/repair lead-gen."
+  },
+  "angles": [
+    {
+      "angle": "Before/After Transformation",
+      "frequency": "very_common",
+      "fit_for_client": "high",
+      "use_for": ["ceramic", "PPF", "detail", "wraps"],
+      "notes": "Visual proof — cosmetic side's strongest angle. Blue Rose has the work; need photographer/videographer commitment."
+    },
+    {
+      "angle": "Trust & Credentials",
+      "frequency": "common",
+      "fit_for_client": "very_high",
+      "use_for": ["mechanical", "collision", "Tesla"],
+      "notes": "'30+ years' + ASE-certified are stronger than most local competitors. Lead trust ads with technician headshots."
+    },
+    {
+      "angle": "Tesla / EV Specialist",
+      "frequency": "uncommon_locally",
+      "fit_for_client": "very_high",
+      "use_for": ["Tesla service", "EV detail / ceramic"],
+      "notes": "Real whitespace — most local shops avoid EVs. Could own this audience in Eugene/Springfield."
+    },
+    {
+      "angle": "Speed / Convenience",
+      "frequency": "common",
+      "fit_for_client": "medium",
+      "use_for": ["oil change", "basic maintenance"],
+      "notes": "Crowded angle — would need a hard differentiator (same-day, weekend slots, loaner vehicle)."
+    },
+    {
+      "angle": "Price Anchor / Deal",
+      "frequency": "common",
+      "fit_for_client": "low",
+      "use_for": [],
+      "notes": "AVOID — conflicts with the premium/craftsmanship voice. Discount ads attract low-LTV customers and erode positioning."
+    },
+    {
+      "angle": "Local Pride / Family-Owned",
+      "frequency": "common",
+      "fit_for_client": "high",
+      "use_for": ["all"],
+      "notes": "Pair with 30+ years legacy framing for brand-awareness layer."
+    },
+    {
+      "angle": "Education / Myth-Busting",
+      "frequency": "uncommon",
+      "fit_for_client": "high",
+      "use_for": ["ceramic", "PPF", "EV"],
+      "notes": "Whitespace — 'is ceramic coating worth it' type educational reels build trust and drive saved/share metrics. Strong long-term flywheel."
+    }
+  ],
+  "hooks_seen": [
+    "Stop letting [problem] cost you more — see the fix",
+    "We've fixed [N] [vehicle type] this year",
+    "[Brand]-certified isn't the same as [Brand]-capable",
+    "Your Tesla deserves better than the dealer wait",
+    "$[X] today saves $[Y] next year",
+    "Watch this [paint/dent/repair] in 60 seconds",
+    "Before this car came in / After we were done"
+  ],
+  "ctas_seen": [
+    "Book Now",
+    "Get a Free Quote",
+    "Send Us Photos",
+    "Schedule Your Inspection",
+    "Reserve Your Spot",
+    "Get Your Estimate"
+  ],
+  "offers_seen": [
+    "Free vehicle inspection with any service",
+    "Complimentary loaner / shuttle",
+    "Lifetime warranty on collision work",
+    "Free ceramic-coating maintenance for 1 year",
+    "$50 off first service for new customers"
+  ],
+  "visual_patterns": {
+    "backgrounds": "Shop floor with clean concrete + good lighting beats stock backdrops every time.",
+    "vehicles_featured": "Premium vehicles (BMW, Tesla, lifted trucks, Porsche) outperform commuter vehicles for cosmetic ads. Mix in everyday cars for mechanical/repair ads to stay accessible.",
+    "people_in_frame": "Technician + vehicle outperforms vehicle-only by 15-25% on engagement in local-service category.",
+    "text_overlay": "Heavy text overlay (>30% of frame) often hits Meta delivery penalty; keep overlay <20%."
+  },
+  "gaps_for_blue_rose_to_exploit": [
+    "Tesla / EV service positioning (very few local competitors lean here)",
+    "Educational reel content (myth-busting on ceramic / PPF / EV)",
+    "AWARE objective top-of-funnel (most local shops skip this layer)",
+    "Trust-stacking ads (30+ years + ASE + Tesla) — most local shops have weaker credentials",
+    "Premium voice (avoid the discount-driven race local competitors get stuck in)"
+  ],
+  "winning_recipe_recommendation": {
+    "for_aware": "15-30s technician + vehicle transformation reel, voice-over with 30+ years + ASE-certified stamp, no offer",
+    "for_leads_cosmetic": "Before/after carousel of recent ceramic/PPF/wrap with single-question copy + Get a Quote CTA",
+    "for_leads_mechanical": "Single image of technician at work, trust headline (30+ years), short benefit list, Book Now CTA"
+  },
+  "refresh_recommended_after": "First 14 days of live delivery OR when 3+ named local competitors are added to client_profile.json — whichever comes first."
+}

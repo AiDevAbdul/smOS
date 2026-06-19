@@ -1,0 +1,185 @@
+{
+  "client_slug": "blue-rose-auto",
+  "generated_at": "2026-06-18",
+  "geo": {
+    "primary": {
+      "type": "radius",
+      "center": "Springfield, OR 97478",
+      "radius_miles": 30
+    },
+    "zip_whitelist_optional": [
+      "97478", "97477", "97401", "97402", "97403", "97404", "97405", "97408",
+      "97448", "97487", "97455", "97426", "97431", "97446"
+    ]
+  },
+  "age_gender": {
+    "age_min": 28,
+    "age_max": 60,
+    "genders": ["all"]
+  },
+  "language": ["en"],
+  "clusters": [
+    {
+      "id": "INT_MECH_BROAD",
+      "label": "Mechanical / Repair — broad",
+      "objective_fit": ["LEADS"],
+      "service_fit": ["mechanical", "diagnostics", "brakes", "oil_change"],
+      "interest_stack": [
+        "Auto repair",
+        "Car maintenance",
+        "Brakes",
+        "Engine",
+        "Oil change",
+        "Mechanic"
+      ],
+      "behavioral_add_ons": ["frequent_travelers"],
+      "income_layer": "mid_broad",
+      "size_estimate": "180k-220k",
+      "overlap_with": ["INT_LUX_COS"],
+      "merge_threshold_pct": 40,
+      "exclude": ["EXC_RECENT_LEADS_30D"]
+    },
+    {
+      "id": "INT_LUX_COS",
+      "label": "Cosmetic / Luxury Owner",
+      "objective_fit": ["LEADS", "OUTCOME_AWARENESS"],
+      "service_fit": ["ceramic", "PPF", "tint", "wraps", "detail", "custom_paint"],
+      "interest_stack": [
+        "Ceramic coating",
+        "Paint protection film",
+        "Car detailing",
+        "Auto detailing",
+        "Window tinting",
+        "Car wraps",
+        "BMW",
+        "Mercedes-Benz",
+        "Porsche",
+        "Audi"
+      ],
+      "income_layer": "higher_income_zips_plus_luxury_interest",
+      "size_estimate": "55k-80k",
+      "overlap_with": ["INT_MECH_BROAD", "INT_TESLA_EV"],
+      "merge_threshold_pct": 40,
+      "exclude": ["EXC_RECENT_LEADS_30D"]
+    },
+    {
+      "id": "INT_TESLA_EV",
+      "label": "Tesla & EV Owners",
+      "objective_fit": ["LEADS", "OUTCOME_AWARENESS"],
+      "service_fit": ["tesla_service", "ev_detail", "ev_ceramic", "ev_PPF"],
+      "interest_stack": [
+        "Tesla, Inc.",
+        "Tesla Model 3",
+        "Tesla Model Y",
+        "Tesla Model S",
+        "Electric vehicle",
+        "Rivian",
+        "Lucid Motors",
+        "Polestar"
+      ],
+      "behavioral_add_ons": ["early_technology_adopters"],
+      "size_estimate": "8k-15k",
+      "note": "Tight audience — fund it deliberately; expect higher CPM but high LTV. Pairs well with educational/whitespace content.",
+      "exclude": ["EXC_RECENT_LEADS_30D"]
+    },
+    {
+      "id": "INT_TRUCK_OFFROAD",
+      "label": "Truck / Off-road / Lifted",
+      "objective_fit": ["LEADS"],
+      "service_fit": ["upfitting", "wraps", "ceramic", "tint"],
+      "interest_stack": [
+        "Ford F-150",
+        "Ram Trucks",
+        "Chevrolet Silverado",
+        "Jeep Wrangler",
+        "Off-roading",
+        "Truck (vehicle)",
+        "4-wheel drive"
+      ],
+      "size_estimate": "35k-55k"
+    },
+    {
+      "id": "INT_FLEET",
+      "label": "Local Fleet Managers",
+      "objective_fit": ["LEADS"],
+      "service_fit": ["mechanical", "wraps", "diagnostics"],
+      "interest_stack": [
+        "Fleet management",
+        "Small business owner",
+        "Contractor (general)",
+        "Construction"
+      ],
+      "size_estimate": "5k-12k",
+      "note": "Smaller audience but high-LTV. Use only after first 30 days once budget supports a 3rd or 4th adset."
+    }
+  ],
+  "retargeting_layers": [
+    { "id": "RT_PIX_30D", "source": "pixel", "window_days": 30, "min_size_warning_at": 1000 },
+    { "id": "RT_PIX_60D", "source": "pixel", "window_days": 60, "min_size_warning_at": 1000 },
+    { "id": "RT_IG_ENG_365D", "source": "instagram_engagement", "window_days": 365 },
+    { "id": "RT_FB_ENG_365D", "source": "facebook_engagement", "window_days": 365 },
+    { "id": "RT_FORM_SUBMIT_180D", "source": "pixel_event:Lead", "window_days": 180, "note": "warm; for upsell to ceramic/PPF or annual maintenance" },
+    { "id": "RT_VIDEO_75PCT_30D", "source": "video_view_75pct", "window_days": 30, "note": "fuel for awareness → leads handoff" }
+  ],
+  "lookalikes": [
+    { "id": "LAL_CUSTOMER_LIST_1PCT", "seed": "customer_list_email_phone_12mo", "country": "US", "pct": 1, "fallback_seed": "RT_FORM_SUBMIT_180D" },
+    { "id": "LAL_CUSTOMER_LIST_3PCT", "seed": "customer_list_email_phone_12mo", "country": "US", "pct": 3 },
+    { "id": "LAL_CUSTOMER_LIST_5PCT", "seed": "customer_list_email_phone_12mo", "country": "US", "pct": 5 },
+    { "id": "LAL_LEAD_180D_1PCT", "seed": "RT_FORM_SUBMIT_180D", "country": "US", "pct": 1 }
+  ],
+  "exclusions": [
+    {
+      "id": "EXC_RECENT_LEADS_30D",
+      "from": "RT_FORM_SUBMIT_180D",
+      "rule": "exclude from all cold prospecting adsets to avoid double-counting and stale CPL inflation"
+    },
+    {
+      "id": "EXC_EMPLOYEES",
+      "from": "customer_list_employees_csv",
+      "rule": "exclude employees from every adset (vanity engagement risk)"
+    },
+    {
+      "id": "EXC_PURCHASED_60D",
+      "from": "pixel_event:Schedule_completed",
+      "rule": "exclude from acquisition adsets, include in upsell adsets only"
+    }
+  ],
+  "ad_set_recommendations": [
+    {
+      "name": "FEED_2860_INTLUXCOS",
+      "cluster": "INT_LUX_COS",
+      "placement": "Facebook Feed + Instagram Feed + Instagram Reels",
+      "objective": "OUTCOME_LEADS",
+      "daily_budget_low": 25,
+      "daily_budget_high": 50
+    },
+    {
+      "name": "REELS_2860_INTTESLAEV",
+      "cluster": "INT_TESLA_EV",
+      "placement": "Instagram Reels + Facebook Reels",
+      "objective": "OUTCOME_LEADS",
+      "daily_budget_low": 15,
+      "daily_budget_high": 30,
+      "note": "Smaller audience — start lower to avoid frequency spike"
+    },
+    {
+      "name": "FEED_2860_INTMECHBROAD",
+      "cluster": "INT_MECH_BROAD",
+      "placement": "Facebook Feed + Instagram Feed",
+      "objective": "OUTCOME_LEADS",
+      "daily_budget_low": 20,
+      "daily_budget_high": 40
+    },
+    {
+      "name": "BROAD_2860_AWARE",
+      "cluster": "broad_geo_only",
+      "placement": "Reels + Stories + Feed",
+      "objective": "OUTCOME_AWARENESS",
+      "daily_budget_low": 15,
+      "daily_budget_high": 30,
+      "note": "No interest layer — let the algorithm find them. Pair with the strongest brand reel."
+    }
+  ],
+  "overlap_analysis_pending_api": true,
+  "merge_proposals_after_overlap_check": "After /audience-map re-runs with live estimate_audience_overlap, any pair > 40% overlap gets merged into a single adset to preserve CBO performance."
+}

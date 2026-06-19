@@ -1,0 +1,142 @@
+{
+  "business_name": "Sample Dental Group",
+  "niche": "dental",
+  "description": "Dental practices — general dentistry, cosmetic, Invisalign/orthodontics, implants, pediatric, emergency, sedation dentistry.",
+  "categories": [
+    {
+      "key": "general",
+      "label": "General Dentistry",
+      "search_terms": ["family dentist", "general dentistry"],
+      "file": "cat_family_dentist_general_dentistry.json",
+      "icon": "🦷",
+      "color": "#0071e3"
+    },
+    {
+      "key": "cosmetic",
+      "label": "Cosmetic (Veneers / Whitening)",
+      "search_terms": ["veneers", "teeth whitening"],
+      "file": "cat_veneers_teeth_whitening.json",
+      "icon": "✨",
+      "color": "#ff375f"
+    },
+    {
+      "key": "ortho",
+      "label": "Invisalign / Orthodontics",
+      "search_terms": ["invisalign", "clear aligners"],
+      "file": "cat_invisalign_clear_aligners.json",
+      "icon": "😬",
+      "color": "#34c759"
+    },
+    {
+      "key": "implants",
+      "label": "Dental Implants",
+      "search_terms": ["dental implants", "all on 4 implants"],
+      "file": "cat_dental_implants_all_on_4_implants.json",
+      "icon": "🔩",
+      "color": "#ff9f0a"
+    },
+    {
+      "key": "pediatric",
+      "label": "Pediatric Dentistry",
+      "search_terms": ["pediatric dentist", "kids dentist"],
+      "file": "cat_pediatric_dentist_kids_dentist.json",
+      "icon": "🧒",
+      "color": "#af52de"
+    },
+    {
+      "key": "emergency",
+      "label": "Emergency Dentist",
+      "search_terms": ["emergency dentist", "same day dentist"],
+      "file": "cat_emergency_dentist_same_day_dentist.json",
+      "icon": "🚨",
+      "color": "#5ac8fa"
+    },
+    {
+      "key": "sedation",
+      "label": "Sedation Dentistry",
+      "search_terms": ["sedation dentist", "dental anxiety"],
+      "file": "cat_sedation_dentist_dental_anxiety.json",
+      "icon": "😴",
+      "color": "#30d158"
+    }
+  ],
+  "strategy": [
+    {
+      "category": "General Dentistry",
+      "icon": "🦷",
+      "bullets": [
+        "<strong>Hook:</strong> \"New to the area? First exam + cleaning, $59.\" New-patient acquisition is the entire job",
+        "<strong>Format:</strong> Short reel of the office tour + smiling staff — trust is the conversion blocker, not price",
+        "<strong>CTA:</strong> \"Book Your First Visit\" — Meta Lead Form beats site click for new patients in this niche",
+        "<strong>Offer:</strong> New-patient special ($59–$99 exam + X-rays + cleaning) with insurance acceptance highlighted",
+        "<strong>Angle:</strong> Geo-target 5-mile radius around practice; exclude existing-patient list to avoid wasted spend"
+      ]
+    },
+    {
+      "category": "Cosmetic (Veneers / Whitening)",
+      "icon": "✨",
+      "bullets": [
+        "<strong>Hook:</strong> \"Hate your smile in photos?\" Emotional, not clinical — cosmetic is identity-driven",
+        "<strong>Format:</strong> Before/after carousel — real patients only, never stock photos, drives 2–3× the CTR",
+        "<strong>CTA:</strong> \"Get a Smile Design Consultation\" — premium framing, never \"book a cleaning\"",
+        "<strong>Offer:</strong> Free digital smile preview / 3D mockup — soft entry to a $15K+ case",
+        "<strong>Angle:</strong> Women 28–55, income 75K+, life events (wedding, divorce, milestone birthday) lift response"
+      ]
+    },
+    {
+      "category": "Invisalign / Orthodontics",
+      "icon": "😬",
+      "bullets": [
+        "<strong>Hook:</strong> \"Straight teeth in 6 months — no metal, no awkward photos.\"",
+        "<strong>Format:</strong> Time-lapse smile transformation video (with patient consent) — highest-performing format in this niche",
+        "<strong>CTA:</strong> \"See If You're a Candidate\" — quiz-style lead capture outperforms direct booking",
+        "<strong>Offer:</strong> Free Invisalign consult + scan; in-house financing from $X/month makes the $5K case affordable",
+        "<strong>Angle:</strong> Split campaigns: adult professional 25–45 vs parent-buying-for-teen 35–55 — completely different copy"
+      ]
+    },
+    {
+      "category": "Dental Implants",
+      "icon": "🔩",
+      "bullets": [
+        "<strong>Hook:</strong> \"Tired of dentures slipping? Implants give you your bite back.\" Functional pain beats vanity here",
+        "<strong>Format:</strong> Long-form video testimonial — implants are a 6–12 month consideration cycle, build trust deep",
+        "<strong>CTA:</strong> \"Book a Free Implant Consultation\" + sedation reassurance in the ad copy",
+        "<strong>Offer:</strong> Free 3D CBCT scan with consult (normally $300) — removes friction, signals tech credibility",
+        "<strong>Angle:</strong> Target 55+, retarget aggressively (90-day window), exclude implants-already-done audiences"
+      ]
+    },
+    {
+      "category": "Pediatric Dentistry",
+      "icon": "🧒",
+      "bullets": [
+        "<strong>Hook:</strong> \"Make your kid's first dental visit a happy one.\" — emotional reassurance to parents",
+        "<strong>Format:</strong> Short video of a kid laughing in the chair with toy/prize wall in frame — sells the experience",
+        "<strong>CTA:</strong> \"Book Their First Visit\" — gentle, never urgency-driven",
+        "<strong>Offer:</strong> Free first visit for kids under 3, or new-family bundle (2 kids + parent cleaning)",
+        "<strong>Angle:</strong> Target moms 28–42 with parenting interests; school-start (Aug) and post-Halloween (Nov) are peak windows"
+      ]
+    },
+    {
+      "category": "Emergency Dentist",
+      "icon": "🚨",
+      "bullets": [
+        "<strong>Hook:</strong> \"Tooth pain right now? We can see you today.\" — direct, immediate, no warmth needed",
+        "<strong>Format:</strong> Static image with bold phone number — call-driving creative, click-to-call ads",
+        "<strong>CTA:</strong> \"Call Now\" — emergency intent is high, click-to-call beats lead-form by 2×",
+        "<strong>Offer:</strong> Same-day appointments + accepted insurance list visible in creative",
+        "<strong>Angle:</strong> 24/7 search-style targeting; bid heaviest evenings, weekends, holidays when GPs are closed"
+      ]
+    },
+    {
+      "category": "Sedation Dentistry",
+      "icon": "😴",
+      "bullets": [
+        "<strong>Hook:</strong> \"Avoided the dentist for years? You're not alone — and you can sleep through it.\"",
+        "<strong>Format:</strong> Patient testimonial video — fear-overcome stories convert anxious avoiders",
+        "<strong>CTA:</strong> \"Schedule a No-Pressure Consult\" — language matters; \"book\" feels too committal here",
+        "<strong>Offer:</strong> Free anxiety consultation + IV-sedation pricing transparency in ad",
+        "<strong>Angle:</strong> Layer dental-anxiety + 'haven't been to dentist in 5+ years' lookalike; women 30–55 overindex"
+      ]
+    }
+  ]
+}

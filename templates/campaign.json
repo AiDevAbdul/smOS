@@ -1,0 +1,15 @@
+{
+  "ad_account_id": "{{ad_account_id}}",
+  "name": "{{objective_code}}_{{audience_code}}_{{yyyymm}}",
+  "objective": "{{objective}}",
+  "status": "PAUSED",
+  "daily_budget": "{{daily_budget_cents}}",
+  "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+  "special_ad_categories": [],
+  "_meta": {
+    "client_slug": "{{client_slug}}",
+    "brief_id": "{{brief_id}}",
+    "phase": "{{phase_letter}}",
+    "currency": "{{currency}}"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "client_slug": "blue-rose-auto",
+  "snapshot_date": "2026-06-18",
+  "status": "interim_public_only",
+  "immutable_locked_at": null,
+  "note": "This snapshot will be re-captured and locked once Meta API access is provided. Until locked, /before-after will refuse to run.",
+  "website": {
+    "url": "https://blueroseauto.com/",
+    "reachable": true,
+    "completeness_score": 8,
+    "completeness_max": 10,
+    "pixel_verified": null
+  },
+  "facebook": {
+    "handle": "BlueRoseAuto",
+    "followers": null,
+    "likes": null,
+    "engagement_rate_30d": null,
+    "posts_per_week_30d": null,
+    "page_completeness_pct": null
+  },
+  "instagram": {
+    "handle": "blueroseauto",
+    "followers": null,
+    "following": null,
+    "post_count": null,
+    "engagement_rate_30d": null,
+    "posts_per_week_30d": null
+  },
+  "creative_quality": {
+    "score_out_of_10": null,
+    "note": "audit-creative deferred — no Meta-API access to pull recent posts"
+  },
+  "paid": {
+    "monthly_ad_spend": 0,
+    "campaigns_active": 0,
+    "cost_per_lead": null,
+    "roas": null,
+    "pixel_events_per_month": null
+  }
+}
