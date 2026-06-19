@@ -84,7 +84,7 @@ def fetch_ads_for_page_id(page_id: str, page_label: str, country: str, days: int
 
     params = {
         "access_token": token,
-        "ad_reached_countries": json.dumps([country]),
+        "ad_reached_countries": json.dumps(_parse_countries(country)),
         "search_page_ids": page_id,
         "ad_active_status": "ALL",
         "ad_delivery_date_min": since_date,
@@ -101,7 +101,7 @@ def fetch_ads_by_terms(search_terms: str, country: str, days: int, token: str) -
 
     params = {
         "access_token": token,
-        "ad_reached_countries": json.dumps([country]),
+        "ad_reached_countries": json.dumps(_parse_countries(country)),
         "search_terms": search_terms,
         "ad_active_status": "ALL",
         "ad_delivery_date_min": since_date,
@@ -110,6 +110,25 @@ def fetch_ads_by_terms(search_terms: str, country: str, days: int, token: str) -
     }
 
     return _paginate(params, search_terms)
+
+
+def _parse_countries(country: str) -> list[str]:
+    """Parse country argument into list of ISO-3166-1 alpha-2 codes.
+
+    Meta's ad_reached_countries requires explicit ISO codes — there is no "ALL".
+    Accepts a single code ("US"), comma-separated list ("US,CA,GB"), or "WW"/"ALL"
+    which expands to a broad default set.
+    """
+    WORLDWIDE = ["US", "CA", "GB", "AU", "DE", "FR", "IT", "ES", "NL", "BR", "MX", "IN", "PK", "AE", "SA"]
+    raw = country.strip().upper()
+    if raw in ("ALL", "WW", "WORLDWIDE"):
+        return WORLDWIDE
+    codes = [c.strip() for c in raw.split(",") if c.strip()]
+    for c in codes:
+        if not (len(c) == 2 and c.isalpha()):
+            print(f"\n[ERROR] Invalid country code '{c}'. Use ISO-3166-1 alpha-2 (e.g. US, GB, PK) or 'ALL' for worldwide set.\n")
+            sys.exit(1)
+    return codes
 
 
 def _paginate(params: dict, label: str) -> list[dict]:
@@ -171,7 +190,7 @@ def main():
         "--pages", nargs="+",
         help="Keyword search terms (less precise — searches ad copy, not page names)."
     )
-    parser.add_argument("--country", default="US", help="Country code (default: US)")
+    parser.add_argument("--country", default="US", help="ISO-3166-1 alpha-2 code, comma-separated list (US,CA,GB), or 'ALL' for worldwide set (default: US)")
     parser.add_argument("--days", type=int, default=90, help="Lookback days (default: 90)")
     parser.add_argument("--output", default=None, help="Output JSON file path")
     args = parser.parse_args()
