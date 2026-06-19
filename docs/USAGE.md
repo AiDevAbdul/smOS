@@ -99,11 +99,14 @@ You don't have their ad account yet. You want a sales artifact.
 You: /pre-audit
 Claude asks: business name, niche, FB page URL, IG handle, website, 3 competitors, country.
 Claude runs: public page scrape + Meta Ad Library on prospect + competitors + pixel check.
-Output: prospects/{slug}/pre_audit.html — branded report, scored 0–100,
+Output: prospects/{slug}/pre_audit.html  — branded report, scored 0–100
+        prospects/{slug}/pre_audit.pdf   — same report, shareable PDF
         with "they're outspending you NX:1" headline + 3 wins / 3 gaps / 3 opportunities.
 ```
 
-Open the HTML, send it as your pitch. Takes ~5 minutes. No client login needed.
+Both are rendered from a single standardized template — every prospect's report
+shares identical structure and Apple-style design. Open the HTML in your browser
+for review, send the PDF as your pitch. Takes ~5 minutes. No client login needed.
 
 When they sign, `/intake {slug}` auto-hydrates from the pre-audit — you don't re-ask the same questions.
 
@@ -164,11 +167,18 @@ Shared by `/research`, `/pre-audit`, and `/research-market`. You normally don't 
 | `client.py` | Fetch ads from the Meta Ad Library API by URL, page ID, or keyword |
 | `analyzer.py` | Score competitors (volume / spend / format / cadence / impressions) |
 | `classifier.py` | LLM-classify ad copy into 6-theme angle taxonomy (cached on disk) |
-| `report.py` | Render the Apple-style HTML report |
+| `report.py` | Render the Apple-style competitor HTML report |
+| `pre_audit_report.py` | Render the **standardized pre-audit** HTML report (used by `/pre-audit`) |
 | `differ.py` | Diff two snapshots — surface new ads, killed ads, spend-tier moves |
 | `persist.py` | Write snapshots to Supabase (`competitor_snapshots` / `market_snapshots` / `prospect_audits`) |
 | `creatives.py` | Download ad images/videos to `clients/{slug}/swipe/` |
 | `market.py` | Category-level sweep across a niche using `data/niches/<niche>.json` |
+
+Companion helper at the repo root:
+
+| Script | Purpose |
+|---|---|
+| `scripts/render_pdf.py` | Convert any report HTML → PDF via headless Chromium (Playwright). Called by every report skill. |
 
 ### One-off competitor scan
 
@@ -181,7 +191,20 @@ python scripts/meta-ad-library/client.py \
 
 python scripts/meta-ad-library/analyzer.py --input reports/raw.json
 python scripts/meta-ad-library/report.py --input reports/analyzed.json --open
+
+# Optional: ship as PDF too
+python scripts/render_pdf.py reports/analyzed.html --output reports/analyzed.pdf
 ```
+
+### Render any report to PDF
+
+Every report skill emits HTML + PDF automatically. To convert an HTML report ad-hoc:
+
+```bash
+python scripts/render_pdf.py path/to/report.html --output path/to/report.pdf
+```
+
+First-time setup: `pip install playwright && python -m playwright install chromium`.
 
 ### Diff against a prior snapshot
 
@@ -249,7 +272,10 @@ smOS/
 │   └── swipe/                       ← downloaded competitor creatives
 ├── prospects/{slug}/
 │   ├── page_audit.json              ← /pre-audit Pass 1
-│   ├── pre_audit.html               ← the sales artifact
+│   ├── competitor_summary.json      ← /pre-audit Pass 3 synthesis
+│   ├── synthesis.json               ← /pre-audit Pass 6 score + wins/gaps/opps
+│   ├── pre_audit.html               ← sales artifact (interactive)
+│   ├── pre_audit.pdf                ← sales artifact (shareable)
 │   └── reports/                     ← raw + competitor analysis
 ├── data/niches/                     ← shared niche playbooks (auto.json, …)
 └── .cache/meta-ad-library/          ← LLM classifier cache (disk-cached responses)
@@ -269,6 +295,8 @@ smOS/
 | `/pre-audit` says "no niche playbook on file" | `data/niches/<niche>.json` doesn't exist yet | Run anyway — Pass 4 will skip and flag it as a gap. Add the niche file later. |
 | LLM classifier errors out | `ANTHROPIC_API_KEY` missing | Set the key, OR skip the classifier pass — analyzer regex hooks still work, just less accurate |
 | Supabase insert fails on `competitor_snapshots` | You haven't re-applied the updated schema | Re-run `psql … -f scripts/schema.sql` (it's idempotent on the new tables) |
+| `render_pdf.py` errors: "playwright not installed" | Browser dep missing on this machine | Run `pip install playwright && python -m playwright install chromium` once |
+| PDF renders blank / no styles | Page didn't finish loading before `pdf()` | Already handled — helper waits for `networkidle`. If still blank, open the HTML directly to confirm it isn't broken |
 
 For anything else: check `error_log` in Supabase — every Meta API failure logs `fbtrace_id`, `code`, `type`, and `error_subcode` there.
 
@@ -280,6 +308,8 @@ For anything else: check `error_log` in Supabase — every Meta API failure logs
 - **New hook** — add the script to `hooks/`, register in `plugin.json` `hooks[]` with the right `event` + `matcher`.
 - **New niche playbook** — drop a JSON file in `data/niches/<niche>.json` mirroring `data/niches/auto.json`. `/pre-audit` and `/research-market` pick it up automatically.
 - **New report template** — add to `templates/`, point the relevant skill at it.
+- **Edit the pre-audit design** — the standardized pre-audit template lives in `scripts/meta-ad-library/pre_audit_report.py`. Change it there and every future prospect inherits the update — do not fork per-prospect.
+- **New report type that needs PDF** — write the HTML, then call `python scripts/render_pdf.py <input.html> --output <out.pdf>`. Add a "## PDF Rendering" section to the skill so future runs don't forget.
 
 When in doubt, mimic an existing file in the same folder. The structure is consistent on purpose.
 

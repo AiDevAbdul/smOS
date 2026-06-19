@@ -99,3 +99,13 @@ Write `clients/{slug}/strategy_recommendations.json`:
 - Trend math is local computation, not LLM
 - Reuse the `/before-after` skill for that section rather than re-deriving
 - Recommendations are the only LLM-generative section
+
+## PDF Rendering
+
+Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+
+```bash
+python scripts/render_pdf.py <report.html> --output <report.pdf>
+```
+
+For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.

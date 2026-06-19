@@ -103,3 +103,13 @@ Fill `templates/audit-report.md` with the data from passes 1–3. Compute:
 
 - All API responses are saved to Supabase before this skill returns, so subsequent skills (`/audit-creative`, `/strategy-brief`) read from Supabase rather than re-hitting Meta
 - The 30-post creative list from `get_page_creatives` is reused by `/audit-creative` — don't re-fetch
+
+## PDF Rendering
+
+Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+
+```bash
+python scripts/render_pdf.py <report.html> --output <report.pdf>
+```
+
+For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.

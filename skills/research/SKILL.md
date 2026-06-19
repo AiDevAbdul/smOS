@@ -150,3 +150,13 @@ Surface the diff summary (new ads, killed ads, spend-tier moves, dominant-format
 - Run all competitor `search_ad_library` calls in parallel — they're independent
 - Do not re-pull snapshots; reuse the URLs already in the search response
 - Save the full raw response set to a single Supabase row so `/strategy-brief` reads from there instead of re-hitting the API
+
+## PDF Rendering
+
+Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+
+```bash
+python scripts/render_pdf.py <report.html> --output <report.pdf>
+```
+
+For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.

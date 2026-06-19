@@ -102,3 +102,13 @@ Every flag includes the metric value, the threshold it tripped, and a one-line r
 - Read prior 7 days of `daily_metrics` from Supabase first — only fetch from Meta for windows not already cached
 - All flag classification is local computation, not LLM-driven
 - Breakdowns run only on active adsets, not paused ones
+
+## PDF Rendering
+
+Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+
+```bash
+python scripts/render_pdf.py <report.html> --output <report.pdf>
+```
+
+For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.

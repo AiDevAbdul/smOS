@@ -79,3 +79,13 @@ Append `{week_end_date}` to `clients/{slug}/reports/sent.json` so the reporter a
 - Pull from Supabase first; only hit Meta for missing days
 - Template fill — no blank-page generation
 - One Gmail / Drive / Slack call per client, never per metric
+
+## PDF Rendering
+
+Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+
+```bash
+python scripts/render_pdf.py <report.html> --output <report.pdf>
+```
+
+For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.

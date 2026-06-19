@@ -78,3 +78,13 @@ Add a 2-sentence headline above the table: "Since {baseline_date}, {client} has 
 - Read once: baseline JSON, then a single live pull
 - Template fill, no LLM generation in the body
 - One PDF, one Slack, one DB row
+
+## PDF Rendering
+
+Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+
+```bash
+python scripts/render_pdf.py <report.html> --output <report.pdf>
+```
+
+For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.

@@ -148,18 +148,49 @@ Compute:
 - **Top 3 gaps** — highest-impact missing pieces
 - **Top 3 opportunities** — concrete actions, ordered by impact-per-dollar
 
-### Pass 7 — Render Branded HTML
+### Pass 7 — Render Branded HTML (standardized template)
 
-Generate `prospects/{slug}/pre_audit.html` using the same Apple-style design system as `scripts/meta-ad-library/report.py` (load that module's `build_html` style constants and reuse).
+Use the shared, templated renderer — **do not** write per-prospect Python scripts. Every pre-audit ships with the same Apple-style design system used across smOS reports.
 
-Sections, in order:
-1. Hero — business name + score gauge + "they're outspending you NX:1" headline
-2. Are You Running Ads? — Pass 2 verdict in plain English
-3. Page Health — Pass 1 completeness scorecard
-4. Competitor Outspend — Pass 3 ranked table + embedded `competitors_<ts>.html` link
-5. Niche Playbook Gap — Pass 4 hooks/CTAs/offers you're missing
-6. Tracking Surface — Pass 5 pixel + analytics audit
-7. Three Opportunities — closing CTA with proposed next step
+```bash
+python scripts/meta-ad-library/pre_audit_report.py \
+  --page-audit prospects/{slug}/page_audit.json \
+  --competitors prospects/{slug}/competitor_summary.json \
+  --synthesis prospects/{slug}/synthesis.json \
+  --business "<Business Name>" --slug {slug} \
+  --output prospects/{slug}/pre_audit.html \
+  [--niche-html prospects/{slug}/reports/market_<ts>.html]
+```
+
+The template is fixed (don't customize per-prospect) and renders these sections in order:
+
+1. **Hero** — business name + Ducker Creative byline + outspend headline + page snapshot pills
+2. **Score Hero** — 0–100 conic-gradient gauge + competitor outspend ratio block
+3. **Score Breakdown** — six weighted dimensions with bars
+4. **Wins & Gaps** — two-column card layout (green ticks / red X's)
+5. **Competitor Outspend** — ranked 90-day table
+6. **Tracking Surface** — Pixel / GTM / GA4 / conversion events / viewport
+7. **Niche Playbook** — embedded link to `market_<ts>.html` (only if `--niche-html` passed)
+8. **Three Opportunities** — numbered cards with title / impact / effort
+
+If you need a section the template doesn't have, edit `scripts/meta-ad-library/pre_audit_report.py` so every future prospect gets it — never fork the design per-prospect.
+
+### Pass 7b — Render PDF
+
+Every report ships in HTML **and** PDF. Use the shared helper:
+
+```bash
+python scripts/render_pdf.py prospects/{slug}/pre_audit.html \
+  --output prospects/{slug}/pre_audit.pdf
+```
+
+This uses headless Chromium (Playwright) so the Apple-style gradients, conic gauge, and table borders all render correctly. The template includes a `@media print` block that strips shadows and prevents card splits across pages.
+
+First-time setup on a fresh machine:
+
+```bash
+pip install playwright && python -m playwright install chromium
+```
 
 ### Pass 8 — Persist + Open
 
@@ -175,10 +206,13 @@ Open the HTML in browser. Print one-line summary: `Pre-audit complete · score {
 ## Output
 
 - `prospects/{slug}/page_audit.json`
+- `prospects/{slug}/competitor_summary.json`
+- `prospects/{slug}/synthesis.json`
 - `prospects/{slug}/reports/raw_self_<ts>.json`
 - `prospects/{slug}/reports/competitors_<ts>.html`
 - `prospects/{slug}/reports/market_<ts>.html` (if niche file exists)
-- `prospects/{slug}/pre_audit.html` — the sales artifact
+- `prospects/{slug}/pre_audit.html` — the sales artifact (interactive)
+- `prospects/{slug}/pre_audit.pdf` — the sales artifact (shareable)
 - Row in `prospect_audits` table
 
 ## Conversion Hand-off
