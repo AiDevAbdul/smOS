@@ -32,7 +32,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 
 ## Meta API Defaults
 
-- **API version:** v21.0
+- **API version:** v25.0
 - **Default status for new campaigns/adsets/ads:** PAUSED
 - **Default bid strategy:** LOWEST_COST_WITHOUT_CAP
 - **Default attribution:** 7-day click, 1-day view

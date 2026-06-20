@@ -16,13 +16,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
 from load_env import load_env  # noqa: E402
 load_env()
 
-API_BASE = "https://graph.facebook.com/v21.0/ads_archive"
+API_BASE = "https://graph.facebook.com/v25.0/ads_archive"
 DEFAULT_FIELDS = (
     "id,page_id,page_name,ad_creation_time,ad_delivery_start_time,"
     "ad_delivery_stop_time,ad_creative_bodies,ad_creative_link_captions,"
     "ad_creative_link_titles,ad_creative_link_descriptions,ad_snapshot_url,"
     "publisher_platforms,impressions,spend,estimated_audience_size,languages,"
-    "call_to_action_type"
+    "call_to_action_type,bylines"
 )
 
 
@@ -82,8 +82,14 @@ def resolve_page_id_from_url(page_url: str) -> str | None:
     return None
 
 
-def fetch_ads_for_page_id(page_id: str, page_label: str, country: str, days: int, token: str) -> list[dict]:
-    """Fetch all ads for a specific numeric page ID using search_page_ids."""
+def fetch_ads_for_page_id(page_id: str, page_label: str, country: str, days: int, token: str, media_type: str | None = None) -> list[dict]:
+    """Fetch all ads for a specific numeric page ID using search_page_ids.
+
+    Args:
+        media_type: Optional filter — "ALL", "IMAGE", "VIDEO", "MEME", or "NONE".
+                    When set, only ads of that media type are returned.
+                    Each returned ad is tagged with _media_type for downstream use.
+    """
     since_date = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
 
     params = {
@@ -95,12 +101,24 @@ def fetch_ads_for_page_id(page_id: str, page_label: str, country: str, days: int
         "fields": DEFAULT_FIELDS,
         "limit": 100,
     }
+    if media_type:
+        params["media_type"] = media_type
 
-    return _paginate(params, page_label)
+    ads = _paginate(params, page_label)
+    if media_type:
+        for ad in ads:
+            ad["_media_type"] = media_type
+    return ads
 
 
-def fetch_ads_by_terms(search_terms: str, country: str, days: int, token: str) -> list[dict]:
-    """Fallback: fetch ads by keyword search across ad copy (less precise)."""
+def fetch_ads_by_terms(search_terms: str, country: str, days: int, token: str, media_type: str | None = None) -> list[dict]:
+    """Fallback: fetch ads by keyword search across ad copy (less precise).
+
+    Args:
+        media_type: Optional filter — "ALL", "IMAGE", "VIDEO", "MEME", or "NONE".
+                    When set, only ads of that media type are returned.
+                    Each returned ad is tagged with _media_type for downstream use.
+    """
     since_date = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
 
     params = {
@@ -112,8 +130,14 @@ def fetch_ads_by_terms(search_terms: str, country: str, days: int, token: str) -
         "fields": DEFAULT_FIELDS,
         "limit": 100,
     }
+    if media_type:
+        params["media_type"] = media_type
 
-    return _paginate(params, search_terms)
+    ads = _paginate(params, search_terms)
+    if media_type:
+        for ad in ads:
+            ad["_media_type"] = media_type
+    return ads
 
 
 def _parse_countries(country: str) -> list[str]:
@@ -197,6 +221,11 @@ def main():
     parser.add_argument("--country", default="US", help="ISO-3166-1 alpha-2 code, comma-separated list (US,CA,GB), or 'ALL' for worldwide set (default: US)")
     parser.add_argument("--days", type=int, default=90, help="Lookback days (default: 90)")
     parser.add_argument("--output", default=None, help="Output JSON file path")
+    parser.add_argument(
+        "--media-type", default=None,
+        choices=["ALL", "IMAGE", "VIDEO", "MEME", "NONE"],
+        help="Filter by media type (default: no filter = all types)",
+    )
     args = parser.parse_args()
 
     token = get_token()
@@ -226,7 +255,7 @@ def main():
             print(f"  Resolved page ID: {page_id}")
             result["meta"]["competitors"].append(slug)
             print(f"  Fetching ads...")
-            ads = fetch_ads_for_page_id(page_id, slug, args.country, args.days, token)
+            ads = fetch_ads_for_page_id(page_id, slug, args.country, args.days, token, media_type=args.media_type)
             result["data"][slug] = ads
             _report_result(slug, ads)
 
@@ -235,7 +264,7 @@ def main():
             label = f"page:{page_id}"
             result["meta"]["competitors"].append(label)
             print(f"\nFetching ads for page ID: {page_id}")
-            ads = fetch_ads_for_page_id(page_id, label, args.country, args.days, token)
+            ads = fetch_ads_for_page_id(page_id, label, args.country, args.days, token, media_type=args.media_type)
             result["data"][label] = ads
             _report_result(label, ads)
 
@@ -245,7 +274,7 @@ def main():
             print(f"\nFetching ads for search term: '{term}'")
             print("  [NOTE] --pages uses keyword search across ad copy, not exact page matching.")
             print("         Use --urls for exact page lookup.")
-            ads = fetch_ads_by_terms(term, args.country, args.days, token)
+            ads = fetch_ads_by_terms(term, args.country, args.days, token, media_type=args.media_type)
             result["data"][term] = ads
             _report_result(term, ads)
 

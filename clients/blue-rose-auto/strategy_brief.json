@@ -1,60 +1,195 @@
 {
-  "client_slug": "blue-rose-auto",
-  "month": "2026-06",
-  "generated_at": "2026-06-18",
-  "status": "awaiting_approval",
-  "approval_channel": "in_thread_planning_mode",
-  "positioning": "Premium-leaning local auto: 30+ years, ASE-certified, Tesla-capable. Craftsmanship voice — never discount.",
-  "voice_pillars": ["craftsmanship", "competence", "calm"],
-  "objectives": ["OUTCOME_AWARENESS", "OUTCOME_LEADS"],
-  "campaigns": [
+  "slug": "blue-rose-auto",
+  "generated_at": "2026-06-20T20:38:46.112Z",
+  "inputs_used": {
+    "profile": true,
+    "audit": true,
+    "competitor_intel": true,
+    "audience_map": true
+  },
+  "objective_hierarchy": [
     {
-      "name": "AWARE_BROADGEO_202606",
-      "objective": "OUTCOME_AWARENESS",
-      "daily_budget_planning": 25,
-      "adsets": ["BROAD_2860_AWARE"],
-      "creative_brief": "15-30s technician + vehicle transformation reel; 30+ years + ASE-certified stamp; no offer"
+      "phase": "A",
+      "start_day": 0,
+      "objective": "OUTCOME_TRAFFIC",
+      "reason": "pixel learning — start lighter-funnel, graduate after 200+ events"
     },
     {
-      "name": "CONV_LUXCOS_202606",
-      "objective": "OUTCOME_LEADS",
-      "daily_budget_planning": 40,
-      "adsets": ["FEED_2860_INTLUXCOS"],
-      "creative_brief": "Before/after carousel — recent ceramic/PPF/wrap; single-question copy; Get a Quote CTA"
+      "phase": "B",
+      "start_day": 14,
+      "objective": "OUTCOME_SALES",
+      "reason": "promote to conversion objective once pixel has signal"
     },
     {
-      "name": "CONV_TESLAEV_202606",
-      "objective": "OUTCOME_LEADS",
-      "daily_budget_planning": 20,
-      "adsets": ["REELS_2860_INTTESLAEV"],
-      "creative_brief": "15-30s reel; 'your Tesla deserves better than the dealer wait'; trust + Tesla-capable framing"
-    },
-    {
-      "name": "CONV_MECHBROAD_202606",
-      "objective": "OUTCOME_LEADS",
-      "daily_budget_planning": 30,
-      "adsets": ["FEED_2860_INTMECHBROAD"],
-      "creative_brief": "Single image — technician at work; trust headline; benefit list; Book Now CTA"
+      "phase": "C",
+      "start_day": 21,
+      "objective": "OUTCOME_SALES",
+      "reason": "scale into lookalike + second cluster"
     }
   ],
-  "total_daily_budget_planning_low": 50,
-  "total_daily_budget_planning_high": 115,
-  "kpi_targets": {
-    "aware_cpm_max": 15,
-    "aware_freq_7d_band": [1.5, 3.0],
-    "leads_target_cpa": 35,
-    "leads_pause_cpa": 105,
-    "leads_target_ctr": 1.0,
-    "leads_target_roas_proxy": 1.5
+  "budget_allocation": {
+    "monthly_budget": 3000,
+    "daily_total": 100,
+    "split": {
+      "cold_pct": 0.6,
+      "warm_pct": 0.25,
+      "lal_pct": 0.15
+    },
+    "adsets": [
+      {
+        "audience_id": "BROAD",
+        "audience_label": "BROAD",
+        "role": "cold",
+        "daily_budget": 20,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "INT_MECH_BROAD",
+        "audience_label": "Mechanical / Repair — broad",
+        "role": "cold",
+        "daily_budget": 20,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "INT_LUX_COS",
+        "audience_label": "Cosmetic / Luxury Owner",
+        "role": "cold",
+        "daily_budget": 20,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "RT_PIX_30D",
+        "audience_label": "RT_PIX_30D",
+        "role": "warm",
+        "daily_budget": 12.5,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "RT_PIX_60D",
+        "audience_label": "RT_PIX_60D",
+        "role": "warm",
+        "daily_budget": 12.5,
+        "needs_approval": false
+      }
+    ]
   },
-  "month2_additions": ["retargeting_layers", "lookalike_layers", "CBO_test_on_top_campaign"],
-  "month3_additions": ["fleet_managers_adset_if_budget", "creative_refresh_per_monthly_review"],
-  "risks": [
-    { "risk": "pixel_not_firing", "likelihood": "high", "mitigation": "verify pixel + CAPI pre-launch" },
-    { "risk": "freq_spike_tesla_ev_small_audience", "likelihood": "high", "mitigation": "cap $20-30/day month 1; freq pause 3.5" },
-    { "risk": "competitor_discount_copycat", "likelihood": "medium", "mitigation": "voice locked to craftsmanship — no price war" },
-    { "risk": "geo_too_small_for_aware_freq_cap", "likelihood": "medium", "mitigation": "monitor freq_7d in week 1" },
-    { "risk": "client_creative_assets_late", "likelihood": "high", "mitigation": "phone-shot bay video acceptable month 1" }
+  "audience_priority": [
+    {
+      "priority": 1,
+      "id": "BROAD",
+      "source": "broad",
+      "reason": "no-interest baseline"
+    },
+    {
+      "priority": 2,
+      "id": "INT_MECH_BROAD",
+      "source": "interest_cluster",
+      "label": "Mechanical / Repair — broad",
+      "size_estimate": "180k-220k"
+    },
+    {
+      "priority": 3,
+      "id": "INT_LUX_COS",
+      "source": "interest_cluster",
+      "label": "Cosmetic / Luxury Owner",
+      "size_estimate": "55k-80k"
+    },
+    {
+      "priority": 4,
+      "id": "RT_PIX_30D",
+      "source": "retargeting"
+    },
+    {
+      "priority": 5,
+      "id": "RT_PIX_60D",
+      "source": "retargeting"
+    }
   ],
-  "blockers_before_launch": ["facebook_page_id", "instagram_business_id", "ad_account_id", "pixel_id", "confirmed_monthly_budget"]
+  "creative_angles": [
+    {
+      "name": "PAIN",
+      "angle": "Education / Myth-Busting",
+      "hook_archetype": "Problem-led question",
+      "format": "reels_15_30s",
+      "prompt": "Lead with the pain in 'Education / Myth-Busting'. Whitespace — 'is ceramic coating worth it' type educational reels build trust and drive saved/share metrics. Strong long-term flywheel."
+    },
+    {
+      "name": "ASPIRATION",
+      "angle": "Before/After Transformation",
+      "hook_archetype": "Outcome-led visual",
+      "format": "reels_15_30s",
+      "prompt": "Show the outcome from 'Before/After Transformation'. Visual proof — cosmetic side's strongest angle. Blue Rose has the work; need photographer/videographer commitment."
+    },
+    {
+      "name": "PROOF",
+      "angle": "Local Pride / Family-Owned",
+      "hook_archetype": "Authority / social proof",
+      "format": "single_image",
+      "prompt": "Establish credibility via 'Local Pride / Family-Owned'. Pair with 30+ years legacy framing for brand-awareness layer."
+    }
+  ],
+  "success_metrics": {
+    "cold": {
+      "ctr_target": 0.01,
+      "cpm_ceiling": 30,
+      "cpa_target": 50,
+      "roas_target": 1.5
+    },
+    "warm": {
+      "cpa_target": 30,
+      "roas_target": 3
+    },
+    "scale_gate": {
+      "rule": "3 consecutive days ROAS > target before any budget increase",
+      "consecutive_days": 3,
+      "target_metric": "roas"
+    },
+    "pause_floors": {
+      "cpa_multiplier": 3,
+      "ctr_floor": 0.005,
+      "frequency_ceiling": 4
+    }
+  },
+  "calendar": [
+    {
+      "week": 1,
+      "actions": [
+        "Launch Phase A — OUTCOME_TRAFFIC",
+        "3 creatives × 2 audiences",
+        "Daily monitoring; no scaling decisions"
+      ]
+    },
+    {
+      "week": 2,
+      "actions": [
+        "Kill underperformers per pause thresholds",
+        "Refresh worst-performing creative",
+        "Begin reviewing audience-level signals"
+      ]
+    },
+    {
+      "week": 3,
+      "actions": [
+        "Begin Phase B — OUTCOME_SALES",
+        "Continue cold prospecting",
+        "Evaluate scaling gate (3-day ROAS > target)"
+      ]
+    },
+    {
+      "week": 4,
+      "actions": [
+        "Begin Phase C — OUTCOME_SALES",
+        "Launch LAL 1% if gate passed",
+        "Plan month-2 budget and creative refresh"
+      ]
+    }
+  ],
+  "assumptions": [],
+  "excluded_angles": [],
+  "approval": {
+    "status": "pending",
+    "approved_by": null,
+    "approved_at": null,
+    "slack_message_ts": null
+  }
 }

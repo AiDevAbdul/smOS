@@ -1,61 +1,63 @@
 {
-  "PreToolUse": [
-    {
-      "matcher": "meta_create_campaign|meta_update_campaign",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/budget-guard.js",
-          "timeout": 30
-        }
-      ]
-    },
-    {
-      "matcher": "meta_create_ad",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/utm-enforcer.js",
-          "timeout": 15
-        },
-        {
-          "type": "command",
-          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/creative-compliance.js",
-          "timeout": 15
-        }
-      ]
-    },
-    {
-      "matcher": "meta_create_campaign|meta_create_adset|meta_create_ad",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/naming-check.js",
-          "timeout": 10
-        }
-      ]
-    },
-    {
-      "matcher": "meta_create_campaign",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pixel-check.js",
-          "timeout": 30
-        }
-      ]
-    }
-  ],
-  "PostToolUse": [
-    {
-      "matcher": "meta_create_campaign",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/post-launch.js",
-          "timeout": 30
-        }
-      ]
-    }
-  ]
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "meta_create_campaign|meta_update_campaign",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/budget-guard.js",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "meta_create_ad",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/utm-enforcer.js",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/creative-compliance.js",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "meta_create_campaign|meta_create_adset|meta_create_ad",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/naming-check.js",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "meta_create_campaign",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pixel-check.js",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "meta_create_campaign",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/post-launch.js",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
 }

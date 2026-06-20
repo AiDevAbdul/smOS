@@ -6,6 +6,7 @@ formats, and generates a strategic HTML report for Blue Rose Auto.
 """
 
 import json
+import os
 import re
 import sys
 from collections import Counter, defaultdict
@@ -138,12 +139,46 @@ def get_all_text(ad: dict) -> str:
 
 
 def infer_format(ad: dict) -> str:
+    """Detect creative format from available API signals.
+
+    Priority order:
+    1. Explicit _media_type tag (set when fetched with --media-type VIDEO)
+    2. bylines field — Meta sometimes includes "Video" in byline strings
+    3. ad_creative_link_titles count > 1 → Carousel (each card gets a title)
+    4. ad_snapshot_url containing "video" (unreliable but catches some)
+    5. Body text heuristics — video-related emoji/phrases near the opening
+    6. Default: Image/Static
+    """
+    # 1. Explicit tag from dual-pass fetch
+    media_tag = ad.get("_media_type", "")
+    if media_tag == "VIDEO":
+        return "Video"
+
+    # 2. Bylines — Meta returns array like ["Sponsored", "Video"] for video ads
+    bylines = ad.get("bylines") or []
+    byline_text = " ".join(str(b) for b in bylines).lower()
+    if "video" in byline_text:
+        return "Video"
+
+    # 3. Carousel detection — multiple link titles = multiple cards
+    link_titles = ad.get("ad_creative_link_titles") or []
+    if len(link_titles) > 1:
+        return "Carousel"
+
+    # 4. Snapshot URL hint (keep as fallback)
     snapshot = ad.get("ad_snapshot_url", "")
-    bodies = ad.get("ad_creative_bodies") or []
     if "video" in snapshot.lower():
         return "Video"
-    if len(bodies) > 1:
-        return "Carousel"
+
+    # 5. Body text video signals (emoji + keywords near opening)
+    bodies = ad.get("ad_creative_bodies") or []
+    if bodies:
+        first_body = str(bodies[0]).lower()[:200]
+        video_signals = ["🎥", "🎬", "📹", "▶️", "watch now", "watch the video",
+                         "see the video", "play video", "video below"]
+        if any(sig in first_body for sig in video_signals):
+            return "Video"
+
     return "Image/Static"
 
 
@@ -179,6 +214,55 @@ def platform_labels(ad: dict) -> list[str]:
     return ad.get("publisher_platforms") or []
 
 
+# ── Video enrichment via API ──────────────────────────────────────────────────
+
+def _enrich_with_video_counts(all_ads: list[dict], search_terms: list[str]) -> list[dict]:
+    """Do a separate VIDEO-only fetch for the same search terms and tag
+    matching ads so infer_format picks them up.  Falls back silently if
+    no API token is set or the fetch errors out.
+
+    Returns the enriched ad list (mutated in place for convenience).
+    """
+    token = os.environ.get("META_ACCESS_TOKEN", "")
+    if not token:
+        return all_ads
+
+    try:
+        from client import fetch_ads_by_terms
+    except ImportError:
+        # Running from a different working directory
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from client import fetch_ads_by_terms
+
+    # Build a set of ad IDs already known
+    known_ids = {ad.get("id") for ad in all_ads if ad.get("id")}
+
+    for term in search_terms[:3]:  # cap to avoid excessive API calls
+        try:
+            video_ads = fetch_ads_by_terms(
+                term, country="US", days=90, token=token, media_type="VIDEO"
+            )
+        except Exception as e:
+            print(f"  [WARN] Video fetch failed for '{term}': {e}")
+            continue
+
+        for vad in video_ads:
+            vid = vad.get("id")
+            if vid and vid in known_ids:
+                # Tag the existing ad in all_ads
+                for ad in all_ads:
+                    if ad.get("id") == vid:
+                        ad["_media_type"] = "VIDEO"
+                        break
+            elif vid:
+                # New ad not in original fetch — add it tagged
+                vad["_media_type"] = "VIDEO"
+                all_ads.append(vad)
+                known_ids.add(vid)
+
+    return all_ads
+
+
 # ── Core analysis ────────────────────────────────────────────────────────────
 
 def analyze_category(cat_key: str, cat_info: dict, reports_dir: Path) -> dict:
@@ -191,12 +275,19 @@ def analyze_category(cat_key: str, cat_info: dict, reports_dir: Path) -> dict:
 
     # Flatten all ads (may be keyed by search term or competitor)
     all_ads = []
+    search_terms_used = []
     data = raw.get("data", {})
     if isinstance(data, dict):
-        for ads in data.values():
+        for key, ads in data.items():
+            search_terms_used.append(key)
             all_ads.extend(ads if isinstance(ads, list) else [])
     elif isinstance(data, list):
         all_ads = data
+
+    # Enrich with video detection via separate API query
+    if search_terms_used and os.environ.get("META_ACCESS_TOKEN"):
+        print(f"    Enriching with video ad detection...")
+        all_ads = _enrich_with_video_counts(all_ads, search_terms_used)
 
     # Filter to automotive pages only
     auto_ads = [a for a in all_ads if is_auto_page(a.get("page_name", ""))]
