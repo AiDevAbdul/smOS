@@ -25,6 +25,9 @@ const KINDS = {
   page: { env: "PAGE_TOKEN", profile: "page_token" },
   ig: { env: "IG_TOKEN", profile: "ig_token" },
   threads: { env: "THREADS_TOKEN", profile: "threads_token" },
+  // Account/system-user token for ad-account-level reads (insights, lift studies).
+  // Global fallback is META_ACCESS_TOKEN — the standard system token.
+  user: { env: "ACCESS_TOKEN", profile: "access_token" },
 };
 
 function envSlugKey(base, slug) {

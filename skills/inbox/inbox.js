@@ -42,30 +42,72 @@ const tok = resolveToken("page", slug, { profile });
 const inboxPath = resolve(dir, "inbox.json");
 
 async function pullLive(token) {
-  const graph = createGraph(process.env.META_ACCESS_TOKEN);
+  // Build the client on the PAGE token so appsecret_proof is computed from the
+  // same token Meta authenticates the call with. (The old code built on the
+  // global user token and then overrode access_token per-call — which produced a
+  // proof/token mismatch the moment "Require App Secret" was on.)
+  const graph = createGraph(token);
   const raw = [];
-  // DMs
+
+  // --- Facebook DMs (Messenger) ---
   if (pageId) {
     try {
       const convos = await graph.get(`/${pageId}/conversations`, {
-        access_token: token, platform: "messenger",
+        platform: "messenger",
         fields: "id,snippet,unread_count,updated_time,participants{id,name}", limit: 25,
       });
       for (const c of convos.data || []) {
         raw.push({ platform: "facebook", type: "dm", external_id: c.id, conversation_id: c.id,
           text: c.snippet, received_at: c.updated_time, author: { name: c.participants?.data?.[0]?.name } });
       }
-    } catch (e) { console.error("DM pull failed:", e.message); }
+    } catch (e) { console.error("FB DM pull failed:", e.message); }
+
+    // --- Facebook Page comments (on recent posts) ---
+    try {
+      const feed = await graph.get(`/${pageId}/feed`, {
+        fields: "id,permalink_url,comments.limit(25){id,message,from,created_time}", limit: 15,
+      });
+      for (const post of feed.data || []) {
+        for (const cm of post.comments?.data || []) {
+          raw.push({ platform: "facebook", type: "comment", external_id: cm.id, object_ref: post.permalink_url || post.id,
+            text: cm.message, received_at: cm.created_time, author: { id: cm.from?.id, name: cm.from?.name } });
+        }
+      }
+    } catch (e) { console.error("FB comment pull failed:", e.message); }
   }
-  // Mentions
+
+  // --- Instagram DMs, comments, and mentions ---
   if (igId) {
     try {
-      const tags = await graph.get(`/${igId}/tags`, { access_token: token, fields: "id,caption,permalink,timestamp,username", limit: 25 });
+      const convos = await graph.get(`/${pageId || igId}/conversations`, {
+        platform: "instagram",
+        fields: "id,snippet,unread_count,updated_time,participants{id,username}", limit: 25,
+      });
+      for (const c of convos.data || []) {
+        raw.push({ platform: "instagram", type: "dm", external_id: c.id, conversation_id: c.id,
+          text: c.snippet, received_at: c.updated_time, author: { name: c.participants?.data?.[0]?.username } });
+      }
+    } catch (e) { console.error("IG DM pull failed:", e.message); }
+
+    try {
+      const media = await graph.get(`/${igId}/media`, {
+        fields: "id,caption,permalink,comments.limit(25){id,text,username,timestamp}", limit: 15,
+      });
+      for (const m of media.data || []) {
+        for (const cm of m.comments?.data || []) {
+          raw.push({ platform: "instagram", type: "comment", external_id: cm.id, object_ref: m.permalink || m.id,
+            text: cm.text, received_at: cm.timestamp, author: { name: cm.username } });
+        }
+      }
+    } catch (e) { console.error("IG comment pull failed:", e.message); }
+
+    try {
+      const tags = await graph.get(`/${igId}/tags`, { fields: "id,caption,permalink,timestamp,username", limit: 25 });
       for (const t of tags.data || []) {
         raw.push({ platform: "instagram", type: "mention", external_id: t.id, text: t.caption,
           received_at: t.timestamp, object_ref: t.permalink, author: { name: t.username } });
       }
-    } catch (e) { console.error("mention pull failed:", e.message); }
+    } catch (e) { console.error("IG mention pull failed:", e.message); }
   }
   return raw;
 }
