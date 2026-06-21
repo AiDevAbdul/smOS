@@ -70,7 +70,11 @@ Do NOT batch all 9 groups into one prompt — that produces shallow answers. Ask
 
 7. **Insert row into Supabase `clients` table** with columns: `slug`, `name`, `profile` (the full JSON), `kpis`, `account_ids`, `voice`, `status: 'active'`.
 
-8. **Confirm + next step.** "Profile saved for {name}. Run `/audit` next to pull the baseline state of their accounts."
+8. **Confirm + next step — branch on whether the client has a Meta presence.**
+   - **Established client** (real `ad_account_id` / `facebook_page_id` / `pixel_id`): status is `active`. "Profile saved for {name}. Run `/audit` next to pull the baseline state of their accounts."
+   - **Zero-start client** (no real account ids — all missing or `TBD_*`): intake does NOT block on missing account ids. The profile is written with `status: "planning"` and a `blockers_before_live` list, and the build script's `next` field routes into **Phase 0**. Tell the user: "This is a brand-new business with no Meta presence yet. We'll build the brand and stand up the accounts first: `/brand-strategy` → `/brand-name` → `/brand-visual` → `/brand-book` → `/brand-social` → `/setup-accounts` → `/setup-web`, then `/audit`." See CLAUDE.md → *Zero-Start Onboarding (Phase 0)*.
+
+   The build script auto-detects which case applies (`isZeroStart`) and emits `zero_start`, `status`, and `blockers_before_live` in its output — read those to know which next step to recommend.
 
 ## Output Files
 

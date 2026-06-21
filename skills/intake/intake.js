@@ -27,6 +27,7 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { clientProfile as profileSchema } from "../../schemas/index.js";
+import { checkZeroStartPrereqs } from "../../scripts/lib/guards.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -153,7 +154,16 @@ async function detectAccountMeta(adAccountId) {
   return res;
 }
 
-function validateAnswers(a) {
+// A "zero-start" client arrives with no Meta presence yet — no real ad account,
+// Page, or pixel. They onboard via Phase 0 (/brand-* + /setup-accounts) which fills
+// these in, so intake must NOT hard-require account ids for them.
+function isZeroStart(a) {
+  const acc = a.accounts || {};
+  const real = (v) => v && !isTbd(v);
+  return !real(acc.ad_account_id) && !real(acc.facebook_page_id) && !real(acc.pixel_id);
+}
+
+function validateAnswers(a, { zeroStart = false } = {}) {
   const errors = [];
   for (const k of REQUIRED_TOP) {
     if (a[k] === undefined || a[k] === null) errors.push(`missing:${k}`);
@@ -163,7 +173,9 @@ function validateAnswers(a) {
       if (!a.business[k]) errors.push(`missing:business.${k}`);
     }
   }
-  if (a.accounts) {
+  // Account ids are required for an established client, but a zero-start client
+  // legitimately has none yet — Phase 0 creates them. Don't block onboarding.
+  if (a.accounts && !zeroStart) {
     for (const k of REQUIRED_ACCOUNTS) {
       if (!a.accounts[k]) errors.push(`missing:accounts.${k}`);
     }
@@ -247,12 +259,24 @@ function buildTemplateVars(profile) {
   };
 }
 
-function buildProfile(answers, accountMeta) {
+function buildProfile(answers, accountMeta, { zeroStart = false } = {}) {
   const profile = {
     ...answers,
-    status: "active",
+    // Zero-start clients aren't live yet — they're in Phase 0. Mark them "planning"
+    // (matches the existing convention) with the assets that gate going live.
+    status: zeroStart ? "planning" : "active",
     onboarded_at: TODAY(),
   };
+  if (zeroStart) {
+    const acc = answers.accounts || {};
+    const real = (v) => v && !isTbd(v);
+    profile.blockers_before_live = [
+      ["facebook_page_id", acc.facebook_page_id],
+      ["instagram_business_id", acc.instagram_business_id],
+      ["ad_account_id", acc.ad_account_id],
+      ["pixel_id", acc.pixel_id],
+    ].filter(([, v]) => !real(v)).map(([k]) => k);
+  }
   if (accountMeta) {
     profile.accounts = {
       ...profile.accounts,
@@ -314,7 +338,8 @@ async function main() {
   // Hydrate any still-missing fields from prospect data (idempotent on re-run)
   const hyd = hydrateFromProspect(slug, answers);
 
-  const errors = validateAnswers(answers);
+  const zeroStart = isZeroStart(answers);
+  const errors = validateAnswers(answers, { zeroStart });
   if (errors.length) {
     console.error("[intake] validation failed:");
     for (const e of errors) console.error(`  - ${e}`);
@@ -334,7 +359,7 @@ async function main() {
 
   // Normalize so canonical IDs (facebook_page_id/instagram_business_id) and their
   // legacy aliases are both populated from whatever the operator supplied.
-  const profile = profileSchema.normalize(buildProfile(answers, accountMeta));
+  const profile = profileSchema.normalize(buildProfile(answers, accountMeta, { zeroStart }));
 
   const clientDir = resolve(ROOT, "clients", slug);
   mkdirSync(clientDir, { recursive: true });
@@ -370,16 +395,24 @@ async function main() {
   };
   walk(profile);
 
+  const prereq = checkZeroStartPrereqs(profile, { need: ["page", "ig", "ad_account", "pixel"] });
+  const next = zeroStart
+    ? "ZERO-START client (no Meta presence yet). Run Phase 0 before /audit: /brand-strategy → /brand-name → /brand-visual → /brand-book → /brand-social → /setup-accounts → /setup-web. See CLAUDE.md → Zero-Start Onboarding."
+    : "run /audit to pull baseline state of accounts";
+
   console.log(JSON.stringify({
     mode,
     slug,
+    status: profile.status,
+    zero_start: zeroStart,
+    blockers_before_live: profile.blockers_before_live || [],
     profile_path: profilePath,
     claude_md_path: claudePath,
     prospect_archived: archivedPath,
     prospect_hydrated_fields: hyd.fields,
     account_meta_detected: accountMeta ? { currency: accountMeta.currency, timezone: accountMeta.timezone_name } : null,
     skipped_fields: skipped,
-    next: "run /audit to pull baseline state of accounts",
+    next,
   }, null, 2));
 }
 
