@@ -12,11 +12,11 @@ Each file covers one phase: what was decided, what was built, what was tested, w
 | Phase | Title | Status | File |
 |---|---|---|---|
 | Phase 1 | Foundation — Meta MCP Server + Supabase Schema | ✅ Complete | [phase1.md](phase1.md) |
-| Phase 2 | Intake & Audit Skills | 🔲 Not started | [phase2.md](phase2.md) |
-| Phase 3 | Research & Strategy Skills | 🔲 Not started | [phase3.md](phase3.md) |
-| Phase 4 | Creative & Launch | 🔲 Not started | [phase4.md](phase4.md) |
-| Phase 5 | Optimization Loop | 🔲 Not started | [phase5.md](phase5.md) |
-| Phase 6 | Reporting & Polish | 🔲 Not started | [phase6.md](phase6.md) |
+| Phase 2 | Intake & Audit Skills | ✅ Complete | [phase2.md](phase2.md) |
+| Phase 3 | Research & Strategy Skills | ✅ Complete | [phase3.md](phase3.md) |
+| Phase 4 | Creative & Launch | ✅ Complete | [phase4.md](phase4.md) |
+| Phase 5 | Optimization Loop | ✅ Complete | [phase5.md](phase5.md) |
+| Phase 6 | Reporting & Polish | ✅ Complete | [phase6.md](phase6.md) |
 
 ---
 
@@ -28,10 +28,10 @@ client onboarding → strategy → creative → campaign launch → daily optimi
 
 **Stack:**
 - Claude Code (runtime + agent orchestration)
-- Custom Meta MCP Server (Node.js, v21.0 API)
+- Custom Meta MCP Server (Node.js, v25.0 API)
 - Supabase (data persistence)
-- Slack (notifications + approvals)
-- Google Drive + Gmail (report storage + distribution)
+- Discord webhooks (notifications + approvals)
+- Google Drive + Gmail (report storage + distribution, via Python connector scripts)
 
 **Authentication:** System User Token (one long-lived token per ad account, stored in env vars)
 
@@ -47,13 +47,21 @@ smOS/
 ├── plugin.json                     ← Plugin manifest + MCP server config
 ├── .env.example                    ← All required environment variables
 ├── mcp/
-│   ├── meta-server/                ← Custom Meta API MCP server
-│   └── connectors.json             ← Slack, Supabase, Drive, Gmail, Notion
-├── skills/                         ← Skill files (built phase by phase)
-├── agents/                         ← Agent files (built phase by phase)
-├── hooks/                          ← Guardrail hooks (built Phase 4)
-├── templates/                      ← Output templates (built phase by phase)
+│   └── meta-server/                ← Custom Meta API MCP server (v25.0)
+├── skills/                         ← One folder per skill, each with SKILL.md + script
+├── agents/                         ← optimizer.md, reporter.md, auditor.md, creative-agent.md
+├── hooks/                          ← Guardrail hooks + shared _lib.js
+├── templates/                      ← Output templates (weekly-report, before-after, etc.)
 ├── scripts/
-│   └── schema.sql                  ← Full Supabase database schema
+│   ├── schema.sql                  ← Full Supabase database schema
+│   ├── scheduler.js                ← Schedule definitions (read by install-crons.sh)
+│   ├── install-crons.sh            ← Registers smOS jobs in native crontab
+│   ├── run-agent.sh                ← Claude CLI wrapper invoked by cron
+│   ├── baseline-snapshot.js        ← Captures /audit baseline to Supabase
+│   ├── render_pdf.py               ← HTML → PDF via headless Chromium (Playwright)
+│   └── lib/
+│       ├── google_auth.py          ← One-time OAuth2 flow, stores refresh token
+│       ├── drive_upload.py         ← Upload file to Google Drive, return share link
+│       └── gmail_send.py           ← Send email with optional PDF attachment
 └── docs/                           ← This folder
 ```

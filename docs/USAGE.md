@@ -12,7 +12,8 @@ How to drive smOS day-to-day. Read [README.md](README.md) for what it is; read t
 - Claude Code installed (`claude` CLI on `$PATH`)
 - A Meta Business Manager with at least one ad account you control
 - A Supabase project (free tier is fine)
-- A Slack workspace where you can install a bot
+- A Discord server with two webhooks (alerts channel + approvals channel)
+- A Google account for Drive + Gmail report distribution
 
 ### Install steps
 
@@ -21,19 +22,28 @@ How to drive smOS day-to-day. Read [README.md](README.md) for what it is; read t
 cd /path/to/smOS
 claude .
 
-# 2. Copy the env template and fill it in
-cp .env.example .env
-# Edit .env — see "Environment variables" below
+# 2. Secrets live outside the repo — copy the template to ~/.config/smos/.env
+mkdir -p ~/.config/smos
+cp .env.example ~/.config/smos/.env && chmod 600 ~/.config/smos/.env
+# Fill in the values — see "Environment variables" below
 
 # 3. Initialize the Supabase schema
 psql "$SUPABASE_URL" -f scripts/schema.sql
 # Or paste scripts/schema.sql into the Supabase SQL editor
 
-# 4. Install Python deps for the Meta Ad Library engine
-pip install requests
+# 4. Install Python deps
+pip3 install requests playwright google-auth google-auth-oauthlib google-api-python-client markdown
+python3 -m playwright install chromium   # headless browser for PDF rendering
 
-# 5. Install MCP server deps
+# 5. Authorize Google Drive + Gmail (one-time browser flow, stores refresh token)
+python3 scripts/lib/google_auth.py
+
+# 6. Install MCP server deps
 cd mcp/meta-server && npm install && cd ../..
+
+# 7. Register the three scheduled agents in crontab
+bash scripts/install-crons.sh
+# Verify: crontab -l | grep smOS
 ```
 
 ### Environment variables
@@ -47,16 +57,18 @@ Required (smOS won't run without these):
 | `META_APP_SECRET` | same App → Settings → Basic |
 | `SUPABASE_URL` | Supabase project → Settings → API → Project URL |
 | `SUPABASE_SERVICE_KEY` | Supabase project → Settings → API → service_role key (NOT anon) |
-| `SLACK_BOT_TOKEN` | api.slack.com → your App → OAuth → Bot User Token (xoxb-…) |
-| `SLACK_DEFAULT_CHANNEL` | Channel ID where approvals/digests land (e.g. `C012345ABCD`) |
+| `DISCORD_WEBHOOK_ALERTS` | Discord Server Settings → Integrations → Webhooks → alerts/digest channel |
+| `DISCORD_WEBHOOK_APPROVALS` | Same — second webhook for the approvals channel |
+| `GDRIVE_CREDENTIALS` | Google Cloud Console → OAuth 2.0 Client → `{"client_id":"...","client_secret":"..."}` |
+| `GMAIL_CREDENTIALS` | Same OAuth client (Drive + Gmail share one app) |
+| `GMAIL_FROM_ADDRESS` | Gmail address reports are sent from |
+| `GOOGLE_DRIVE_FOLDER_ID` | Drive folder ID from the URL (`/folders/<ID>`) where reports are uploaded |
 
-Optional but recommended:
+Optional:
 
 | Var | What unlocks |
 |---|---|
 | `ANTHROPIC_API_KEY` | LLM angle classifier in `/research` and `/pre-audit` (without it, falls back to regex hooks) |
-| `GOOGLE_DRIVE_FOLDER_ID` | Auto-upload weekly reports |
-| `GMAIL_FROM_ADDRESS` | Auto-email reports |
 | `NOTION_TOKEN` | Mirror reports into Notion |
 
 ### Sanity check
@@ -144,7 +156,7 @@ Each step reads from the previous step's output. You can re-run any step without
                       automatically, anything bigger routes to Slack approval)
 ```
 
-Or skip the manual loop and let the **optimizer agent** run on cron (see `agents/optimizer.md`).
+Or skip the manual loop and let the **optimizer agent** run on cron — registered automatically by `bash scripts/install-crons.sh` (see `agents/optimizer.md`).
 
 ### Scenario E — "Weekly and monthly reports"
 
@@ -154,7 +166,7 @@ Or skip the manual loop and let the **optimizer agent** run on cron (see `agents
 /monthly-review {slug}      → full month review with strategy reset recommendations
 ```
 
-Reports auto-upload to Google Drive and post to Slack if those connectors are wired.
+Reports auto-upload to Google Drive, post a Discord digest, and email the client contact if Google auth is complete (run `python3 scripts/lib/google_auth.py` once to authorize).
 
 ---
 
@@ -238,7 +250,7 @@ If you bypass this convention by editing in Ads Manager directly, the `/analyze`
 - Generating + sending reports
 - Writing to Supabase
 
-**Slack approval required:**
+**Discord approval required** (posted to `DISCORD_WEBHOOK_APPROVALS`, must be acknowledged before proceeding):
 - Single budget increase >$500/day
 - New campaign launch with daily budget >$200
 - Any action outside 6 AM – 9 PM client timezone
@@ -295,8 +307,12 @@ smOS/
 | `/pre-audit` says "no niche playbook on file" | `data/niches/<niche>.json` doesn't exist yet | Run anyway — Pass 4 will skip and flag it as a gap. Add the niche file later. |
 | LLM classifier errors out | `ANTHROPIC_API_KEY` missing | Set the key, OR skip the classifier pass — analyzer regex hooks still work, just less accurate |
 | Supabase insert fails on `competitor_snapshots` | You haven't re-applied the updated schema | Re-run `psql … -f scripts/schema.sql` (it's idempotent on the new tables) |
-| `render_pdf.py` errors: "playwright not installed" | Browser dep missing on this machine | Run `pip install playwright && python -m playwright install chromium` once |
+| `render_pdf.py` errors: "playwright not installed" | Browser dep missing on this machine | Run `pip3 install playwright && python3 -m playwright install chromium` once |
 | PDF renders blank / no styles | Page didn't finish loading before `pdf()` | Already handled — helper waits for `networkidle`. If still blank, open the HTML directly to confirm it isn't broken |
+| `drive_upload.py` or `gmail_send.py` fails with auth error | Token expired or never generated | Run `python3 scripts/lib/google_auth.py` — reopens browser flow and refreshes `~/.config/smos/google_token.json` |
+| Google auth: "client_id missing" | `GDRIVE_CREDENTIALS` not set in `~/.config/smos/.env` | Set `GDRIVE_CREDENTIALS={"client_id":"...","client_secret":"..."}` — same JSON for both Drive and Gmail |
+| Cron jobs not firing | crontab entries not installed | Run `bash scripts/install-crons.sh` then verify with `crontab -l \| grep smOS` |
+| Agent log empty after expected cron run | `claude` not on `$PATH` in cron environment | Add `PATH=/usr/local/bin:/usr/bin:/bin` at the top of your crontab (`crontab -e`) |
 
 For anything else: check `error_log` in Supabase — every Meta API failure logs `fbtrace_id`, `code`, `type`, and `error_subcode` there.
 
@@ -317,18 +333,30 @@ When in doubt, mimic an existing file in the same folder. The structure is consi
 
 ## 10. The shortest possible "first run"
 
-You have an ad account, a Supabase project, a Slack workspace. You want to see smOS work end-to-end on a real client.
+You have an ad account, a Supabase project, a Discord server with two webhooks, and a Google account. You want smOS running end-to-end on a real client.
 
 ```
-1. cp .env.example .env  → fill in the 7 required vars
+1. mkdir -p ~/.config/smos && cp .env.example ~/.config/smos/.env && chmod 600 ~/.config/smos/.env
+   → fill in all required vars (Meta, Supabase, Discord, Google)
+
 2. psql "$SUPABASE_URL" -f scripts/schema.sql
-3. claude . → /intake → answer the 9 question groups
-4. /audit {slug} → review the health score
-5. /research {slug} → review competitor_intel.json + the ranked HTML
-6. /strategy-brief {slug} → review the plan
-7. /creative {slug} → review ad copy variants
-8. /launch {slug} → campaign created in Meta as PAUSED
-9. Eyeball it in Ads Manager. Activate manually. You're live.
+
+3. pip3 install requests playwright google-auth google-auth-oauthlib google-api-python-client markdown
+   python3 -m playwright install chromium
+   python3 scripts/lib/google_auth.py   ← one browser sign-in, then headless forever
+
+4. cd mcp/meta-server && npm install && cd ../..
+
+5. bash scripts/install-crons.sh   ← registers optimizer / reporter / auditor in crontab
+
+6. claude . → /intake → answer the 9 question groups
+7. /audit {slug}          → review the health score + baseline snapshot
+8. /research {slug}       → competitor_intel.json + ranked HTML
+9. /strategy-brief {slug} → review the plan, approve via Discord
+10. /creative {slug}      → review ad copy variants
+11. /launch {slug}        → campaign created in Meta as PAUSED
+12. Eyeball it in Ads Manager. Activate manually. You're live.
+    From here: optimizer runs daily at 08:00, reporter Mondays at 09:00.
 ```
 
 Time, end-to-end on a clean account: ~45 minutes.
