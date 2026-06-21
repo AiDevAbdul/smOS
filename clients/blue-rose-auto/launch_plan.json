@@ -1,0 +1,1154 @@
+{
+  "slug": "blue-rose-auto",
+  "generated_at": "2026-06-20T20:40:29.671Z",
+  "live_phase": {
+    "phase": "A",
+    "start_day": 0,
+    "objective": "OUTCOME_TRAFFIC",
+    "reason": "pixel learning — start lighter-funnel, graduate after 200+ events"
+  },
+  "deferred_phases": [
+    {
+      "phase": "B",
+      "start_day": 14,
+      "objective": "OUTCOME_SALES",
+      "reason": "promote to conversion objective once pixel has signal"
+    },
+    {
+      "phase": "C",
+      "start_day": 21,
+      "objective": "OUTCOME_SALES",
+      "reason": "scale into lookalike + second cluster"
+    }
+  ],
+  "campaigns": [
+    {
+      "audience_id": "BROAD",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": "TBD_AD_ACCOUNT_ID",
+        "name": "TRAFFIC_BROAD_202606",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "REELS_2860_BROAD",
+            "status": "PAUSED",
+            "daily_budget": "2000",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 28,
+              "age_max": 60,
+              "geo_locations": {
+                "zips": [
+                  {
+                    "key": "97478",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97477",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97401",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97402",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97403",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97404",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97405",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97408",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97448",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97487",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97455",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97426",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97431",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97446",
+                    "country": "US"
+                  }
+                ]
+              },
+              "publisher_platforms": [
+                "facebook",
+                "instagram"
+              ],
+              "facebook_positions": [
+                "facebook_reels"
+              ],
+              "instagram_positions": [
+                "reels",
+                "story"
+              ]
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "VID_PAIN_v1",
+              "angle": "PAIN",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "PAIN_REELS_2860_BROAD",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_BROAD&utm_content=PAIN",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PAIN'"
+              ]
+            },
+            {
+              "name": "VID_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "ASPIRATION_REELS_2860_BROAD",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_BROAD&utm_content=ASPIRATION",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'ASPIRATION'"
+              ]
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_REELS_2860_BROAD",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_BROAD&utm_content=PROOF",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PROOF'"
+              ]
+            }
+          ],
+          "audience_id": "BROAD"
+        }
+      ]
+    },
+    {
+      "audience_id": "INT_MECH_BROAD",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": "TBD_AD_ACCOUNT_ID",
+        "name": "TRAFFIC_INTMECHBROAD_202606",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "REELS_2860_INTMECHBROAD",
+            "status": "PAUSED",
+            "daily_budget": "2000",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 28,
+              "age_max": 60,
+              "geo_locations": {
+                "zips": [
+                  {
+                    "key": "97478",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97477",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97401",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97402",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97403",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97404",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97405",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97408",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97448",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97487",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97455",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97426",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97431",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97446",
+                    "country": "US"
+                  }
+                ]
+              },
+              "flexible_spec": [
+                {
+                  "interests": [
+                    {
+                      "name": "Auto repair"
+                    },
+                    {
+                      "name": "Car maintenance"
+                    },
+                    {
+                      "name": "Brakes"
+                    },
+                    {
+                      "name": "Engine"
+                    },
+                    {
+                      "name": "Oil change"
+                    },
+                    {
+                      "name": "Mechanic"
+                    }
+                  ],
+                  "behaviors": [
+                    {
+                      "name": "frequent_travelers"
+                    }
+                  ]
+                }
+              ],
+              "publisher_platforms": [
+                "facebook",
+                "instagram"
+              ],
+              "facebook_positions": [
+                "facebook_reels"
+              ],
+              "instagram_positions": [
+                "reels",
+                "story"
+              ]
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "VID_PAIN_v1",
+              "angle": "PAIN",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "PAIN_REELS_2860_INTMECHBROAD",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_INTMECHBROAD&utm_content=PAIN",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PAIN'"
+              ]
+            },
+            {
+              "name": "VID_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "ASPIRATION_REELS_2860_INTMECHBROAD",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_INTMECHBROAD&utm_content=ASPIRATION",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'ASPIRATION'"
+              ]
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_REELS_2860_INTMECHBROAD",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_INTMECHBROAD&utm_content=PROOF",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PROOF'"
+              ]
+            }
+          ],
+          "audience_id": "INT_MECH_BROAD"
+        }
+      ]
+    },
+    {
+      "audience_id": "INT_LUX_COS",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": "TBD_AD_ACCOUNT_ID",
+        "name": "TRAFFIC_INTLUXCOS_202606",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "2000",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "REELS_2860_INTLUXCOS",
+            "status": "PAUSED",
+            "daily_budget": "2000",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 28,
+              "age_max": 60,
+              "geo_locations": {
+                "zips": [
+                  {
+                    "key": "97478",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97477",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97401",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97402",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97403",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97404",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97405",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97408",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97448",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97487",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97455",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97426",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97431",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97446",
+                    "country": "US"
+                  }
+                ]
+              },
+              "flexible_spec": [
+                {
+                  "interests": [
+                    {
+                      "name": "Ceramic coating"
+                    },
+                    {
+                      "name": "Paint protection film"
+                    },
+                    {
+                      "name": "Car detailing"
+                    },
+                    {
+                      "name": "Auto detailing"
+                    },
+                    {
+                      "name": "Window tinting"
+                    },
+                    {
+                      "name": "Car wraps"
+                    },
+                    {
+                      "name": "BMW"
+                    },
+                    {
+                      "name": "Mercedes-Benz"
+                    },
+                    {
+                      "name": "Porsche"
+                    },
+                    {
+                      "name": "Audi"
+                    }
+                  ],
+                  "behaviors": []
+                }
+              ],
+              "publisher_platforms": [
+                "facebook",
+                "instagram"
+              ],
+              "facebook_positions": [
+                "facebook_reels"
+              ],
+              "instagram_positions": [
+                "reels",
+                "story"
+              ]
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "VID_PAIN_v1",
+              "angle": "PAIN",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "PAIN_REELS_2860_INTLUXCOS",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_INTLUXCOS&utm_content=PAIN",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PAIN'"
+              ]
+            },
+            {
+              "name": "VID_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "ASPIRATION_REELS_2860_INTLUXCOS",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_INTLUXCOS&utm_content=ASPIRATION",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'ASPIRATION'"
+              ]
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_REELS_2860_INTLUXCOS",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_INTLUXCOS&utm_content=PROOF",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PROOF'"
+              ]
+            }
+          ],
+          "audience_id": "INT_LUX_COS"
+        }
+      ]
+    },
+    {
+      "audience_id": "RT_PIX_30D",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": "TBD_AD_ACCOUNT_ID",
+        "name": "TRAFFIC_RTPIX30D_202606",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "1250",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "REELS_2860_RTPIX30D",
+            "status": "PAUSED",
+            "daily_budget": "1250",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 28,
+              "age_max": 60,
+              "geo_locations": {
+                "zips": [
+                  {
+                    "key": "97478",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97477",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97401",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97402",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97403",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97404",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97405",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97408",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97448",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97487",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97455",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97426",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97431",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97446",
+                    "country": "US"
+                  }
+                ]
+              },
+              "custom_audiences": [
+                {
+                  "id": "<TBD_RT_PIX_30D>"
+                }
+              ],
+              "publisher_platforms": [
+                "facebook",
+                "instagram"
+              ],
+              "facebook_positions": [
+                "facebook_reels"
+              ],
+              "instagram_positions": [
+                "reels",
+                "story"
+              ]
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "VID_PAIN_v1",
+              "angle": "PAIN",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "PAIN_REELS_2860_RTPIX30D",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_RTPIX30D&utm_content=PAIN",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PAIN'"
+              ]
+            },
+            {
+              "name": "VID_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "ASPIRATION_REELS_2860_RTPIX30D",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_RTPIX30D&utm_content=ASPIRATION",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'ASPIRATION'"
+              ]
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_REELS_2860_RTPIX30D",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_RTPIX30D&utm_content=PROOF",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PROOF'"
+              ]
+            }
+          ],
+          "audience_id": "RT_PIX_30D"
+        }
+      ]
+    },
+    {
+      "audience_id": "RT_PIX_60D",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": "TBD_AD_ACCOUNT_ID",
+        "name": "TRAFFIC_RTPIX60D_202606",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "1250",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "REELS_2860_RTPIX60D",
+            "status": "PAUSED",
+            "daily_budget": "1250",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 28,
+              "age_max": 60,
+              "geo_locations": {
+                "zips": [
+                  {
+                    "key": "97478",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97477",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97401",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97402",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97403",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97404",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97405",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97408",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97448",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97487",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97455",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97426",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97431",
+                    "country": "US"
+                  },
+                  {
+                    "key": "97446",
+                    "country": "US"
+                  }
+                ]
+              },
+              "custom_audiences": [
+                {
+                  "id": "<TBD_RT_PIX_60D>"
+                }
+              ],
+              "publisher_platforms": [
+                "facebook",
+                "instagram"
+              ],
+              "facebook_positions": [
+                "facebook_reels"
+              ],
+              "instagram_positions": [
+                "reels",
+                "story"
+              ]
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "VID_PAIN_v1",
+              "angle": "PAIN",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "PAIN_REELS_2860_RTPIX60D",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_RTPIX60D&utm_content=PAIN",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PAIN'"
+              ]
+            },
+            {
+              "name": "VID_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "reels_15_30s",
+              "creative_payload": {
+                "name": "ASPIRATION_REELS_2860_RTPIX60D",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_RTPIX60D&utm_content=ASPIRATION",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'ASPIRATION'"
+              ]
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_REELS_2860_RTPIX60D",
+                "object_story_spec": {
+                  "page_id": "TBD_FB_PAGE_ID",
+                  "instagram_actor_id": "TBD_IG_BUSINESS_ID",
+                  "link_data": {
+                    "message": "",
+                    "link": "https://blueroseauto.com/?utm_source=meta&utm_medium=paid_social&utm_campaign=REELS_2860_RTPIX60D&utm_content=PROOF",
+                    "name": "",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "copy_used": null,
+              "warnings": [
+                "no matching ad_copy entry for angle 'PROOF'"
+              ]
+            }
+          ],
+          "audience_id": "RT_PIX_60D"
+        }
+      ]
+    }
+  ],
+  "naming_issues": [],
+  "mode": "DRY_RUN"
+}

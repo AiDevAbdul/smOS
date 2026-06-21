@@ -1,0 +1,18 @@
+{
+  "slug": "blue-rose-auto",
+  "generated_at": "2026-06-19T06:32:17.510Z",
+  "organic": {
+    "facebook": {
+      "skipped": true,
+      "reason": "page_id is TBD"
+    },
+    "instagram": {
+      "skipped": true
+    }
+  },
+  "paid": {
+    "skipped": true
+  },
+  "creative": null,
+  "health_score": 8
+}

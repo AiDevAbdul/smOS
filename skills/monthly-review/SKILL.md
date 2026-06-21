@@ -80,7 +80,7 @@ Write `clients/{slug}/strategy_recommendations.json`:
 
 - Render `clients/{slug}/reports/{YYYY-MM}_monthly_review.md` with all sections + updated before/after table (call `/before-after` internally for the comparison block)
 - Generate PDF
-- Upload to Drive, post Slack, send Gmail (same distribution as `/report`)
+- Upload PDF via `python3 scripts/lib/drive_upload.py`, post Discord digest to `DISCORD_WEBHOOK_ALERTS`, send Gmail via `python3 scripts/lib/gmail_send.py` (same pattern as `/report`)
 - Insert into Supabase `reports`: `type: 'monthly_review'`
 
 ## Output
@@ -91,7 +91,7 @@ Write `clients/{slug}/strategy_recommendations.json`:
 
 ## Error Handling
 
-- Missing competitor intel + research fails → render review without competitive section, note in Slack
+- Missing competitor intel + research fails → render review without competitive section, note in Discord digest
 - < 30 days of data → render with all available days and flag at top "Partial month — only N days of data"
 
 ## Token Efficiency

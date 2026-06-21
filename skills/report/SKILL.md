@@ -48,14 +48,21 @@ Convert the markdown to PDF (Pandoc or headless Chrome via the chrome-devtools M
 
 ### Step 6 — Distribute
 
-1. Upload PDF to client Google Drive folder (`client_profile.drive_folder_id`)
-2. Post Slack summary to `approvals.channel`:
-   > *Weekly report — {client_name} · week ending {date}*
-   > Spend: ${X} · Conv: {N} · ROAS: {x.x} · CPA: ${X}
-   > 🏆 Top: {ad_name} · 📉 Killed: {N} · ⏳ Pending: {N}
-   > Full report: {drive_link}
-3. Send Gmail to `contacts.primary_email` with PDF attached
-4. Insert row into Supabase `reports`: `client_id`, `type: 'weekly'`, `summary_json`, `drive_url`, `created_at`
+1. **Drive upload** — run `python3 scripts/lib/drive_upload.py <pdf_path> --folder-id <client_profile.drive_folder_id>`. Capture `drive_link` from the JSON output.
+
+2. **Discord digest** — POST to `DISCORD_WEBHOOK_ALERTS` with this message body:
+   ```
+   **Weekly report — {client_name} · week ending {date}**
+   Spend: ${X} · Conv: {N} · ROAS: {x.x} · CPA: ${X}
+   🏆 Top: {ad_name} · 📉 Killed: {N} · ⏳ Pending: {N}
+   Full report: {drive_link}
+   ```
+
+3. **Gmail send** — run `python3 scripts/lib/gmail_send.py --to <primary_email> --subject "Weekly Report — {client_name} | {week_end}" --body "..." --attachment <pdf_path>`.
+
+4. **Supabase log** — insert row into `reports` table: `client_id`, `type: 'weekly'`, `summary_json`, `drive_url`, `created_at`.
+
+> **Auth:** Both scripts share `~/.config/smos/google_token.json`. Run `python3 scripts/lib/google_auth.py` once to authorize — no re-auth needed after that.
 
 ### Step 7 — Mark sent
 
