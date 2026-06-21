@@ -63,7 +63,7 @@ Score formula: start at 100, subtract per category (naming -5 each, overlap -10 
 
 Insert into Supabase `reports`: `type: 'monthly_health'`, `summary_json`. The next `/strategy-brief` run reads this file and incorporates recommendations.
 
-### Step 10 — Slack post
+### Step 10 — Discord post
 
 > *Monthly health audit — {client_name}*
 > Score: {X}/100

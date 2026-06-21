@@ -77,7 +77,7 @@ The `naming-check` hook enforces this before any create_campaign, create_adset, 
 
 ## Guardrail Rules
 
-### Requires Slack approval before execution
+### Requires Discord approval before execution
 - Any single budget increase > $500/day
 - Any new campaign launch with daily budget > $200
 - Any action outside normal operating hours (9 PM – 6 AM client timezone)
@@ -89,7 +89,7 @@ The `naming-check` hook enforces this before any create_campaign, create_adset, 
 - Scaling budget by ≤ 20% on qualifying adsets
 - Generating reports and sending them
 - Saving data to Supabase
-- Sending Slack digest messages
+- Sending Discord digest messages
 
 ### Absolute blocks (never do these without explicit written instruction)
 - Delete any campaign, adset, or ad (archive instead)
@@ -129,9 +129,9 @@ All client-facing reports (`/pre-audit`, `/audit`, `/before-after`, `/report`, `
 
 ## Error Handling
 
-- Meta API errors: log the full error (code, type, fbtrace_id) to Supabase `error_log`, notify Slack, do not retry automatically
-- Budget guard trips: send Slack approval request, wait for response, do not proceed
-- Pixel not firing: block conversion campaign launch, report to Slack
+- Meta API errors: log the full error (code, type, fbtrace_id) to Supabase `error_log`, notify Discord, do not retry automatically
+- Budget guard trips: send Discord approval request, wait for response, do not proceed
+- Pixel not firing: block conversion campaign launch, report to Discord
 - Missing client data: halt and ask for the missing field — do not guess
 
 ---

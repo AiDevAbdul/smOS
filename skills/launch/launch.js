@@ -402,7 +402,7 @@ async function main() {
 
   // Validation: brief must be approved if executing
   if (execute && brief.approval?.status !== "approved") {
-    console.error(`Cannot --execute: strategy_brief.approval.status is '${brief.approval?.status || "pending"}'. Get Slack approval first.`);
+    console.error(`Cannot --execute: strategy_brief.approval.status is '${brief.approval?.status || "pending"}'. Get Discord approval first.`);
     process.exit(3);
   }
   if (execute && isTbd(profile.accounts?.ad_account_id)) {
@@ -445,7 +445,7 @@ async function main() {
       generated_at: new Date().toISOString(),
       brief_phase: plan.live_phase.phase,
       created,
-      next: created.errors.length ? "review errors before activation" : `reply 'activate' in Slack to set PAUSED → ACTIVE`,
+      next: created.errors.length ? "review errors before activation" : `reply 'activate' in Discord to set PAUSED → ACTIVE`,
     }, null, 2));
     console.error(`[launch] wrote ${logPath}`);
   }
@@ -461,7 +461,7 @@ async function main() {
     naming_issues: nameIssues.length,
     created: created ? { campaigns: created.campaigns.length, adsets: created.adsets.length, ads: created.ads.length, errors: created.errors.length } : null,
     next: execute
-      ? (created?.errors.length ? "review campaign_log.json errors" : "reply 'activate' in Slack to flip PAUSED → ACTIVE")
+      ? (created?.errors.length ? "review campaign_log.json errors" : "reply 'activate' in Discord to flip PAUSED → ACTIVE")
       : "review launch_plan.json, then rerun with --execute",
   };
   console.log(JSON.stringify(summary, null, 2));

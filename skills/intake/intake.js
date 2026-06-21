@@ -101,7 +101,7 @@ function blankAnswers(slug) {
       brand_colors: [],
     },
     approvals: {
-      channel: "slack",
+      channel: "discord",
       daily_cap: 500,
       extra_rules: [],
     },

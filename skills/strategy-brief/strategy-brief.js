@@ -29,7 +29,7 @@ const ROOT = resolve(__dirname, "../..");
 loadEnv();
 
 const DEFAULT_BUDGET_SPLIT = { cold_pct: 0.6, warm_pct: 0.25, lal_pct: 0.15 };
-const ADSET_LARGE_DAILY = 200; // > this triggers Slack approval per global guardrails
+const ADSET_LARGE_DAILY = 200; // > this triggers Discord approval per global guardrails
 
 function loadJsonIfExists(path) {
   if (!existsSync(path)) return null;
@@ -293,7 +293,7 @@ function renderMarkdown(brief, profile) {
   lines.push(`**Monthly budget:** ${brief.budget_allocation.monthly_budget}`);
   lines.push(`**Daily total:** ${brief.budget_allocation.daily_total}`);
   lines.push(``);
-  lines.push(`> Reply 'approve' in Slack to lock this brief, or 'reject [reason]' to revise.`);
+  lines.push(`> Reply 'approve' in Discord to lock this brief, or 'reject [reason]' to revise.`);
   lines.push(``);
 
   lines.push(`## Objective hierarchy`);
@@ -407,7 +407,7 @@ async function main() {
     calendar,
     assumptions,
     excluded_angles: excluded,
-    approval: { status: "pending", approved_by: null, approved_at: null, slack_message_ts: null },
+    approval: { status: "pending", approved_by: null, approved_at: null, discord_message_id: null },
   };
 
   const jsonPath = resolve(dir, "strategy_brief.json");
@@ -428,7 +428,7 @@ async function main() {
     assumptions: brief.assumptions.length,
     json: jsonPath,
     md: mdPath,
-    next: "post strategy_brief.md to Slack for approval, then run /creative",
+    next: "post strategy_brief.md to Discord for approval, then run /creative",
   }, null, 2));
 }
 

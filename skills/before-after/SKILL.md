@@ -56,7 +56,7 @@ Add a 2-sentence headline above the table: "Since {baseline_date}, {client} has 
 - Insert into Supabase `reports`: `type: 'before_after'`, `summary_json` with all delta values, `created_at`
 - Optionally upload to Drive (if `drive_folder_id` set)
 
-### Step 7 — Slack post
+### Step 7 — Discord post
 
 > *Before/After — {client_name}*
 > {headline_summary}
@@ -70,14 +70,14 @@ Add a 2-sentence headline above the table: "Since {baseline_date}, {client} has 
 ## Error Handling
 
 - Missing baseline → halt with explicit message: "No baseline snapshot for {slug}. Run `/audit` first to capture one."
-- Page insights API fails → degrade gracefully: render the rows we have, mark missing as "—", flag in Slack
+- Page insights API fails → degrade gracefully: render the rows we have, mark missing as "—", flag in Discord
 - Pixel events unavailable → mark "—" with note "pixel not connected at baseline"
 
 ## Token Efficiency
 
 - Read once: baseline JSON, then a single live pull
 - Template fill, no LLM generation in the body
-- One PDF, one Slack, one DB row
+- One PDF, one Discord post, one DB row
 
 ## PDF Rendering
 

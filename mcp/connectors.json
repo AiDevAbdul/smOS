@@ -5,12 +5,12 @@
       "args": ["-y", "@supabase/mcp-server-supabase@latest", "--supabase-url", "${SUPABASE_URL}", "--supabase-key", "${SUPABASE_SERVICE_KEY}"],
       "description": "smOS data persistence — clients, metrics, logs, reports"
     },
-    "slack": {
+    "discord": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "args": ["-y", "mcp-discord-webhooks"],
       "env": {
-        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
-        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+        "DISCORD_WEBHOOK_ALERTS": "${DISCORD_WEBHOOK_ALERTS}",
+        "DISCORD_WEBHOOK_APPROVALS": "${DISCORD_WEBHOOK_APPROVALS}"
       },
       "description": "Notifications, daily digests, and approval requests"
     },

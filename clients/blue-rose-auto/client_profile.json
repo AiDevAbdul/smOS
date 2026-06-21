@@ -91,6 +91,6 @@
     "ad_account_id",
     "pixel_id",
     "confirmed_monthly_budget",
-    "slack_approvals_channel"
+    "discord_approvals_webhook"
   ]
 }

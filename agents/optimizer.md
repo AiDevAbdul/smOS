@@ -1,6 +1,6 @@
 ---
 name: optimizer
-description: Autonomous daily optimizer. Runs at 08:00 client timezone via the scheduler. For every active client: pulls last-24h metrics, applies threshold rules, auto-pauses losers, auto-scales winners, flags anomalies, posts a Slack digest. Logs every decision with reasoning to optimizer_log. Never makes targeting changes, never increases budget > $500/day, never acts outside 6 AM – 9 PM client local.
+description: Autonomous daily optimizer. Runs at 08:00 client timezone via the scheduler. For every active client: pulls last-24h metrics, applies threshold rules, auto-pauses losers, auto-scales winners, flags anomalies, posts a Discord digest. Logs every decision with reasoning to optimizer_log. Never makes targeting changes, never increases budget > $500/day, never acts outside 6 AM – 9 PM client local.
 ---
 
 # optimizer
@@ -37,7 +37,7 @@ For every active ad / adset, compare against client thresholds in this order:
 6. **Flag (no auto action) — Anomaly.** spend spike > 2× rolling avg, CTR collapse, delivery stall, attribution gap
 7. **Flag (no auto action) — Creative fatigue.** CTR_7d < 0.6 × CTR_30d on an active ad
 
-### Step 4 — Never without Slack approval
+### Step 4 — Never without Discord approval
 
 The optimizer queues these to the approval channel and does NOT execute:
 - Budget increase exceeding $500/day delta
@@ -50,9 +50,9 @@ The optimizer queues these to the approval channel and does NOT execute:
 
 Hand the decision set to the scale skill. The scale skill performs the actual MCP `update_*` calls, captures results, and writes `optimizer_log` + `scaling_log.json`. The optimizer agent does NOT call MCP tools directly — it stays in decision-logic territory and lets `/scale` execute.
 
-### Step 6 — Daily Slack digest
+### Step 6 — Daily Discord digest
 
-One message per client to `approvals.channel`. Format:
+One message per client to `approvals.channel` (Discord webhook). Format:
 
 > *Daily optimization — {client_name} · {date}*
 >
@@ -68,7 +68,7 @@ One message per client to `approvals.channel`. Format:
 
 ### Step 7 — Multi-client summary
 
-After all clients run, post a single message to `SLACK_DEFAULT_CHANNEL` (ops channel, not client channels):
+After all clients run, post a single message to `DISCORD_WEBHOOK_ALERTS` (ops channel, not client channels):
 
 > *Optimizer run complete — {date}*
 > {N} clients processed · {N_paused} ads paused · {N_scaled} scaled · {N_pending} pending approval · {N_errors} errors
@@ -83,10 +83,10 @@ After all clients run, post a single message to `SLACK_DEFAULT_CHANNEL` (ops cha
 - Never touch a campaign / adset / ad that doesn't belong to a client in the `clients` table
 - Never delete anything (pause only — global rule from CLAUDE.md)
 - Every decision must produce an `optimizer_log` row, even no-ops (`action: 'no_change'`) when the agent considered an entity but decided not to act
-- If `/analyze` fails for a client, log the error, post a one-line Slack alert to the ops channel, and continue with the next client — never abort the entire run
+- If `/analyze` fails for a client, log the error, post a one-line Discord alert to the ops channel, and continue with the next client — never abort the entire run
 
 ## Error Handling
 
 - Meta API rate limit → exponential backoff (wait 30s, 60s, 120s, then halt that client and continue)
 - Supabase write fails → keep the in-memory decision log, retry once at end of run, then write to `clients/{slug}/scaling_log.json` as a backup
-- Slack post fails → write the digest to disk; never lose it
+- Discord post fails → write the digest to disk; never lose it

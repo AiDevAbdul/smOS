@@ -1,6 +1,6 @@
 ---
 name: strategy-brief
-description: Use this skill when the user asks to build a campaign strategy brief or synthesize intake/audit/competitor intel into a launch plan (typically via `/strategy-brief {slug}`). Produces the brief that gates Phase 4 — requires explicit human approval in Slack before `/launch` can run.
+description: Use this skill when the user asks to build a campaign strategy brief or synthesize intake/audit/competitor intel into a launch plan (typically via `/strategy-brief {slug}`). Produces the brief that gates Phase 4 — requires explicit human approval in Discord before `/launch` can run.
 ---
 
 # /strategy-brief — Campaign Strategy Synthesis
@@ -12,7 +12,7 @@ description: Use this skill when the user asks to build a campaign strategy brie
 - `clients/{slug}/competitor_intel.json`
 - `clients/{slug}/audience_map.json`
 - `clients/{slug}/CLAUDE.md` — for client-specific KPI overrides
-- Slack connector — for posting the brief and listening for the approval reply
+- Discord connector — for posting the brief and listening for the approval reply
 - Supabase connector — for `strategy_briefs` row
 
 Halt if any of the four input artifacts is missing — surface which one and which skill produces it.
@@ -48,7 +48,7 @@ Allocate `monthly_budget_low` across the objective hierarchy:
 - 25% retargeting warm
 - 15% lookalike test
 
-Translate to daily budgets per adset. Flag any single adset daily budget > $200 (triggers Slack approval per global guardrails).
+Translate to daily budgets per adset. Flag any single adset daily budget > $200 (triggers Discord approval per global guardrails).
 
 ### Pass 4 — Audience priority order
 
@@ -104,16 +104,16 @@ Week-by-week table:
      "excluded_angles": ["..."]
    }
    ```
-2. Render `clients/{slug}/strategy_brief.md` — a human-readable version of the same content, suitable to post to Slack and paste into Google Drive.
+2. Render `clients/{slug}/strategy_brief.md` — a human-readable version of the same content, suitable to post to Discord and paste into Google Drive.
 
-### Pass 9 — Slack approval workflow
+### Pass 9 — Discord approval workflow
 
 **This is a hard gate. Phase 4 cannot proceed until approval is recorded.**
 
-1. Post `strategy_brief.md` content to the client's Slack channel (from `approvals.channel` in the profile). Prefix with: `*Strategy brief for {name} — reply 'approve' to lock in, or 'reject [reason]' to revise.*`
-2. Poll the channel (or use a Slack-event hook if wired) for a reply from an authorized approver containing `approve` or `reject`.
+1. Post `strategy_brief.md` content to the Discord approvals webhook (`DISCORD_WEBHOOK_APPROVALS`). Prefix with: `**Strategy brief for {name} — reply 'approve' to lock in, or 'reject [reason]' to revise.**`
+2. Wait for the user to confirm approval in this session (Discord webhooks are outbound-only; the human replies here or in Discord and confirms verbally).
 3. On **approve**:
-   - Insert a row into Supabase `strategy_briefs`: `client_id`, `brief` (full JSON), `status: 'approved'`, `approved_by`, `approved_at`, `slack_message_ts`
+   - Insert a row into Supabase `strategy_briefs`: `client_id`, `brief` (full JSON), `status: 'approved'`, `approved_by`, `approved_at`, `discord_message_id`
    - Print: `Strategy brief approved by {user}. Run /creative next.`
 4. On **reject [reason]**:
    - Capture the reason
@@ -126,13 +126,13 @@ Week-by-week table:
 
 - `clients/{slug}/strategy_brief.json`
 - `clients/{slug}/strategy_brief.md`
-- Slack message in client channel
+- Discord message in approvals channel
 - Row in `strategy_briefs` table (only after approval)
 
 ## Error Handling
 
 - Missing input artifact → halt and tell the user exactly which skill to run first (`/intake`, `/audit`, `/research`, `/audience-map`)
-- Slack post fails → save the brief locally, surface the channel ID + error, do not record approval state
+- Discord post fails → save the brief locally, surface the webhook URL + error, do not record approval state
 - Conflicting KPI signals between profile and audit → never silently override; surface both in `assumptions`
 
 ## Token Efficiency

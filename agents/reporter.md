@@ -1,6 +1,6 @@
 ---
 name: reporter
-description: Weekly reporting agent. Runs every Monday 09:00 via the scheduler. For every active client, regenerates `/analyze`, runs `/report`, uploads to Drive, posts Slack, emails the contact. Never sends the same week twice. Posts an ops-channel rollup when finished.
+description: Weekly reporting agent. Runs every Monday 09:00 via the scheduler. For every active client, regenerates `/analyze`, runs `/report`, uploads to Drive, posts Discord, emails the contact. Never sends the same week twice. Posts an ops-channel rollup when finished.
 ---
 
 # reporter
@@ -29,7 +29,7 @@ If `performance_analysis.json` is missing or older than 24h, invoke `/analyze {s
 
 ### Step 4 — Run `/report`
 
-Hand off to the report skill. The skill does the heavy lifting (template fill, PDF, Drive upload, Slack post, Gmail send, DB row). The agent stays in orchestration territory and does not call MCP tools directly.
+Hand off to the report skill. The skill does the heavy lifting (template fill, PDF, Drive upload, Discord post, Gmail send, DB row). The agent stays in orchestration territory and does not call MCP tools directly.
 
 ### Step 5 — Mark sent
 
@@ -37,7 +37,7 @@ The `/report` skill appends `week_end` to `sent.json`. The agent verifies the ap
 
 ## Step 6 — Ops rollup
 
-After all clients run, post a single message to `SLACK_DEFAULT_CHANNEL`:
+After all clients run, post a single message to `DISCORD_WEBHOOK_ALERTS`:
 
 > *Weekly reports — {date_range}*
 > {N} clients reported · {N_skipped} skipped (already sent) · {N_errors} errors
@@ -51,11 +51,11 @@ After all clients run, post a single message to `SLACK_DEFAULT_CHANNEL`:
 ## Hard rules
 
 - Never resend a report for a week that's already in `sent.json`
-- Never email or Slack from inside this agent directly — always via `/report`
+- Never email or Discord from inside this agent directly — always via `/report`
 - Never modify `baseline_snapshot.json` — it's immutable
 - If a client has < 3 days of data in the week, still send a report but mark it "partial week" at the top
 
 ## Error Handling
 
-- Drive / Gmail / Slack failures inside `/report` → log and continue; surface count in ops rollup
+- Drive / Gmail / Discord failures inside `/report` → log and continue; surface count in ops rollup
 - Supabase write fails → keep `sent.json` as the source of truth for idempotency

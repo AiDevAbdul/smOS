@@ -43,19 +43,18 @@ if (supabaseUrl && supabaseKey) {
   }
 }
 
-const slackToken = process.env.SLACK_BOT_TOKEN;
-const channel = profile?.approvals?.channel || process.env.SLACK_DEFAULT_CHANNEL;
-if (slackToken && channel) {
+const discordWebhook = process.env.DISCORD_WEBHOOK_ALERTS;
+if (discordWebhook) {
   const budget = row.daily_budget_cents ? `$${(row.daily_budget_cents / 100).toFixed(2)}/day` : "lifetime budget";
-  const text = `🚀 Campaign created (PAUSED) — *${row.name}* · ${row.objective} · ${budget} · client \`${slug || "unknown"}\``;
+  const content = `🚀 Campaign created (PAUSED) — **${row.name}** · ${row.objective} · ${budget} · client \`${slug || "unknown"}\``;
   try {
-    await fetch("https://slack.com/api/chat.postMessage", {
+    await fetch(discordWebhook, {
       method: "POST",
-      headers: { Authorization: `Bearer ${slackToken}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ channel, text }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
     });
   } catch (e) {
-    process.stderr.write(`[post-launch] slack post failed: ${e.message}\n`);
+    process.stderr.write(`[post-launch] discord post failed: ${e.message}\n`);
   }
 }
 

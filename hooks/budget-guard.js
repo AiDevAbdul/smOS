@@ -20,17 +20,17 @@ const clientDailyCap = monthlyHigh ? monthlyHigh / 30 : GLOBAL_DAILY_CAP_USD;
 
 if (toolName.includes("create_campaign")) {
   if (proposedUSD > clientDailyCap) {
-    block(`budget-guard BLOCKED: daily $${proposedUSD.toFixed(2)} exceeds client cap $${clientDailyCap.toFixed(2)} (monthly_budget_high/30). Send Slack approval request before retrying.`);
+    block(`budget-guard BLOCKED: daily $${proposedUSD.toFixed(2)} exceeds client cap $${clientDailyCap.toFixed(2)} (monthly_budget_high/30). Post Discord approval request before retrying.`);
   }
   allow(`budget-guard: $${proposedUSD.toFixed(2)} ≤ cap $${clientDailyCap.toFixed(2)}`);
 }
 
 if (toolName.includes("update_campaign")) {
   if (proposedUSD > clientDailyCap * 2) {
-    block(`budget-guard BLOCKED: proposed $${proposedUSD.toFixed(2)} is >2× client daily cap. Requires explicit Slack approval.`);
+    block(`budget-guard BLOCKED: proposed $${proposedUSD.toFixed(2)} is >2× client daily cap. Requires explicit Discord approval.`);
   }
   if (proposedUSD > SINGLE_INCREASE_CAP_USD) {
-    block(`budget-guard BLOCKED: single increase to $${proposedUSD.toFixed(2)}/day exceeds $${SINGLE_INCREASE_CAP_USD} global threshold. Slack approval required.`);
+    block(`budget-guard BLOCKED: single increase to $${proposedUSD.toFixed(2)}/day exceeds $${SINGLE_INCREASE_CAP_USD} global threshold. Discord approval required.`);
   }
   allow(`budget-guard: update $${proposedUSD.toFixed(2)} within thresholds`);
 }

@@ -50,7 +50,7 @@ Tighter frequency cap because the served population is small (30mi radius around
 
 ## Approvals
 
-- All approvals route to **this planning thread** until a Slack workspace is set up.
+- All approvals route to **this planning thread** until a Discord webhook is set up.
 - Pre-launch artifacts (strategy brief, ad copy, campaign JSON) require human "approve" before `/launch` is allowed to fire MCP create calls.
 
 ## Blockers Before Going Live
@@ -60,6 +60,6 @@ Tighter frequency cap because the served population is small (30mi radius around
 - Ad Account ID (`act_…`)
 - Pixel ID
 - Confirmed monthly ad budget
-- Slack workspace + #blue-rose-approvals channel (or written confirmation that this thread stays the approval channel)
+- Discord approvals webhook URL (or written confirmation that this thread stays the approval channel)
 
 Until all six land, **no `meta_create_*` calls are permitted**. All output stays as planning artifacts in `clients/blue-rose-auto/`.
