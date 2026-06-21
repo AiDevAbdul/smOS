@@ -1,0 +1,96 @@
+{
+  "niche": "automotive",
+  "client_name": "Blue Rose Auto",
+  "title": "Meta Ad Strategy Playbook",
+  "cards": [
+    {
+      "icon": "🔧",
+      "title": "Mechanic / Repair",
+      "bullets": [
+        ["Hook", "Lead with a pain point — \"Is your check engine light on?\" or \"Tired of overpriced dealership repairs?\""],
+        ["Format", "Short video (before/after inspection) performs best"],
+        ["CTA", "\"Book Now\" or \"Get a Free Estimate\""],
+        ["Offer", "Free multi-point inspection or $X off first service drives clicks"],
+        ["Angle", "Local trust — show your team, shop, real reviews"]
+      ]
+    },
+    {
+      "icon": "🚗",
+      "title": "Collision / Body Shop",
+      "bullets": [
+        ["Hook", "\"We work directly with all insurance companies\""],
+        ["Format", "Before/after carousel — dramatic transformations win"],
+        ["CTA", "\"Free Estimate\" is the #1 CTA in this category"],
+        ["Offer", "Free rental car / free tow partnership adds perceived value"],
+        ["Angle", "Insurance claim expertise removes customer fear"]
+      ]
+    },
+    {
+      "icon": "✨",
+      "title": "Auto Detailing",
+      "bullets": [
+        ["Hook", "Transformation content — dirty vs. clean is highly shareable"],
+        ["Format", "Video reels get the most organic boost; use for ads too"],
+        ["CTA", "\"Book Today\" + urgency (\"Only 3 slots left this week\")"],
+        ["Offer", "Package bundles (interior + exterior) with a discount perform well"],
+        ["Angle", "Mobile detailing angle (\"We come to you\") is a strong differentiator"]
+      ]
+    },
+    {
+      "icon": "🎨",
+      "title": "Vehicle Wraps",
+      "bullets": [
+        ["Hook", "\"Turn your vehicle into a moving billboard\""],
+        ["Format", "Portfolio carousel — show your best work"],
+        ["CTA", "\"Get a Free Quote\" — high-consideration purchase"],
+        ["Offer", "Lead with portfolio + social proof, not discounts"],
+        ["Angle", "Target local business owners for commercial wraps (fleet)"]
+      ]
+    },
+    {
+      "icon": "🪟",
+      "title": "Window Tinting",
+      "bullets": [
+        ["Hook", "\"Beat the heat. Protect your interior.\""],
+        ["Format", "Static image — clear before/after with shade comparison"],
+        ["CTA", "\"Book Now\" with same-day availability"],
+        ["Offer", "Seasonal promotions (summer heat) drive urgency"],
+        ["Angle", "UV protection + privacy + energy savings (multiple pain points)"]
+      ]
+    },
+    {
+      "icon": "💎",
+      "title": "Ceramic Coating",
+      "bullets": [
+        ["Hook", "\"Your car's paint deserves better than wax\""],
+        ["Format", "High-quality video showing water beading / gloss"],
+        ["CTA", "\"Get a Free Consultation\" — high-ticket, educate first"],
+        ["Offer", "Limited-time pricing or bundle with PPF"],
+        ["Angle", "Long-term value (\"Protects for 5+ years\") justifies price"]
+      ]
+    },
+    {
+      "icon": "🛡️",
+      "title": "Paint Protection Film (PPF)",
+      "bullets": [
+        ["Hook", "\"Protect your investment from day one\""],
+        ["Format", "Side-by-side comparison video or scratch demo"],
+        ["CTA", "\"Get a Free Quote\" — PPF is a premium, researched purchase"],
+        ["Offer", "Bundle PPF + ceramic coating for package pricing"],
+        ["Angle", "New car owners are the #1 target — catch them early"]
+      ]
+    }
+  ],
+  "highlight": {
+    "icon": "🚀",
+    "title": "Where to Start",
+    "bullets": [
+      ["Step 1", "Launch with detailing + mechanic ads — highest ad volume, most tested playbooks"],
+      ["Step 2", "Before/after video content is the #1 winning format across all categories"],
+      ["Step 3", "Run a lead-gen ad with \"Free Estimate / Free Inspection\" offer"],
+      ["Step 4", "Target: Springfield/Eugene OR, 25–55, vehicle owners, homeowners"],
+      ["Step 5", "Bundle services (e.g. tint + ceramic + PPF) for higher-ticket packages"],
+      ["Budget", "Start at $15–25/day per service category, scale what converts"]
+    ]
+  }
+}

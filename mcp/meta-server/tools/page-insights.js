@@ -9,8 +9,8 @@ export const tools = [
         metrics: {
           type: "array",
           items: { type: "string" },
-          description: "Metrics to pull. Default: fan count, reach, engagement, views",
-          default: ["page_fans", "page_fan_adds", "page_fan_removes", "page_impressions_unique", "page_post_engagements", "page_views_total"],
+          description: "Page insight metrics. Default uses the post-2024 survivors (page_fans/page_fan_adds/page_fan_removes/page_views_total were deprecated). Follower totals come from the page node's fan_count/followers_count, not insights.",
+          default: ["page_impressions_unique", "page_post_engagements", "page_daily_follows_unique", "page_fan_adds_unique"],
         },
         period: { type: "string", enum: ["day", "week", "month"], default: "day" },
         days: { type: "number", description: "How many days to look back (default 28)", default: 28 },
@@ -51,8 +51,8 @@ export const tools = [
         metrics: {
           type: "array",
           items: { type: "string" },
-          description: "Default: reach, accounts_engaged, follower_count, profile_views, website_clicks (impressions deprecated Apr 2025)",
-          default: ["reach", "accounts_engaged", "follower_count", "profile_views", "website_clicks"],
+          description: "Account-level IG metrics requested with metric_type=total_value. Default: reach, accounts_engaged, total_interactions. (profile_views, website_clicks and impressions were deprecated Jan–Apr 2025.) follower_count is pulled separately as a time series.",
+          default: ["reach", "accounts_engaged", "total_interactions"],
         },
         period: { type: "string", enum: ["day", "week", "month", "lifetime"], default: "day" },
         days: { type: "number", default: 28 },
@@ -139,14 +139,21 @@ export const tools = [
 export async function handle(toolName, args, client) {
   switch (toolName) {
     case "get_page_insights": {
-      const { page_id, metrics = ["page_fans", "page_fan_adds", "page_fan_removes", "page_impressions_unique", "page_post_engagements", "page_views_total"], period = "day", days = 28 } = args;
-      const since = Math.floor(Date.now() / 1000) - days * 86400;
-      return client.get(`/${page_id}/insights`, {
-        metric: metrics.join(","),
-        period,
-        since,
-        until: Math.floor(Date.now() / 1000),
-      });
+      const { page_id, metrics = ["page_impressions_unique", "page_post_engagements", "page_daily_follows_unique", "page_fan_adds_unique"], period = "day", days = 28 } = args;
+      const until = Math.floor(Date.now() / 1000);
+      const since = until - days * 86400;
+      // page_fans is deprecated as an insight; follower totals now come from the
+      // page node's fan_count / followers_count fields. Fetch both and merge.
+      const [insights, node] = await Promise.all([
+        client.get(`/${page_id}/insights`, { metric: metrics.join(","), period, since, until })
+          .catch((e) => ({ error: e.message, data: [] })),
+        client.get(`/${page_id}`, { fields: "fan_count,followers_count" })
+          .catch((e) => ({ error: e.message })),
+      ]);
+      return {
+        ...insights,
+        page_followers: { fan_count: node?.fan_count ?? null, followers_count: node?.followers_count ?? null },
+      };
     }
 
     case "get_post_insights": {
@@ -181,14 +188,19 @@ export async function handle(toolName, args, client) {
     }
 
     case "get_instagram_insights": {
-      const { ig_user_id, metrics = ["reach", "accounts_engaged", "follower_count", "profile_views", "website_clicks"], period = "day", days = 28 } = args;
-      const since = Math.floor(Date.now() / 1000) - days * 86400;
-      return client.get(`/${ig_user_id}/insights`, {
-        metric: metrics.join(","),
-        period,
-        since,
-        until: Math.floor(Date.now() / 1000),
-      });
+      const { ig_user_id, metrics = ["reach", "accounts_engaged", "total_interactions"], period = "day", days = 28 } = args;
+      const until = Math.floor(Date.now() / 1000);
+      const since = until - days * 86400;
+      // Account-level IG metrics now REQUIRE metric_type=total_value; follower_count
+      // is a time-series metric that must be requested WITHOUT metric_type, so split
+      // into two calls. profile_views / website_clicks were deprecated (Jan–Apr 2025).
+      const [totals, follower] = await Promise.all([
+        client.get(`/${ig_user_id}/insights`, { metric: metrics.join(","), period, metric_type: "total_value", since, until })
+          .catch((e) => ({ error: e.message, data: [] })),
+        client.get(`/${ig_user_id}/insights`, { metric: "follower_count", period: "day", since, until })
+          .catch((e) => ({ error: e.message, data: [] })),
+      ]);
+      return { totals: totals?.data ?? totals, follower_count: follower?.data ?? follower };
     }
 
     case "get_page_completeness": {

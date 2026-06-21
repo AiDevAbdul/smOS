@@ -27,6 +27,18 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | Weekly client report | `/report` |
 | Show before/after | `/before-after` |
 | Full monthly review | `/monthly-review` |
+| Publish / run content calendar | `/publish` |
+| Conversions API (CAPI) setup | `/capi-setup` |
+| Product catalog / DPA setup | `/catalog` |
+| Lead forms + lead retrieval | `/leads` |
+| Automated optimizer rules | `/rules` |
+| Competitor creative intel | `/creative-intel` |
+| **Organic content strategy + calendar** | `/content-plan` |
+| **Unified social inbox (comments/DMs/mentions)** | `/inbox` |
+| **Incrementality / conversion lift** | `/attribution` |
+| **Social listening + organic competitor benchmark** | `/listening` |
+| **Creative asset library (DAM)** | `/assets` |
+| **Client-facing white-label dashboard** | `/portal` |
 
 ---
 
@@ -39,6 +51,8 @@ You manage real ad accounts with real budgets. Every action you take that touche
 - **Default placements:** Facebook Feed, Instagram Feed, Instagram Stories, Instagram Reels
 - **Default billing event:** IMPRESSIONS
 - **Special ad categories:** always set to `[]` unless client profile specifies otherwise
+- **AI-content disclosure:** any ad built from GenAI imagery/video MUST set `ai_disclosed: true`. The `ai-disclosure` guard (in `scripts/lib/guards.js`) fail-closed blocks undisclosed AI creatives — Meta rejects them (since Mar 2026).
+- **Per-client tokens:** organic actions (publish, inbox, threads) resolve a per-client token via `scripts/lib/tokens.js` (`META_PAGE_TOKEN_<SLUG>` etc.) — never assume the global page token in a multi-client setup.
 
 ---
 

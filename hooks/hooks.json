@@ -2,7 +2,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "meta_create_campaign|meta_update_campaign",
+        "matcher": "mcp__.*meta.*(create_campaign|update_campaign|update_adset)",
         "hooks": [
           {
             "type": "command",
@@ -12,7 +12,7 @@
         ]
       },
       {
-        "matcher": "meta_create_ad",
+        "matcher": "mcp__.*meta.*(create_ad$|create_ad_creative)",
         "hooks": [
           {
             "type": "command",
@@ -27,7 +27,7 @@
         ]
       },
       {
-        "matcher": "meta_create_campaign|meta_create_adset|meta_create_ad",
+        "matcher": "mcp__.*meta.*(create_campaign|create_adset|create_ad$)",
         "hooks": [
           {
             "type": "command",
@@ -37,7 +37,7 @@
         ]
       },
       {
-        "matcher": "meta_create_campaign",
+        "matcher": "mcp__.*meta.*create_campaign",
         "hooks": [
           {
             "type": "command",
@@ -45,11 +45,21 @@
             "timeout": 30
           }
         ]
+      },
+      {
+        "matcher": "mcp__.*meta.*(delete|destroy|remove|update_campaign|update_adset)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/destructive-guard.js",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "meta_create_campaign",
+        "matcher": "mcp__.*meta.*create_campaign",
         "hooks": [
           {
             "type": "command",

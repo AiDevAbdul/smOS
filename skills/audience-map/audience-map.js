@@ -23,6 +23,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { audienceMap as audienceMapSchema } from "../../schemas/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -335,11 +336,12 @@ async function main() {
   const retargeting = buildRetargetingLayers(profile);
   const exclusions = buildExclusions(profile);
 
-  const map = {
+  const rawMap = {
     client_slug: slug,
     generated_at: new Date().toISOString(),
     mode: offline ? "offline_structure_only" : "live",
     geo: {
+      primary: geoTargets[0] || (profile.location?.city ? `${profile.location.city}, ${profile.location.state || ""}`.trim() : null) || profile.location?.country || null,
       targets: geoTargets,
       radius: profile.location?.service_radius_miles || null,
       center: profile.location?.city ? `${profile.location.city}, ${profile.location.state || ""}`.trim() : null,
@@ -362,6 +364,9 @@ async function main() {
       issues: [],
     },
   };
+  // Emit in canonical shape (clusters / geo.primary / cluster.interest_stack) so
+  // /launch and /strategy-brief read the field names they expect.
+  const map = audienceMapSchema.normalize(rawMap);
 
   if (clusters.length < MIN_CLUSTERS && !offline) {
     map.diagnostics.issues.push(`Fewer than ${MIN_CLUSTERS} clusters assembled — broaden product description or add explicit interests in profile.audience.interests`);
@@ -369,6 +374,10 @@ async function main() {
   if (isTbd(acct.ad_account_id)) {
     map.diagnostics.issues.push("ad_account_id is TBD — ran in offline mode; rerun once real ID is set");
   }
+  // Soft schema check — surface contract gaps in diagnostics without hard-failing
+  // an offline/structure-only run. The launch-side gate enforces hard.
+  const v = audienceMapSchema.validate(map);
+  if (!v.ok) map.diagnostics.issues.push(...v.errors.map((e) => `schema: ${e}`));
 
   const outPath = resolve(ROOT, "clients", slug, "audience_map.json");
   writeFileSync(outPath, JSON.stringify(map, null, 2));

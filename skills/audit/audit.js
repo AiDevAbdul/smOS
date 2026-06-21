@@ -19,6 +19,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { baselineSnapshot as baselineSchema } from "../../schemas/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -441,6 +442,27 @@ async function main() {
 
   console.error(`[audit] wrote ${rawPath}`);
   console.error(`[audit] wrote ${reportPath}`);
+
+  // Canonical baseline_snapshot.json — the artifact /before-after compares against.
+  // Locked (immutable_locked_at) ONLY when real FB engagement was captured; an
+  // unlocked snapshot makes /before-after refuse to run (its safety gate).
+  const fbReal = !facebook?.error && Number.isFinite(facebook?.avg_engagement_rate);
+  const baselinePath = resolve(ROOT, "clients", slug, "baseline_snapshot.json");
+  if (existsSync(baselinePath)) {
+    console.error(`[audit] baseline_snapshot.json already exists — baselines are immutable, NOT overwriting`);
+  } else {
+    const snapshot = baselineSchema.normalize({
+      client_slug: slug,
+      captured_at: data.generated_at,
+      immutable_locked_at: fbReal ? new Date().toISOString() : null,
+      facebook,
+      instagram,
+      creative_quality: { score_out_of_10: data.creative?.overall_score ?? null },
+      paid: { pixel_events_per_month: paid?.pixel_events_per_month ?? null },
+    });
+    writeFileSync(baselinePath, JSON.stringify(snapshot, null, 2));
+    console.error(`[audit] wrote ${baselinePath}${fbReal ? " (locked)" : " (UNLOCKED — re-run with Meta access to lock)"}`);
+  }
   console.log(JSON.stringify({
     slug,
     health_score: healthScore,

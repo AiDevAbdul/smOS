@@ -1,6 +1,6 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-06-20T20:40:29.671Z",
+  "generated_at": "2026-06-21T11:38:44.692Z",
   "live_phase": {
     "phase": "A",
     "start_day": 0,
@@ -160,7 +160,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PAIN'"
+                "no ad_copy angle matched angle_id='PAIN'"
               ]
             },
             {
@@ -192,7 +192,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'ASPIRATION'"
+                "no ad_copy angle matched angle_id='ASPIRATION'"
               ]
             },
             {
@@ -224,7 +224,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PROOF'"
+                "no ad_copy angle matched angle_id='PROOF'"
               ]
             }
           ],
@@ -399,7 +399,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PAIN'"
+                "no ad_copy angle matched angle_id='PAIN'"
               ]
             },
             {
@@ -431,7 +431,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'ASPIRATION'"
+                "no ad_copy angle matched angle_id='ASPIRATION'"
               ]
             },
             {
@@ -463,7 +463,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PROOF'"
+                "no ad_copy angle matched angle_id='PROOF'"
               ]
             }
           ],
@@ -646,7 +646,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PAIN'"
+                "no ad_copy angle matched angle_id='PAIN'"
               ]
             },
             {
@@ -678,7 +678,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'ASPIRATION'"
+                "no ad_copy angle matched angle_id='ASPIRATION'"
               ]
             },
             {
@@ -710,7 +710,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PROOF'"
+                "no ad_copy angle matched angle_id='PROOF'"
               ]
             }
           ],
@@ -861,7 +861,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PAIN'"
+                "no ad_copy angle matched angle_id='PAIN'"
               ]
             },
             {
@@ -893,7 +893,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'ASPIRATION'"
+                "no ad_copy angle matched angle_id='ASPIRATION'"
               ]
             },
             {
@@ -925,7 +925,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PROOF'"
+                "no ad_copy angle matched angle_id='PROOF'"
               ]
             }
           ],
@@ -1076,7 +1076,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PAIN'"
+                "no ad_copy angle matched angle_id='PAIN'"
               ]
             },
             {
@@ -1108,7 +1108,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'ASPIRATION'"
+                "no ad_copy angle matched angle_id='ASPIRATION'"
               ]
             },
             {
@@ -1140,7 +1140,7 @@
               },
               "copy_used": null,
               "warnings": [
-                "no matching ad_copy entry for angle 'PROOF'"
+                "no ad_copy angle matched angle_id='PROOF'"
               ]
             }
           ],

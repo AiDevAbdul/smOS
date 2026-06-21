@@ -1,6 +1,6 @@
 ---
 name: report
-description: Use this skill when the user asks to generate the weekly client report or it's invoked on the Monday 09:00 schedule (typically via `/report {slug}`). Pulls 7-day Meta metrics, compares against baseline + prior week, fills the weekly-report template, generates PDF, uploads to Drive, and sends to Slack + email.
+description: Use this skill when the user asks to generate the weekly client report or it's invoked on the Monday 09:00 schedule (typically via `/report {slug}`). Pulls 7-day Meta metrics, compares against baseline + prior week, fills the weekly-report template, generates PDF, uploads to Drive, and sends to Discord + email.
 ---
 
 # /report — Weekly Client Report
@@ -12,7 +12,7 @@ description: Use this skill when the user asks to generate the weekly client rep
 - `clients/{slug}/performance_analysis.json` — latest analyze output (regenerate via `/analyze` if older than 24h)
 - Supabase `daily_metrics`, `optimizer_log`, `reports` tables
 - `templates/weekly-report.md`
-- Connectors: Slack `chat.postMessage`, Google Drive upload, Gmail send
+- Connectors: Discord webhook, Google Drive upload, Gmail send
 
 ## Workflow
 
@@ -72,20 +72,20 @@ Append `{week_end_date}` to `clients/{slug}/reports/sent.json` so the reporter a
 
 - `clients/{slug}/reports/{date}_weekly.md`
 - `clients/{slug}/reports/{date}_weekly.pdf`
-- Drive upload, Slack post, Gmail send, `reports` row
+- Drive upload, Discord post, Gmail send, `reports` row
 
 ## Error Handling
 
-- Drive upload fails → keep going; Slack mentions "Drive upload failed, attaching PDF inline"
-- Gmail fails → log to `error_log`, surface in Slack message
-- PDF generation fails → ship the markdown instead, flag in Slack
+- Drive upload fails → keep going; Discord mentions "Drive upload failed, attaching PDF inline"
+- Gmail fails → log to `error_log`, surface in Discord message
+- PDF generation fails → ship the markdown instead, flag in Discord
 - Missing baseline → skip the before/after section but still send the report; flag in digest that `/audit` needs to run
 
 ## Token Efficiency
 
 - Pull from Supabase first; only hit Meta for missing days
 - Template fill — no blank-page generation
-- One Gmail / Drive / Slack call per client, never per metric
+- One Gmail / Drive / Discord call per client, never per metric
 
 ## PDF Rendering
 

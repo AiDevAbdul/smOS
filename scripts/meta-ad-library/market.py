@@ -5,6 +5,7 @@ filters to automotive pages only, extracts copy themes, CTAs,
 formats, and generates a strategic HTML report for Blue Rose Auto.
 """
 
+import html as ihtml
 import json
 import os
 import re
@@ -393,7 +394,68 @@ def analyze_category(cat_key: str, cat_info: dict, reports_dir: Path) -> dict:
 
 # ── HTML report ──────────────────────────────────────────────────────────────
 
-def build_html(categories: list[dict], generated: str) -> str:
+NICHES_DIR = Path(__file__).resolve().parent / "niches"
+
+
+def load_niche_playbook(niche: str) -> dict | None:
+    """Load a niche playbook config from niches/<niche>.json, or None if absent."""
+    if not niche:
+        return None
+    path = NICHES_DIR / f"{niche}.json"
+    if not path.exists():
+        return None
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def _card_html(card: dict, extra_class: str = "") -> str:
+    cls = ("strategy-card " + extra_class).strip()
+    icon = ihtml.escape(str(card.get("icon", "")))
+    title = ihtml.escape(str(card.get("title", "")))
+    items = "".join(
+        f"<li><strong>{ihtml.escape(str(label))}:</strong> {ihtml.escape(str(text))}</li>"
+        for label, text in card.get("bullets", [])
+    )
+    return (
+        f'<div class="{cls}"><div class="s-icon">{icon}</div>'
+        f"<h3>{title}</h3><ul>{items}</ul></div>"
+    )
+
+
+def render_strategy_cards(niche: str | None) -> str:
+    """Render the strategy playbook section from a niche config. Degrades to a
+    clearly-labeled generic message when no config exists for the niche, so the
+    report never silently presents one vertical's playbook for another."""
+    pb = load_niche_playbook(niche or "")
+    if not pb:
+        return (
+            '<div class="strategy-section">'
+            '<h2 class="section-title">🎯 Meta Ad Strategy Playbook</h2>'
+            f'<p style="color:#6e6e73">No niche playbook configured for '
+            f'"{ihtml.escape(str(niche or "unknown"))}". Add '
+            f'<code>scripts/meta-ad-library/niches/{ihtml.escape(str(niche or "&lt;niche&gt;"))}.json</code> '
+            "to enable category-specific recommendations.</p></div>"
+        )
+    client = ihtml.escape(str(pb.get("client_name", "")))
+    title = ihtml.escape(str(pb.get("title", "Meta Ad Strategy Playbook")))
+    heading = f"🎯 {client} — {title}" if client else f"🎯 {title}"
+    cards = "".join(_card_html(c) for c in pb.get("cards", []))
+    highlight = pb.get("highlight")
+    if highlight:
+        hl = dict(highlight)
+        if client and "Where to Start" in str(hl.get("title", "")):
+            hl["title"] = f"{pb.get('client_name')} — {hl['title']}"
+        cards += _card_html(hl, "highlight")
+    return (
+        f'<div class="strategy-section"><h2 class="section-title">{heading}</h2>'
+        f'<div class="grid-2">{cards}</div></div>'
+    )
+
+
+def build_html(categories: list[dict], generated: str, niche: str = "automotive") -> str:
 
     def pct_bar(val, max_val, color):
         pct = round(val / max_val * 100) if max_val else 0
@@ -534,112 +596,9 @@ def build_html(categories: list[dict], generated: str) -> str:
 </div>
 """
 
-    # Strategy summary cards
-    strategy_cards = """
-<div class="strategy-section">
-  <h2 class="section-title">🎯 Blue Rose Auto — Meta Ad Strategy Playbook</h2>
-  <div class="grid-2">
-
-    <div class="strategy-card">
-      <div class="s-icon">🔧</div>
-      <h3>Mechanic / Repair</h3>
-      <ul>
-        <li><strong>Hook:</strong> Lead with a pain point — "Is your check engine light on?" or "Tired of overpriced dealership repairs?"</li>
-        <li><strong>Format:</strong> Short video (before/after inspection) performs best</li>
-        <li><strong>CTA:</strong> "Book Now" or "Get a Free Estimate"</li>
-        <li><strong>Offer:</strong> Free multi-point inspection or $X off first service drives clicks</li>
-        <li><strong>Angle:</strong> Local trust — show your team, shop, real reviews</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card">
-      <div class="s-icon">🚗</div>
-      <h3>Collision / Body Shop</h3>
-      <ul>
-        <li><strong>Hook:</strong> "We work directly with all insurance companies"</li>
-        <li><strong>Format:</strong> Before/after carousel — dramatic transformations win</li>
-        <li><strong>CTA:</strong> "Free Estimate" is the #1 CTA in this category</li>
-        <li><strong>Offer:</strong> Free rental car / free tow partnership adds perceived value</li>
-        <li><strong>Angle:</strong> Insurance claim expertise removes customer fear</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card">
-      <div class="s-icon">✨</div>
-      <h3>Auto Detailing</h3>
-      <ul>
-        <li><strong>Hook:</strong> Transformation content — dirty vs. clean is highly shareable</li>
-        <li><strong>Format:</strong> Video reels get the most organic boost; use for ads too</li>
-        <li><strong>CTA:</strong> "Book Today" + urgency ("Only 3 slots left this week")</li>
-        <li><strong>Offer:</strong> Package bundles (interior + exterior) with a discount perform well</li>
-        <li><strong>Angle:</strong> Mobile detailing angle ("We come to you") is a strong differentiator</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card">
-      <div class="s-icon">🎨</div>
-      <h3>Vehicle Wraps</h3>
-      <ul>
-        <li><strong>Hook:</strong> "Turn your vehicle into a moving billboard"</li>
-        <li><strong>Format:</strong> Portfolio carousel — show your best work</li>
-        <li><strong>CTA:</strong> "Get a Free Quote" — high-consideration purchase</li>
-        <li><strong>Offer:</strong> Lead with portfolio + social proof, not discounts</li>
-        <li><strong>Angle:</strong> Target local business owners for commercial wraps (fleet)</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card">
-      <div class="s-icon">🪟</div>
-      <h3>Window Tinting</h3>
-      <ul>
-        <li><strong>Hook:</strong> "Beat the heat. Protect your interior."</li>
-        <li><strong>Format:</strong> Static image — clear before/after with shade comparison</li>
-        <li><strong>CTA:</strong> "Book Now" with same-day availability</li>
-        <li><strong>Offer:</strong> Seasonal promotions (summer heat) drive urgency</li>
-        <li><strong>Angle:</strong> UV protection + privacy + energy savings (multiple pain points)</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card">
-      <div class="s-icon">💎</div>
-      <h3>Ceramic Coating</h3>
-      <ul>
-        <li><strong>Hook:</strong> "Your car's paint deserves better than wax"</li>
-        <li><strong>Format:</strong> High-quality video showing water beading / gloss</li>
-        <li><strong>CTA:</strong> "Get a Free Consultation" — high-ticket, educate first</li>
-        <li><strong>Offer:</strong> Limited-time pricing or bundle with PPF</li>
-        <li><strong>Angle:</strong> Long-term value ("Protects for 5+ years") justifies price</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card">
-      <div class="s-icon">🛡️</div>
-      <h3>Paint Protection Film (PPF)</h3>
-      <ul>
-        <li><strong>Hook:</strong> "Protect your investment from day one"</li>
-        <li><strong>Format:</strong> Side-by-side comparison video or scratch demo</li>
-        <li><strong>CTA:</strong> "Get a Free Quote" — PPF is a premium, researched purchase</li>
-        <li><strong>Offer:</strong> Bundle PPF + ceramic coating for package pricing</li>
-        <li><strong>Angle:</strong> New car owners are the #1 target — catch them early</li>
-      </ul>
-    </div>
-
-    <div class="strategy-card highlight">
-      <div class="s-icon">🚀</div>
-      <h3>Blue Rose Auto — Where to Start</h3>
-      <ul>
-        <li><strong>Step 1:</strong> Launch with detailing + mechanic ads — highest ad volume, most tested playbooks</li>
-        <li><strong>Step 2:</strong> Before/after video content is the #1 winning format across all categories</li>
-        <li><strong>Step 3:</strong> Run a lead-gen ad with "Free Estimate / Free Inspection" offer</li>
-        <li><strong>Step 4:</strong> Target: Springfield/Eugene OR, 25–55, vehicle owners, homeowners</li>
-        <li><strong>Step 5:</strong> Bundle services (e.g. tint + ceramic + PPF) for higher-ticket packages</li>
-        <li><strong>Budget:</strong> Start at $15–25/day per service category, scale what converts</li>
-      </ul>
-    </div>
-
-  </div>
-</div>
-"""
+    # Strategy summary cards — loaded from a niche config so the playbook is
+    # reusable across clients/verticals instead of hardcoded to Blue Rose Auto.
+    strategy_cards = render_strategy_cards(niche)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -772,6 +731,12 @@ blockquote.copy-sample{{background:#f5f5f7;border-left:3px solid #ccc;padding:10
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="Market research analyzer")
+    ap.add_argument("--niche", default="automotive",
+                    help="niche playbook to render (matches niches/<niche>.json)")
+    args = ap.parse_args()
+
     reports_dir = Path("reports")
     if not reports_dir.exists():
         print("[ERROR] reports/ directory not found. Run meta_client.py first.")
@@ -785,7 +750,7 @@ def main():
         results.append(result)
 
     generated = datetime.now(timezone.utc).strftime("%B %d, %Y")
-    html = build_html(results, generated)
+    html = build_html(results, generated, niche=args.niche)
 
     out_path = reports_dir / "blue_rose_auto_market_research.html"
     with open(out_path, "w", encoding="utf-8") as f:

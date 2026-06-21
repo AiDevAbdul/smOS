@@ -122,9 +122,11 @@ export async function handle(toolName, args, client) {
     }
 
     case "search_interests": {
+      // v25: the account-scoped targetingsearch endpoint is the supported path;
+      // the bare /search?type=adinterest route is deprecated/unreliable.
       const { ad_account_id, query, limit = 20 } = args;
-      return client.get(`/search`, {
-        type: "adinterest",
+      return client.get(`/${client.act(ad_account_id)}/targetingsearch`, {
+        class: "interests",
         q: query,
         limit,
       });

@@ -130,6 +130,9 @@ export async function handle(toolName, args, client) {
   switch (toolName) {
     case "create_adset": {
       const { ad_account_id, advantage_plus, ...body } = args;
+      // PAUSED as a code-level default (mirrors create_campaign) — never launch
+      // an adset live just because status was omitted.
+      if (body.status === undefined) body.status = "PAUSED";
       if (body.daily_budget) body.daily_budget = String(body.daily_budget);
       if (body.lifetime_budget) body.lifetime_budget = String(body.lifetime_budget);
       if (body.bid_amount) body.bid_amount = String(body.bid_amount);

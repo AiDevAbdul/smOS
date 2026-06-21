@@ -5,7 +5,7 @@
  * Deterministic data-fetch + transform + template-fill for the weekly client
  * report. Claude invokes this, reviews the filled markdown, fills the
  * Claude-only placeholders (win/flag headline, recommendations), then runs
- * the distribution step (Slack/Drive/Gmail).
+ * the distribution step (Discord/Drive/Gmail).
  *
  * Usage:
  *   node skills/report/report.js <client_slug> [--week-end YYYY-MM-DD]
@@ -21,6 +21,8 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { normalizeKpis } from "../../scripts/lib/metrics.js";
+import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -238,8 +240,8 @@ async function main() {
   }
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));
   const acct = profile.accounts || {};
-  const kpis = profile.kpis || {};
-  const leadKpis = kpis.leads || {};
+  // Unified KPI read (flat or nested) — same targets /analyze + /scale see.
+  const kpis = normalizeKpis(profile);
 
   const window = windowFromArgs(weArg);
   const baselinePath = resolve(clientDir, "baseline_snapshot.json");
@@ -281,9 +283,9 @@ async function main() {
   })();
   const budgetPaced = dailyBudget && now.spend ? Math.round((now.spend / (dailyBudget * 7)) * 100) : null;
 
-  const ctrTarget = leadKpis.target_ctr_link ?? null;
-  const cpaTarget = leadKpis.target_cpa ?? null;
-  const roasTarget = leadKpis.target_roas ?? null;
+  const ctrTarget = kpis.ctr_target ?? null;
+  const cpaTarget = kpis.cpa_target ?? null;
+  const roasTarget = kpis.roas_target ?? null;
 
   const optimizerActions = loadOptimizerActions(clientDir, window.week_start, window.week_end);
 
@@ -335,6 +337,20 @@ async function main() {
     drive_link: "_(set after Drive upload)_",
   };
 
+  // H1 guard: refuse to emit a worthless all-zero report (no Meta data at all).
+  // A report full of $0.00 / 0 conversions is not a deliverable — it means the
+  // ad account is unconnected or the window is empty. Halt and tell the user,
+  // unless they explicitly opt in with --allow-empty.
+  const allowEmpty = process.argv.includes("--allow-empty");
+  const hasData = (now.spend || 0) > 0 || (now.impressions || 0) > 0 || (now.conversions || 0) > 0;
+  if (!hasData && !allowEmpty) {
+    console.error(`[report] No performance data for ${slug} in ${window.week_start}…${window.week_end} ` +
+      `(spend=${now.spend}, impressions=${now.impressions}). Refusing to emit an all-$0.00 report.`);
+    if (errors.length) console.error(`[report] upstream errors:\n  - ${errors.join("\n  - ")}`);
+    console.error(`[report] Connect the ad account / pick a window with spend, or pass --allow-empty to force.`);
+    process.exit(5);
+  }
+
   // Write output
   const reportsDir = resolve(clientDir, "reports");
   if (!existsSync(reportsDir)) mkdirSync(reportsDir, { recursive: true });
@@ -343,6 +359,13 @@ async function main() {
   const filled = fillTemplate(template, vars);
   const mdPath = resolve(reportsDir, `${window.week_end}_weekly.md`);
   writeFileSync(mdPath, filled);
+
+  // Ship HTML + PDF alongside the markdown (every client-facing report does).
+  const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, filled, {
+    title: `${profile.name || slug} — Weekly Report`,
+    subtitle: `${window.week_start} → ${window.week_end}`,
+  });
+  console.error(`[report] wrote ${htmlPath}${pdfOk ? " + PDF" : " (PDF skipped)"}`);
 
   const rawPath = resolve(reportsDir, `${window.week_end}_weekly_raw.json`);
   writeFileSync(rawPath, JSON.stringify({

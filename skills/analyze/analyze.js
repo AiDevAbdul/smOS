@@ -22,6 +22,9 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { deriveMetrics, findAction, round, normalizeKpis } from "../../scripts/lib/metrics.js";
+import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -46,74 +49,13 @@ const INSIGHT_FIELDS = [
 
 const WINDOWS = ["last_7d", "last_14d", "last_30d"];
 
-// Global KPI defaults — overridden by client profile.kpis
-const DEFAULT_KPIS = {
-  cpa_target: 50,
-  roas_target: 2.0,
-  pause_cpa_multiplier: 3,
-  pause_cpa_min_spend: 50,
-  pause_roas_floor: 1.0,
-  pause_roas_min_spend: 100,
-  pause_ctr_floor: 0.005, // 0.5%
-  pause_ctr_min_spend: 30,
-  pause_frequency_ceiling: 4.0,
-  scale_roas_floor: 3.0,
-  fatigue_ctr_decay: 0.6, // CTR_7d < 0.6 * CTR_30d
-  fatigue_frequency_min: 3.0,
-};
-
+// KPI targets/thresholds come from the shared metrics lib so /analyze, /report,
+// /monthly-review and /scale all read the same client targets (flat or nested).
 function mergeKpis(profile) {
-  return { ...DEFAULT_KPIS, ...(profile.kpis || {}) };
+  return normalizeKpis(profile);
 }
 
-function findAction(actions, types) {
-  if (!Array.isArray(actions)) return 0;
-  for (const t of types) {
-    const m = actions.find((a) => a.action_type === t);
-    if (m) return +m.value;
-  }
-  return 0;
-}
-
-function deriveMetrics(ins, primaryEvents = ["purchase", "offsite_conversion.fb_pixel_purchase", "complete_registration", "lead"]) {
-  const spend = +ins?.spend || 0;
-  const impressions = +ins?.impressions || 0;
-  const clicks = +ins?.clicks || 0;
-  const linkClicks = +ins?.inline_link_clicks || 0;
-  const frequency = +ins?.frequency || 0;
-  const reach = +ins?.reach || 0;
-  const ctr = +ins?.ctr || 0;
-  const linkCtr = +ins?.inline_link_click_ctr || 0;
-  const cpc = +ins?.cpc || 0;
-  const cpm = +ins?.cpm || 0;
-  const conversions = findAction(ins?.actions, primaryEvents);
-  const conversionValue = findAction(ins?.action_values, primaryEvents);
-  const cpa = conversions ? spend / conversions : null;
-  const roas = +ins?.purchase_roas?.[0]?.value || (spend && conversionValue ? conversionValue / spend : null);
-
-  return {
-    spend: round(spend, 2),
-    impressions,
-    clicks,
-    link_clicks: linkClicks,
-    reach,
-    frequency: round(frequency, 4),
-    ctr: round(ctr, 4),
-    link_ctr: round(linkCtr, 4),
-    cpc: round(cpc, 2),
-    cpm: round(cpm, 2),
-    conversions,
-    conversion_value: round(conversionValue, 2),
-    cpa: cpa != null ? round(cpa, 2) : null,
-    roas: roas != null ? round(roas, 4) : null,
-  };
-}
-
-function round(n, d) {
-  if (n == null || isNaN(n)) return n;
-  const f = 10 ** d;
-  return Math.round(n * f) / f;
-}
+// deriveMetrics / findAction / round now come from scripts/lib/metrics.js (imported).
 
 async function getInsightsAtWindow(graph, entityId, datePreset, breakdowns = null) {
   const params = { fields: INSIGHT_FIELDS, date_preset: datePreset };
@@ -202,7 +144,7 @@ function classifyFlags(ad, adset, kpis) {
       flag: "PAUSE_CANDIDATE_CTR",
       metric: m7.link_ctr,
       threshold: kpis.pause_ctr_floor,
-      reasoning: `7d link CTR ${(m7.link_ctr * 100).toFixed(2)}% < ${(kpis.pause_ctr_floor * 100).toFixed(2)}% after $${m7.spend} spend`,
+      reasoning: `7d link CTR ${m7.link_ctr.toFixed(2)}% < ${kpis.pause_ctr_floor.toFixed(2)}% after $${m7.spend} spend`,
     });
   }
   if (m7.frequency > kpis.pause_frequency_ceiling) {
@@ -490,6 +432,67 @@ async function main() {
   const outPath = resolve(ROOT, "clients", slug, "performance_analysis.json");
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[analyze] wrote ${outPath}`);
+
+  // Client-facing HTML + PDF summary (constitution: every report ships both).
+  try {
+    const ws = out.window_summary?.last_7d_totals || {};
+    const fc = flags.reduce((m, f) => ({ ...m, [f.flag]: (m[f.flag] || 0) + 1 }), {});
+    const md = [
+      `# Performance Analysis — ${profile.name || slug}`,
+      ``,
+      `_7-day window · ${campaignRows.length} campaigns · ${adsetRows.length} adsets · ${adRows.length} ads_`,
+      ``,
+      `## Last 7 days`,
+      ``,
+      `| Metric | Value |`,
+      `|---|---|`,
+      `| Spend | $${ws.spend ?? "—"} |`,
+      `| ROAS | ${ws.roas ?? "—"} |`,
+      `| CPA | ${ws.cpa ?? "—"} |`,
+      `| Link CTR | ${ws.link_ctr ?? "—"}% |`,
+      `| Conversions | ${ws.conversions ?? "—"} |`,
+      ``,
+      `## Flags (${flags.length})`,
+      ``,
+      Object.keys(fc).length ? Object.entries(fc).map(([k, v]) => `- **${k}**: ${v}`).join("\n") : "_No threshold breaches._",
+      ``,
+      `## Winners`,
+      ``,
+      (ranking.top_roas || []).slice(0, 5).map((w) => `- ${w.name || w.id} — ROAS ${w.metrics?.last_7d?.roas ?? "—"}`).join("\n") || "_None yet._",
+    ].join("\n");
+    const mdPath = resolve(ROOT, "clients", slug, "performance_analysis.md");
+    writeFileSync(mdPath, md);
+    const { pdfOk } = writeHtmlAndPdf(mdPath, md, { title: `${profile.name || slug} — Performance Analysis`, subtitle: "Last 7 days" });
+    console.error(`[analyze] wrote ${mdPath} + HTML${pdfOk ? " + PDF" : " (PDF skipped)"}`);
+  } catch (e) {
+    console.error(`[analyze] report render skipped: ${e.message}`);
+  }
+
+  // H4 persistence (best-effort): write TRUE daily rows to daily_metrics so the
+  // optimizer's 3-consecutive-day ROAS rule has data. No-op without Supabase env.
+  if (supabaseConfigured()) {
+    try {
+      const clientId = await clientIdBySlug(slug);
+      const rows = [];
+      await inBatches(campaignRows, 5, async (c) => {
+        const daily = await getInsightsAtWindow(graph, c.id, "last_7d");
+        // re-pull with time_increment=1 for per-day granularity
+        const perDay = await graph.get(`/${c.id}/insights`, { fields: INSIGHT_FIELDS, date_preset: "last_7d", time_increment: 1 }).catch(() => ({ data: [] }));
+        for (const r of perDay.data || []) {
+          const m = deriveMetrics(r);
+          rows.push({
+            client_id: clientId, campaign_id: c.id, date: r.date_start,
+            spend: m.spend, impressions: m.impressions, clicks: m.clicks, ctr: m.ctr,
+            cpc: m.cpc, cpm: m.cpm, conversions: m.conversions, cpa: m.cpa, roas: m.roas,
+            frequency: m.frequency, reach: m.reach, raw_actions: r.actions || [],
+          });
+        }
+      });
+      if (rows.length) { await sbInsert("daily_metrics", rows); console.error(`[analyze] persisted ${rows.length} daily_metrics rows`); }
+    } catch (e) {
+      console.error(`[analyze] daily_metrics persistence skipped: ${e.message}`);
+    }
+  }
 
   // One-line summary to stdout (per SKILL.md Pass 6 step 4)
   const flagCounts = flags.reduce((m, f) => ({ ...m, [f.flag]: (m[f.flag] || 0) + 1 }), {});

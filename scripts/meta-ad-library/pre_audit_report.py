@@ -17,6 +17,7 @@ shares the same Apple-style visual language.
 import argparse
 import html as ihtml
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -77,6 +78,22 @@ def build_html(
     score = int(syn.get("score", 0))
     dims = syn.get("dimensions", {}) or {}
     ratio = int(syn.get("outspend_ratio", 0) or 0)
+    # Honesty guard (H1): never present an unverified / category-level benchmark as
+    # if it were a measured competitor figure. Degrade to "Data unavailable" when
+    # there's no real ratio, and label category benchmarks explicitly.
+    _comp_note = (comp.get("note") or "") + " " + (syn.get("outspend_ratio_source") or "")
+    _is_category = bool(re.search(r"categor|benchmark|could not be resolved|unresolved|sweep", _comp_note, re.I))
+    if ratio > 0:
+        ratio_html = f'{ratio:,}<small> : 1</small>'
+        ratio_caption = (
+            "Category benchmark — competitor URLs could not be resolved, so this is a "
+            "market-level estimate, not your named competitors."
+            if _is_category else
+            "Top competitor monthly ad volume vs. yours over the last 90 days."
+        )
+    else:
+        ratio_html = '<span style="font-size:28px;color:#6e6e73;">Data unavailable</span>'
+        ratio_caption = "Competitor ad-spend data could not be retrieved for this prospect."
     headline = syn.get("headline", "")
     timestamp = datetime.now(timezone.utc).strftime("%B %d, %Y at %H:%M UTC")
 
@@ -335,8 +352,8 @@ ul.bullet-list.gaps li::before {{
         <div class="score-gauge"><div class="num">{score}<small>/100</small></div></div>
         <div class="outspend-box">
             <div class="label">Competitor outspend ratio</div>
-            <div class="ratio">{ratio:,}<small> : 1</small></div>
-            <div class="caption">Top competitor monthly ad volume vs. yours over the last 90 days.</div>
+            <div class="ratio">{ratio_html}</div>
+            <div class="caption">{ratio_caption}</div>
         </div>
     </div>
 

@@ -5,7 +5,7 @@
  * Pure synthesis — no Meta API calls. Reads the 4 input artifacts, reconciles
  * conflicts, computes deterministic outputs (budget split, audience priority,
  * calendar), and writes strategy_brief.json + .md. Claude appends qualitative
- * judgment (creative angle phrasing, calendar narrative) and runs the Slack
+ * judgment (creative angle phrasing, calendar narrative) and runs the Discord
  * approval gate.
  *
  * Usage:
@@ -23,6 +23,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
+import { competitorIntel as competitorSchema, audienceMap as audienceMapSchema, strategyBrief as briefSchema, assertValid } from "../../schemas/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -204,10 +205,12 @@ function pickCreativeAngles(competitorIntel, profile) {
     return "single_image";
   };
 
+  // angle_id is the stable join key /creative stamps onto ad_copy and /launch
+  // matches on. name is already a canonical uppercase slug, so id == name here.
   return [
-    buckets.pain && { name: "PAIN", angle: buckets.pain.angle, hook_archetype: "Problem-led question", format: formatForAngle(buckets.pain), prompt: `Lead with the pain in '${buckets.pain.angle}'. ${buckets.pain.notes || ""}` },
-    buckets.aspiration && { name: "ASPIRATION", angle: buckets.aspiration.angle, hook_archetype: "Outcome-led visual", format: formatForAngle(buckets.aspiration), prompt: `Show the outcome from '${buckets.aspiration.angle}'. ${buckets.aspiration.notes || ""}` },
-    buckets.proof && { name: "PROOF", angle: buckets.proof.angle, hook_archetype: "Authority / social proof", format: formatForAngle(buckets.proof), prompt: `Establish credibility via '${buckets.proof.angle}'. ${buckets.proof.notes || ""}` },
+    buckets.pain && { angle_id: "PAIN", name: "PAIN", angle: buckets.pain.angle, hook_archetype: "Problem-led question", format: formatForAngle(buckets.pain), prompt: `Lead with the pain in '${buckets.pain.angle}'. ${buckets.pain.notes || ""}` },
+    buckets.aspiration && { angle_id: "ASPIRATION", name: "ASPIRATION", angle: buckets.aspiration.angle, hook_archetype: "Outcome-led visual", format: formatForAngle(buckets.aspiration), prompt: `Show the outcome from '${buckets.aspiration.angle}'. ${buckets.aspiration.notes || ""}` },
+    buckets.proof && { angle_id: "PROOF", name: "PROOF", angle: buckets.proof.angle, hook_archetype: "Authority / social proof", format: formatForAngle(buckets.proof), prompt: `Establish credibility via '${buckets.proof.angle}'. ${buckets.proof.notes || ""}` },
   ].filter(Boolean);
 }
 
@@ -368,8 +371,10 @@ async function main() {
     console.error(`Profile not found: ${dir}/client_profile.json`);
     process.exit(2);
   }
-  const competitor = loadJsonIfExists(resolve(dir, "competitor_intel.json"));
-  const audienceMap = loadJsonIfExists(resolve(dir, "audience_map.json"));
+  const competitorRaw = loadJsonIfExists(resolve(dir, "competitor_intel.json"));
+  const competitor = competitorRaw ? competitorSchema.normalize(competitorRaw) : null;
+  const audienceMapRaw = loadJsonIfExists(resolve(dir, "audience_map.json"));
+  const audienceMap = audienceMapRaw ? audienceMapSchema.normalize(audienceMapRaw) : null;
   const audit = loadJsonIfExists(resolve(dir, "audit_raw.json"));
 
   const missing = [];
@@ -409,6 +414,9 @@ async function main() {
     excluded_angles: excluded,
     approval: { status: "pending", approved_by: null, approved_at: null, discord_message_id: null },
   };
+
+  // Fail-closed: refuse to write a brief whose angles lack join keys.
+  assertValid("strategy_brief", briefSchema.normalize(brief), briefSchema.validate);
 
   const jsonPath = resolve(dir, "strategy_brief.json");
   const mdPath = resolve(dir, "strategy_brief.md");

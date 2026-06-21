@@ -57,6 +57,6 @@ The `/intake` skill walks through these 9 groups conversationally. Ask one quest
 
 ## 9. Approval Preferences
 
-- Approval channel for sensitive actions: Slack, email, or both?
+- Approval channel for sensitive actions: Discord, email, or both?
 - Daily budget threshold above which Claude should NEVER auto-act? (default $500)
 - Are there any actions you want auto-approved beyond the global defaults? (e.g., always auto-pause underperformers)

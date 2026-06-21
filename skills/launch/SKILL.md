@@ -14,7 +14,7 @@ description: Use this skill when the user asks to launch a campaign, push a brie
 - `clients/{slug}/CLAUDE.md` — for KPI thresholds and daily caps
 - Meta MCP server — `create_campaign`, `create_adset`, `create_ad_creative`, `upload_image`, `create_ad`, `update_ad_status`, `update_campaign`
 - Supabase connector — `campaigns` row + `campaign_log`
-- Slack connector — for the launch notification + activation confirmation
+- Discord connector — for the launch notification + activation confirmation
 
 ## Launch Sequence
 
@@ -74,7 +74,7 @@ Asset handling: if the client has uploaded creative images locally, call `upload
 After all entities are created PAUSED:
 
 1. Build `clients/{slug}/campaign_log.json` with the full tree (campaign IDs, adset IDs, ad IDs, names, budgets, audiences) and `status: "paused"` at the root.
-2. Post a Slack message to `approvals.channel`:
+2. Post a Discord message to `approvals.channel`:
    > `Campaigns built for {name}. {N} campaigns · {M} adsets · {K} ads · total daily {currency}{X}. All PAUSED. Reply 'activate' to set everything to ACTIVE, or 'activate <campaign_name>' to roll out one at a time.`
 3. Listen for the reply.
 4. On `activate` → call `update_campaign({status:"ACTIVE"})` on each campaign, then `update_ad_status` on each ad. Log activations to Supabase `campaign_log`.
@@ -83,13 +83,13 @@ After all entities are created PAUSED:
 
 ### Step 8 — Post-launch logging
 
-The `post-launch.js` PostToolUse hook fires automatically after each `create_campaign` — it inserts into Supabase `campaigns` and sends a per-campaign Slack ping. The skill does not duplicate that work; it only writes the consolidated `campaign_log.json` and the final activation state.
+The `post-launch.js` PostToolUse hook fires automatically after each `create_campaign` — it inserts into Supabase `campaigns` and sends a per-campaign Discord ping. The skill does not duplicate that work; it only writes the consolidated `campaign_log.json` and the final activation state.
 
 ## Output
 
 - `clients/{slug}/campaign_log.json` (full tree + activation state)
 - Rows in `campaigns` table (one per campaign, via post-launch hook)
-- Slack notification(s) in client channel
+- Discord notification(s) in client channel
 
 ## Error Handling
 

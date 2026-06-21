@@ -16,6 +16,8 @@ import * as capi from "./tools/capi.js";
 import * as rules from "./tools/rules.js";
 import * as leads from "./tools/leads.js";
 import * as catalog from "./tools/catalog.js";
+import * as inbox from "./tools/inbox.js";
+import * as threads from "./tools/threads.js";
 
 const ALL_TOOLS = [
   ...campaigns.tools,
@@ -29,11 +31,13 @@ const ALL_TOOLS = [
   ...rules.tools,
   ...leads.tools,
   ...catalog.tools,
+  ...inbox.tools,
+  ...threads.tools,
 ];
 
 // Map tool name → handler module
 const TOOL_HANDLERS = new Map();
-for (const mod of [campaigns, adsets, ads, audiences, pixel, pageInsights, publishing, capi, rules, leads, catalog]) {
+for (const mod of [campaigns, adsets, ads, audiences, pixel, pageInsights, publishing, capi, rules, leads, catalog, inbox, threads]) {
   for (const tool of mod.tools) {
     TOOL_HANDLERS.set(tool.name, mod);
   }

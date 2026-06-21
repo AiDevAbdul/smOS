@@ -22,14 +22,16 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { normalizeKpis } from "../../scripts/lib/metrics.js";
+import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
 loadEnv();
 
 const DEFAULT_DAYS = 30;
-const FATIGUE_FREQ_THRESHOLD = 4.0;
-const SATURATION_FREQ = 4.0;
+// Frequency fatigue ceiling defaults to the constitution's 4.0 but is overridden
+// per-client via normalizeKpis(profile).pause_frequency_ceiling.
 
 function argVal(args, flag, fallback = null) {
   const i = args.indexOf(flag);
@@ -164,7 +166,7 @@ function trendAnalysis(daily) {
   return out;
 }
 
-function fatigueByAdset(adsetRows) {
+function fatigueByAdset(adsetRows, freqCeiling) {
   // Group by adset_id, get freq + ctr; flag rising freq + falling ctr is harder
   // without daily breakdown — use aggregate threshold heuristic.
   const byId = new Map();
@@ -178,8 +180,8 @@ function fatigueByAdset(adsetRows) {
     adset_name: v.adset_name,
     frequency: Math.round(v.freq * 100) / 100,
     ctr: v.ctr,
-    fatigue: v.freq >= FATIGUE_FREQ_THRESHOLD ? "saturated" : v.freq >= 3 ? "warming" : "ok",
-    needs_refresh: v.freq >= SATURATION_FREQ,
+    fatigue: v.freq >= freqCeiling ? "saturated" : v.freq >= 3 ? "warming" : "ok",
+    needs_refresh: v.freq >= freqCeiling,
   })).sort((a, b) => b.frequency - a.frequency);
 }
 
@@ -290,8 +292,10 @@ async function main() {
     fetchPlacementBreakdown(graph, adAccountId, days),
   ]);
 
+  const kpis = normalizeKpis(profile);
+  const freqCeiling = kpis.pause_frequency_ceiling;
   const trends = trendAnalysis(daily);
-  const fatigue = fatigueByAdset(adsets);
+  const fatigue = fatigueByAdset(adsets, freqCeiling);
   const lifecycle = lifecycleByAd(ads);
   const ranking = rankAdsets(adsets, audienceMap);
   const placementRanked = efficiencyByPlacement(placements);
@@ -303,7 +307,7 @@ async function main() {
   const topPlacement = placementRanked.find((p) => p.cpa != null);
 
   const recommendationsSkeleton = [
-    fatigued.length ? { id: 1, action: `Refresh creative for ${fatigued.length} saturated adset(s)`, rationale: `frequency ≥ ${SATURATION_FREQ}`, impact: "reduce CPM drag", budget_delta: 0, owner: "creative" } : null,
+    fatigued.length ? { id: 1, action: `Refresh creative for ${fatigued.length} saturated adset(s)`, rationale: `frequency ≥ ${freqCeiling}`, impact: "reduce CPM drag", budget_delta: 0, owner: "creative" } : null,
     refreshNeeded.length ? { id: 2, action: `Replace ${refreshNeeded.length} declining/expired ads`, rationale: `current CTR < 60% of peak`, impact: "stabilize CTR, lower CPC", budget_delta: 0, owner: "creative" } : null,
     topAdset ? { id: 3, action: `Reallocate budget toward "${topAdset.adset_name}"`, rationale: `top ROAS ${topAdset.roas}`, impact: "lift account ROAS", budget_delta: "+20%", owner: "optimizer" } : null,
     worstAdset && worstAdset.spend > 50 ? { id: 4, action: `Pause "${worstAdset.adset_name}"`, rationale: `ROAS ${worstAdset.roas} after $${worstAdset.spend}`, impact: "free up budget", budget_delta: `-$${worstAdset.spend}`, owner: "optimizer" } : null,
@@ -345,6 +349,13 @@ async function main() {
   const mdPath = resolve(reportsDir, `${month}_monthly_review.md`);
   const md = renderMd({ slug, profile, month, days, trends, fatigue, lifecycle, ranking, placementRanked, recommendations: recommendationsSkeleton, daily });
   writeFileSync(mdPath, md);
+
+  // Ship HTML + PDF alongside the markdown.
+  const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, md, {
+    title: `${profile.name || slug} — Monthly Review`,
+    subtitle: `${month} · ${days}-day window`,
+  });
+  console.error(`[monthly-review] wrote ${htmlPath}${pdfOk ? " + PDF" : " (PDF skipped)"}`);
 
   console.log(JSON.stringify({
     slug,

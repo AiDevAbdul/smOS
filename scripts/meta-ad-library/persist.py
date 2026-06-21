@@ -88,12 +88,18 @@ def persist_competitor(analyzed_path: str, client_id: str, slug: str) -> str:
 def persist_market(analyzed_path: str, niche_key: str, business_name: str | None = None) -> str:
     data = json.loads(Path(analyzed_path).read_text())
     snapshot_id = str(uuid.uuid4())
+    # market.py's analyzed output is a LIST of category dicts; older code read a
+    # non-existent "categories" key and always stored 0. Handle both shapes.
+    if isinstance(data, list):
+        category_count = len(data)
+    else:
+        category_count = len(data.get("categories") or data.get("results") or [])
     row = {
         "id": snapshot_id,
         "niche": niche_key,
         "business_name": business_name,
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "category_count": len(data.get("categories", [])),
+        "category_count": category_count,
         "payload": data,
     }
     _post(TABLE_MARKET, row)

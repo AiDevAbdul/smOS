@@ -210,6 +210,111 @@ CREATE TABLE prospect_audits (
 
 CREATE INDEX idx_prospect_audits_slug ON prospect_audits (prospect_slug, generated_at DESC);
 
+-- ════════════════════════════════════════════════════════════════════════════
+--  Phase 2/3 — organic OS + differentiation
+-- ════════════════════════════════════════════════════════════════════════════
+
+-- ─── approvals (Phase 3.5 — real approval workflow) ─────────────────────────
+CREATE TABLE approvals (
+  id            uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  approval_id   text UNIQUE NOT NULL,           -- stable id from approvals.js
+  client_id     uuid REFERENCES clients (id) ON DELETE SET NULL,
+  slug          text,
+  action        text NOT NULL,                  -- e.g. budget_increase_over_500
+  summary       text,
+  payload       jsonb DEFAULT '{}',
+  required_role text NOT NULL,
+  status        text DEFAULT 'pending',         -- pending | approved | rejected | expired
+  requested_by  text,
+  requested_at  timestamptz,
+  expires_at    timestamptz,
+  decided_by    text,
+  decided_role  text,
+  decided_at    timestamptz,
+  decision_note text
+);
+CREATE INDEX idx_approvals_slug_action ON approvals (slug, action, status);
+CREATE INDEX idx_approvals_status ON approvals (status, expires_at);
+
+-- ─── inbox_items (Phase 2.1/2.3 — Unified Social Inbox) ─────────────────────
+CREATE TABLE inbox_items (
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  inbox_id     text UNIQUE NOT NULL,            -- platform:type:external_id (dedupe)
+  client_id    uuid REFERENCES clients (id) ON DELETE CASCADE,
+  slug         text,
+  platform     text,                            -- facebook | instagram | threads
+  type         text,                            -- comment | dm | mention | ...
+  external_id  text,
+  conversation_id text,
+  author       jsonb DEFAULT '{}',
+  text         text,
+  received_at  timestamptz,
+  state        text DEFAULT 'unread',
+  first_reply_due_at  timestamptz,
+  replied_at          timestamptz,
+  reply_latency_seconds int,
+  thread_depth int DEFAULT 0,
+  assignee     text,
+  raw          jsonb DEFAULT '{}'
+);
+CREATE INDEX idx_inbox_client_state ON inbox_items (client_id, state);
+CREATE INDEX idx_inbox_sla ON inbox_items (first_reply_due_at) WHERE state NOT IN ('replied','closed');
+
+-- ─── content_plans (Phase 2.2 — Content Strategy Engine) ────────────────────
+CREATE TABLE content_plans (
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  client_id    uuid REFERENCES clients (id) ON DELETE CASCADE,
+  slug         text,
+  created_at   timestamptz DEFAULT now(),
+  period       jsonb DEFAULT '{}',
+  plan         jsonb NOT NULL                   -- full content_plan.json
+);
+CREATE INDEX idx_content_plans_client ON content_plans (client_id, created_at DESC);
+
+-- ─── lift_studies (Phase 3.1 — incrementality) ─────────────────────────────
+CREATE TABLE lift_studies (
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  client_id    uuid REFERENCES clients (id) ON DELETE CASCADE,
+  slug         text,
+  created_at   timestamptz DEFAULT now(),
+  method       text NOT NULL,
+  report       jsonb NOT NULL                   -- full attribution_report.json
+);
+CREATE INDEX idx_lift_studies_client ON lift_studies (client_id, created_at DESC);
+
+-- ─── listening_snapshots (Phase 3.3 — social listening) ─────────────────────
+CREATE TABLE listening_snapshots (
+  id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  client_id    uuid REFERENCES clients (id) ON DELETE CASCADE,
+  slug         text,
+  captured_at  timestamptz NOT NULL,
+  snapshot     jsonb NOT NULL                   -- full listening_snapshot.json
+);
+CREATE INDEX idx_listening_client ON listening_snapshots (client_id, captured_at DESC);
+
+-- ─── assets (Phase 3.4 — DAM) ───────────────────────────────────────────────
+CREATE TABLE assets (
+  id            uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  asset_id      text NOT NULL,
+  client_id     uuid REFERENCES clients (id) ON DELETE CASCADE,
+  slug          text,
+  media_type    text,
+  version       int DEFAULT 1,
+  parent_asset_id text,
+  uri           text,
+  hash          text,                           -- sha256 for dedupe
+  angle_id      text,
+  tags          text[] DEFAULT '{}',
+  alt_text      text,
+  ai_generated  boolean DEFAULT false,
+  ai_disclosed  boolean DEFAULT false,
+  metrics       jsonb DEFAULT '{}',             -- hook_rate, retention_3s, ctr, roas
+  created_at    timestamptz DEFAULT now(),
+  UNIQUE (slug, asset_id)
+);
+CREATE INDEX idx_assets_client ON assets (client_id);
+CREATE INDEX idx_assets_hash ON assets (hash);
+
 -- ─── Row Level Security ─────────────────────────────────────────────────────
 -- Enable RLS on all tables (service role key bypasses these)
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
@@ -223,6 +328,12 @@ ALTER TABLE ad_copy ENABLE ROW LEVEL SECURITY;
 ALTER TABLE competitor_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE market_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE prospect_audits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE approvals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE inbox_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE content_plans ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lift_studies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE listening_snapshots ENABLE ROW LEVEL SECURITY;
+ALTER TABLE assets ENABLE ROW LEVEL SECURITY;
 
 -- Service role has full access (used by smOS agents/skills)
 -- Add user-facing policies here when you add auth

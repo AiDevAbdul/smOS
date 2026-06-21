@@ -8,10 +8,11 @@
  * Defaults to DRY RUN — prints the plan as JSON without hitting Meta. Pass
  * --execute to actually create entities.
  *
- * IMPORTANT: This script hits Graph API directly. The naming-check,
- * budget-guard, pixel-check, creative-compliance, and utm-enforcer hooks
- * are wired to the MCP server — they will NOT fire from this script. The
- * --dry-run plan should be reviewed by Claude (or a human) before --execute.
+ * SAFETY: This script hits Graph API directly, but the guard rule-set is now
+ * enforced at the meta-graph chokepoint (scripts/lib/guards.js via createGraph),
+ * so naming/budget/pixel/compliance/UTM/destructive checks DO fire on every
+ * graph.post here — not just on the MCP path. The --dry-run plan is additionally
+ * validated against the canonical launch_plan schema before any --execute.
  *
  * Usage:
  *   node skills/launch/launch.js <client_slug> [--execute] [--phase A|B|C]
@@ -29,6 +30,8 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { adCopy as adCopySchema, audienceMap as audienceMapSchema, strategyBrief as briefSchema, clientProfile as profileSchema, launchPlan as launchPlanSchema } from "../../schemas/index.js";
+import { resolveAudiences, applyResolved, resolvedIdFor } from "../../scripts/lib/audience-resolver.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -145,7 +148,10 @@ function buildTargeting(audience, audienceMap, profile) {
       ];
     }
   } else if (audience.source === "retargeting" || audience.source === "lookalike") {
-    targeting.custom_audiences = [{ id: `<TBD_${audience.id}>` }];
+    // Use a resolved real custom-audience id when one exists; otherwise leave a
+    // TBD marker that the launch_plan gate will reject before --execute.
+    const realId = resolvedIdFor(map, audience);
+    targeting.custom_audiences = [{ id: realId || `<TBD_${audience.id}>` }];
   }
 
   return targeting;
@@ -244,24 +250,11 @@ function validateNames(plan) {
   return issues;
 }
 
+// Delegates to the canonical schema selector so producer + consumer can never
+// disagree on field names again. Returns { copy_used, reason } — reason is the
+// diagnosable cause when no match is found (instead of a silent null).
 function selectTopCopy(angle, adCopy) {
-  // Look up the angle in ad_copy.angles by name match
-  const found = (adCopy?.angles || []).find((a) => {
-    const tag = (a.angle_id || a.name || "").toUpperCase();
-    return tag.includes(angle.name) || (angle.angle || "").toUpperCase().includes(tag);
-  });
-  if (!found) return null;
-  const primary = (found.primary_text || []).sort((a, b) => (b.score?.composite || 0) - (a.score?.composite || 0))[0];
-  const hook = (found.hooks || [])[0];
-  const headline = (found.headlines || [])[0];
-  return {
-    text: primary?.text || hook || "",
-    primary_text: primary?.text,
-    headline,
-    description: found.descriptions?.[0],
-    cta: found.cta?.[0] || "LEARN_MORE",
-    angle_id: found.angle_id,
-  };
+  return adCopySchema.selectTopCopy(angle, adCopy);
 }
 
 function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
@@ -299,14 +292,14 @@ function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
     });
 
     const ads = angles.map((angle, idx) => {
-      const copy = selectTopCopy(angle, adCopy);
+      const { copy_used, reason } = selectTopCopy(angle, adCopy);
       return {
         name: buildAdName(angle.format, angle.name, 1),
         angle: angle.name,
         format: angle.format,
-        creative_payload: buildCreativePayload({ profile, angle, copyVariant: copy, adset: adsetPayload }),
-        copy_used: copy ? { angle_id: copy.angle_id, headline: copy.headline, cta: copy.cta, score_composite: copy.score_composite } : null,
-        warnings: copy ? [] : [`no matching ad_copy entry for angle '${angle.name}'`],
+        creative_payload: buildCreativePayload({ profile, angle, copyVariant: copy_used, adset: adsetPayload }),
+        copy_used,
+        warnings: copy_used ? [] : [reason || `no matching ad_copy entry for angle '${angle.name}'`],
       };
     });
 
@@ -386,10 +379,15 @@ async function main() {
   }
 
   const dir = resolve(ROOT, "clients", slug);
-  const profile = JSON.parse(readFileSync(resolve(dir, "client_profile.json"), "utf8"));
-  const brief = existsSync(resolve(dir, "strategy_brief.json")) ? JSON.parse(readFileSync(resolve(dir, "strategy_brief.json"), "utf8")) : null;
-  const audienceMap = existsSync(resolve(dir, "audience_map.json")) ? JSON.parse(readFileSync(resolve(dir, "audience_map.json"), "utf8")) : null;
-  const adCopy = existsSync(resolve(dir, "ad_copy.json")) ? JSON.parse(readFileSync(resolve(dir, "ad_copy.json"), "utf8")) : null;
+  const readJ = (f) => (existsSync(resolve(dir, f)) ? JSON.parse(readFileSync(resolve(dir, f), "utf8")) : null);
+  // Normalize every input to its canonical shape on read, so drifted field names
+  // in older artifacts resolve to the names the builder expects.
+  const profile = profileSchema.normalize(JSON.parse(readFileSync(resolve(dir, "client_profile.json"), "utf8")));
+  const briefRaw = readJ("strategy_brief.json");
+  const brief = briefRaw ? briefSchema.normalize(briefRaw) : null;
+  const audienceMapRaw = readJ("audience_map.json");
+  let audienceMap = audienceMapRaw ? audienceMapSchema.normalize(audienceMapRaw) : null;
+  const adCopy = readJ("ad_copy.json");
 
   const missing = [];
   if (!brief) missing.push("strategy_brief.json (run /strategy-brief)");
@@ -408,6 +406,35 @@ async function main() {
   if (execute && isTbd(profile.accounts?.ad_account_id)) {
     console.error("accounts.ad_account_id is TBD");
     process.exit(4);
+  }
+
+  // Audience resolution (H5): turn RT/LAL specs into real custom-audience IDs.
+  // Always looks up existing audiences when the account is real; --create-audiences
+  // additionally creates any that are missing (a consequential write). Skipped for
+  // TBD accounts — the launch_plan gate then catches the unresolved <TBD_> markers.
+  const acctReal = !isTbd(profile.accounts?.ad_account_id);
+  const hasCustomAudienceSpecs =
+    (audienceMap.retargeting_layers?.length || 0) > 0 ||
+    (audienceMap.lookalikes?.length || audienceMap.lookalike ? 1 : 0) > 0;
+  if (acctReal && hasCustomAudienceSpecs && !audienceMap.resolved_audiences) {
+    try {
+      const graph = createGraph();
+      const r = await resolveAudiences(graph, profile.accounts.ad_account_id, audienceMap, {
+        slug,
+        pixelId: profile.accounts?.pixel_id || null,
+        country: profile.location?.country || "US",
+        create: args.includes("--create-audiences"),
+      });
+      audienceMap = applyResolved(audienceMap, r.resolved);
+      // Persist resolved IDs back to audience_map.json so brief/launch reuse them.
+      writeFileSync(resolve(dir, "audience_map.json"), JSON.stringify(audienceMap, null, 2));
+      const resolvedCount = Object.keys(r.resolved).length;
+      console.error(`[launch] audience resolution: ${resolvedCount} resolved, ${r.created.length} created`);
+      for (const w of r.warnings) console.error(`[launch]   ⚠ ${w}`);
+      for (const e of r.errors) console.error(`[launch]   ✗ ${e}`);
+    } catch (e) {
+      console.error(`[launch] audience resolution failed (${e.message}) — continuing; gate will catch unresolved IDs`);
+    }
   }
 
   console.error(`[launch] ${slug} — building plan (phase=${phaseFilter || "first"})…`);
@@ -434,6 +461,20 @@ async function main() {
     mode: execute ? "EXECUTE" : "DRY_RUN",
   }, null, 2));
   console.error(`[launch] wrote ${planPath}`);
+
+  // Fail-closed gate: the plan must be fully resolved (no copy_used:null, no TBD
+  // audiences) before any live create. This is the headline regression guard.
+  const planForValidation = launchPlanSchema.normalize(JSON.parse(readFileSync(planPath, "utf8")));
+  const planCheck = launchPlanSchema.validate(planForValidation, { requireExecutable: true });
+  if (!planCheck.ok) {
+    console.error(`[launch] launch_plan validation failed:\n  - ${planCheck.errors.join("\n  - ")}`);
+    if (execute) {
+      console.error("Refusing to --execute an unresolved plan. Fix /creative (copy) or /audience-map (audiences) and rebuild.");
+      process.exit(6);
+    } else {
+      console.error("[launch] (dry-run) plan is NOT executable yet — see errors above.");
+    }
+  }
 
   let created = null;
   if (execute) {

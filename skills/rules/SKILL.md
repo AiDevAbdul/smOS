@@ -51,7 +51,7 @@ These are **defensible defaults**. They will not auto-scale; they will not chang
 
 ## Guardrails inside this skill
 
-- Never creates rules that auto-scale budgets — that's the optimizer agent's job, with Slack approval
+- Never creates rules that auto-scale budgets — that's the optimizer agent's job, with Discord approval
 - Never targets specific entity IDs in the install — rules apply account-wide so they cover new campaigns automatically
 - `--dry-run` (default OFF for `install`) only POSTs to `/preview`, never to the real endpoint
 

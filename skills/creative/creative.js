@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { adCopy as adCopySchema, angleId, assertValid } from "../../schemas/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -87,6 +88,9 @@ function buildSkeleton(profile, brief) {
     voice: { tone: profile.voice?.tone, restricted_words: getRestrictedWords(profile) },
     audience: profile.audience,
     angles: angles.map((a) => ({
+      // angle_id is the join key carried from the brief; it MUST survive into
+      // ad_copy.json so /launch can match copy to the brief angle.
+      angle_id: a.angle_id || angleId(angleName(a)),
       name: angleName(a),
       hook_archetype: a.hook || a.archetype || "",
       format: angleFormat(a, brief),
@@ -238,6 +242,7 @@ function lintDraft(draft, profile) {
     }
 
     return {
+      angle_id: angle.angle_id || angleId(angle.name),
       name: angle.name,
       hook_archetype: angle.hook_archetype,
       format: angle.format,
@@ -335,6 +340,10 @@ function main() {
     angles: linted.angles,
     summary: linted.summary,
   };
+
+  // Fail-closed: refuse to write ad_copy that /launch can't consume (missing
+  // angle_id join key, or an angle with no usable copy).
+  assertValid("ad_copy", adCopySchema.normalize(out), adCopySchema.validate);
 
   const outPath = resolve(ROOT, "clients", slug, "ad_copy.json");
   writeFileSync(outPath, JSON.stringify(out, null, 2));

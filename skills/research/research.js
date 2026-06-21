@@ -19,6 +19,7 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
+import { competitorIntel as competitorSchema } from "../../schemas/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -190,13 +191,17 @@ async function main() {
 
   // Step 8: build competitor_intel.json from analyzed output
   const analyzed = JSON.parse(readFileSync(analyzedPath, "utf8"));
-  const intel = {
+  // Normalize to canonical shape — crucially this derives the top-level `angles`
+  // array (from analyzed.angles or aggregated from competitors[].angles) that
+  // /strategy-brief reads to pick creative angles.
+  const intel = competitorSchema.normalize({
     client_slug: slug,
     generated_at: new Date().toISOString(),
     country,
     days_window: days,
     competitors: analyzed.competitors || analyzed.pages || [],
     gaps: analyzed.gaps || [],
+    angles: analyzed.angles || [],
     artifacts: {
       raw: rawPath,
       analyzed: analyzedPath,
@@ -205,7 +210,7 @@ async function main() {
       diff: diffPath,
     },
     resolved_page_ids: resolved,
-  };
+  });
 
   const intelPath = resolve(ROOT, "clients", slug, "competitor_intel.json");
   writeFileSync(intelPath, JSON.stringify(intel, null, 2));

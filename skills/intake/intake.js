@@ -26,6 +26,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { clientProfile as profileSchema } from "../../schemas/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -77,6 +78,10 @@ function blankAnswers(slug) {
     accounts: {
       ad_account_id: null,
       pixel_id: null,
+      // Canonical IDs (single source of truth read by audit/launch/before-after/etc).
+      facebook_page_id: null,
+      instagram_business_id: null,
+      // Legacy aliases kept mirrored for any transitional reader.
       page_id: null,
       ig_account_id: null,
       bm_id: null,
@@ -119,9 +124,15 @@ function hydrateFromProspect(slug, answers) {
     answers.business.product_description = prospect.about;
     fields.push("business.product_description");
   }
-  if (!answers.accounts.page_id && prospect.facebook_page_id) {
-    answers.accounts.page_id = prospect.facebook_page_id;
-    fields.push("accounts.page_id");
+  if (!answers.accounts.facebook_page_id && prospect.facebook_page_id) {
+    answers.accounts.facebook_page_id = prospect.facebook_page_id;
+    answers.accounts.page_id = prospect.facebook_page_id; // mirror legacy alias
+    fields.push("accounts.facebook_page_id");
+  }
+  if (!answers.accounts.instagram_business_id && prospect.instagram_business_id) {
+    answers.accounts.instagram_business_id = prospect.instagram_business_id;
+    answers.accounts.ig_account_id = prospect.instagram_business_id;
+    fields.push("accounts.instagram_business_id");
   }
   if ((!answers.competitors || !answers.competitors.length) && Array.isArray(prospect.competitors)) {
     answers.competitors = prospect.competitors.slice(0, 3);
@@ -321,7 +332,9 @@ async function main() {
     }
   }
 
-  const profile = buildProfile(answers, accountMeta);
+  // Normalize so canonical IDs (facebook_page_id/instagram_business_id) and their
+  // legacy aliases are both populated from whatever the operator supplied.
+  const profile = profileSchema.normalize(buildProfile(answers, accountMeta));
 
   const clientDir = resolve(ROOT, "clients", slug);
   mkdirSync(clientDir, { recursive: true });

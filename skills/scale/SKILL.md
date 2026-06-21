@@ -12,7 +12,7 @@ description: Use this skill when the user asks to scale winners, kill losers, or
 - `clients/{slug}/performance_analysis.json` — generated within the last 4 hours (halt if older — run `/analyze` first)
 - Meta MCP server — `update_ad_status`, `update_adset`, `update_campaign`, `create_adset`, `create_ad`
 - Supabase connector — `optimizer_log` insert
-- Slack connector — digest post
+- Discord connector — digest post
 
 ## Rules (defaults — client CLAUDE.md overrides)
 
@@ -22,10 +22,10 @@ description: Use this skill when the user asks to scale winners, kill losers, or
 | PAUSE_CANDIDATE_ROAS | `update_ad_status({status:"PAUSED"})` | auto |
 | PAUSE_CANDIDATE_CTR | `update_ad_status({status:"PAUSED"})` | auto |
 | PAUSE_CANDIDATE_FREQUENCY | `update_ad_status({status:"PAUSED"})` | auto |
-| SCALE_CANDIDATE | `update_adset({daily_budget: current × 1.2})` | auto if delta ≤ $500/day, else Slack |
-| DUPLICATE_CANDIDATE | clone adset → new adset with 0.5× budget | Slack |
-| CREATIVE_FATIGUE | flag only; do not pause silently | Slack digest |
-| ANOMALY_* | flag only; surface in digest | Slack |
+| SCALE_CANDIDATE | `update_adset({daily_budget: current × 1.2})` | auto if delta ≤ $500/day, else Discord |
+| DUPLICATE_CANDIDATE | clone adset → new adset with 0.5× budget | Discord |
+| CREATIVE_FATIGUE | flag only; do not pause silently | Discord digest |
+| ANOMALY_* | flag only; surface in digest | Discord |
 
 Global hard blocks (never auto):
 - Budget increase > $500/day in a single action
@@ -54,7 +54,7 @@ For SCALE actions where new daily budget exceeds the $500 single-increase ceilin
 
 ### Step 4 — Approval queue
 
-For every decision flagged "Slack" above, post one consolidated approval message to `approvals.channel`:
+For every decision flagged "Discord" above, post one consolidated approval message to `approvals.channel`:
 
 > *Scaling actions pending approval for {name}:*
 > 1. Scale adset `FEED_2545_FITNESS` budget $200 → $260 (+30%) — ROAS 4.2, 4 days in a row
@@ -88,7 +88,7 @@ Also write `clients/{slug}/scaling_log.json` — the same set, plus a roll-up su
 
 ### Step 6 — Digest
 
-Post a single Slack summary to the client channel:
+Post a single Discord summary to the client channel:
 
 > *Daily optimization — {name}*
 > ✅ Auto: paused N · scaled M · flagged K · anomalies F
@@ -100,16 +100,16 @@ Post a single Slack summary to the client channel:
 
 - `clients/{slug}/scaling_log.json`
 - Rows in `optimizer_log`
-- Slack digest in client channel
+- Discord digest in client channel
 
 ## Error Handling
 
 - Any `update_*` call fails → log to `error_log`, keep going with the remaining actions; do not abort the whole run
 - `budget-guard` hook blocks a scale action → record `action: 'blocked_by_guard'` with the hook's stderr message
-- Slack post fails → write digest to `clients/{slug}/digests/{date}.md` so it's not lost
+- Discord post fails → write digest to `clients/{slug}/digests/{date}.md` so it's not lost
 
 ## Token Efficiency
 
 - Reads from `performance_analysis.json` only — no Meta fetches in this skill
 - All decisions are deterministic rule-checks, not LLM calls
-- One batch Slack message per run, not one per action
+- One batch Discord message per run, not one per action

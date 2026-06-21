@@ -4,7 +4,7 @@
  *
  * Consumes clients/<slug>/performance_analysis.json and executes the
  * scaling rules: pause underperformers, scale winners +20%, flag
- * fatigue/anomalies for Slack. No Meta reads — this is execution only.
+ * fatigue/anomalies for Discord. No Meta reads — this is execution only.
  *
  * Defaults to DRY RUN. Pass --execute to actually hit Meta.
  *
@@ -21,6 +21,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
+import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -34,8 +35,16 @@ const BUSINESS_HOURS = { start: 6, end: 21 }; // 6 AM – 9 PM
 // SCALE auto-eligible only if delta ≤ this; otherwise → approval queue
 const AUTO_SCALE_DELTA_CEILING_CENTS = 50_000;
 
-function inBusinessHours(timezone) {
-  if (!timezone) return true; // unknown tz → assume in-window
+// ---- run-level circuit breaker (refuse a mass mutation from garbage data) ----
+const MAX_AUTO_ACTIONS_ABS = 25;       // never auto-execute more than this many actions in one run
+const MAX_AUTO_ACTIONS_PCT = 0.5;      // ...nor more than this fraction of active entities
+// ---- per-action metric sanity gate (reject acting on implausible metrics) ----
+const MIN_IMPRESSIONS_FOR_ACTION = 100; // below this the sample is too small to trust
+
+// inBusinessHours: fail-CLOSED in autonomous mode (unknown tz / error → outside window).
+// Pass autonomous=false (operator with --force) to keep the lenient legacy behavior.
+function inBusinessHours(timezone, autonomous = true) {
+  if (!timezone) return autonomous ? false : true; // unknown tz: autonomous → refuse
   try {
     const fmt = new Intl.DateTimeFormat("en-US", {
       timeZone: timezone,
@@ -43,10 +52,22 @@ function inBusinessHours(timezone) {
       hour12: false,
     });
     const hour = parseInt(fmt.format(new Date()), 10);
+    if (Number.isNaN(hour)) return autonomous ? false : true;
     return hour >= BUSINESS_HOURS.start && hour < BUSINESS_HOURS.end;
   } catch {
-    return true;
+    return autonomous ? false : true; // error: autonomous → refuse
   }
+}
+
+// Metrics must be present and plausible before any auto pause/scale.
+// Guards against the "API returned null/zero → every ad reads as a breach" failure.
+function metricsArePlausible(entity) {
+  if (!entity) return true; // entity not in analysis rollup — trust the analyzer (can't second-guess)
+  const spend = Number(entity.spend);
+  const impressions = Number(entity.impressions);
+  if (!Number.isFinite(spend) || spend <= 0) return false;
+  if (Number.isFinite(impressions) && impressions < MIN_IMPRESSIONS_FOR_ACTION) return false;
+  return true;
 }
 
 function hoursOld(iso) {
@@ -58,10 +79,17 @@ function decisionFromFlag(flag, parentMap) {
     case "PAUSE_CANDIDATE_CPA":
     case "PAUSE_CANDIDATE_ROAS":
     case "PAUSE_CANDIDATE_CTR":
-    case "PAUSE_CANDIDATE_FREQUENCY":
+    case "PAUSE_CANDIDATE_FREQUENCY": {
+      if (!metricsArePlausible(parentMap.ads.get(flag.entity_id))) {
+        return { action: "flag", entity_type: "ad", auto: false, reason: "metrics missing/zero — refusing auto-pause (bad-data guard)" };
+      }
       return { action: "pause", entity_type: "ad", endpoint: `/${flag.entity_id}`, body: { status: "PAUSED" }, auto: true };
+    }
     case "SCALE_CANDIDATE": {
       const adset = parentMap.adsets.get(flag.entity_id);
+      if (!metricsArePlausible(adset)) {
+        return { action: "flag", entity_type: "adset", auto: false, reason: "metrics missing/zero — refusing auto-scale (bad-data guard)" };
+      }
       const currentBudgetCents = adset?.daily_budget != null ? Math.round(adset.daily_budget * 100) : null;
       if (!currentBudgetCents) {
         return { action: "flag", entity_type: "adset", auto: false, reason: "no daily_budget — cannot auto-scale (CBO campaign?)" };
@@ -119,15 +147,71 @@ async function executeDecision(graph, decision) {
   }
 }
 
+// Reverse a prior run: un-pause paused entities, restore pre-scale budgets.
+function reverseDecision(d) {
+  if (d.status !== "applied") return null;
+  if (d.action === "pause" && d.entity_id) {
+    return { endpoint: `/${d.entity_id}`, body: { status: "ACTIVE" }, note: `un-pause ${d.entity_name || d.entity_id}` };
+  }
+  if (d.action === "scale" && d.entity_id && d.budget_before_cents != null) {
+    return { endpoint: `/${d.entity_id}`, body: { daily_budget: String(d.budget_before_cents) }, note: `restore budget $${d.budget_before_cents / 100}/day` };
+  }
+  return null;
+}
+
+async function rollback(logPath, execute) {
+  if (!existsSync(logPath)) {
+    console.error(`[scale] rollback: log not found: ${logPath}`);
+    process.exit(7);
+  }
+  const log = JSON.parse(readFileSync(logPath, "utf8"));
+  const reversals = (log.decisions || []).map(reverseDecision).filter(Boolean);
+  if (!reversals.length) {
+    console.log(JSON.stringify({ mode: "ROLLBACK", reversed: 0, note: "no applied actions to reverse" }, null, 2));
+    return;
+  }
+  const graph = execute ? createGraph() : null;
+  const results = [];
+  for (const r of reversals) {
+    if (execute) {
+      try {
+        await graph.post(r.endpoint, r.body);
+        results.push({ ...r, status: "reversed" });
+      } catch (e) {
+        results.push({ ...r, status: "error", error: e.message });
+      }
+    } else {
+      results.push({ ...r, status: "dry_run" });
+    }
+  }
+  console.log(JSON.stringify({
+    mode: execute ? "ROLLBACK_EXECUTE" : "ROLLBACK_DRY_RUN",
+    from_log: logPath,
+    reversed: results.filter((r) => r.status === "reversed").length,
+    errors: results.filter((r) => r.status === "error").length,
+    actions: results,
+  }, null, 2));
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
   if (!slug) {
-    console.error("Usage: node skills/scale/scale.js <slug> [--execute] [--force]");
+    console.error("Usage: node skills/scale/scale.js <slug> [--execute] [--force] [--rollback [log]]");
     process.exit(1);
   }
   const execute = args.includes("--execute");
   const force = args.includes("--force");
+
+  const rbIdx = args.indexOf("--rollback");
+  if (rbIdx !== -1) {
+    const next = args[rbIdx + 1];
+    const logPath = next && !next.startsWith("--")
+      ? resolve(ROOT, next)
+      : resolve(ROOT, "clients", slug, "scaling_log.json");
+    await rollback(logPath, execute);
+    return;
+  }
 
   const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
   const analysisPath = resolve(ROOT, "clients", slug, "performance_analysis.json");
@@ -151,9 +235,9 @@ async function main() {
   }
 
   const tz = profile.accounts?.timezone || profile.location?.timezone || null;
-  const inHours = inBusinessHours(tz);
+  const inHours = inBusinessHours(tz, !force);
   if (!inHours && !force) {
-    console.error(`Outside business hours (6 AM – 9 PM ${tz || "UTC"}). Pass --force to override.`);
+    console.error(`Outside business hours (6 AM – 9 PM ${tz || "unknown tz → fail-closed"}). Pass --force to override.`);
     process.exit(5);
   }
 
@@ -176,6 +260,22 @@ async function main() {
   const autoActions = allDecisions.filter((d) => d.auto && d.endpoint);
   const approvalQueue = allDecisions.filter((d) => !d.auto && d.endpoint);
   const flagOnly = allDecisions.filter((d) => !d.endpoint);
+
+  // Run-level circuit breaker: a garbage performance_analysis.json (all entities
+  // reading as breaches) must not auto-mutate the whole account. Refuse the run
+  // when auto-actions exceed an absolute count or a fraction of active entities.
+  const activeCount = Math.max(parentMap.ads.size + parentMap.adsets.size, 1);
+  const pctCap = Math.floor(activeCount * MAX_AUTO_ACTIONS_PCT);
+  const breachesAbs = autoActions.length > MAX_AUTO_ACTIONS_ABS;
+  const breachesPct = autoActions.length > pctCap;
+  if (execute && (breachesAbs || breachesPct) && !force) {
+    console.error(
+      `[scale] CIRCUIT BREAKER: ${autoActions.length} auto-actions ` +
+      `(abs cap ${MAX_AUTO_ACTIONS_ABS}, ${Math.round(MAX_AUTO_ACTIONS_PCT * 100)}%-of-${activeCount} cap ${pctCap}). ` +
+      `Likely bad analysis data. Inspect performance_analysis.json, or pass --force to override.`
+    );
+    process.exit(6);
+  }
 
   const graph = execute ? createGraph() : null;
   const results = [];
@@ -225,6 +325,30 @@ async function main() {
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[scale] wrote ${outPath}`);
 
+  // H4 persistence (best-effort): one optimizer_log row per run. No-op offline.
+  if (supabaseConfigured()) {
+    try {
+      const clientId = await clientIdBySlug(slug);
+      const actionsTaken = results
+        .filter((r) => r.status === "applied" || r.status === "dry_run")
+        .map((r) => ({ type: r.action, entity_id: r.entity_id, reason: r.reason || r.approval_reason || null,
+          before: r.budget_before_cents ?? null, after: r.budget_after_cents ?? null, status: r.status }));
+      const flagsRaised = results
+        .filter((r) => r.status === "flagged" || r.status === "awaiting_approval")
+        .map((r) => ({ type: r.action, entity_id: r.entity_id, reason: r.reason || r.approval_reason || null, status: r.status }));
+      await sbInsert("optimizer_log", [{
+        client_id: clientId,
+        run_date: new Date().toISOString().slice(0, 10),
+        actions_taken: actionsTaken,
+        flags_raised: flagsRaised,
+        digest_sent: false,
+      }]);
+      console.error(`[scale] persisted optimizer_log (${actionsTaken.length} actions, ${flagsRaised.length} flags)`);
+    } catch (e) {
+      console.error(`[scale] optimizer_log persistence skipped: ${e.message}`);
+    }
+  }
+
   console.log(JSON.stringify({
     slug,
     mode: execute ? "EXECUTE" : "DRY_RUN",
@@ -239,7 +363,13 @@ function round(n, d) {
   return Math.round(n * f) / f;
 }
 
-main().catch((e) => {
-  console.error("[scale] FATAL:", e.message);
-  process.exit(1);
-});
+// Exported for unit tests; main() only runs when invoked directly.
+export { inBusinessHours, metricsArePlausible, decisionFromFlag, reverseDecision, buildParentMap,
+  MAX_AUTO_ACTIONS_ABS, MAX_AUTO_ACTIONS_PCT, MIN_IMPRESSIONS_FOR_ACTION };
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((e) => {
+    console.error("[scale] FATAL:", e.message);
+    process.exit(1);
+  });
+}

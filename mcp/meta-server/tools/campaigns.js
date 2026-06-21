@@ -111,6 +111,9 @@ export async function handle(toolName, args, client) {
 
     case "create_campaign": {
       const { ad_account_id, ...body } = args;
+      // PAUSED is a CODE-LEVEL default, not just a JSON-Schema default — a caller
+      // that omits status must never accidentally create a live campaign.
+      if (body.status === undefined) body.status = "PAUSED";
       if (body.daily_budget) body.daily_budget = String(body.daily_budget);
       if (body.lifetime_budget) body.lifetime_budget = String(body.lifetime_budget);
       return client.post(`/${client.act(ad_account_id)}/campaigns`, body);

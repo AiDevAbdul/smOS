@@ -23,6 +23,8 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { baselineSnapshot as baselineSchema, clientProfile as profileSchema } from "../../schemas/index.js";
+import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -218,12 +220,13 @@ async function main() {
     process.exit(3);
   }
 
-  const profile = JSON.parse(readFileSync(profilePath, "utf8"));
-  const baseline = JSON.parse(readFileSync(baselinePath, "utf8"));
-
-  // SKILL.md: refuse to run if baseline isn't immutably locked
-  if (!baseline.immutable_locked_at) {
-    console.error(`Baseline snapshot for ${slug} is not locked (immutable_locked_at is null). Refuse to run.`);
+  const profile = profileSchema.normalize(JSON.parse(readFileSync(profilePath, "utf8")));
+  // Normalize so audit's field names (avg_engagement_rate → engagement_rate_30d)
+  // resolve, then fail-closed validate (also enforces the immutable lock).
+  const baseline = baselineSchema.normalize(JSON.parse(readFileSync(baselinePath, "utf8")));
+  const baselineCheck = baselineSchema.validate(baseline, { requireLock: true });
+  if (!baselineCheck.ok) {
+    console.error(`Baseline snapshot for ${slug} is not usable:\n  - ${baselineCheck.errors.join("\n  - ")}`);
     console.error(`Re-run /audit with Meta API access, then re-capture and lock the baseline.`);
     process.exit(4);
   }
@@ -337,9 +340,14 @@ async function main() {
     JSON.stringify({ slug, baseline_date: baseline.snapshot_date, current_date: today, baseline: b, current: c, deltas, headline }, null, 2)
   );
 
+  const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, filled, {
+    title: `${profile.name || slug} — Before / After`,
+    subtitle: `Baseline ${baseline.snapshot_date || "—"} → ${today}`,
+  });
+
   console.error(`[before-after] wrote ${mdPath}`);
   console.error(`[before-after] wrote ${rawPath}`);
-  console.error(`[before-after] next: python scripts/render_pdf.py ${mdPath} --output ${mdPath.replace(/\.md$/, ".pdf")}`);
+  console.error(`[before-after] wrote ${htmlPath}${pdfOk ? " + PDF" : " (PDF skipped)"}`);
 
   console.log(JSON.stringify({
     slug,
