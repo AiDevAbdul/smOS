@@ -15,6 +15,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 |---|---|
 | Pre-sale prospect audit (no client API access) | `/pre-audit` |
 | **Agency sales/client pipeline (CRM)** | `/crm` |
+| **Generate a client proposal / pitch** | `/proposal` |
 | New client onboarding | `/intake` |
 | **Zero-start — brand strategy + positioning** | `/brand-strategy` |
 | **Zero-start — name + verbal identity (3-gate screen)** | `/brand-name` |

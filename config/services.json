@@ -1,0 +1,61 @@
+{
+  "agency": {
+    "name": "Ducker Creative",
+    "tagline": "Performance social, run like an operating system.",
+    "email": "abdul@duckercreative.com",
+    "website": "https://duckercreative.com",
+    "logo_url": null
+  },
+  "packages": [
+    {
+      "id": "starter",
+      "name": "Starter",
+      "monthly_retainer": 1500,
+      "currency": "USD",
+      "setup_fee": 500,
+      "best_for": "New advertisers validating their first paid channel.",
+      "includes": [
+        "Meta (Facebook + Instagram) ads management",
+        "1 active campaign objective",
+        "Up to 4 ad creatives / month",
+        "Weekly optimization + monthly report"
+      ]
+    },
+    {
+      "id": "growth",
+      "name": "Growth",
+      "monthly_retainer": 3000,
+      "currency": "USD",
+      "setup_fee": 750,
+      "best_for": "Brands with proof of concept ready to scale spend.",
+      "includes": [
+        "Everything in Starter",
+        "Up to 3 campaign objectives + retargeting",
+        "Up to 10 ad creatives / month",
+        "Conversions API setup + audience strategy",
+        "Bi-weekly strategy calls"
+      ]
+    },
+    {
+      "id": "scale",
+      "name": "Scale",
+      "monthly_retainer": 6000,
+      "currency": "USD",
+      "setup_fee": 1000,
+      "best_for": "Established brands optimizing for efficiency at volume.",
+      "includes": [
+        "Everything in Growth",
+        "Full-funnel paid + organic management",
+        "Unlimited creative iteration + creative testing",
+        "Incrementality / attribution analysis",
+        "Dedicated weekly reporting + portal access"
+      ]
+    }
+  ],
+  "terms": {
+    "contract_length_months": 3,
+    "ad_spend": "Billed separately and paid directly to Meta — not included in the retainer.",
+    "payment": "Monthly in advance, Net 7.",
+    "cancellation": "30 days written notice after the initial 3-month term."
+  }
+}
