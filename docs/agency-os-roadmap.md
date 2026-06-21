@@ -155,13 +155,15 @@ A new **Agency Ops layer** (sibling to the marketing skills), reusing existing i
 
 ## Phased roadmap
 
-**Phase 5 — Agency Ops foundation (chosen priority)**
-1. CRM/pipeline schema + skill (extend `clients`)
-2. `/proposal` (AI deck from `/pre-audit` → HTML+PDF)
-3. Finish `/pre-audit` Node wrapper (currently Python-only) — it's the front of the funnel the CRM/proposal depend on
-4. `/contract` + e-sign integration
-5. `/billing` (Stripe) — retainers + ad-spend pass-through
-6. `/portal` upgrade → real white-label client portal (no-login approvals)
+**Phase 5 — Agency Ops foundation (chosen priority) — ✅ COMPLETE**
+1. ✅ CRM/pipeline (`schemas/deal.js` + `/crm`, state machine + forecast)
+2. ✅ `/proposal` (catalog-driven AI deck → HTML+PDF, advances deal to proposed)
+3. ✅ `/pre-audit` Node wrapper (orchestrates the Python pipeline → HTML+PDF + CRM advance)
+4. ✅ `/contract` + e-sign (Dropbox Sign, fail-closed to manual; won transition)
+5. ✅ `/billing` (Stripe, fail-closed; retainer + setup + ad-spend, per-period idempotent ledger)
+6. ✅ `/portal` upgrade (plan + invoice ledger + no-login mailto approvals)
+
+_Lifecycle now runs end-to-end: `/pre-audit → /proposal → /contract → won → /intake → /billing`, all surfaced in `/portal`. Live Stripe/Dropbox-Sign sends are best-effort (no keys in env yet) and fail-closed to manual. 204 tests._
 
 **Phase 6 — Connectors & moats (parallel, low effort)**
 - GA4 + Slack/Teams connectors (Slack alongside Discord)
