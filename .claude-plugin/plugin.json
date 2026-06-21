@@ -18,32 +18,5 @@
         "META_APP_SECRET": "${META_APP_SECRET}"
       }
     }
-  },
-
-  "requiredEnv": [
-    "META_ACCESS_TOKEN",
-    "META_APP_ID",
-    "META_APP_SECRET",
-    "SUPABASE_URL",
-    "SUPABASE_SERVICE_KEY",
-    "DISCORD_WEBHOOK_ALERTS",
-    "DISCORD_WEBHOOK_APPROVALS"
-  ],
-
-  "optionalEnv": [
-    "ANTHROPIC_API_KEY",
-    "GOOGLE_DRIVE_FOLDER_ID",
-    "GMAIL_FROM_ADDRESS",
-    "NOTION_TOKEN"
-  ],
-
-  "permissions": [
-    "network",
-    "filesystem:read",
-    "filesystem:write:clients/",
-    "filesystem:write:prospects/",
-    "filesystem:write:scripts/",
-    "filesystem:write:data/",
-    "filesystem:write:.cache/"
-  ]
+  }
 }

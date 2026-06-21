@@ -1,5 +1,7 @@
-import { loadEnv } from "../../scripts/lib/load-env.js";
+import { loadEnv, requireEnv } from "../../scripts/lib/load-env.js";
 loadEnv();
+// Fail closed: the Meta server cannot serve a single tool without these.
+requireEnv(["META_ACCESS_TOKEN", "META_APP_ID", "META_APP_SECRET"], "Meta MCP server");
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "@modelcontextprotocol/sdk/types.js";

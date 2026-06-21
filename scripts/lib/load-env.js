@@ -31,3 +31,21 @@ export function loadEnv({ silent = false } = {}) {
   dotenvConfig({ path });
   return path;
 }
+
+/**
+ * Fail-closed env preflight. Throws with an actionable message listing every
+ * missing var, so a misconfigured plugin halts at startup instead of failing
+ * deep inside an API call. Treats empty/whitespace values as missing.
+ *
+ * @param {string[]} names - env var names that must be present & non-empty
+ * @param {string} [context] - short label for the error (e.g. "Meta MCP server")
+ */
+export function requireEnv(names, context = "smos") {
+  const missing = names.filter((n) => !process.env[n] || !process.env[n].trim());
+  if (missing.length) {
+    throw new Error(
+      `[${context}] Missing required env: ${missing.join(", ")}. ` +
+        "Set them in ~/.config/smos/.env (see .env.example), or via SMOS_ENV_FILE."
+    );
+  }
+}

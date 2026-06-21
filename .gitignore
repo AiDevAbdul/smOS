@@ -1,5 +1,4 @@
 .env
-.env.example
 .env.local
 *.local
 node_modules/
@@ -12,3 +11,7 @@ reports/*.pdf
 
 # Prospect working data (scrapes, raw HTML, per-prospect renders)
 prospects/
+
+# Agency Ops generated deliverables (per-client proposals/contracts)
+proposals/
+contracts/
