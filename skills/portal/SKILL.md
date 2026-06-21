@@ -24,10 +24,17 @@ self-contained HTML file (no external assets) that can be hosted or emailed.
 ## Workflow
 
 1. Load the profile + whatever artifacts exist (degrade gracefully; show "no data yet" cards).
-2. Build sections: Paid Performance, Organic Engagement, Content Calendar, Listening.
+2. Build sections: **Your Plan**, **Billing**, **Awaiting Your Approval**, Paid Performance, Community, Content Calendar, Listening.
 3. Render with the shared `md_to_html` design tokens → one self-contained HTML.
+
+## Phase 5 commercial layer
+
+- **Your Plan** — the client's retainer + whether an agreement is on file (from the CRM deal).
+- **Billing** — the invoice ledger (`billing/{slug}/ledger.json`): each invoice's period, amount, status, and a **Pay now** link when a Stripe hosted URL exists; plus the outstanding balance.
+- **Awaiting Your Approval** — pending `content_plan` items with **no-login** Approve / Request-changes actions. These are `mailto:` links to the agency email (from `config/services.json`), so approval works from a static, self-contained file with no backend. A hosted version can swap the action for a POST.
 
 ## Safety / privacy
 
-- Read-only: the portal never triggers an action.
-- White-label: no smOS branding leaks; uses the client's name from the profile.
+- Read-only on the marketing side: the portal never triggers a paid/organic action. Approvals are client-initiated emails the operator then records.
+- White-label: no smOS branding leaks; uses the client's name from the profile and the agency identity from the catalog.
+- Internal-only data (pipeline forecast, other clients) never appears — the portal shows only this client's plan, invoices, and work.

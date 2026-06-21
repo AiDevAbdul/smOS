@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /**
- * /portal companion script (Phase 2.5) — white-label client dashboard.
+ * /portal companion — white-label client dashboard (Phase 2.5 → upgraded in Phase 5).
  *
- * Builds a self-contained portal.html blending paid + organic from whatever local
- * artifacts exist (offline-safe; degrades to "no data yet" cards). Reuses the
- * shared md_to_html design tokens for one visual language.
+ * Blends paid + organic performance with the Phase 5 commercial layer: the client's
+ * plan, their invoice ledger (issued/paid/outstanding), and no-login approvals for
+ * pending content (mailto-based, so it works from a static, self-contained file).
+ * Offline-safe: every section degrades to a "no data yet" line.
  *
  * Usage: node skills/portal/portal.js <slug>
  */
@@ -14,6 +15,8 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { mdToHtml } from "../../scripts/lib/md_to_html.js";
+import { getDeal } from "../../scripts/lib/crm-store.js";
+import { listInvoices } from "../../scripts/lib/billing-store.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -27,48 +30,90 @@ if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`)
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 const clientName = profile?.business?.name || profile?.name || slug;
 
-function readJson(name) {
-  const p = resolve(dir, name);
+function readJson(p) {
   if (!existsSync(p)) return null;
   try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; }
 }
+function readClientJson(name) { return readJson(resolve(dir, name)); }
 
-const perf = readJson("performance_analysis.json");
-const inbox = readJson("inbox.json");
-const content = readJson("content_plan.json");
-const listening = readJson("listening_snapshot.json");
+const catalog = readJson(resolve(ROOT, "config", "services.json")) || { agency: {} };
+const agencyEmail = catalog.agency?.email || "hello@agency.co";
 
-const sections = [`# ${clientName} — Dashboard`, `_Generated ${new Date().toISOString().slice(0, 10)}_`, ""];
+const perf = readClientJson("performance_analysis.json");
+const inbox = readClientJson("inbox.json");
+const content = readClientJson("content_plan.json");
+const listening = readClientJson("listening_snapshot.json");
+const deal = getDeal(slug);
+const invoices = listInvoices(slug);
 
-sections.push("## Paid Performance");
+const fmt = (n) => Number(n || 0).toLocaleString();
+const s = [`# ${clientName}`, `_Your account dashboard · updated ${new Date().toISOString().slice(0, 10)}_`, ""];
+
+// ── Your Plan (commercial) ──
+s.push("## Your Plan");
+if (deal && deal.deal?.monthly_retainer) {
+  s.push(`- **${deal.deal.currency} ${fmt(deal.deal.monthly_retainer)}/month** management retainer`);
+  if (deal.links?.contract) s.push(`- Agreement: on file`);
+} else s.push("_Plan details will appear once your agreement is active._");
+
+// ── Billing (commercial) ──
+s.push("", "## Billing");
+if (invoices.length) {
+  const issued = invoices.reduce((a, i) => a + i.total, 0);
+  const paid = invoices.filter((i) => i.status === "paid").reduce((a, i) => a + i.total, 0);
+  const cur = invoices[0].currency;
+  s.push(`| Invoice | Period | Amount | Status |`, `|---|---|--:|---|`);
+  for (const i of invoices) {
+    const status = i.stripe?.hosted_url && i.status !== "paid" ? `[Pay now](${i.stripe.hosted_url})` : i.status;
+    s.push(`| ${i.id} | ${i.period} | ${cur} ${fmt(i.total)} | ${status} |`);
+  }
+  s.push("", `**Outstanding: ${cur} ${fmt(issued - paid)}**`);
+} else s.push("_No invoices issued yet._");
+
+// ── Approvals (no-login, mailto) ──
+s.push("", "## Awaiting Your Approval");
+const pending = (content?.items || []).filter((i) => i.status === "pending").slice(0, 8);
+if (pending.length) {
+  s.push("Review each planned post and approve or request changes — no login needed.", "");
+  for (const it of pending) {
+    const label = `${String(it.publish_at).slice(0, 10)} · ${it.platform}/${it.format}`;
+    const subj = (verb) => encodeURIComponent(`[${verb}] ${clientName} post ${it.id}`);
+    const body = encodeURIComponent(`Post: ${label}\nCaption: ${(it.message || "").slice(0, 140)}\n\nDecision: `);
+    const approve = `mailto:${agencyEmail}?subject=${subj("APPROVE")}&body=${body}`;
+    const changes = `mailto:${agencyEmail}?subject=${subj("CHANGES")}&body=${body}`;
+    s.push(`- **${label}** — ${(it.message || "").slice(0, 80)}  ·  [Approve](${approve}) · [Request changes](${changes})`);
+  }
+} else s.push("_Nothing needs your approval right now._");
+
+// ── Paid Performance ──
+s.push("", "## Paid Performance");
 if (perf?.summary) {
-  const s = perf.summary;
-  sections.push(
-    `| Spend | Conversions | CPA | ROAS | CTR |`,
-    `|--:|--:|--:|--:|--:|`,
-    `| $${s.spend ?? "—"} | ${s.conversions ?? "—"} | ${s.cpa ?? "—"} | ${s.roas ?? "—"} | ${s.ctr ?? "—"}% |`
-  );
-} else sections.push("_No paid performance data yet — run /analyze._");
+  const p = perf.summary;
+  s.push(`| Spend | Conversions | CPA | ROAS | CTR |`, `|--:|--:|--:|--:|--:|`,
+    `| $${fmt(p.spend)} | ${p.conversions ?? "—"} | ${p.cpa ?? "—"} | ${p.roas ?? "—"} | ${p.ctr ?? "—"}% |`);
+} else s.push("_Performance data will appear once campaigns are live._");
 
-sections.push("", "## Organic Engagement");
+// ── Organic ──
+s.push("", "## Community");
 if (inbox?.items?.length) {
   const breaches = inbox.items.filter((i) => i.first_reply_due_at && Date.parse(i.first_reply_due_at) < Date.now() && i.state !== "replied").length;
-  sections.push(`- **${inbox.items.length}** interactions in the inbox`, `- **${breaches}** awaiting reply past SLA`);
-} else sections.push("_No inbox data yet — run /inbox._");
+  s.push(`- **${inbox.items.length}** interactions handled`, `- **${breaches}** awaiting reply`);
+} else s.push("_No community activity captured yet._");
 
-sections.push("", "## Content Calendar");
+s.push("", "## Content Calendar");
 if (content?.items?.length) {
-  const upcoming = content.items.filter((i) => i.status === "pending").slice(0, 5);
-  sections.push(`- **${content.pillars?.length || 0}** pillars · **${content.items.length}** planned posts`);
-  upcoming.forEach((i) => sections.push(`  - ${String(i.publish_at).slice(0, 10)} · ${i.platform}/${i.format} · ${i.pillar_id}`));
-} else sections.push("_No content plan yet — run /content-plan._");
+  s.push(`- **${content.pillars?.length || 0}** content pillars · **${content.items.length}** posts planned`);
+} else s.push("_Your content calendar will appear here._");
 
-sections.push("", "## Market Listening");
+s.push("", "## Market Listening");
 if (listening?.competitors?.length || listening?.mentions?.length) {
-  sections.push(`- Tracking **${listening.competitors?.length || 0}** competitors · **${listening.mentions?.length || 0}** mentions captured`);
-} else sections.push("_No listening snapshot yet — run /listening._");
+  s.push(`- Tracking **${listening.competitors?.length || 0}** competitors · **${listening.mentions?.length || 0}** mentions`);
+} else s.push("_Listening insights will appear here._");
 
-const html = mdToHtml(sections.join("\n"), { title: `${clientName} — Portal`, subtitle: "Client Dashboard" });
+const html = mdToHtml(s.join("\n"), { title: `${clientName} — Portal`, subtitle: "Client Dashboard" });
 const out = resolve(dir, "portal.html");
 writeFileSync(out, html);
-console.log(`portal: ${clientName} → portal.html (paid:${!!perf} organic:${!!inbox} content:${!!content} listening:${!!listening})`);
+console.log(JSON.stringify({
+  portal: out, client: clientName,
+  sections: { plan: !!deal, billing: invoices.length, approvals: pending.length, paid: !!perf, organic: !!inbox, content: !!content, listening: !!listening },
+}, null, 2));
