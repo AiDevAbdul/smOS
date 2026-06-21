@@ -70,8 +70,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
     };
   } catch (err) {
+    // Token expiry gets a distinct, actionable message so Claude prompts a
+    // re-auth instead of treating it as a generic API failure.
+    const text = err.tokenExpired
+      ? `Auth error: ${err.message}\nAction required: refresh META_ACCESS_TOKEN (or the per-client token) — the request was not retried.`
+      : `Error: ${err.message}`;
     return {
-      content: [{ type: "text", text: `Error: ${err.message}` }],
+      content: [{ type: "text", text }],
       isError: true,
     };
   }

@@ -1,11 +1,12 @@
 export const tools = [
   {
     name: "get_custom_audiences",
-    description: "List all custom audiences in an ad account with sizes and metadata",
+    description: "List all custom audiences in an ad account with sizes and metadata. Paginates automatically.",
     inputSchema: {
       type: "object",
       properties: {
         ad_account_id: { type: "string" },
+        limit: { type: "number", description: "Total max results across pages (default 1000)." },
       },
       required: ["ad_account_id"],
     },
@@ -83,11 +84,12 @@ export const tools = [
 export async function handle(toolName, args, client) {
   switch (toolName) {
     case "get_custom_audiences": {
-      const { ad_account_id } = args;
-      return client.get(`/${client.act(ad_account_id)}/customaudiences`, {
+      const { ad_account_id, limit = 1000 } = args;
+      const data = await client.paginate(`/${client.act(ad_account_id)}/customaudiences`, {
         fields: "id,name,subtype,approximate_count_lower_bound,approximate_count_upper_bound,data_source,creation_time,operation_status,time_updated",
-        limit: 200,
-      });
+        limit: 100,
+      }, limit);
+      return { data };
     }
 
     case "create_lookalike": {

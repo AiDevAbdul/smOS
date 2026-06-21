@@ -108,7 +108,7 @@ export const tools = [
       properties: {
         ad_account_id: { type: "string" },
         status: { type: "string", enum: ["ENABLED", "DISABLED", "ALL"], default: "ALL" },
-        limit: { type: "number", default: 100 },
+        limit: { type: "number", description: "Total max results across pages (default 500). Paginates automatically." },
       },
       required: ["ad_account_id"],
     },
@@ -182,13 +182,14 @@ export async function handle(toolName, args, client) {
     }
 
     case "get_rules": {
-      const { ad_account_id, status = "ALL", limit = 100 } = args;
+      const { ad_account_id, status = "ALL", limit = 500 } = args;
       const params = {
         fields: "id,name,status,evaluation_spec,execution_spec,schedule_spec,created_time,updated_time",
-        limit: Math.min(limit, 200),
+        limit: 100,
       };
       if (status !== "ALL") params.filtering = JSON.stringify([{ field: "status", operator: "EQUAL", value: status }]);
-      return client.get(`/${client.act(ad_account_id)}/adrules_library`, params);
+      const data = await client.paginate(`/${client.act(ad_account_id)}/adrules_library`, params, limit);
+      return { data };
     }
 
     case "get_rule_history": {

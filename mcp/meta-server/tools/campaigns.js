@@ -11,7 +11,7 @@ export const tools = [
           items: { type: "string", enum: ["ACTIVE", "PAUSED", "ARCHIVED", "DELETED", "IN_PROCESS", "WITH_ISSUES"] },
           description: "Filter by campaign status. Omit for all non-archived.",
         },
-        limit: { type: "number", description: "Max results (default 50, max 200)" },
+        limit: { type: "number", description: "Total max results across pages (default 500). Paginates automatically." },
       },
       required: ["ad_account_id"],
     },
@@ -98,15 +98,18 @@ const INSIGHT_FIELDS = "impressions,clicks,spend,reach,ctr,cpc,cpm,frequency,act
 export async function handle(toolName, args, client) {
   switch (toolName) {
     case "get_campaigns": {
-      const { ad_account_id, status, limit = 50 } = args;
+      // limit is now a TOTAL cap across pages, not a page size — large accounts
+      // return every matching campaign, not just the first page.
+      const { ad_account_id, status, limit = 500 } = args;
       const params = {
         fields: "id,name,status,objective,daily_budget,lifetime_budget,bid_strategy,start_time,stop_time,created_time,updated_time",
-        limit: Math.min(limit, 200),
+        limit: 100,
       };
       if (status?.length) {
         params.filtering = JSON.stringify([{ field: "effective_status", operator: "IN", value: status }]);
       }
-      return client.get(`/${client.act(ad_account_id)}/campaigns`, params);
+      const data = await client.paginate(`/${client.act(ad_account_id)}/campaigns`, params, limit);
+      return { data };
     }
 
     case "create_campaign": {
