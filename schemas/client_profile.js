@@ -26,15 +26,47 @@ export function normalizeAccounts(a) {
     // keep legacy aliases mirrored so transitional readers still resolve
     page_id: fb ?? null,
     ig_account_id: ig ?? null,
-    bm_id: pick(acc, "bm_id") ?? null,
+    bm_id: pick(acc, "bm_id", "business_id") ?? null,
+    business_id: pick(acc, "business_id", "bm_id") ?? null,
+    system_user_id: pick(acc, "system_user_id") ?? null,
     currency: pick(acc, "currency") ?? null,
     timezone: pick(acc, "timezone") ?? null,
+    // Phase 0 (zero-start) provenance + web — additive, default null so existing
+    // established-client profiles are unaffected.
+    pixel_installed: acc.pixel_installed === true,
+    website_url: pick(acc, "website_url") ?? null,
+    domain: pick(acc, "domain") ?? null,
+  };
+}
+
+// Phase 0 setup-checklist state. /setup-accounts owns this: it records which
+// manual gates the human has cleared and which API-creatable assets smOS made.
+// A null step = not done yet; a string = ISO timestamp it was completed.
+export function normalizeSetup(raw) {
+  const s = raw || {};
+  const step = (...keys) => pick(s, ...keys) ?? null;
+  return {
+    // manual gates (human-only — see docs/agency-foundation.md)
+    business_verified_at: step("business_verified_at"),
+    page_created_at: step("page_created_at"),
+    instagram_created_at: step("instagram_created_at"),
+    instagram_professional_at: step("instagram_professional_at"),
+    ig_page_linked_at: step("ig_page_linked_at"),
+    payment_method_added_at: step("payment_method_added_at"),
+    asset_access_granted_at: step("asset_access_granted_at"),
+    // API-creatable (smOS does these once the manual spine exists)
+    ad_account_created_at: step("ad_account_created_at"),
+    pixel_created_at: step("pixel_created_at"),
+    system_user_token_at: step("system_user_token_at"),
+    assets_assigned_at: step("assets_assigned_at"),
+    domain_verified_at: step("domain_verified_at"),
+    landing_deployed_at: step("landing_deployed_at"),
   };
 }
 
 export function normalize(raw) {
   const r = raw || {};
-  return { ...r, accounts: normalizeAccounts(r.accounts) };
+  return { ...r, accounts: normalizeAccounts(r.accounts), setup: normalizeSetup(r.setup) };
 }
 
 /** Validate the accounts needed for a LIVE launch. Pre-launch skills (intake) may
