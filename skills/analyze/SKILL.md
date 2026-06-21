@@ -63,6 +63,10 @@ Every flag includes the metric value, the threshold it tripped, and a one-line r
 - Bottom 5 ads by ROAS
 - Top placement / age-gender / device segment by ROAS at adset level (highlight if one segment is >50% of conversions — concentrate spend there)
 
+### Pass 5b — Opportunity Score
+
+- `opportunity` block (0–100): a single explainable number for unrealized upside, blending spend-share of proven winners to scale (0.45), spend bleeding on pause candidates to reclaim (0.35), and fatigued-creative spend to refresh (0.20). Includes a component breakdown + ranked recommendations. Higher = more money currently left on the table.
+
 ### Pass 6 — Persist
 
 1. Write `clients/{slug}/performance_analysis.json`:

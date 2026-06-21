@@ -23,6 +23,8 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { deriveMetrics, findAction, round, normalizeKpis } from "../../scripts/lib/metrics.js";
+import { twoProportionZ, scaleSignificance } from "../../scripts/lib/stats.js";
+import { opportunityScore } from "../../scripts/lib/opportunity.js";
 import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 
@@ -155,15 +157,36 @@ function classifyFlags(ad, adset, kpis) {
       reasoning: `7d frequency ${m7.frequency} > ${kpis.pause_frequency_ceiling}`,
     });
   }
-  // Creative fatigue: CTR_7d < 0.6 × CTR_30d AND frequency_7d > 3.0
+  // Creative fatigue: CTR_7d < 0.6 × CTR_30d AND frequency_7d > 3.0.
+  // Significance gate: the CTR drop must be statistically real (two-proportion
+  // z-test on clicks/impressions), not small-sample noise. Without it, an ad
+  // with a handful of impressions could be "fatigued" purely by variance.
   if (m7.link_ctr != null && m30.link_ctr != null && m30.link_ctr > 0) {
     const decay = m7.link_ctr / m30.link_ctr;
     if (decay < kpis.fatigue_ctr_decay && m7.frequency > kpis.fatigue_frequency_min) {
+      const sig = twoProportionZ(m7.link_clicks || 0, m7.impressions || 0, m30.link_clicks || 0, m30.impressions || 0);
+      if (sig.significant) {
+        flags.push({
+          flag: "CREATIVE_FATIGUE",
+          metric: round(decay, 3),
+          threshold: kpis.fatigue_ctr_decay,
+          significance: { z: round(sig.z, 2), test: "two_proportion_z_95" },
+          reasoning: `7d CTR is ${Math.round(decay * 100)}% of 30d CTR at frequency ${m7.frequency} (z=${round(sig.z, 2)}, significant)`,
+        });
+      }
+    }
+  }
+  // Anomaly: spend spike — 7d daily-average spend far above the 30d daily average.
+  // Catches a runaway adset (CBO reallocation, bid change) between optimizer runs.
+  {
+    const daily7 = (m7.spend || 0) / 7;
+    const daily30 = (m30.spend || 0) / 30;
+    if (daily30 > 0 && daily7 >= kpis.spend_spike_min_daily && daily7 > kpis.spend_spike_multiplier * daily30) {
       flags.push({
-        flag: "CREATIVE_FATIGUE",
-        metric: round(decay, 3),
-        threshold: kpis.fatigue_ctr_decay,
-        reasoning: `7d CTR is ${Math.round(decay * 100)}% of 30d CTR at frequency ${m7.frequency}`,
+        flag: "ANOMALY_spend_spike",
+        metric: round(daily7 / daily30, 2),
+        threshold: kpis.spend_spike_multiplier,
+        reasoning: `7d daily spend $${round(daily7, 2)} is ${round(daily7 / daily30, 1)}× the 30d daily avg $${round(daily30, 2)} — runaway delivery`,
       });
     }
   }
@@ -200,15 +223,21 @@ function classifyAdsetFlags(adset, kpis) {
   const flags = [];
   const m7 = adset.metrics?.last_7d || {};
   if (m7.spend >= kpis.pause_roas_min_spend && m7.roas != null && m7.roas >= kpis.scale_roas_floor) {
+    // Significance gate: a ROAS win on a handful of conversions is luck, not a
+    // signal to push budget. Only a sufficiently-sampled winner becomes an
+    // auto-eligible SCALE_CANDIDATE; a thin one downgrades to a SCALE_WATCH flag
+    // a human can review.
+    const sig = scaleSignificance(m7.conversions, kpis.scale_min_conversions);
     flags.push({
       entity_type: "adset",
       entity_id: adset.id,
       name: adset.name,
       campaign_id: adset.campaign_id,
-      flag: "SCALE_CANDIDATE",
+      flag: sig.significant ? "SCALE_CANDIDATE" : "SCALE_WATCH",
       metric: m7.roas,
       threshold: kpis.scale_roas_floor,
-      reasoning: `7d ROAS ${m7.roas} ≥ ${kpis.scale_roas_floor} after $${m7.spend} spend`,
+      significance: sig,
+      reasoning: `7d ROAS ${m7.roas} ≥ ${kpis.scale_roas_floor} after $${m7.spend} spend — ${sig.note}`,
     });
   }
   return flags;
@@ -411,6 +440,9 @@ async function main() {
     .filter((s) => s.breakdowns)
     .flatMap((s) => topSegments(s.breakdowns).map((h) => ({ adset_id: s.id, adset_name: s.name, ...h })));
 
+  // Opportunity Score — one explainable number for unrealized upside in the account.
+  const opportunity = opportunityScore({ adsets: adsetRows, ads: adRows, flags, kpis });
+
   const out = {
     slug,
     generated_at: new Date().toISOString(),
@@ -424,6 +456,7 @@ async function main() {
     by_adset: adsetRows,
     by_ad: adRows,
     flags,
+    opportunity,
     winners: { top_roas: ranking.top_roas, lowest_cpa: ranking.lowest_cpa },
     losers: { bottom_roas: ranking.bottom_roas },
     segment_highlights: segmentHighlights,
@@ -441,6 +474,10 @@ async function main() {
       `# Performance Analysis — ${profile.name || slug}`,
       ``,
       `_7-day window · ${campaignRows.length} campaigns · ${adsetRows.length} adsets · ${adRows.length} ads_`,
+      ``,
+      `## Opportunity Score: ${opportunity.score}/100`,
+      ``,
+      opportunity.recommendations.map((r) => `- ${r}`).join("\n"),
       ``,
       `## Last 7 days`,
       ``,
@@ -505,6 +542,7 @@ async function main() {
         campaigns: campaignRows.length,
         flags: flags.length,
         flag_counts: flagCounts,
+        opportunity_score: opportunity.score,
         winners: ranking.top_roas.length,
         losers: ranking.bottom_roas.length,
         path: outPath,

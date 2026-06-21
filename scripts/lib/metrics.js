@@ -94,6 +94,11 @@ export const DEFAULT_KPIS = {
   scale_roas_floor: 3.0,
   fatigue_ctr_decay: 0.6,
   fatigue_frequency_min: 3.0,
+  // ---- statistical-significance gates (Track C) ----
+  scale_min_conversions: 15,   // an adset needs ≥ this many 7d conversions before a ROAS win auto-scales
+  // ---- spend-spike anomaly ----
+  spend_spike_multiplier: 2.0, // 7d daily-avg spend > N× the 30d daily-avg → ANOMALY_spend_spike
+  spend_spike_min_daily: 10,   // ignore spikes below this absolute daily spend (noise on tiny budgets)
 };
 
 const num = (v) => (v == null || v === "" || !Number.isFinite(+v) ? null : +v);

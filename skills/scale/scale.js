@@ -90,6 +90,12 @@ function decisionFromFlag(flag, parentMap) {
       if (!metricsArePlausible(adset)) {
         return { action: "flag", entity_type: "adset", auto: false, reason: "metrics missing/zero — refusing auto-scale (bad-data guard)" };
       }
+      // Defense-in-depth: /analyze only emits SCALE_CANDIDATE when the ROAS win is
+      // significant, but if a stale/hand-edited analysis carries an insignificant
+      // one through, refuse to auto-scale on it.
+      if (flag.significance && flag.significance.significant === false) {
+        return { action: "flag", entity_type: "adset", auto: false, reason: `not significant (${flag.significance.note}) — refusing auto-scale` };
+      }
       const currentBudgetCents = adset?.daily_budget != null ? Math.round(adset.daily_budget * 100) : null;
       if (!currentBudgetCents) {
         return { action: "flag", entity_type: "adset", auto: false, reason: "no daily_budget — cannot auto-scale (CBO campaign?)" };
@@ -109,9 +115,13 @@ function decisionFromFlag(flag, parentMap) {
         approval_reason: exceedsCeiling ? `delta $${deltaCents / 100} > $${AUTO_SCALE_DELTA_CEILING_CENTS / 100}/day ceiling` : null,
       };
     }
+    case "SCALE_WATCH":
+      // Significant-enough to watch, too thin to auto-scale. Human review.
+      return { action: "flag", entity_type: "adset", auto: false, reason: flag.significance?.note || "watch — sample too thin to scale" };
     case "CREATIVE_FATIGUE":
     case "ANOMALY_delivery_stall":
     case "ANOMALY_attribution":
+    case "ANOMALY_spend_spike":
       return { action: "flag", entity_type: flag.entity_type, auto: true };
     default:
       return { action: "flag", entity_type: flag.entity_type, auto: false };

@@ -23,9 +23,12 @@ description: Use this skill when the user asks to scale winners, kill losers, or
 | PAUSE_CANDIDATE_CTR | `update_ad_status({status:"PAUSED"})` | auto |
 | PAUSE_CANDIDATE_FREQUENCY | `update_ad_status({status:"PAUSED"})` | auto |
 | SCALE_CANDIDATE | `update_adset({daily_budget: current × 1.2})` | auto if delta ≤ $500/day, else Discord |
+| SCALE_WATCH | flag only — ROAS qualifies but conversions < `scale_min_conversions` (sample too thin) | Discord digest |
 | DUPLICATE_CANDIDATE | clone adset → new adset with 0.5× budget | Discord |
 | CREATIVE_FATIGUE | flag only; do not pause silently | Discord digest |
-| ANOMALY_* | flag only; surface in digest | Discord |
+| ANOMALY_* | flag only; surface in digest (incl. `ANOMALY_spend_spike`) | Discord |
+
+**Significance gating (Track C):** `/analyze` only emits an auto-eligible `SCALE_CANDIDATE` when the ROAS win clears the conversion-count floor (`scale_min_conversions`, default 15); thinner winners downgrade to `SCALE_WATCH`. `CREATIVE_FATIGUE` requires the 7d-vs-30d CTR drop to pass a two-proportion z-test. `/scale` re-checks the carried `significance` and refuses to auto-scale an insignificant flag (defense-in-depth).
 
 Global hard blocks (never auto):
 - Budget increase > $500/day in a single action
