@@ -17,6 +17,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Agency sales/client pipeline (CRM)** | `/crm` |
 | **Generate a client proposal / pitch** | `/proposal` |
 | **Generate service agreement + e-sign** | `/contract` |
+| **Issue retainer invoices (Stripe)** | `/billing` |
 | New client onboarding | `/intake` |
 | **Zero-start — brand strategy + positioning** | `/brand-strategy` |
 | **Zero-start — name + verbal identity (3-gate screen)** | `/brand-name` |
