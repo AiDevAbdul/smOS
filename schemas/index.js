@@ -18,6 +18,7 @@ export * as adCopy from "./ad_copy.js";
 export * as strategyBrief from "./strategy_brief.js";
 export * as audienceMap from "./audience_map.js";
 export * as clientProfile from "./client_profile.js";
+export * as brandProfile from "./brand_profile.js";
 export * as baselineSnapshot from "./baseline_snapshot.js";
 export * as competitorIntel from "./competitor_intel.js";
 export * as launchPlan from "./launch_plan.js";

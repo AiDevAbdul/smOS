@@ -15,6 +15,13 @@ You manage real ad accounts with real budgets. Every action you take that touche
 |---|---|
 | Pre-sale prospect audit (no client API access) | `/pre-audit` |
 | New client onboarding | `/intake` |
+| **Zero-start — brand strategy + positioning** | `/brand-strategy` |
+| **Zero-start — name + verbal identity (3-gate screen)** | `/brand-name` |
+| **Zero-start — visual identity (logo/color/type)** | `/brand-visual` |
+| **Zero-start — brand guidelines (HTML+PDF)** | `/brand-book` |
+| **Zero-start — social profile assets + bios** | `/brand-social` |
+| **Zero-start — Meta account bootstrap (Page/IG/ad acct/pixel)** | `/setup-accounts` |
+| **Zero-start — domain + landing + domain verification** | `/setup-web` |
 | Account + page audit | `/audit` |
 | Creative quality review | `/audit-creative` |
 | Competitor research | `/research` |
@@ -39,6 +46,50 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Social listening + organic competitor benchmark** | `/listening` |
 | **Creative asset library (DAM)** | `/assets` |
 | **Client-facing white-label dashboard** | `/portal` |
+
+---
+
+## Zero-Start Onboarding (Phase 0)
+
+The paid + organic pipeline below assumes a client already has a brand, a Page, an IG
+account, an ad account, and a pixel. A **brand-new business has none of these.** Phase 0
+builds them, then hands off to the existing pipeline. Route a "starting from zero" client
+through this BEFORE `/audit`.
+
+**Order (each step gates the next):**
+
+```
+/intake (no account ids required)
+  → /brand-strategy   ──★ positioning approved (human)
+  → /brand-name       ──★ name approved (3-gate screen + attorney clearance, human)
+  → /brand-visual     ──★ logo approved (human)
+  → /brand-book        (auto-assembled guidelines, HTML+PDF)
+  → /brand-social      (profile/cover/highlights/templates/bios)
+  → /setup-accounts    (manual gates checklist + API bootstrap → fills account ids)
+  → /setup-web         (domain + landing + Meta domain verification)
+  → /capi-setup        (verify pixel firing)
+  → [existing pipeline unblocks] /audit → /research → /audience-map → /strategy-brief → /creative → /launch
+```
+
+**The split that governs everything:** identity/trust is **manual** (Page creation, IG
+creation + Professional conversion, IG↔Page link, business verification, payment method,
+accepting access — all UI-only); structure/management is **API** (ad account, pixel,
+system-user token, asset assignment, domain registration). `/setup-accounts` drives both —
+it records manual gates via `--done` (never fakes them) and executes the API half through
+the guarded chokepoint.
+
+**Three human gates are load-bearing and never auto-cleared:** positioning, final name
+(+ trademark attorney clearance — the knockout screen only rules names *out*), and logo.
+`schemas/brand_profile.js` enforces them fail-closed: a later stage refuses to validate
+until the prior gate timestamp is stamped.
+
+**Preflight:** skills that need live accounts call `checkZeroStartPrereqs(profile, {need})`
+in `scripts/lib/guards.js` — it returns a clear "run `/setup-accounts` first" instead of a
+cryptic null-halt.
+
+> Agency one-time prerequisite (done once, not per client): business verification + App
+> Review for Advanced Access. See `docs/agency-foundation.md` — without it, API ad-account
+> creation in `/setup-accounts` fails.
 
 ---
 

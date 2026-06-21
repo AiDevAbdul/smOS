@@ -266,6 +266,44 @@ export function checkDestructive(ctx = {}) {
   return PASS;
 }
 
+/**
+ * Phase 0 (zero-start) preflight. Established-client skills (/audit, /audience-map,
+ * /launch, /publish) presuppose a Page, IG account, ad account and pixel already
+ * exist. For a brand-new business those are null/TBD and the downstream skill would
+ * otherwise halt with a cryptic "accounts.x is missing". This returns a clear,
+ * actionable result naming WHICH setup skill to run first.
+ *
+ * Pure (no I/O): pass the loaded profile. `need` selects which assets a caller
+ * requires — e.g. /publish needs page+ig+token but not pixel; /launch needs all.
+ *   checkZeroStartPrereqs(profile, { need: ["page","ig","ad_account","pixel","website"] })
+ */
+export function checkZeroStartPrereqs(profile, { need = ["page", "ad_account"] } = {}) {
+  const a = profile?.accounts || {};
+  const missing = [];
+  const isSet = (v) => v != null && String(v).trim() !== "" && !/^<?TBD/i.test(String(v).trim());
+
+  const checks = {
+    page:       { val: a.facebook_page_id,      label: "Facebook Page",          fix: "create the Page manually, then run /setup-accounts to record the id" },
+    ig:         { val: a.instagram_business_id, label: "Instagram business account", fix: "create + convert to Professional and link to the Page, then run /setup-accounts" },
+    ad_account: { val: a.ad_account_id,         label: "Meta ad account",        fix: "run /setup-accounts (it creates the ad account via the API once the business is verified)" },
+    pixel:      { val: a.pixel_id,              label: "Meta pixel/dataset",      fix: "run /setup-accounts (creates the pixel), then install it via /setup-web or /capi-setup" },
+    website:    { val: a.website_url,           label: "website / landing page",  fix: "run /setup-web to buy a domain + deploy a landing page" },
+  };
+
+  for (const key of need) {
+    const c = checks[key];
+    if (c && !isSet(c.val)) missing.push({ asset: key, label: c.label, fix: c.fix });
+  }
+
+  return {
+    ok: missing.length === 0,
+    missing,
+    message: missing.length
+      ? `Zero-start prerequisites missing: ${missing.map((m) => `${m.label} (→ ${m.fix})`).join("; ")}`
+      : "All required accounts present.",
+  };
+}
+
 // ====================== chokepoint orchestrator ======================
 
 /**
