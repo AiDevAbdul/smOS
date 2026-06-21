@@ -40,14 +40,18 @@ async function checkDotCom(name) {
   }
 }
 
-// Social handle availability — HEAD the public profile URL. 404 → likely free,
-// 200 → taken. Network failure → null (unknown). Best-effort across platforms.
+// Social handle availability — unauthenticated checks can only PROVE availability,
+// not taken-ness: IG/FB/TikTok/X are SPAs that return HTTP 200 (login/app shell)
+// for nonexistent handles, so a 200 is NOT evidence the handle is taken. We
+// therefore return true ONLY on a clean 404 (definitely free) and null otherwise
+// (unknown — verify manually / with an authenticated check). This avoids the
+// harmful false-positive of marking an available name as "taken". Verified against
+// live IG/FB/TikTok behavior in the v25.0 dry run.
 async function checkHandle(url) {
   try {
-    const res = await fetch(url, { method: "HEAD", redirect: "manual" });
-    if (res.status === 404) return true;
-    if (res.status >= 200 && res.status < 400) return false;
-    return null;
+    const res = await fetch(url, { method: "GET", redirect: "manual" });
+    if (res.status === 404) return true; // definitively available
+    return null;                          // 200/redirect/block → cannot conclude; unknown
   } catch {
     return null;
   }
@@ -67,24 +71,28 @@ async function checkHandles(name) {
   return out;
 }
 
-// Trademark KNOCKOUT only — USPTO open-data quick search for live identical marks.
-// A hit means "ruled out / needs review"; no hit is NOT clearance. We never return
-// "clear: true" with confidence — attorney clearance is always required.
+// Trademark KNOCKOUT only — a hit rules a name OUT; no hit is NEVER clearance.
+// The legacy public TESS endpoint was retired and the current USPTO search backend
+// (tmsearch.uspto.gov) has no open JSON API — the v25.0 dry run confirmed it 404s.
+// Automating this requires a USPTO Open Data Portal API key (developer.uspto.gov,
+// trademark APIs). With a key in env we query it; without one we honestly return
+// null (manual step) rather than pretend the knockout ran.
 async function trademarkKnockout(name) {
   const term = encodeURIComponent(name.trim());
+  const key = process.env.USPTO_ODP_API_KEY;
+  const manualNote = `verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)`;
+  if (!key) return { knockout_clear: null, note: `no USPTO_ODP_API_KEY — ${manualNote}` };
   try {
-    // USPTO trademark search API (open data). Endpoint shape varies; treat any
-    // non-2xx or parse failure as "unknown" rather than "clear".
-    const res = await fetch(`https://tmsearch.uspto.gov/api/v1/search?query=${term}`, {
-      headers: { accept: "application/json" },
+    const res = await fetch(`https://api.uspto.gov/api/v1/trademarks/search?query=${term}`, {
+      headers: { accept: "application/json", "X-API-KEY": key },
     });
-    if (!res.ok) return { knockout_clear: null, note: `USPTO returned ${res.status} — verify manually` };
+    if (!res.ok) return { knockout_clear: null, note: `USPTO returned ${res.status} — ${manualNote}` };
     const json = await res.json().catch(() => null);
-    const hits = json?.count ?? json?.results?.length ?? null;
-    if (hits == null) return { knockout_clear: null, note: "USPTO response unparseable — verify manually" };
-    return { knockout_clear: hits === 0, hits, note: hits ? `${hits} potentially conflicting live mark(s)` : "no identical live marks in quick search" };
+    const hits = json?.count ?? json?.results?.length ?? json?.total ?? null;
+    if (hits == null) return { knockout_clear: null, note: `USPTO response unparseable — ${manualNote}` };
+    return { knockout_clear: hits === 0, hits, note: hits ? `${hits} potentially conflicting live mark(s) — attorney review required` : "no identical live marks in quick search (NOT clearance)" };
   } catch (e) {
-    return { knockout_clear: null, note: `USPTO unreachable (${e.message}) — verify manually at tmsearch.uspto.gov` };
+    return { knockout_clear: null, note: `USPTO unreachable (${e.message}) — ${manualNote}` };
   }
 }
 

@@ -20,9 +20,9 @@ The name is the anchor of the brand and must clear three **independent** screens
 1. **Generate** 15–30 candidates across name types (descriptive / suggestive / abstract / coined / compound). Coined + abstract marks are the most trademark-defensible — bias toward them when the category is crowded.
 2. **Shortlist** ~6 on memorability, pronounceability, distinctiveness, cultural soundness.
 3. **Screen each shortlisted name** against the three gates (the companion script does this):
-   - **`.com` availability** — RDAP/DNS check (authority signal; independent of trademark)
-   - **Trademark knockout** — USPTO quick-search for identical/near-identical live marks. This is a *knockout filter only*, never a clearance. ALWAYS set `attorney_clearance_flagged: true`.
-   - **Social handles** — Instagram / Facebook / X / TikTok / LinkedIn availability
+   - **`.com` availability** — RDAP/DNS check (authority signal; independent of trademark). Reliable: registered domains resolve; an invented name returns `null` (no record ≠ guaranteed free — confirm at a registrar).
+   - **Trademark knockout** — knockout filter only, never clearance; ALWAYS sets `attorney_clearance_flagged: true`. Requires a `USPTO_ODP_API_KEY` (developer.uspto.gov) to automate; without one it returns `null` with the manual-search URL. The legacy public TESS endpoint was retired.
+   - **Social handles** — unauthenticated checks can only PROVE availability (a clean 404 → `true`); IG/FB/TikTok/X return 200 even for nonexistent handles, so a "taken" result is reported as `null` (unknown), not `false`. Confirm taken-ness with an authenticated check.
 4. **Present the screened shortlist** to the human with the gate results per name. Recommend one, but the **human picks**.
 5. Once chosen, draft the rest of verbal identity: **tagline**, **voice** (3–5 traits + NN/g spectrums + do/don't), **messaging house** (roof/walls/foundation), **elevator pitch**, **boilerplate**.
 
