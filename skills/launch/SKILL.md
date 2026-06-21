@@ -12,7 +12,7 @@ description: Use this skill when the user asks to launch a campaign, push a brie
 - `clients/{slug}/ad_copy.json`
 - `clients/{slug}/audience_map.json`
 - `clients/{slug}/CLAUDE.md` — for KPI thresholds and daily caps
-- Meta MCP server — `create_campaign`, `create_adset`, `create_ad_creative`, `upload_image`, `create_ad`, `update_ad_status`, `update_campaign`
+- Meta MCP server — `create_campaign`, `create_adset`, `create_ad_creative`, `upload_image`, `upload_video`, `create_ad`, `update_ad_status`, `update_campaign`
 - Supabase connector — `campaigns` row + `campaign_log`
 - Discord connector — for the launch notification + activation confirmation
 
@@ -67,7 +67,7 @@ For each angle in `ad_copy.angles`:
 1. For each `top_pick` (and any explicitly flagged secondary variants), call `create_ad_creative` with the chosen primary text, headline, CTA, page_id, ig_account_id, and destination URL (with UTMs — `utm-enforcer` will fix if missing).
 2. For each adset assigned to this angle, call `create_ad` with the creative ID, ad name following convention `[FORMAT]_[HOOK_CODE]_v[N]`, status `PAUSED`.
 
-Asset handling: if the client has uploaded creative images locally, call `upload_image` first and use the returned hash on the creative. If only design-brief direction exists (no rendered images yet), halt before step 6 with a message: `N creative slots ready — supply rendered images at clients/{slug}/creatives/ then resume.`
+Asset handling: the `launch.js` companion now resolves a creative asset per angle automatically. Put an asset reference on the brief's `creative_angles[i]` — a flat `image_hash`/`image_url`/`image_path`/`video_id`/`video_url`, or a nested `asset: {media_type, uri, hash}`. At `--execute`, launch uploads the asset (`/adimages` for images via URL/base64/local file, `/advideos` for video via hosted URL or multipart local file) and attaches the resulting hash/id to the creative — a video_id converts the creative to `video_data`. With no asset reference it falls back to a link-only creative (Meta pulls the URL's OG image). If only design-brief direction exists (no rendered images yet), supply rendered images or asset URLs on the angles before `--execute`.
 
 ### Step 7 — Human activation gate
 

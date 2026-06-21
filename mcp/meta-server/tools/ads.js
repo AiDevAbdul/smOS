@@ -1,5 +1,34 @@
 import FormData from "form-data";
 import axios from "axios";
+import { createReadStream } from "node:fs";
+import { createHmac } from "node:crypto";
+import { imageUploadBody, videoUploadBodyFromUrl } from "../../../scripts/lib/media_upload.js";
+
+const API_VERSION = "v25.0";
+
+/**
+ * Multipart video upload (local file → /act_X/advideos). The shared JSON client
+ * can't send multipart, so this posts directly with the same auth (access token
+ * + appsecret_proof). Media uploads carry no budget/structure mutation, so they
+ * sit outside the guard chokepoint by design.
+ */
+async function uploadVideoFile(adAccountPath, videoPath, { title, name } = {}) {
+  const token = process.env.META_ACCESS_TOKEN;
+  if (!token) throw new Error("META_ACCESS_TOKEN is required for video upload");
+  const form = new FormData();
+  form.append("access_token", token);
+  const appSecret = process.env.META_APP_SECRET;
+  if (appSecret) form.append("appsecret_proof", createHmac("sha256", appSecret).update(token).digest("hex"));
+  if (title) form.append("title", title);
+  if (name) form.append("name", name);
+  form.append("source", createReadStream(videoPath));
+  const res = await axios.post(`https://graph.facebook.com/${API_VERSION}/${adAccountPath}/advideos`, form, {
+    headers: form.getHeaders(),
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+  });
+  return res.data;
+}
 
 export const tools = [
   {
@@ -38,14 +67,31 @@ export const tools = [
   },
   {
     name: "upload_image",
-    description: "Upload an image to the ad account creative library by URL or base64",
+    description: "Upload an image to the ad account creative library. Provide exactly one source: image_url (hosted), image_bytes (base64), or image_path (local file). Returns the image hash for create_ad_creative.",
     inputSchema: {
       type: "object",
       properties: {
         ad_account_id: { type: "string" },
-        image_url: { type: "string", description: "Publicly accessible image URL to upload" },
+        image_url: { type: "string", description: "Publicly accessible image URL — Meta fetches it." },
+        image_bytes: { type: "string", description: "Base64-encoded image bytes (e.g. a GenAI-produced image not hosted anywhere)." },
+        image_path: { type: "string", description: "Local file path; read and base64-encoded for you." },
       },
-      required: ["ad_account_id", "image_url"],
+      required: ["ad_account_id"],
+    },
+  },
+  {
+    name: "upload_video",
+    description: "Upload a video to the ad account for single_video creatives. Provide video_url (hosted, Meta fetches it) or video_path (local file, multipart upload). Returns the video_id for create_ad_creative.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        ad_account_id: { type: "string" },
+        video_url: { type: "string", description: "Publicly accessible video URL — Meta fetches it." },
+        video_path: { type: "string", description: "Local file path — uploaded via multipart." },
+        title: { type: "string", description: "Optional video title." },
+        name: { type: "string", description: "Optional internal name." },
+      },
+      required: ["ad_account_id"],
     },
   },
   {
@@ -176,8 +222,17 @@ export async function handle(toolName, args, client) {
     }
 
     case "upload_image": {
-      const { ad_account_id, image_url } = args;
-      return client.post(`/${client.act(ad_account_id)}/adimages`, { url: image_url });
+      const { ad_account_id, image_url, image_bytes, image_path } = args;
+      const body = imageUploadBody({ image_url, image_bytes, image_path });
+      return client.post(`/${client.act(ad_account_id)}/adimages`, body);
+    }
+
+    case "upload_video": {
+      const { ad_account_id, video_url, video_path, title, name } = args;
+      const urlBody = videoUploadBodyFromUrl({ video_url, title, name });
+      if (urlBody) return client.post(`/${client.act(ad_account_id)}/advideos`, urlBody);
+      if (video_path) return uploadVideoFile(client.act(ad_account_id), video_path, { title, name });
+      throw new Error("upload_video requires video_url or video_path");
     }
 
     case "create_ad": {

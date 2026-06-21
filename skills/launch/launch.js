@@ -32,6 +32,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { adCopy as adCopySchema, audienceMap as audienceMapSchema, strategyBrief as briefSchema, clientProfile as profileSchema, launchPlan as launchPlanSchema } from "../../schemas/index.js";
 import { resolveAudiences, applyResolved, resolvedIdFor } from "../../scripts/lib/audience-resolver.js";
+import { readAssetRef, attachMedia, resolveAssetMedia } from "../../scripts/lib/launch_media.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -298,6 +299,7 @@ function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
         angle: angle.name,
         format: angle.format,
         creative_payload: buildCreativePayload({ profile, angle, copyVariant: copy_used, adset: adsetPayload }),
+        asset: readAssetRef(angle), // {image_hash|image_url|video_id|video_url} or null; uploaded at execute
         copy_used,
         warnings: copy_used ? [] : [reason || `no matching ad_copy entry for angle '${angle.name}'`],
       };
@@ -336,9 +338,19 @@ async function executePlan(graph, plan, profile) {
 
           for (const ad of s.ads) {
             try {
+              // Upload the creative asset (if any) and attach it before creating
+              // the creative — this is what makes /launch ship a real image/video
+              // instead of a link-only ad.
+              let payload = ad.creative_payload;
+              try {
+                const media = await resolveAssetMedia(graph, graph.act(acct.ad_account_id), ad.asset);
+                payload = attachMedia(ad.creative_payload, media);
+              } catch (e) {
+                created.errors.push({ stage: "asset", name: ad.name, error: e.message });
+              }
               // Create creative first
-              const creativeBody = { name: ad.creative_payload.name };
-              for (const [k, v] of Object.entries(ad.creative_payload)) {
+              const creativeBody = { name: payload.name };
+              for (const [k, v] of Object.entries(payload)) {
                 creativeBody[k] = v != null && typeof v === "object" ? JSON.stringify(v) : v;
               }
               const creativeRes = await graph.post(`/${graph.act(acct.ad_account_id)}/adcreatives`, creativeBody);
