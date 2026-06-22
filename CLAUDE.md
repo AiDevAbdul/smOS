@@ -107,6 +107,7 @@ cryptic null-halt.
 - **Default billing event:** IMPRESSIONS
 - **Special ad categories:** always set to `[]` unless client profile specifies otherwise
 - **AI-content disclosure:** any ad built from GenAI imagery/video MUST set `ai_disclosed: true`. The `ai-disclosure` guard (in `scripts/lib/guards.js`) fail-closed blocks undisclosed AI creatives — Meta rejects them (since Mar 2026).
+- **Brand compliance:** the `brand-compliance` guard (in `scripts/lib/guards.js`) fail-closed blocks ad creatives that use off-brand language (`client.voice.avoid` / `brand.verbal.voice.dont`) and, for locked brands (`SMOS_REQUIRE_BRAND_KIT=1` or `brand.visual.brand_kit_locked`), AI-generated visuals that don't declare a `brand_kit` matching the approved palette/logo. Enforces the *client's* brand, beyond Meta policy.
 - **Per-client tokens:** organic actions (publish, inbox, threads) resolve a per-client token via `scripts/lib/tokens.js` (`META_PAGE_TOKEN_<SLUG>` etc.) — never assume the global page token in a multi-client setup.
 
 ---

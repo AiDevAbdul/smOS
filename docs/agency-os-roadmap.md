@@ -168,7 +168,7 @@ _Lifecycle now runs end-to-end: `/pre-audit → /proposal → /contract → won 
 **Phase 6 — Connectors & moats (parallel, low effort)**
 - GA4 + Slack/Teams connectors (Slack alongside Discord)
 - Expose smOS as an MCP server
-- AI brand/compliance approval guard
+- ✅ AI brand/compliance approval guard — `checkBrandCompliance` in `scripts/lib/guards.js` + `hooks/brand-compliance.js`. Enforces the *client's* brand on every ad creative, beyond Meta-policy compliance: (1) off-brand language from `client.voice.avoid` + `brand.verbal.voice.dont` (the existing compliance guard only read `restricted_words`, so `voice.avoid` was silently ignored), (2) logo/color lock for AI-generated visuals — once a brand's visual kit is approved AND strict mode is on (`SMOS_REQUIRE_BRAND_KIT=1` or `brand.visual.brand_kit_locked`), an AI creative must declare `creative.brand_kit {colors, logo_url}` matching the approved palette/logo. Fail-closed at the same chokepoint as the other guards; explicit-flag detection (never guesses tone or inspects pixels). 218 tests.
 - GEO/AI-visibility audit in `/pre-audit`
 
 **Phase 7 — Multi-platform (when breadth is needed)**

@@ -1,52 +1,139 @@
 ---
 name: brand-book
-description: Use this skill when a brand's strategy, name, and visual identity are locked and the client needs the brand guidelines document (typically via `/brand-book {slug}`). Auto-assembles a complete brand book (HTML + PDF) from brand_profile.json — strategy, logo system, color, typography, voice, and usage rules. Requires the logo to be approved first.
+description: Use this skill to assemble a complete brand guidelines document (HTML + PDF) from a locked brand_profile.json — strategy summary, logo system, color, typography, imagery, voice & tone, AI-disclosure rules, and governance. This skill should be used when a brand's strategy, name, and visual identity are all approved and the client needs the governance document (typically via `/brand-book {slug}`). It is a deterministic assembler (no generation) and halts fail-closed unless the logo gate is stamped.
 ---
 
 # /brand-book — Brand Guidelines (Phase 0 · step 4 of 5)
 
-Codifies the locked strategy + verbal + visual layers into the governance document. This is a **deterministic assembler**, not a generator — it never invents brand decisions, it formats the ones already approved. Ships HTML + PDF like every other client deliverable.
+Assemble the locked strategy + verbal + visual layers of `brand_profile.json` into the
+brand governance document. This is a **deterministic assembler, not a generator** — it
+formats decisions already approved upstream and never invents a brand value. Ships HTML
+(interactive) + PDF (shareable) in the same design language as every smOS report.
 
-## Precondition (fail-closed)
+## What This Skill Does
 
-`brand_profile.json → visual.logo_approved_at` must be set. Otherwise halt: "Approve the logo in `/brand-visual` first." (Enforced at schema stage `guidelines`.)
+- Load and validate `clients/{slug}/brand_profile.json` at schema stage `guidelines`.
+- Format eight standard sections from existing data: brand strategy, logo system, color
+  palette, typography, imagery & iconography, voice & tone + messaging house,
+  AI-content disclosure, and governance.
+- Render `brand_book.md` → `brand_book.html` → `brand_book.pdf` via the shared
+  `writeHtmlAndPdf` helper.
+- Record `guidelines.doc_url` / `pdf_url` / `version` / `generated_at` back into the profile.
 
-## Required Context
+## What This Skill Does NOT Do
 
-- `clients/{slug}/brand_profile.json` — all three locked layers
+- Does **not** create or decide brand strategy → `/brand-strategy`.
+- Does **not** generate or screen the brand name → `/brand-name`.
+- Does **not** design the logo, palette, or type → `/brand-visual`.
+- Does **not** produce social profile assets, covers, or bios → `/brand-social`.
+- Does **not** stamp any human-approval gate — gates are stamped only by the originating
+  skill on an explicit `--approve` flag.
+
+## Before Implementation
+
+Gather context before acting (do not ask the user for what is discoverable):
+
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `scripts/lib/brand.js` (load/save/merge), `schemas/brand_profile.js` (stage validator + gates), `scripts/lib/md_to_html.js` (`writeHtmlAndPdf`) |
+| **Conversation** | Which `{slug}`; any explicit re-render request after a visual change |
+| **Skill References** | Section taxonomy, ratios, and contrast rules in `references/` (see table below) |
+| **Client Profile** | `clients/{slug}/brand_profile.json` — the single source for all three locked layers |
+
+## Clarifications
+
+> Before asking: check the conversation, `brand_profile.json`, and the upstream gate
+> timestamps. Only ask for what cannot be determined. Section content and ordering are
+> embedded in `references/` — never ask the user for them.
+
+**Required (must resolve before running):**
+1. Which client `{slug}`?
+
+**Optional (ask only if relevant):**
+2. Re-render an existing book after a `/brand-visual` change, or first generation?
 
 ## Workflow
 
-1. Load and validate the brand profile at stage `guidelines`.
-2. Assemble the standard brand-book sections from the data:
-   - Brand strategy summary (purpose, mission, vision, values, positioning, archetype)
-   - Logo system (variants) + usage/misuse (clear space, min size)
-   - Color palette (HEX, 60-30-10, contrast pairings)
-   - Typography (heading/body, scale)
-   - Imagery & iconography direction
-   - Voice & tone (traits, do/don't, spectrums) + messaging house
-   - **AI-content disclosure rules** (modern section — references the smOS `ai-disclosure` guard)
-   - Governance (file naming, ™/® usage, approval workflow)
-3. Render HTML + PDF via the shared `writeHtmlAndPdf` helper (same design language as all reports).
-4. Record `guidelines.doc_url`/`pdf_url`/`version`/`generated_at` back into the profile.
+1. Run `node skills/brand-book/brand-book.js {slug}`.
+2. The script loads the profile via `loadBrand(slug)` and validates stage `guidelines`.
+3. If `visual.logo_approved_at` is unset, validation fails — halt and tell the user to
+   approve the logo in `/brand-visual` first.
+4. On success it assembles the eight Markdown sections, renders HTML + PDF, and merges the
+   `guidelines` metadata back into `brand_profile.json`.
+5. Report the HTML/PDF paths and the next step (`/brand-social`) from the script's JSON.
 
-## Persisting / Running
+## Input / Output Specification
 
-```
-node skills/brand-book/brand-book.js {slug}
-```
-Writes `clients/{slug}/brand_book.md` + `.html` + `.pdf`, and updates `brand_profile.json → guidelines`.
+**Inputs:** CLI arg `{slug}`; reads `clients/{slug}/brand_profile.json`.
+**Outputs:** `clients/{slug}/brand_book.md` + `.html` + `.pdf`, and an updated
+`brand_profile.json → guidelines` block. The script prints a JSON summary to stdout
+(`slug`, `html`, `pdf`, `status`, `next`).
+(Full schemas and example payloads: `references/io-contract.md`.)
 
-## Output
+## Variability Analysis
 
-- `clients/{slug}/brand_book.html` (interactive) + `brand_book.pdf` (shareable)
-- `brand_profile.json → guidelines` metadata
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
+|--------------------------------|------------------------------------|
+| Strategy text, name, logo URLs, palette HEX, fonts, voice traits, AI-generated flag | The eight-section order + headings, 60-30-10 ratio, WCAG AA contrast targets, governance/naming rules, fail-closed logo gate |
+| Whether AI imagery is used (drives the disclosure copy) | Which disclosure paragraph renders for each branch |
+| Version date (`YYYY-MM-DD` at run time) | Document template + Apple design tokens (shared `md_to_html`) |
 
-## Safety
+## Domain Standards
 
-- Pure assembler: if a required field is missing, validation halts with the field name — it never fabricates a value to fill the page.
+### Must Follow
+- [ ] Validate stage `guidelines` before assembling — the logo gate is load-bearing.
+- [ ] Format only approved data; omit a field cleanly when absent (never placeholder text).
+- [ ] State the 60-30-10 color ratio and WCAG AA contrast (4.5:1 body, 3:1 large) verbatim.
+- [ ] Render the AI-disclosure section matching `visual.ai_generated` (true vs false branch).
+- [ ] Ship both HTML and PDF; write the `guidelines` metadata back to the profile.
 
-## Token Efficiency
+### Must Avoid
+- Inventing or paraphrasing strategy/voice values to fill a section.
+- Stamping or bypassing the logo gate.
+- Per-client custom renderers — use the shared `writeHtmlAndPdf` helper only.
 
-- Zero LLM in the body — 100% template fill from `brand_profile.json`.
-- First-time PDF setup: `pip install playwright && python -m playwright install chromium`.
+### Output Checklist (verify before delivery)
+- [ ] All eight sections present (or cleanly omitted lines for absent optional fields).
+- [ ] `brand_book.html` exists; `.pdf` exists or a clear "install playwright" note is shown.
+- [ ] `brand_profile.json → guidelines.doc_url/version/generated_at` updated.
+- [ ] Stdout JSON reports `next: "/brand-social"`.
+
+## Error Handling
+
+| Scenario | Action |
+|----------|--------|
+| No `{slug}` arg | Exit 1, print usage `brand-book.js <slug>` — never guess |
+| `visual.logo_approved_at` unset | Exit 3, list the failed gate; route user to `/brand-visual --approve` |
+| Other required field missing | Exit 3, name each missing field from the validator — never fabricate |
+| PDF render fails (no Playwright) | Non-fatal: HTML still ships; stdout notes "install playwright" |
+| Profile file missing | `loadBrand` returns a draft skeleton; validation then halts naming missing fields |
+
+## Dependencies & Security
+
+- **Reuses:** `scripts/lib/brand.js` (`loadBrand`, `saveBrand`, `clientDir`),
+  `schemas/brand_profile.js` (`validate`), `scripts/lib/md_to_html.js` (`writeHtmlAndPdf`).
+- **External APIs:** none. PDF conversion shells out to `render_pdf.py` (headless Chromium
+  via Playwright) — first-time setup `pip install playwright && python -m playwright install chromium`.
+- **Secrets:** none read or written; no tokens, no network calls. All I/O is local files.
+
+## Documentation & References
+
+| Resource | URL | Use For |
+|----------|-----|---------|
+| Understanding WCAG SC 1.4.3 Contrast (Minimum) | https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html | The 4.5:1 / 3:1 AA contrast targets cited in the color section |
+| Meta AI Disclosures policy | https://transparency.meta.com/policies/other-policies/meta-AI-disclosures | Canonical AI-content disclosure rule for the disclosure section |
+| Labeling AI-Generated Content (announcement) | https://about.fb.com/news/2024/04/metas-approach-to-labeling-ai-generated-content-and-manipulated-media/ | Effective dates / label-vs-remove approach behind the smOS `ai-disclosure` guard |
+| IG/FB profile, cover & story spec dimensions | https://www.facebook.com/business/ads-guide | Asset sizing referenced when handing off to `/brand-social` |
+
+For patterns not covered here, fetch the official docs above, then apply the same
+conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
+
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | Section taxonomy, 60-30-10 ratio, WCAG AA thresholds, governance/naming rules, good vs bad examples |
+| `references/api-reference.md` | The schema-stage contract + gate semantics this skill depends on (no external API; documents the validator and PDF toolchain) |
+| `references/io-contract.md` | Full `brand_profile.json` schema, the `guidelines` output block, stdout JSON, and edge cases |

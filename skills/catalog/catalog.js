@@ -105,7 +105,7 @@ async function createCatalog(graph, businessId, name) {
   return graph.post(`/${businessId}/owned_product_catalogs`, { name, vertical: "commerce" });
 }
 
-async function syncProducts(graph, catalogId, products) {
+export async function syncProducts(graph, catalogId, products) {
   const seenIds = new Set();
   const accepted = [];
   const rejected = [];
@@ -141,7 +141,51 @@ async function syncProducts(graph, catalogId, products) {
     uploads.push(res);
   }
 
-  return { accepted: accepted.length, rejected: rejected.length, rejected_list: rejected, uploads };
+  // Post-upload verification (SKILL.md step 4): GET the catalog's live item count
+  // and compare to the number we accepted. The batch API returns 200 even when
+  // individual items are silently dropped server-side, so a 200 is NOT proof the
+  // items landed. We must read back the count before claiming success.
+  const verification = await verifyItemCount(graph, catalogId, accepted.length);
+
+  return {
+    accepted: accepted.length,
+    rejected: rejected.length,
+    rejected_list: rejected,
+    uploads,
+    verification,
+  };
+}
+
+/**
+ * Read back the catalog's live product_count and compare to what we expected to
+ * upload. Meta's catalog node exposes product_count directly, so a single GET is
+ * enough — no need to paginate the full items collection.
+ *
+ * Degrades honestly: if the count GET fails or the field is absent, we record
+ * status:"count_unverified" with the reason rather than asserting success.
+ */
+async function verifyItemCount(graph, catalogId, expected) {
+  let live;
+  try {
+    const res = await graph.get(`/${catalogId}`, { fields: "product_count" });
+    live = res && typeof res.product_count !== "undefined" ? Number(res.product_count) : null;
+  } catch (e) {
+    return { status: "count_unverified", expected, reason: e.message };
+  }
+  if (live == null || Number.isNaN(live)) {
+    return { status: "count_unverified", expected, reason: "product_count not returned by Meta" };
+  }
+  if (live >= expected) {
+    // >= rather than === : a catalog may already hold items from prior syncs, so
+    // the live total only has to cover everything we just uploaded.
+    return { status: "matched", expected, live_product_count: live };
+  }
+  return {
+    status: "discrepancy",
+    expected,
+    live_product_count: live,
+    missing: expected - live,
+  };
 }
 
 async function createFeed(graph, catalogId, name, url, scheduleInterval) {
@@ -198,6 +242,16 @@ async function main() {
         const logPath = resolve(ROOT, "clients", slug, "catalog_sync_log.json");
         writeFileSync(logPath, JSON.stringify({ slug, generated_at: new Date().toISOString(), ...result }, null, 2));
         console.error(`[catalog] wrote ${logPath}`);
+        const v = result.verification;
+        if (v?.status === "discrepancy") {
+          console.error(
+            `[catalog] WARNING discrepancy: uploaded ${v.expected} but catalog shows ${v.live_product_count} (${v.missing} missing) — NOT all items landed`
+          );
+        } else if (v?.status === "count_unverified") {
+          console.error(`[catalog] count_unverified — could not confirm item count: ${v.reason}`);
+        } else if (v?.status === "matched") {
+          console.error(`[catalog] verified: catalog holds ${v.live_product_count} items (>= ${v.expected} uploaded)`);
+        }
         break;
       }
       case "feed": {
@@ -243,7 +297,10 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error("[catalog] FATAL:", e.message);
-  process.exit(1);
-});
+// Only run the CLI when invoked directly — importing for tests must not execute main().
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1])) {
+  main().catch((e) => {
+    console.error("[catalog] FATAL:", e.message);
+    process.exit(1);
+  });
+}

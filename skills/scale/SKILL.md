@@ -1,118 +1,151 @@
 ---
 name: scale
-description: Use this skill when the user asks to scale winners, kill losers, or execute scaling decisions on a performance analysis (typically via `/scale {slug}` or invoked by the optimizer agent). Pauses underperformers, scales winners by +20%, duplicates top performers for budget tests; all actions logged to `optimizer_log`.
+description: Use this skill when the user asks to scale winners, kill losers, or execute scaling decisions on a performance analysis (typically via `/scale {slug}` or invoked by the optimizer agent). Pauses underperformers, scales qualifying winners +20%, clones top performers at 0.5x PAUSED for budget tests, queues over-ceiling/insignificant moves for Discord approval, and logs every decision to `scaling_log.json` + Supabase `optimizer_log`. Dry-run by default; mutates Meta only with `--execute`; supports `--rollback`.
 ---
 
-# /scale — Execute Scaling Decisions
+# /scale — Execute Scaling Decisions (Phase 4)
 
-## Required Context
+Consume a fresh `/analyze` output and turn its flags into concrete Meta account
+actions: pause underperformers, scale qualifying winners +20%, clone the campaign's
+top performer at half budget (PAUSED), and queue anything risky for human approval.
+The skill is execution-only — it never re-fetches metrics — and is safe by default:
+DRY-RUN runs without `--execute`, and a stack of fail-closed gates blocks mass
+mutations from garbage data.
 
-- `clients/{slug}/client_profile.json` — for `kpis`, `accounts.ad_account_id`, `approvals.channel`
-- `clients/{slug}/CLAUDE.md` — for per-client threshold overrides
-- `clients/{slug}/performance_analysis.json` — generated within the last 4 hours (halt if older — run `/analyze` first)
-- Meta MCP server — `update_ad_status`, `update_adset`, `update_campaign`, `create_adset`, `create_ad`
-- Supabase connector — `optimizer_log` insert
-- Discord connector — digest post
+## What This Skill Does
 
-## Rules (defaults — client CLAUDE.md overrides)
+- Run `node skills/scale/scale.js <slug> [--execute] [--force] [--rollback [log]]`.
+- DRY-RUN by default: compute every decision, write `scaling_log.json`, mutate **nothing** on Meta. `--execute` is required to send writes.
+- Map each `/analyze` flag to a decision: pause (ad), scale +20% (adset), duplicate at 0.5x PAUSED (adset), flag-only, or approval-queue.
+- Enforce fail-closed safety: run-level circuit breaker (`MAX_AUTO_ACTIONS_ABS`/`PCT`), per-action `MIN_IMPRESSIONS_FOR_ACTION` sanity gate, business-hours window (fail-closed on unknown timezone), and $500/day single-increase ceiling.
+- Route over-ceiling scales, thin (`SCALE_WATCH`) and significance-failed winners to an approval queue (`status: awaiting_approval`); flag fatigue/anomalies for the digest.
+- At `--execute`, clone a qualifying `DUPLICATE_CANDIDATE` adset via the guarded chokepoint — fetch the source's live spec, POST a new adset at 0.5x daily budget, `status: PAUSED`.
+- Persist: write `clients/<slug>/scaling_log.json` and (when configured) one `optimizer_log` row per run.
+- `--rollback` reverses a prior run's applied actions (un-pause, restore pre-scale budgets) — dry-run unless paired with `--execute`.
 
-| Flag | Action | Approval |
-|---|---|---|
-| PAUSE_CANDIDATE_CPA | `update_ad_status({status:"PAUSED"})` | auto |
-| PAUSE_CANDIDATE_ROAS | `update_ad_status({status:"PAUSED"})` | auto |
-| PAUSE_CANDIDATE_CTR | `update_ad_status({status:"PAUSED"})` | auto |
-| PAUSE_CANDIDATE_FREQUENCY | `update_ad_status({status:"PAUSED"})` | auto |
-| SCALE_CANDIDATE | `update_adset({daily_budget: current × 1.2})` | auto if delta ≤ $500/day, else Discord |
-| SCALE_WATCH | flag only — ROAS qualifies but conversions < `scale_min_conversions` (sample too thin) | Discord digest |
-| DUPLICATE_CANDIDATE | clone adset → new adset with 0.5× budget | Discord |
-| CREATIVE_FATIGUE | flag only; do not pause silently | Discord digest |
-| ANOMALY_* | flag only; surface in digest (incl. `ANOMALY_spend_spike`) | Discord |
+## What This Skill Does NOT Do
 
-**Significance gating (Track C):** `/analyze` only emits an auto-eligible `SCALE_CANDIDATE` when the ROAS win clears the conversion-count floor (`scale_min_conversions`, default 15); thinner winners downgrade to `SCALE_WATCH`. `CREATIVE_FATIGUE` requires the 7d-vs-30d CTR drop to pass a two-proportion z-test. `/scale` re-checks the carried `significance` and refuses to auto-scale an insignificant flag (defense-in-depth).
+- **Generate flags / fetch metrics** → owned by `/analyze` (this skill only consumes `performance_analysis.json`).
+- **Run an interactive Discord reply loop** → the agent posts the approval message and applies approvals manually; the `.js` only writes the queue to `scaling_log.json` + `optimizer_log`.
+- **Build campaigns/ads from a brief** → owned by `/launch`.
+- **Change targeting, audiences, exclusions, or campaign objective** → out of scope; absolute blocks per the constitution.
+- **Activate the cloned adset** → the clone is created PAUSED; activation is a human step.
 
-Global hard blocks (never auto):
-- Budget increase > $500/day in a single action
-- Any action outside 6 AM – 9 PM client timezone (read `accounts.timezone`)
-- Audience or targeting changes
-- Removing exclusions
+## Before Implementation
+
+Gather context before acting (do not ask the user for what is discoverable):
+
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `scripts/lib/meta-graph.js` (guarded `createGraph`), `scripts/lib/guards.js` (`budget-guard`), `scripts/lib/supabase.js` (`insert`, `clientIdBySlug`), `scripts/lib/load-env.js` |
+| **Conversation** | Whether the user wants a dry-run preview or to apply (`--execute`); any explicit override intent (`--force`); rollback intent |
+| **Skill References** | Decision/threshold taxonomy from `references/` (see table below) |
+| **Client Profile** | `clients/<slug>/client_profile.json` (`accounts.ad_account_id`, `accounts.timezone`, `kpis`) + per-client `CLAUDE.md` threshold overrides |
+| **Handoff** | `clients/<slug>/performance_analysis.json` — must exist and be ≤ 4h old |
+
+## Clarifications
+
+> Before asking: check the conversation, the client profile, and the `performance_analysis.json` handoff.
+> Only ask for what cannot be determined. Decision rules and thresholds are embedded in `references/` —
+> never ask the user for them.
+
+**Required (must resolve before running):**
+1. Which client `{slug}`?
+2. Dry-run preview, or apply changes (`--execute`)? Default to dry-run if unstated.
+
+**Optional (ask only if relevant):**
+3. Override a stale analysis / off-hours / circuit-breaker block with `--force`? (Default: no — let the gate halt.)
+4. Roll back the last run instead of executing (`--rollback`)?
 
 ## Workflow
 
-### Step 1 — Validate
+1. Confirm `performance_analysis.json` exists and is ≤ 4h old; halt otherwise (run `/analyze` first), unless `--force`.
+2. Run `node skills/scale/scale.js <slug>` (dry-run) and read the JSON summary + `scaling_log.json`.
+3. Review the proposed decisions: auto-actions, approval queue, flag-only. Confirm counts look sane (circuit breaker not tripped).
+4. If applying, rerun with `--execute`. The script enforces business hours, the metric-sanity gate, the circuit breaker, and the budget ceiling before any write.
+5. For each `awaiting_approval` entry, post one consolidated Discord approval message to `approvals.channel`; apply approved actions manually.
+6. Post the daily digest (auto/flagged/anomaly counts, top performer, kills) to the client channel.
+7. To undo: `node skills/scale/scale.js <slug> --rollback --execute`.
 
-- Refuse to run if `performance_analysis.json` is missing or > 4h old
-- Refuse to run outside client business hours unless `--force` is passed; if forced, surface the violation in the digest
+## Input / Output Specification
 
-### Step 2 — Group flags
+**Inputs:** CLI args `<slug> [--execute] [--force] [--rollback [log]]`; files `clients/<slug>/client_profile.json`, `clients/<slug>/performance_analysis.json`; env `META_ACCESS_TOKEN` (+ optional `META_APP_SECRET`, Supabase vars).
+**Outputs:** `clients/<slug>/scaling_log.json` (decisions + summary), one Supabase `optimizer_log` row per run (best-effort), JSON summary on stdout, progress logs on stderr.
+(Full schemas, exit codes, and example payloads: `references/io-contract.md`.)
 
-Read the `flags` array. Group by `entity_id` so the same ad/adset isn't touched twice. Resolve conflicts:
-- If an adset has both SCALE and one of its ads has PAUSE → pause the ad first, then evaluate scale on remaining ads' aggregated metrics
-- If an entity has both PAUSE and ANOMALY → pause wins, anomaly stays in digest
+## Variability Analysis
 
-### Step 3 — Execute auto actions
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
+|--------------------------------|------------------------------------|
+| KPI targets / thresholds (client `CLAUDE.md` overrides) | Flag→action mapping (`decisionFromFlag`) |
+| Ad account id, timezone, currency | +20% scale multiplier, 0.5x duplicate multiplier |
+| Which flags `/analyze` emits this run | $500/day single-increase ceiling, business-hours window 6 AM–9 PM |
+| Number of active entities | Circuit-breaker caps (abs 25 / 50% of active), 100-impression sanity floor |
+| Significance verdicts carried on flags | PAUSED-default for clones, dry-run default, fail-closed unknown-tz behavior |
 
-For each auto-eligible decision, run the corresponding update_* MCP call. Capture the result.
+## Domain Standards
 
-For SCALE actions where new daily budget exceeds the $500 single-increase ceiling → defer to Step 4 (approval queue) instead of executing. The `budget-guard` hook will block it anyway; better to surface ahead of time.
+### Must Follow
+- [ ] Treat DRY-RUN as the default — never imply changes were applied without `--execute`.
+- [ ] Respect every fail-closed gate (age ≤ 4h, business hours, circuit breaker, metric sanity, budget ceiling). Use `--force` only on explicit user instruction and surface the override.
+- [ ] Route over-ceiling scales and insignificant/thin winners to the approval queue, not auto-execute.
+- [ ] Create cloned adsets PAUSED, at 0.5x budget, in the source campaign.
+- [ ] Log every decision to `scaling_log.json` and (when configured) `optimizer_log`.
 
-### Step 4 — Approval queue
+### Must Avoid
+- Auto-pausing/scaling on missing or implausible metrics (`spend ≤ 0` or `impressions < 100`).
+- Auto-scaling a flag whose `significance.significant === false`.
+- Activating any entity (clones stay PAUSED; un-pause is human).
+- Deleting entities, changing targeting/objective, or removing exclusions.
 
-For every decision flagged "Discord" above, post one consolidated approval message to `approvals.channel`:
-
-> *Scaling actions pending approval for {name}:*
-> 1. Scale adset `FEED_2545_FITNESS` budget $200 → $260 (+30%) — ROAS 4.2, 4 days in a row
-> 2. Duplicate adset `REELS_1834_RUNNING` at $50/day budget test — best ROAS in campaign
->
-> Reply with action numbers to approve (e.g. `approve 1,2`) or `skip` to defer.
-
-Wait for reply. Apply approved actions; log skipped ones with `status: 'deferred'`.
-
-### Step 5 — Log every decision
-
-Insert one row per decision into Supabase `optimizer_log`:
-```json
-{
-  "client_id": "...",
-  "entity_type": "ad|adset|campaign",
-  "entity_id": "...",
-  "entity_name": "...",
-  "flag": "PAUSE_CANDIDATE_CPA",
-  "action": "paused|scaled|duplicated|flagged|deferred",
-  "metric_value": 0,
-  "threshold": 0,
-  "reasoning": "...",
-  "auto": true,
-  "actor": "scale_skill|optimizer_agent|human:<name>",
-  "created_at": "..."
-}
-```
-
-Also write `clients/{slug}/scaling_log.json` — the same set, plus a roll-up summary at the top.
-
-### Step 6 — Digest
-
-Post a single Discord summary to the client channel:
-
-> *Daily optimization — {name}*
-> ✅ Auto: paused N · scaled M · flagged K · anomalies F
-> ⏳ Awaiting approval: P
-> 🏆 Top performer: {ad_name} — ROAS {x.x}, CPA {$x}
-> 📉 Killed: {ad_name} — CPA {$x} vs target {$x}
-
-## Output
-
-- `clients/{slug}/scaling_log.json`
-- Rows in `optimizer_log`
-- Discord digest in client channel
+### Output Checklist (verify before delivery)
+- [ ] `scaling_log.json` written with `summary` + per-decision `status`.
+- [ ] Mode reported accurately (`DRY_RUN` vs `EXECUTE`) and matches whether `--execute` was passed.
+- [ ] Approval queue surfaced to Discord; nothing over-ceiling was auto-applied.
+- [ ] `optimizer_log` row written, or the skip reason logged (offline/unconfigured).
 
 ## Error Handling
 
-- Any `update_*` call fails → log to `error_log`, keep going with the remaining actions; do not abort the whole run
-- `budget-guard` hook blocks a scale action → record `action: 'blocked_by_guard'` with the hook's stderr message
-- Discord post fails → write digest to `clients/{slug}/digests/{date}.md` so it's not lost
+| Scenario | Action |
+|----------|--------|
+| Missing `slug` arg | Print usage, exit 1 — never guess a client |
+| `client_profile.json` missing | Exit 2 |
+| `performance_analysis.json` missing | Exit 3 — instruct to run `/analyze` first |
+| Analysis > 4h old (no `--force`) | Exit 4 — refuse stale data |
+| Outside business hours / unknown tz (no `--force`) | Exit 5 — fail-closed |
+| Circuit breaker trips (auto-actions > abs 25 or > 50% active) | Exit 6 — suspect bad analysis data; inspect or `--force` |
+| `--rollback` log not found | Exit 7 |
+| A single `update_*`/clone call fails | Record `status: error` with message + `metaError`, continue with remaining actions (do not abort run) |
+| `budget-guard` chokepoint blocks a write | Surface guard message in the decision result; post to approval queue |
+| Token expired (Meta code 190) | Non-retryable `TokenExpiredError` from `meta-graph.js` — surface, prompt re-auth |
+| Supabase unreachable | Skip `optimizer_log` (best-effort), log the skip; `scaling_log.json` still written |
 
-## Token Efficiency
+## Dependencies & Security
 
-- Reads from `performance_analysis.json` only — no Meta fetches in this skill
-- All decisions are deterministic rule-checks, not LLM calls
-- One batch Discord message per run, not one per action
+- **Reuses:** `scripts/lib/meta-graph.js` (`createGraph`, `isTbd`, guarded retry/backoff), `scripts/lib/guards.js` (`budget-guard` at the write chokepoint), `scripts/lib/supabase.js` (`insert`, `clientIdBySlug`, `supabaseConfigured`), `scripts/lib/load-env.js`. Runtime: Node ≥18 (ESM), `axios`.
+- **External APIs:** Meta Graph/Marketing API **v25.0** (adset budget/status writes, adset clone). Rate limits + retry behavior in `references/api-reference.md`.
+- **Secrets:** `META_ACCESS_TOKEN` / `META_APP_SECRET` / Supabase keys resolved from env via `load-env.js` — never hardcoded, never logged. `appsecret_proof` is computed per call.
+
+## Documentation & References
+
+| Resource | URL | Use For |
+|----------|-----|---------|
+| AdSet node | https://developers.facebook.com/docs/marketing-api/reference/ad-campaign/ | `daily_budget`, `status`, `targeting`, `optimization_goal` fields for scale/clone |
+| Create adset edge | https://developers.facebook.com/docs/marketing-api/reference/ad-account/ | POST `act_<id>/adsets` to create the clone |
+| Ad node | https://developers.facebook.com/docs/marketing-api/reference/adgroup/ | Pausing an ad (`status: PAUSED`) |
+| Handle Errors (Graph API) | https://developers.facebook.com/docs/graph-api/guides/error-handling/ | Error codes, `fbtrace_id`, code 190 token handling |
+| Graph API Rate Limits | https://developers.facebook.com/docs/graph-api/overview/rate-limiting/ | Codes 4/17/613; `X-Business-Use-Case-Usage` backoff |
+| Versions list | https://developers.facebook.com/docs/graph-api/changelog/versions/ | Confirm v25.0 is current |
+
+For patterns not covered here, fetch the official docs above, then apply the same
+conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
+
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | Flag taxonomy, decision rules, thresholds, multipliers, the safety-gate stack, and good/bad scaling examples |
+| `references/api-reference.md` | Exact Meta v25.0 endpoints/fields used for scale + clone, rate-limit codes, and retry/guard behavior |
+| `references/io-contract.md` | Full `performance_analysis.json` input + `scaling_log.json`/`optimizer_log` output schemas, exit codes, example payloads, edge cases |

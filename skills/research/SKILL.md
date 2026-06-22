@@ -1,162 +1,137 @@
 ---
 name: research
-description: Use this skill when the user asks for competitor research, ad library analysis, or competitive intel for a client (typically via `/research {slug}`). Pulls competitor ads from the Meta Ad Library and analyzes format, angles, offers, CTAs, and gaps; produces `competitor_intel.json` that feeds `/strategy-brief`.
+description: Use this skill to pull a client's competitors' live ads from the Meta Ad Library and analyze their formats, angles, offers, CTAs, and competitive gaps. This skill should be used when the user asks for competitor research, ad-library analysis, or competitive intel for a client — typically via `/research {slug}`. Produces `competitor_intel.json` (with a top-level `angles` array) plus a ranked HTML/PDF report that feeds `/strategy-brief`.
 ---
 
-# /research — Competitor Ad Intelligence
+# /research — Competitor Ad Intelligence (Phase 3 · Pre-Strategy)
 
-## Required Context
+Pull every competitor's currently-running ads from the public Meta Ad Library, cluster them into angles/offers/CTAs, diff against the prior snapshot, and emit `competitor_intel.json` — the canonical input `/strategy-brief` reads to choose creative angles. Output ships as JSON + ranked HTML + PDF.
 
-- `clients/{slug}/client_profile.json` — for `competitors`, `business.product_description`, `audience.geo_targets`
-- Meta MCP server — `search_ad_library` (primary path)
-- `scripts/meta-ad-library/` — direct Ad Library engine (fallback when MCP is unavailable, and the only path that produces the ranked HTML report)
-- Supabase connector — for the `reports` + `competitor_snapshots` rows
-- `META_ACCESS_TOKEN` env var (smOS root `.env`) — required for the script fallback and for the ranked HTML pass
+## What This Skill Does
 
-Halt if `client.competitors` is empty — ask the user for at least 2 competitor names or Facebook Page IDs before continuing.
+- Resolve each `profile.competitors` entry to a Meta Page ID (numeric → used directly; name → Graph `/ads_archive` search, pick the highest-ad-volume matching page).
+- Fetch active ads per page via the Python pipeline (`client.py`), analyze them (`analyzer.py`), LLM-classify angles (`classifier.py`), render HTML (`report.py`), and convert to PDF.
+- Diff against the most recent prior `analyzed_*.json` snapshot when one exists (`differ.py`).
+- Normalize results through `schemas/competitor_intel.js` into `competitor_intel.json` and print a machine-readable summary on stdout.
+
+## What This Skill Does NOT Do
+
+- Score or grade creative quality with vision — that is `/audit-creative`.
+- Synthesize the launch plan or pick the winning angle — that is `/strategy-brief` (it reads this skill's `angles`).
+- Audit the client's own account/page — that is `/audit`.
+- Persist to Supabase `reports`/`competitor_snapshots` — `research.js` writes files only; run `scripts/meta-ad-library/persist.py` separately if a DB snapshot is wanted.
+- Download creative assets — `creatives.py` exists for `/audit-creative`; this skill does not call it.
+
+## Before Implementation
+
+Gather context before acting (do not ask the user for what is discoverable):
+
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `scripts/lib/meta-graph.js` (`createGraph`, pinned v25.0), `scripts/meta-ad-library/*.py`, `schemas/competitor_intel.js`, `scripts/render_pdf.py` |
+| **Conversation** | Lookback window, country override, whether to skip LLM classification |
+| **Skill References** | Angle taxonomy + gap formulas (`references/domain-standards.md`); endpoints (`references/api-reference.md`); output shape (`references/io-contract.md`) |
+| **Client Profile** | `clients/{slug}/client_profile.json` → `competitors`, `audience.geo_targets`, `location.country`, `business.usp` |
+
+## Clarifications
+
+> Before asking: check the conversation, the client profile, and prior `reports/analyzed_*.json`.
+> Only ask for what cannot be determined. Domain knowledge is embedded in `references/` — never ask the user for it.
+
+**Required (must resolve before running):**
+1. The client `{slug}` (must have `clients/{slug}/client_profile.json`).
+2. At least **2** entries in `profile.competitors` — the run halts below 2. If short, ask the user for competitor names or Facebook Page IDs.
+
+**Optional (ask only if relevant):**
+3. Lookback window (`--days`, default 90).
+4. Country override (`--country`, default = first `geo_targets` entry, else profile country, else `US`).
+5. Skip LLM angle classification (`--skip-classify`).
 
 ## Workflow
 
-### Pass 1 — Discover competitor pages
+1. Run `node skills/research/research.js {slug} [--days N] [--country CC] [--skip-classify]`.
+2. The script: loads `.env`, reads the profile, halts if `competitors.length < 2`, resolves page IDs via Graph `/ads_archive`, then chains `client.py → analyzer.py → classifier.py → report.py → render_pdf.py → differ.py`.
+3. It normalizes the analyzed output through `competitorSchema.normalize(...)` and writes `clients/{slug}/competitor_intel.json`.
+4. Review the printed summary + the ranked HTML, then proceed to `/strategy-brief`.
 
-For each entry in `client.competitors`:
-- If it looks like a numeric Page ID, use it directly
-- Otherwise call `search_ad_library({ search_terms: <name>, ad_reached_countries: <geo_targets> })` and pick the top page by ad volume that clearly matches the brand name
+A failing `classifier.py`, `render_pdf.py`, or `differ.py` is non-fatal — the script logs and continues. Only a missing profile, `<2` competitors, zero resolved page IDs, or a `client.py`/`analyzer.py`/`report.py` failure halts the run.
 
-If a competitor has zero ads in the Ad Library, record it as `inactive` and continue — don't block.
+## Input / Output Specification
 
-### Pass 2 — Pull active ads per competitor
+**Inputs:** CLI `{slug}` + optional `--days`, `--country`, `--skip-classify`; `clients/{slug}/client_profile.json`; `META_ACCESS_TOKEN` (loaded by `loadEnv()`).
+**Outputs:** `clients/{slug}/competitor_intel.json` (canonical; top-level `angles`, `competitors`, `gaps`, `client_slug`, passthrough `generated_at`/`country`/`days_window`/`artifacts`); `clients/{slug}/reports/{raw,analyzed}_<ts>.json`; `competitor_report_<ts>.html` + `.pdf`; `snapshot_diff_<ts>.json` (when a prior snapshot exists). A JSON summary is printed to stdout.
+(Full schema, the exact `competitor_intel.json` shape, and example payloads: `references/io-contract.md`.)
 
-For each resolved Page ID, run in parallel:
+## Variability Analysis
 
-```
-search_ad_library({
-  search_page_ids: [page_id],
-  ad_reached_countries: client.audience.geo_targets,
-  ad_active_status: "ACTIVE",
-  limit: 50
-})
-```
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
+|--------------------------------|------------------------------------|
+| Competitor list, geo_targets, business USP | Graph API version (v25.0), `/ads_archive` edge as canonical path |
+| Lookback `--days`, `--country` | 6-theme angle taxonomy, gap categories (format/angle/offer/voice) |
+| Number/activity of competitors | Halt-below-2-competitors gate; PDF + HTML dual output |
+| Whether a prior snapshot exists | `competitor_intel.json` normalized shape (via schema) |
 
-The response already includes copy bodies, link titles/descriptions, snapshot URLs, spend ranges, and impression ranges — no detail fetch needed.
+## Domain Standards
 
-### Pass 3 — Analyze each competitor
+### Must Follow
+- [ ] Halt when `profile.competitors` has fewer than 2 entries — never fabricate competitors.
+- [ ] Treat Graph `/ads_archive` as the canonical resolution path (an MCP `search_ad_library` tool is NOT used).
+- [ ] Resolve a name by tallying `page_id` across returned ads and picking the most frequent match.
+- [ ] Write the final JSON through `competitorSchema.normalize()` so the top-level `angles` array always exists.
+- [ ] Surface, never swallow, a fatal pipeline failure; let non-essential passes degrade gracefully.
 
-For each competitor's ad set, derive:
+### Must Avoid
+- Inventing a `format_mix` field — the schema does NOT write one; do not document or expect it.
+- Renaming `angles` to `top_angles` in output — `/strategy-brief` reads `.angles`.
+- Auto-retrying on a rate-limit (code 4 / 17 / 613) — halt and surface `fbtrace_id`.
+- Re-pulling ads already captured in `raw_<ts>.json`.
 
-- **Active ad count** and **spend range** (sum the per-ad spend ranges into a low/high band)
-- **Format mix %:** classify each ad by inspecting `ad_snapshot_url` page or the presence of multiple `ad_creative_bodies` / link assets — bucket into image / video / carousel
-- **Top copy angles:** cluster `ad_creative_bodies` into themes (pain, aspiration, social proof, urgency, price, authority). List the top 3 with example snippets
-- **Top hooks:** extract the first sentence of each body, group near-duplicates, return the 5 most common
-- **Common CTAs:** count `call_to_action_type` values across the set
-- **Common offers:** scan bodies + link descriptions for offer language (% off, free trial, BOGO, money-back, free shipping) and tally
-- **Visual style patterns:** brief one-line description per recurring pattern (e.g. "white background product shots", "UGC selfie videos", "before/after splits") — derived from snapshot URLs the user can spot-check
-
-### Pass 4 — Gap analysis
-
-Compare across all competitors and against `client.business.usp`:
-
-- **Format gaps:** formats none of them are using (e.g. nobody runs carousels)
-- **Angle gaps:** themes nobody is leaning on that the client's USP could own
-- **Offer gaps:** offer types absent from the competitive set
-- **Voice gaps:** tone/register the field is crowded around vs an open lane
-
-Return 3–5 concrete gap statements, each tied to a recommended angle the client can take.
-
-### Pass 4.5 — Ranked HTML + LLM angle classification
-
-Run the shared engine to produce the visual report and enrich the angle analysis. The MCP path above gives you the JSON; this pass gives you the shareable artifact + better hook taxonomy.
-
-```bash
-# Reuse the page IDs already resolved in Pass 1
-python scripts/meta-ad-library/client.py \
-  --page-ids <ids…> --country <geo> --days 90 \
-  --output clients/{slug}/reports/raw_<ts>.json
-
-python scripts/meta-ad-library/analyzer.py \
-  --input clients/{slug}/reports/raw_<ts>.json
-
-# LLM-classify ad bodies into the 6-theme taxonomy (cached on disk)
-python scripts/meta-ad-library/classifier.py \
-  --analyzed clients/{slug}/reports/analyzed_<ts>.json \
-  --raw clients/{slug}/reports/raw_<ts>.json
-
-python scripts/meta-ad-library/report.py \
-  --input clients/{slug}/reports/analyzed_<ts>.json \
-  --output clients/{slug}/reports/competitor_report_<ts>.html
-```
-
-Merge `angle_analysis` from the classifier into the per-competitor records that feed the `competitor_intel.json` writeout below — the `top_angles` field should use `angle_analysis.dominant_angle` + `angle_analysis.examples` rather than regex guesses.
-
-### Pass 4.6 — Diff against prior snapshot (if any)
-
-Query Supabase for the most recent prior `competitor_snapshots` row with the same `client_id`. If one exists:
-
-```bash
-python scripts/meta-ad-library/differ.py \
-  --supabase --prior <prior_snapshot_id> --current <new_snapshot_id> \
-  --output clients/{slug}/reports/snapshot_diff_<ts>.json
-```
-
-Surface the diff summary (new ads, killed ads, spend-tier moves, dominant-format shifts, CTA changes) as a `since_last_run` section in `competitor_intel.json`. Skip silently on first run.
-
-### Pass 5 — Persistence
-
-1. Write `clients/{slug}/competitor_intel.json`:
-   ```json
-   {
-     "generated_at": "...",
-     "competitors": [
-       {
-         "name": "...",
-         "page_id": "...",
-         "status": "active|inactive",
-         "active_ad_count": 0,
-         "spend_range": { "low": 0, "high": 0, "currency": "..." },
-         "format_mix": { "image": 0.0, "video": 0.0, "carousel": 0.0 },
-         "top_angles": [{ "theme": "...", "example": "..." }],
-         "top_hooks": ["..."],
-         "ctas": { "SHOP_NOW": 0 },
-         "offers": ["..."],
-         "visual_patterns": ["..."]
-       }
-     ],
-     "gaps": [
-       { "type": "format|angle|offer|voice", "observation": "...", "recommended_angle": "..." }
-     ]
-   }
-   ```
-2. Insert row in Supabase `reports`: `client_id`, `type: 'competitor_intel'`, `summary_json` (top-level counts + gap list), `created_at`.
-3. Run `python scripts/meta-ad-library/persist.py competitor --input clients/{slug}/reports/analyzed_<ts>.json --client-id <uuid> --slug {slug}` — writes the full payload to `competitor_snapshots` so `/strategy-brief`, `/before-after`, and future runs of `/research --since` can read it back without re-hitting the Ad Library.
-4. (Optional) `python scripts/meta-ad-library/creatives.py --input clients/{slug}/reports/raw_<ts>.json --out clients/{slug}/swipe/` if `/audit-creative` is queued to run next — gives it real downloaded assets to inspect.
-5. Print a one-line summary: `N competitors analyzed · M active ads observed · K gaps identified · ranked HTML at clients/{slug}/reports/competitor_report_<ts>.html.`
-
-## Output
-
-- `clients/{slug}/competitor_intel.json`
-- `clients/{slug}/reports/competitor_report_<ts>.html` (ranked, shareable)
-- `clients/{slug}/reports/snapshot_diff_<ts>.json` (when a prior snapshot exists)
-- Row in `reports` table
-- Row in `competitor_snapshots` table
+### Output Checklist (verify before delivery)
+- [ ] `competitor_intel.json` exists and has a non-null `angles` array (may be empty = degraded-but-valid).
+- [ ] `competitors`, `gaps`, `client_slug`, `artifacts` present; NO `format_mix` key.
+- [ ] Ranked HTML written; PDF written or its skip logged.
+- [ ] stdout summary printed with `intel_path`, `gap_count`, and `next` hint.
 
 ## Error Handling
 
-- Ad Library returns nothing for a known-active brand → log the searched terms and ask the user to supply a Page ID directly
-- Geo filter returns empty → retry once with `["US"]` as a fallback and flag in the JSON
-- Rate limit (code 17 / 613) → halt, surface the `fbtrace_id`, do not retry automatically
+| Scenario | Action |
+|----------|--------|
+| Missing `client_profile.json` | Halt with the missing path — never guess |
+| `< 2` competitors in profile | Halt; ask user for ≥2 names or Page IDs |
+| Name resolves to no page | Record `status: inactive_or_not_found`, continue |
+| Zero page IDs resolved overall | Halt — ask user to supply Page IDs directly |
+| Empty geo result | Re-run with `--country US`; flag in output |
+| Rate limit (code 4 / 17 / 613) | Halt, surface `fbtrace_id`, do not auto-retry |
+| `classifier.py` fails | Log, continue with regex-derived angles |
+| `render_pdf.py` / `differ.py` fails | Log, continue; PDF/diff omitted |
+| `client.py` / `analyzer.py` / `report.py` fails | Fatal — exit non-zero with stderr |
 
-## Token Efficiency
+## Dependencies & Security
 
-- Run all competitor `search_ad_library` calls in parallel — they're independent
-- Do not re-pull snapshots; reuse the URLs already in the search response
-- Save the full raw response set to a single Supabase row so `/strategy-brief` reads from there instead of re-hitting the API
+- **Reuses:** `scripts/lib/meta-graph.js`, `scripts/lib/load-env.js`, `schemas/competitor_intel.js` (via `schemas/index.js`), `scripts/meta-ad-library/{client,analyzer,classifier,report,differ}.py`, `scripts/render_pdf.py`.
+- **External APIs:** Meta Graph API **v25.0** — `/ads_archive` edge (public, no ad-account access). Rate limits + fields in `references/api-reference.md`.
+- **Runtime:** Node (ESM) + Python 3 (`python3` on PATH); Playwright Chromium for PDF (`pip install playwright && python -m playwright install chromium`).
+- **Secrets:** `META_ACCESS_TOKEN` loaded via `loadEnv()`; `meta-graph.js` adds `appsecret_proof` when the app secret is present. Never hardcoded or logged.
 
-## PDF Rendering
+## Documentation & References
 
-Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+| Resource | URL | Use For |
+|----------|-----|---------|
+| Ads Archive (ads_archive) | https://developers.facebook.com/docs/graph-api/reference/ads_archive/ | Search params: `search_terms`, `ad_reached_countries`, `ad_active_status`, `search_page_ids`, fields |
+| Archived Ad node | https://developers.facebook.com/docs/graph-api/reference/archived-ad/ | Returned fields: `ad_creative_bodies`, `ad_snapshot_url`, `page_id/name`, `spend`, `impressions` |
+| Graph API Rate Limits | https://developers.facebook.com/docs/graph-api/overview/rate-limiting/ | Codes 4 / 17 / 613; `X-App-Usage` header |
+| Handle Errors (Graph API) | https://developers.facebook.com/docs/graph-api/guides/error-handling/ | `fbtrace_id`, recovery, no auto-retry |
+| Versions list | https://developers.facebook.com/docs/graph-api/changelog/versions/ | Confirm v25.0 is current (released 2026-02-18) |
 
-```bash
-python scripts/render_pdf.py <report.html> --output <report.pdf>
-```
+For patterns not covered here, fetch the official docs above, then apply the same
+conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
 
-For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | Angle taxonomy, gap categories, resolution heuristics, good/bad examples |
+| `references/api-reference.md` | `/ads_archive` exact params/fields, v25.0, rate-limit codes, cited URLs |
+| `references/io-contract.md` | Full `competitor_intel.json` schema, CLI contract, example payloads, edge cases |

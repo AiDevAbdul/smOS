@@ -20,7 +20,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
-import { createGraph } from "../../scripts/lib/meta-graph.js";
+import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -30,6 +30,7 @@ loadEnv();
 const MAX_ANALYSIS_AGE_HOURS = 4;
 const BUDGET_INCREASE_CEILING_CENTS = 50_000; // $500/day single-action ceiling
 const SCALE_MULTIPLIER = 1.2;
+const DUPLICATE_BUDGET_MULTIPLIER = 0.5; // clone a top performer at half budget for a budget test
 const BUSINESS_HOURS = { start: 6, end: 21 }; // 6 AM – 9 PM
 
 // SCALE auto-eligible only if delta ≤ this; otherwise → approval queue
@@ -115,6 +116,33 @@ function decisionFromFlag(flag, parentMap) {
         approval_reason: exceedsCeiling ? `delta $${deltaCents / 100} > $${AUTO_SCALE_DELTA_CEILING_CENTS / 100}/day ceiling` : null,
       };
     }
+    case "DUPLICATE_CANDIDATE": {
+      // Top ROAS performer in its campaign (>2× next-best) — clone the adset at
+      // half budget, PAUSED, as a budget test. The new adset is created PAUSED so
+      // nothing goes live without a human; this is consequence-free in the
+      // default-PAUSED sense and so is auto-eligible under --execute (still gated
+      // by the circuit breaker, business hours, and the metric-sanity guard).
+      const adset = parentMap.adsets.get(flag.entity_id);
+      if (!metricsArePlausible(adset)) {
+        return { action: "flag", entity_type: "adset", auto: false, reason: "metrics missing/zero — refusing auto-duplicate (bad-data guard)" };
+      }
+      const currentBudgetCents = adset?.daily_budget != null ? Math.round(adset.daily_budget * 100) : null;
+      if (!currentBudgetCents) {
+        return { action: "flag", entity_type: "adset", auto: false, reason: "no daily_budget — cannot clone at 0.5× (CBO campaign?)" };
+      }
+      const newBudgetCents = Math.max(1, Math.round(currentBudgetCents * DUPLICATE_BUDGET_MULTIPLIER));
+      return {
+        action: "duplicate",
+        entity_type: "adset",
+        // No endpoint to flip on the source — the clone is built at execute time
+        // from the source adset's live spec (see cloneAdset). source_id marks an
+        // actionable (non-flag-only) decision for the circuit-breaker / counters.
+        source_id: flag.entity_id,
+        budget_before_cents: currentBudgetCents,
+        budget_after_cents: newBudgetCents,
+        auto: true,
+      };
+    }
     case "SCALE_WATCH":
       // Significant-enough to watch, too thin to auto-scale. Human review.
       return { action: "flag", entity_type: "adset", auto: false, reason: flag.significance?.note || "watch — sample too thin to scale" };
@@ -147,7 +175,57 @@ function buildParentMap(analysis) {
   };
 }
 
-async function executeDecision(graph, decision) {
+// A decision is actionable (counts toward the circuit breaker, runs in the
+// execute loop) when it carries either an endpoint to mutate or a source_id to
+// clone. Everything else is flag-only.
+function isActionable(d) {
+  return !!d.endpoint || !!d.source_id;
+}
+
+// Derive the clone's name from the source, bumping the trailing version token so
+// it stays inside the [PLACEMENT]_[AGE_RANGE]_[INTEREST_CODE] convention and is
+// distinguishable from its parent. Falls back to a "_DUP" suffix.
+function duplicateName(sourceName) {
+  if (!sourceName) return "DUP_ADSET";
+  const m = sourceName.match(/^(.*?)(?:_v(\d+))?$/);
+  if (m && m[2] != null) return `${m[1]}_v${Number(m[2]) + 1}`;
+  return `${sourceName}_DUP`;
+}
+
+// Clone a top-performing adset at half budget, PAUSED, in the same campaign.
+// performance_analysis.json only carries a slim adset row (no targeting /
+// optimization_goal / billing_event), so we fetch the source's full live spec
+// through the SAME guarded graph and POST a new adset built from it.
+async function cloneAdset(graph, accountId, decision) {
+  const src = await graph.get(`/${decision.source_id}`, {
+    fields: "name,campaign_id,optimization_goal,billing_event,bid_strategy,bid_amount,targeting,promoted_object,attribution_spec,destination_type",
+  });
+  const body = {
+    name: duplicateName(decision.entity_name || src.name),
+    campaign_id: src.campaign_id,
+    daily_budget: String(decision.budget_after_cents),
+    optimization_goal: src.optimization_goal,
+    billing_event: src.billing_event,
+    targeting: src.targeting,
+    status: "PAUSED", // default-PAUSED: the clone never goes live without a human
+  };
+  if (src.bid_strategy) body.bid_strategy = src.bid_strategy;
+  if (src.bid_amount != null) body.bid_amount = src.bid_amount;
+  if (src.promoted_object) body.promoted_object = src.promoted_object;
+  if (src.attribution_spec) body.attribution_spec = src.attribution_spec;
+  if (src.destination_type) body.destination_type = src.destination_type;
+  const res = await graph.post(`/${graph.act(accountId)}/adsets`, body);
+  return { ok: true, response: res, created_name: body.name, created_id: res?.id || null };
+}
+
+async function executeDecision(graph, decision, accountId) {
+  if (decision.action === "duplicate") {
+    try {
+      return await cloneAdset(graph, accountId, decision);
+    } catch (e) {
+      return { ok: false, error: e.message, meta: e.metaError || null };
+    }
+  }
   if (!decision.endpoint) return { ok: true, skipped: true, reason: "flag only" };
   try {
     const res = await graph.post(decision.endpoint, decision.body);
@@ -267,9 +345,9 @@ async function main() {
   resolveConflicts(byEntity);
 
   const allDecisions = [...byEntity.values()].flat();
-  const autoActions = allDecisions.filter((d) => d.auto && d.endpoint);
-  const approvalQueue = allDecisions.filter((d) => !d.auto && d.endpoint);
-  const flagOnly = allDecisions.filter((d) => !d.endpoint);
+  const autoActions = allDecisions.filter((d) => d.auto && isActionable(d));
+  const approvalQueue = allDecisions.filter((d) => !d.auto && isActionable(d));
+  const flagOnly = allDecisions.filter((d) => !isActionable(d));
 
   // Run-level circuit breaker: a garbage performance_analysis.json (all entities
   // reading as breaches) must not auto-mutate the whole account. Refuse the run
@@ -288,12 +366,17 @@ async function main() {
   }
 
   const graph = execute ? createGraph() : null;
+  const accountId = profile.accounts?.ad_account_id || null;
   const results = [];
 
   for (const d of autoActions) {
     let result;
     if (execute) {
-      result = await executeDecision(graph, d);
+      if (d.action === "duplicate" && (!accountId || isTbd(accountId))) {
+        result = { ok: false, error: "accounts.ad_account_id missing/TBD — cannot clone adset" };
+      } else {
+        result = await executeDecision(graph, d, accountId);
+      }
     } else {
       result = { ok: true, dry_run: true };
     }
@@ -303,6 +386,8 @@ async function main() {
       status: result.ok ? (execute ? "applied" : "dry_run") : "error",
       error: result.error || null,
       meta_response: result.response || null,
+      created_id: result.created_id || null,
+      created_name: result.created_name || null,
     });
   }
   for (const d of approvalQueue) {
@@ -315,6 +400,7 @@ async function main() {
   const summary = {
     auto_paused: results.filter((r) => r.action === "pause" && r.status !== "error").length,
     auto_scaled: results.filter((r) => r.action === "scale" && r.status !== "error" && r.auto).length,
+    auto_duplicated: results.filter((r) => r.action === "duplicate" && r.status !== "error" && r.auto).length,
     awaiting_approval: approvalQueue.length,
     flagged: flagOnly.length,
     errors: results.filter((r) => r.status === "error").length,
@@ -375,6 +461,7 @@ function round(n, d) {
 
 // Exported for unit tests; main() only runs when invoked directly.
 export { inBusinessHours, metricsArePlausible, decisionFromFlag, reverseDecision, buildParentMap,
+  isActionable, duplicateName, cloneAdset,
   MAX_AUTO_ACTIONS_ABS, MAX_AUTO_ACTIONS_PCT, MIN_IMPRESSIONS_FOR_ACTION };
 
 if (import.meta.url === `file://${process.argv[1]}`) {

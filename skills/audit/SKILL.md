@@ -1,115 +1,139 @@
 ---
 name: audit
-description: Use this skill when the user asks to audit a client's Meta presence or asks for a baseline of their organic + paid accounts (typically via `/audit {slug}`). Pulls a full snapshot and produces `audit_report.md` — the immutable 'before' state that all future before/after reports compare against.
+description: Use this skill when the user asks to audit a client's Meta presence or asks for a baseline of their organic + paid accounts (typically via `/audit {slug}`). Pulls a full Facebook Page + Instagram + ad-account snapshot via the Graph API, computes a 0–100 health score, fills `audit_report.md`, and writes the immutable `baseline_snapshot.json` that every future `/before-after` report compares against.
 ---
 
-# /audit — Account + Page Audit
+# /audit — Account + Page Audit (Phase 1)
 
-## Required Context
+Capture a complete, point-in-time snapshot of a client's Meta presence — organic (Facebook Page + Instagram) and paid (ad account, pixel, audiences) — score it 0–100, and freeze it as the immutable baseline. This baseline is load-bearing: `/before-after` refuses to run against an unlocked snapshot, so a correct audit run is the foundation of the agency's signature progress deliverable.
 
-Load only the client's profile and account IDs.
+## What This Skill Does
 
-- `clients/{slug}/client_profile.json` — read this; do not load global state
-- `clients/{slug}/CLAUDE.md` — read for KPI thresholds and naming conventions
-- Meta MCP server — all live API calls
-- Supabase connector — for `reports` and `baseline_snapshots` rows
+- Run `skills/audit/audit.js <slug> [--no-paid] [--no-ig]`, the deterministic data-fetch + transform + template-fill companion.
+- Fetch three passes in parallel via `createGraph()`: Facebook Page (profile, 60-day posts, 90-day insights), Instagram (profile, 60-day media, 28-day insights), ad account (account, lifetime campaigns, custom audiences, pixel stats).
+- Derive metrics: page completeness, follower delta, posts/week, format mix, engagement rate, best/worst post, lifetime spend, best CPA/ROAS, naming compliance, zombie campaigns, audience health, pixel-health class.
+- Compute the weighted 0–100 health score (weights in `references/domain-standards.md`).
+- Write `clients/{slug}/audit_raw.json`, fill `templates/audit-report.md` → `clients/{slug}/audit_report.md`, and write `clients/{slug}/baseline_snapshot.json` (locked only when real FB engagement was captured).
+- After the script returns: append the qualitative analysis (Top-3 wins / issues / next steps) into the report, render HTML + PDF, and insert the Supabase `reports` row.
+
+## What This Skill Does NOT Do
+
+- Score creative quality (visual/CTA/text-density via vision) — that is `/audit-creative`, which reuses this audit's post list and appends to the report.
+- On-demand performance deep-dives, segment breakdowns, or fatigue analysis — that is `/analyze`.
+- Compare against the baseline / compute deltas — that is `/before-after` (it consumes the `baseline_snapshot.json` this skill writes).
+- Competitor / Ad Library research — that is `/research`.
+- Any account mutation. `/audit` is strictly read-only (GET only).
+
+## Before Implementation
+
+Gather context before acting (do not ask the user for what is discoverable):
+
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `skills/audit/audit.js`, `scripts/lib/meta-graph.js` (`createGraph`, `isTbd`), `schemas/baseline_snapshot.js`, `templates/audit-report.md`, `scripts/render_pdf.py` |
+| **Conversation** | The `{slug}`; whether the user wants to skip paid (`--no-paid`) or IG (`--no-ig`) |
+| **Skill References** | Scoring weights, thresholds, taxonomies, I/O contract (see Reference Files) |
+| **Client Profile** | `clients/{slug}/client_profile.json` (`accounts.facebook_page_id`, `instagram_business_id`, `ad_account_id`, `pixel_id`, `currency`) + per-client `CLAUDE.md` KPI overrides |
+
+## Clarifications
+
+> Before asking: check the conversation, the client profile, and prior handoff files.
+> Only ask for what cannot be determined. Domain knowledge is embedded in `references/` — never ask the user for thresholds, weights, or naming rules.
+
+**Required (must resolve before running):**
+1. Which client `{slug}`? (Must have `clients/{slug}/client_profile.json`.)
+
+**Optional (ask only if relevant):**
+2. Skip the paid audit (`--no-paid`) — e.g. a first-time advertiser with no ad account?
+3. Skip Instagram (`--no-ig`) — e.g. Facebook-only client?
 
 ## Workflow
 
-Three audit passes, then synthesis, then baseline snapshot. Run the three passes in parallel where possible — they hit different parts of the API.
+1. Confirm `clients/{slug}/client_profile.json` exists; if not, halt and name the missing file.
+2. Run `node skills/audit/audit.js {slug}` (add `--no-paid` / `--no-ig` when requested). The script fetches, derives, scores, writes `audit_raw.json` + `audit_report.md`, and writes `baseline_snapshot.json` if absent.
+3. Read the JSON summary the script prints to stdout (health score, follower counts, spend, pixel health, paths, errors).
+4. Read `audit_raw.json` and write the qualitative analysis into the report: replace the `_(Claude to fill)_` placeholders for Top-3 wins, Top-3 issues, Top-3 next steps — grounded only in the raw data.
+5. Render HTML + PDF: convert `audit_report.md` → HTML, then `python scripts/render_pdf.py <report.html> --output <report.pdf>`.
+6. Insert a Supabase `reports` row (`client_id`, `type:'audit'`, `report_url`, `created_at`, `summary_json`). Do not re-fetch Meta data — downstream skills read `audit_raw.json` / Supabase.
+7. Output one line to the user: health score + report path.
 
-### Pass 1 — Organic Audit (Facebook Page)
+## Input / Output Specification
 
-Tools used:
-- `get_page_completeness({page_id})` → completeness score + per-field check
-- `get_page_insights({page_id, metrics: ["page_fans","page_fan_adds","page_fan_removes","page_impressions_unique","page_post_engagements","page_views_total"], period: "day", days: 90})` → 90-day trend
-- `get_page_fans({page_id})` → follower demographics
-- `get_post_insights({page_id, limit: 30})` → last 30 posts with per-post metrics
-- `get_page_creatives({page_id, limit: 30})` → for format-mix detection (status_type / media_type)
-- `get_page_videos({page_id, limit: 20})` → Reels + video performance
+**Inputs:** CLI arg `<slug>`; flags `--no-paid`, `--no-ig`; reads `clients/{slug}/client_profile.json`; env `META_ACCESS_TOKEN` (+ optional `META_APP_SECRET`) via `scripts/lib/load-env.js`.
+**Outputs:** `clients/{slug}/audit_raw.json`, `clients/{slug}/audit_report.md` (+ `.html`/`.pdf`), `clients/{slug}/baseline_snapshot.json`, a JSON summary on stdout, and a Supabase `reports` row.
+(Full schemas, the stdout summary shape, and edge cases: `references/io-contract.md`.)
 
-Derive:
-- 90-day follower delta (fan_adds − fan_removes)
-- Posts/week = post count / weeks_in_window
-- Format mix %: count posts by `media_type` / `status_type` (photo, video, link, status, carousel)
-- Avg engagement rate by format = (reactions + comments + shares) / impressions, grouped by media_type
-- Best/worst post = top/bottom by engagement rate
-- Posting time distribution: bucket post `created_time` into hour-of-day, day-of-week
+## Variability Analysis
 
-### Pass 2 — Organic Audit (Instagram)
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
+|--------------------------------|------------------------------------|
+| Account IDs, currency, timezone, follower/spend volumes | Three-pass structure; parallel fetch |
+| Which passes run (`--no-paid`, `--no-ig`, or `TBD` IDs auto-skip) | Health-score weights & formula |
+| KPI targets/benchmarks (per-client `CLAUDE.md`) | Naming regex `^[A-Z]+_[A-Z0-9]+_\d{6}$`, pixel-health classes |
+| Whether the baseline locks (depends on real FB engagement) | Baseline immutability rule (never overwrite an existing snapshot) |
 
-If `ig_account_id` is set in the profile:
-- `get_instagram_insights({ig_user_id, metrics: ["reach","accounts_engaged","follower_count","profile_views","website_clicks"], period: "day", days: 28})`
-- Pull recent IG media via direct Graph API call (`/{ig_user_id}/media`) for format mix — there's no dedicated MCP tool yet, so use the raw `mcp__claude_ai_*` path or call Graph directly through `meta-client.js`
+## Domain Standards
 
-Note: IG `impressions` metric is deprecated as of April 2025 — do NOT request it.
+### Must Follow
+- [ ] Run the `.js` companion for all fetch/derive/fill — never hand-fetch or hand-score.
+- [ ] Treat `TBD`/empty IDs via `isTbd()` as a clean skip, not an error.
+- [ ] Fill qualitative sections ONLY from `audit_raw.json` — never invent metrics.
+- [ ] Ship the report as both HTML and PDF (`scripts/render_pdf.py`).
+- [ ] Leave an existing `baseline_snapshot.json` untouched — baselines are immutable.
 
-### Pass 3 — Paid Audit (Ad Account)
+### Must Avoid
+- Overwriting a locked baseline, or hand-locking an unlocked one.
+- Requesting IG `impressions` (deprecated; use `views`/`reach` — see references).
+- Auto-retrying Meta errors or proceeding past a `TokenExpiredError`.
+- Asking the user for thresholds/weights that live in `references/`.
 
-Tools used:
-- `get_campaigns({ad_account_id, status: ["ACTIVE","PAUSED","ARCHIVED"]})` → full campaign history
-- `get_campaign_insights({campaign_id, date_preset: "lifetime"})` → for top N campaigns
-- `get_custom_audiences({ad_account_id})` → list + health
-- `check_pixel_health({pixel_id})` → fire status + event-by-event
-- `get_account_pixels({ad_account_id})` → confirm pixel is account-linked
-- `get_attribution_stats({pixel_id})` → recent attribution
-
-Derive:
-- Total historical spend (sum of lifetime campaign spend)
-- Best CPA / best ROAS across campaigns with sufficient spend (>$50)
-- Audience inventory: count healthy vs broken (`operation_status` 200 = healthy, 433 = broken)
-- Zombie campaigns: status=ACTIVE but no delivery in last 14d (zero impressions)
-- Naming compliance: regex-match each campaign name against `^[A-Z]+_[A-Z0-9]+_\d{6}$`
-- Frequency issues: any active adset with frequency > 4.0 in last 7d
-
-### Pass 4 — Synthesis
-
-Fill `templates/audit-report.md` with the data from passes 1–3. Compute:
-
-- **Overall health score (0–100):** weighted average of:
-  - Page completeness (15%)
-  - Pixel health (20%): full=100, partial=60, none=0
-  - Audience health % (15%): healthy_count / total_count × 100
-  - Naming compliance % (10%)
-  - Organic posting consistency (10%): score by posts/week vs target of 3
-  - Engagement rate vs industry benchmark (15%)
-  - Account financial health (15%): balance status, payment method valid
-
-- **Top 3 wins:** what's working — strongest signal in the data
-- **Top 3 issues:** highest-impact problems blocking results
-- **Top 3 next steps:** concrete, ordered actions
-
-### Pass 5 — Persistence
-
-1. Save `clients/{slug}/audit_report.md` (the filled template)
-2. Insert row in Supabase `reports` table: `client_id`, `type: 'audit'`, `report_url`, `created_at`, `summary_json`
-3. Call `scripts/baseline-snapshot.js` to write the immutable baseline snapshot
-4. Output a one-line summary to the user with the health score and link to the report
-
-## Output
-
-- `clients/{slug}/audit_report.md`
-- Row in `reports` table
-- Row in `baseline_snapshots` table
-- (Optional) Upload report to client's Google Drive folder if connector is wired
+### Output Checklist (verify before delivery)
+- [ ] `audit_raw.json`, `audit_report.md`, `baseline_snapshot.json` all written.
+- [ ] Health score present (0–100) and matches the stdout summary.
+- [ ] Top-3 wins / issues / next-steps placeholders replaced with data-grounded text.
+- [ ] HTML + PDF produced; Supabase `reports` row inserted.
+- [ ] Baseline lock state correct (locked iff real FB engagement captured).
 
 ## Error Handling
 
-- If the ad account has no spend history → all paid metrics return zero; flag "first-time advertiser" and weight health score accordingly
-- If Page Insights returns empty → likely a permissions issue; surface the fbtrace_id and instructions to grant Page roles to the System User
-- If Instagram account isn't linked → skip Pass 2 silently, note in report
+| Scenario | Action |
+|----------|--------|
+| Missing `client_profile.json` | Script exits code 2; halt and name the path — never guess IDs. |
+| No `{slug}` arg | Script exits code 1 with usage; ask for the slug. |
+| `TBD`/empty account ID | Pass returns `{skipped, reason}`; note it in the report, do not error. |
+| Page Insights empty | Surfaced as `insights_error` + `fbtrace_id`; flag likely Page-role/permission gap. |
+| Ad account has no spend | All paid metrics return zero; flag "first-time advertiser" and weight score accordingly. |
+| Meta API error | Logged with code/type/`fbtrace_id`; transient codes auto-retry in `meta-graph.js` (do not add retries). |
+| Expired/invalid token (190/102/463/467) | `TokenExpiredError`, non-retryable — stop and prompt re-auth. |
+| `baseline_snapshot.json` already exists | Not overwritten (immutable); proceed with the existing baseline. |
 
-## Token Efficiency
+## Dependencies & Security
 
-- All API responses are saved to Supabase before this skill returns, so subsequent skills (`/audit-creative`, `/strategy-brief`) read from Supabase rather than re-hitting Meta
-- The 30-post creative list from `get_page_creatives` is reused by `/audit-creative` — don't re-fetch
+- **Reuses:** `scripts/lib/meta-graph.js` (`createGraph`, `isTbd`, retry/backoff/guard chokepoint), `scripts/lib/load-env.js`, `schemas/baseline_snapshot.js` (`normalize`), `templates/audit-report.md`, `scripts/render_pdf.py`.
+- **External APIs:** Meta Graph + Marketing API **v25.0**, read-only (rate limits + endpoints in `references/api-reference.md`).
+- **Runtime:** Node ≥18 (ESM, native `fetch`/`axios`); Python + Playwright/Chromium for PDF (`pip install playwright && python -m playwright install chromium`).
+- **Secrets:** `META_ACCESS_TOKEN` / `META_APP_SECRET` resolved from `~/.config/smos/.env` (chmod 600) or `SMOS_ENV_FILE` — never hardcoded, never logged. `appsecret_proof` is HMAC-derived per call.
 
-## PDF Rendering
+## Documentation & References
 
-Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+| Resource | URL | Use For |
+|----------|-----|---------|
+| Graph API root | https://developers.facebook.com/docs/graph-api/ | Page/IG node + edge fields |
+| Pages API — Posts/feed | https://developers.facebook.com/docs/pages-api/posts/ | Page post + engagement fields |
+| Page node | https://developers.facebook.com/docs/graph-api/reference/page/ | `fan_count`, `about`, completeness fields |
+| Marketing API root | https://developers.facebook.com/docs/marketing-api/ | Campaign/insights/custom-audience reads |
+| IG Media Insights | https://developers.facebook.com/docs/instagram-platform/reference/instagram-media/insights/ | `impressions`→`views` deprecation, `reach` |
+| Handle Errors | https://developers.facebook.com/docs/graph-api/guides/error-handling/ | Error codes, `fbtrace_id`, recovery |
+| Graph API Rate Limits | https://developers.facebook.com/docs/graph-api/overview/rate-limiting/ | Codes 4/17/613, `X-App-Usage` headers |
 
-```bash
-python scripts/render_pdf.py <report.html> --output <report.pdf>
-```
+For patterns not covered here, fetch the official docs above, then apply the same conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
 
-For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | Health-score weights/formula, pixel-health & audience taxonomies, naming regex, ER benchmarks, good/bad audit examples |
+| `references/api-reference.md` | Exact endpoints/fields/version/rate-limits per pass, with cited URLs |
+| `references/io-contract.md` | Full `audit_raw.json` + `baseline_snapshot.json` schemas, stdout summary shape, template vars, edge cases |

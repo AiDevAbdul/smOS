@@ -1,118 +1,139 @@
 ---
 name: analyze
-description: Use this skill when the user asks to analyze, check, or review the performance of a client's Meta ads (typically via `/analyze {slug}`). Performs an on-demand deep dive — pulls 7/14/30-day metrics segmented by campaign, adset, ad, placement, age/gender, and device; flags underperformers, identifies winners, surfaces creative fatigue.
+description: Use this skill when the user asks to analyze, check, or review the live performance of a client's Meta ads (typically via `/analyze {slug}`). It runs `analyze.js`, which pulls 7/14/30-day insights for every active campaign/adset/ad, segments active adsets by placement/age-gender/device, classifies pause/scale/fatigue/anomaly flags against KPI thresholds with statistical-significance gates, computes an account Opportunity Score, ranks winners and losers, writes `performance_analysis.json` + HTML/PDF, and best-effort persists per-day rows to Supabase `daily_metrics`.
 ---
 
-# /analyze — Performance Deep Dive
+# /analyze — Performance Deep Dive (Phase 4 · Optimize)
 
-## Required Context
+Run an on-demand performance deep dive on a client's Meta ad account. Produce a machine-readable `performance_analysis.json` of derived metrics and classified flags that `/scale` executes against, plus a client-facing HTML+PDF summary. This skill reads and analyzes — it never mutates the account.
 
-- `clients/{slug}/client_profile.json` — for `accounts.ad_account_id`, `kpis`
-- `clients/{slug}/CLAUDE.md` — for client-specific KPI overrides
-- Meta MCP server — `get_campaigns`, `get_campaign_insights`, `get_adset_insights`, `get_ad_insights`, `get_ads_under_adset`
-- Supabase connector — read recent `daily_metrics` rows (avoid re-fetching) + write the `reports` row
+## What This Skill Does
+
+- Pull every ACTIVE/PAUSED campaign, adset, and ad via `meta-graph.js`, with insights at `last_7d`, `last_14d`, `last_30d`.
+- Segment active adsets at `last_14d` by placement, age+gender, and device (skippable with `--no-breakdowns`).
+- Derive canonical metrics (spend, CPM, CTR, link CTR, CPC, CPA, ROAS, frequency) via `metrics.js`.
+- Classify ad/adset flags (PAUSE, SCALE, CREATIVE_FATIGUE, anomalies) gated by `stats.js` significance tests.
+- Compute one explainable account Opportunity Score (0–100) via `opportunity.js`.
+- Rank top/bottom ads and highlight concentrated segments.
+- Write `performance_analysis.json` + `performance_analysis.md`/`.html`/`.pdf`; best-effort upsert `daily_metrics`.
+
+## What This Skill Does NOT Do
+
+- Does NOT pause, scale, duplicate, or change any account entity — that is `/scale`.
+- Does NOT generate the weekly client report (Drive/Slack/email delivery) — that is `/report`.
+- Does NOT do 30-day trend/strategy reset or budget reallocation planning — that is `/monthly-review`.
+- Does NOT score creative quality (vision review) — that is `/audit-creative`.
+- Does NOT produce the immutable baseline snapshot — that is `/audit`.
+
+## Before Implementation
+
+Gather context before acting (do not ask the user for what is discoverable):
+
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `scripts/lib/meta-graph.js` (client, `act()`, `paginate`, `isTbd`), `scripts/lib/metrics.js` (`deriveMetrics`, `normalizeKpis`, `DEFAULT_KPIS`), `scripts/lib/stats.js`, `scripts/lib/opportunity.js`, `scripts/lib/supabase.js`, `scripts/lib/md_to_html.js` |
+| **Conversation** | Which client `{slug}`; whether breakdowns are wanted |
+| **Skill References** | Thresholds/flags/formulas in `references/` (see table below) |
+| **Client Profile** | `clients/{slug}/client_profile.json` → `accounts.ad_account_id`, `accounts.currency`, `kpis`; per-client `CLAUDE.md` KPI overrides |
+
+## Clarifications
+
+> Before asking: check the conversation, the client profile, and prior handoff files.
+> Only ask for what cannot be determined. All thresholds and formulas are embedded
+> in `references/` — never ask the user for them.
+
+**Required (must resolve before running):**
+1. The client `{slug}` whose account to analyze.
+
+**Optional (ask only if relevant):**
+2. Skip segmentation breakdowns for a faster, lower-quota run? (maps to `--no-breakdowns`).
 
 ## Workflow
 
-### Pass 1 — Pull the active tree
+1. Resolve `{slug}`; confirm `clients/{slug}/client_profile.json` exists and `accounts.ad_account_id` is not TBD.
+2. Run the script: `node skills/analyze/analyze.js {slug} [--no-breakdowns]`.
+3. The script merges KPIs (`normalizeKpis`), pulls the campaign→adset→ad tree in batches of 5, derives metrics per window, classifies flags, computes the Opportunity Score, ranks winners/losers, and writes outputs.
+4. Read the printed one-line JSON summary (flag counts, opportunity score, output path).
+5. Hand off to `/scale` to execute the pause/scale recommendations.
 
-1. `get_campaigns({ ad_account_id, status: ["ACTIVE","PAUSED"] })` — keep only entities that ran in the last 30 days
-2. For each campaign, fetch insights at three windows: `last_7d`, `last_14d`, `last_30d`
-3. For each adset under each active campaign, fetch `get_adset_insights` at the same three windows
-4. For each ad: `get_ad_insights` at `last_7d` and `last_30d`
+## Input / Output Specification
 
-Run windows in parallel within each entity; entities themselves in batches of 5 to respect rate limits.
+**Inputs:** positional `{slug}`; flag `--no-breakdowns`; `clients/{slug}/client_profile.json`; env (`META_*`, optional `SUPABASE_*`).
+**Outputs:** `clients/{slug}/performance_analysis.json` (+ `.md`/`.html`/`.pdf`); stdout one-line JSON summary; best-effort rows in Supabase `daily_metrics`.
+**Exit codes:** `0` ok · `1` no slug / fatal · `2` profile not found · `3` `ad_account_id` is TBD.
+(Full schemas + example payloads: `references/io-contract.md`.)
 
-### Pass 2 — Segmentation breakdowns
+## Variability Analysis
 
-For active adsets only (skip paused), request additional breakdowns from Graph API via `get_adset_insights` with the `breakdowns` parameter:
-- `placement` (Facebook Feed / Story / Reels / IG Feed / IG Reels)
-- `age,gender`
-- `device_platform` (mobile_app, mobile_web, desktop)
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
+|--------------------------------|------------------------------------|
+| `ad_account_id`, currency, KPI targets (CPA/ROAS/CTR) and pause/scale overrides | Flag taxonomy + classification logic, three time windows, batch size 5 |
+| Number of campaigns/adsets/ads and their metrics | Significance gates (z-test, min-conversions), spend floors |
+| Whether breakdowns run (`--no-breakdowns`) | Opportunity Score weights (scale .45 / reclaim .35 / refresh .20) |
+| Primary conversion events (profile) | Insight field list, API version v25.0, output filenames |
 
-Window: `last_14d` for breakdowns (shorter windows are too noisy at segment level).
+## Domain Standards
 
-### Pass 3 — Derive per-entity metrics
+### Must Follow
+- [ ] Read KPI targets only via `normalizeKpis(profile)` — handles flat and nested shapes.
+- [ ] Treat all CTR values as PERCENT (Meta's `ctr`/`inline_link_click_ctr` are already %).
+- [ ] Gate CREATIVE_FATIGUE on a significant two-proportion z-test; gate auto-SCALE on min conversions.
+- [ ] Compute flags as local arithmetic — never LLM-infer thresholds or values.
+- [ ] Default to read-only; emit candidates, never execute account changes.
 
-For every campaign/adset/ad row at every window, compute:
-- spend, impressions, clicks, link_clicks, conversions, conversion_value
-- CPM, CTR (link), CPC (link), CPA, ROAS, frequency
-- Day-over-day deltas vs the previous equivalent window
+### Must Avoid
+- Do NOT re-fetch windows already cached in `daily_metrics` when avoidable.
+- Do NOT classify ROAS=0 with healthy link clicks as PAUSE — flag `ANOMALY_attribution`.
+- Do NOT auto-retry on Meta rate-limit/token errors.
+- Do NOT hardcode KPI numbers in prose; cite `references/domain-standards.md`.
 
-### Pass 4 — Flag classification
-
-Read thresholds from client CLAUDE.md (fall back to global defaults). For each ad:
-
-- **PAUSE_CANDIDATE — CPA:** spend ≥ $50 AND CPA > 3× target (or per-client override)
-- **PAUSE_CANDIDATE — ROAS:** spend ≥ $100 AND ROAS < 1.0
-- **PAUSE_CANDIDATE — CTR:** spend ≥ $30 AND link CTR < 0.5%
-- **PAUSE_CANDIDATE — Frequency:** frequency_7d > 4.0
-- **SCALE_CANDIDATE:** adset ROAS > 3.0 (or per-client) for 3 consecutive days
-- **DUPLICATE_CANDIDATE:** adset is the top ROAS performer in its campaign AND has > 2× the next-best adset's ROAS
-- **CREATIVE_FATIGUE:** ad CTR_7d < 0.6 × CTR_30d OR frequency_7d > 3.0 AND CTR declining 3 days running
-- **ANOMALY — spend spike:** spend_yesterday > 2× rolling 7d avg
-- **ANOMALY — delivery stall:** active ad with zero impressions in last 24h
-- **ANOMALY — CTR collapse:** CTR_yesterday < 0.4 × CTR_30d
-
-Every flag includes the metric value, the threshold it tripped, and a one-line reasoning string — these feed `/scale` directly.
-
-### Pass 5 — Winners + losers ranking
-
-- Top 5 ads by ROAS (with spend ≥ $50)
-- Top 5 ads by CPA (lowest, with same floor)
-- Bottom 5 ads by ROAS
-- Top placement / age-gender / device segment by ROAS at adset level (highlight if one segment is >50% of conversions — concentrate spend there)
-
-### Pass 5b — Opportunity Score
-
-- `opportunity` block (0–100): a single explainable number for unrealized upside, blending spend-share of proven winners to scale (0.45), spend bleeding on pause candidates to reclaim (0.35), and fatigued-creative spend to refresh (0.20). Includes a component breakdown + ranked recommendations. Higher = more money currently left on the table.
-
-### Pass 6 — Persist
-
-1. Write `clients/{slug}/performance_analysis.json`:
-   ```json
-   {
-     "generated_at": "...",
-     "window_summary": { "last_7d": {...}, "last_14d": {...}, "last_30d": {...} },
-     "by_campaign": [...],
-     "by_adset": [...],
-     "by_ad": [...],
-     "breakdowns": { "placement": {...}, "age_gender": {...}, "device": {...} },
-     "flags": [
-       { "entity_type": "ad", "entity_id": "...", "name": "...", "flag": "PAUSE_CANDIDATE_CPA", "metric": 0, "threshold": 0, "reasoning": "..." }
-     ],
-     "winners": { "top_roas": [...], "lowest_cpa": [...] },
-     "losers": { "bottom_roas": [...] },
-     "segment_highlights": [...]
-   }
-   ```
-2. Insert row in Supabase `reports`: `client_id`, `type: 'performance_analysis'`, `summary_json` (flag counts + top/bottom), `created_at`
-3. Upsert per-entity metrics into Supabase `daily_metrics` so the optimizer can read history without re-hitting Meta
-4. Print a one-line summary: `{N} flags · {W} winners · {L} losers · run /scale to execute.`
-
-## Output
-
-- `clients/{slug}/performance_analysis.json`
-- Rows in `daily_metrics` + a row in `reports`
+### Output Checklist (verify before delivery)
+- [ ] `performance_analysis.json` written with `flags`, `opportunity`, `winners`, `losers`, `segment_highlights`.
+- [ ] Every flag carries `flag`, `metric`, `threshold`, and a one-line `reasoning`.
+- [ ] HTML + PDF summary produced (PDF skip tolerated if Playwright absent).
+- [ ] One-line JSON summary printed to stdout ending with the `/scale` next-step.
 
 ## Error Handling
 
-- Meta API throttle (code 17/613) → halt, surface fbtrace_id, do not retry automatically
-- Empty insights for an active entity → flag as `ANOMALY_delivery_stall`, continue
-- Pixel attribution gap (ROAS = 0 but click-throughs healthy) → flag `ANOMALY_attribution`, do not classify as PAUSE
+| Scenario | Action |
+|----------|--------|
+| No slug argument | Exit `1` with usage string |
+| Profile file missing | Exit `2` naming the path — never guess |
+| `ad_account_id` is TBD | Exit `3`; route user to `/setup-accounts` |
+| Meta rate limit / token error (codes 4/17/613/190) | `meta-graph.js` surfaces it; do not auto-retry; log fbtrace_id |
+| Insights error for one entity | Store `{error}` for that window, continue (fail-soft per entity) |
+| Active ad, zero impressions | Emit `ANOMALY_delivery_stall`, continue |
+| ROAS=0 but link clicks healthy | Emit `ANOMALY_attribution`, do NOT mark PAUSE |
+| Supabase unconfigured / insert fails | Skip persistence with a note; JSON output is authoritative |
+| Playwright/PDF unavailable | Write HTML only; note "PDF skipped" |
 
-## Token Efficiency
+## Dependencies & Security
 
-- Read prior 7 days of `daily_metrics` from Supabase first — only fetch from Meta for windows not already cached
-- All flag classification is local computation, not LLM-driven
-- Breakdowns run only on active adsets, not paused ones
+- **Reuses:** `scripts/lib/meta-graph.js`, `metrics.js`, `stats.js`, `opportunity.js`, `supabase.js`, `md_to_html.js`, `load-env.js`.
+- **Runtime:** Node ESM; `axios` (via meta-graph); Python + Playwright/Chromium only for PDF.
+- **External APIs:** Meta Graph/Marketing API **v25.0** (read-only insights); rate limits and fields in `references/api-reference.md`.
+- **Secrets:** Meta + Supabase credentials resolved from env via `load-env.js` — never hardcoded, never logged (only `fbtrace_id`/error messages surface).
 
-## PDF Rendering
+## Documentation & References
 
-Every report ships in HTML **and** PDF. After the HTML/markdown is written, run the shared helper:
+| Resource | URL | Use For |
+|----------|-----|---------|
+| Graph API insights / fields | https://developers.facebook.com/docs/graph-api/ | Insights edge, field semantics |
+| Marketing API root | https://developers.facebook.com/docs/marketing-api/ | Ad-account entity tree |
+| Versioning guide | https://developers.facebook.com/docs/graph-api/guides/versioning/ | Confirm v25.0 pin |
+| Handle Errors (Graph API) | https://developers.facebook.com/docs/graph-api/guides/error-handling/ | Error codes, fbtrace_id |
+| Graph API Rate Limits | https://developers.facebook.com/docs/graph-api/overview/rate-limiting/ | Codes 4/17/613, usage headers |
+| Marketing API Rate Limiting | https://developers.facebook.com/docs/marketing-api/overview/rate-limiting/ | Ad-account insight limits |
 
-```bash
-python scripts/render_pdf.py <report.html> --output <report.pdf>
-```
+For patterns not covered here, fetch the official docs above, then apply the same
+conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
 
-For markdown-first reports (audit_report.md, weekly_report.md), first convert markdown → HTML using your existing renderer, then call `render_pdf.py`. The helper uses headless Chromium (Playwright) so Apple-style gradients, charts, and table borders render correctly. First-time setup: `pip install playwright && python -m playwright install chromium`.
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | KPI thresholds, full flag taxonomy + trigger logic, metric formulas, Opportunity Score weighting, good/bad examples |
+| `references/api-reference.md` | Exact Graph endpoints, insight fields, breakdown enums, v25.0 notes, rate-limit codes |
+| `references/io-contract.md` | Full `performance_analysis.json` schema, stdout summary, `daily_metrics` rows, CLI/exit-code contract, edge cases |

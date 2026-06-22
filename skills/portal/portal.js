@@ -37,7 +37,17 @@ function readJson(p) {
 function readClientJson(name) { return readJson(resolve(dir, name)); }
 
 const catalog = readJson(resolve(ROOT, "config", "services.json")) || { agency: {} };
-const agencyEmail = catalog.agency?.email || "hello@agency.co";
+let agencyEmail = catalog.agency?.email;
+if (!agencyEmail) {
+  agencyEmail = "hello@agency.co";
+  console.error(
+    "WARN: config/services.json agency.email is unset — falling back to the placeholder " +
+    `"${agencyEmail}". Approval mailto links will point at the wrong inbox. ` +
+    "Set agency.email before shipping this portal to a client."
+  );
+}
+// Approval cap is a tunable business policy, not an invariant — config-driven.
+const approvalCap = Number(catalog.portal?.approval_cap) > 0 ? Number(catalog.portal.approval_cap) : 8;
 
 const perf = readClientJson("performance_analysis.json");
 const inbox = readClientJson("inbox.json");
@@ -59,20 +69,30 @@ if (deal && deal.deal?.monthly_retainer) {
 // ── Billing (commercial) ──
 s.push("", "## Billing");
 if (invoices.length) {
-  const issued = invoices.reduce((a, i) => a + i.total, 0);
-  const paid = invoices.filter((i) => i.status === "paid").reduce((a, i) => a + i.total, 0);
-  const cur = invoices[0].currency;
   s.push(`| Invoice | Period | Amount | Status |`, `|---|---|--:|---|`);
   for (const i of invoices) {
     const status = i.stripe?.hosted_url && i.status !== "paid" ? `[Pay now](${i.stripe.hosted_url})` : i.status;
-    s.push(`| ${i.id} | ${i.period} | ${cur} ${fmt(i.total)} | ${status} |`);
+    s.push(`| ${i.id} | ${i.period} | ${i.currency} ${fmt(i.total)} | ${status} |`);
   }
-  s.push("", `**Outstanding: ${cur} ${fmt(issued - paid)}**`);
+  // Outstanding is summed PER CURRENCY — never add across currencies, which would
+  // produce a meaningless figure. Almost always one currency; mixed ledgers degrade
+  // to one balance line each rather than a wrong total.
+  const byCurrency = {};
+  for (const i of invoices) {
+    const c = i.currency;
+    byCurrency[c] = byCurrency[c] || { issued: 0, paid: 0 };
+    byCurrency[c].issued += i.total;
+    if (i.status === "paid") byCurrency[c].paid += i.total;
+  }
+  const lines = Object.entries(byCurrency)
+    .map(([c, v]) => `${c} ${fmt(v.issued - v.paid)}`)
+    .join(" · ");
+  s.push("", `**Outstanding: ${lines}**`);
 } else s.push("_No invoices issued yet._");
 
 // ── Approvals (no-login, mailto) ──
 s.push("", "## Awaiting Your Approval");
-const pending = (content?.items || []).filter((i) => i.status === "pending").slice(0, 8);
+const pending = (content?.items || []).filter((i) => i.status === "pending").slice(0, approvalCap);
 if (pending.length) {
   s.push("Review each planned post and approve or request changes — no login needed.", "");
   for (const it of pending) {

@@ -16,7 +16,10 @@ function main() {
   if (!slug) { console.error("Usage: brand-visual.js <slug> [--in visual.json] [--approve-logo]"); process.exit(1); }
 
   const b = loadBrand(slug);
-  if (!b.verbal.name_approved_at && !args.includes("--in")) {
+  // Fail-closed human gate: the name MUST be approved before any visual layer is
+  // persisted or the logo gate is stamped. `--in` only supplies the input file —
+  // it is NOT a reason to bypass this gate.
+  if (!b.verbal.name_approved_at) {
     console.error("Name not approved. Run /brand-name and --approve-name before visual identity.");
     process.exit(3);
   }

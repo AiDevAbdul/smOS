@@ -1,105 +1,141 @@
 ---
 name: launch
-description: Use this skill when the user asks to launch a campaign, push a brief live, or build the campaign structure on Meta (typically via `/launch {slug}`). Builds the campaign/adset/ad tree from an approved strategy brief + ad copy + audience map — everything created PAUSED, requires explicit human confirmation before activation.
+description: Use this skill to build a client's Meta campaign/adset/ad tree from an approved strategy brief, ad copy, and audience map — everything created PAUSED, behind a fail-closed approval + plan-validation gate. This skill should be used when the user asks to launch a campaign, push a brief live, or build the campaign structure on Meta (typically via `/launch {slug}`), or when an upstream skill hands off an approved brief ready to ship.
 ---
 
-# /launch — Campaign Build & Push
+# /launch — Campaign Build & Push (Phase 4)
 
-## Required Context
+Turn an approved `strategy_brief.json` + `ad_copy.json` + `audience_map.json` into a real
+Meta campaign → adset → ad tree via `skills/launch/launch.js`. Defaults to a DRY RUN that
+writes an inspectable `launch_plan.json`; `--execute` creates everything PAUSED. Activation
+to ACTIVE is a separate, human-confirmed step — the engine never flips status on its own.
 
-- `clients/{slug}/client_profile.json` — for `accounts.ad_account_id`, `accounts.pixel_id`, `accounts.page_id`, `accounts.ig_account_id`, `audience.geo_targets`
-- `clients/{slug}/strategy_brief.json` + approved row in Supabase `strategy_briefs`
-- `clients/{slug}/ad_copy.json`
-- `clients/{slug}/audience_map.json`
-- `clients/{slug}/CLAUDE.md` — for KPI thresholds and daily caps
-- Meta MCP server — `create_campaign`, `create_adset`, `create_ad_creative`, `upload_image`, `upload_video`, `create_ad`, `update_ad_status`, `update_campaign`
-- Supabase connector — `campaigns` row + `campaign_log`
-- Discord connector — for the launch notification + activation confirmation
+## What This Skill Does
 
-## Launch Sequence
+- Build a deterministic launch plan: one campaign per budgeted audience, one adset per
+  campaign, one ad per creative angle (names enforced to convention).
+- Map brief objectives to Meta `OUTCOME_*` enums, optimization goals, placements, and
+  attach a pixel `promoted_object` for sales objectives.
+- Resolve retargeting/lookalike specs to real custom-audience IDs (`--create-audiences`
+  opts into creating missing ones); upload + attach a creative image/video per angle.
+- Validate the plan fail-closed (approved brief, real account, naming, resolved copy, no
+  `<TBD_>` audiences) before any live write; create all entities PAUSED on `--execute`.
+- Write `launch_plan.json` (always) and `campaign_log.json` (on execute); print a JSON summary to stdout.
 
-### Step 1 — Validate
+## What This Skill Does NOT Do
 
-- Verify `strategy_briefs` row exists with `status: 'approved'`. Halt if not.
-- Verify `ad_copy` row exists for the same `brief_id`. Halt if not.
-- Verify required account IDs are present and non-null.
+- Does NOT generate copy — `/creative` owns `ad_copy.json`.
+- Does NOT build the audience plan or resolve interest IDs into a map — `/audience-map`.
+- Does NOT author or approve the strategy — `/strategy-brief` owns the approval gate.
+- Does NOT activate, scale, or pause for performance — activation is the human Discord step; `/scale` owns optimization.
+- Does NOT measure results — `/analyze` and `/report`.
 
-### Step 2 — Fill `templates/campaign.json`
+## Before Implementation
 
-For each phase in `strategy_brief.objective_hierarchy`, fill the template with:
-- Campaign name following convention: `[OBJECTIVE_CODE]_[AUDIENCE_CODE]_[YYYYMM]`
-- Daily budget from `strategy_brief.budget_allocation.adsets`
-- Objective mapped from brief phase (CONV → `OUTCOME_SALES`, TRAFFIC → `OUTCOME_TRAFFIC`, LEADS → `OUTCOME_LEADS`, ENGAGE → `OUTCOME_ENGAGEMENT`, AWARE → `OUTCOME_AWARENESS`)
-- `special_ad_categories: []` unless the profile says otherwise
+Gather context before acting (do not ask the user for what is discoverable):
 
-For each adset, fill `templates/adset.json` with:
-- Adset name following convention: `[PLACEMENT]_[AGE_RANGE]_[INTEREST_CODE]`
-- Audience from `audience_map` (interest cluster IDs, behavior IDs, RT layer IDs, or LAL spec)
-- Geo from `audience.geo_targets`
-- Placements per `strategy_brief.creative_angles[i].format` (FEED for image/carousel, REELS+STORY for video, etc.)
-- Optimization goal and billing event matching the campaign objective
-- Attribution: 7-day click, 1-day view (global default)
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `scripts/lib/meta-graph.js` (guarded chokepoint, `API_VERSION` v25.0), `scripts/lib/audience-resolver.js`, `scripts/lib/launch_media.js`, `schemas/launch_plan.js` |
+| **Conversation** | Whether the user wants dry-run vs `--execute`, a specific `--phase`, or `--create-audiences` |
+| **Skill References** | Objective/placement maps and the gate ladder in `references/` (see table below) |
+| **Client Profile** | `clients/{slug}/client_profile.json` (`accounts.*`, `location.country`) + per-client `CLAUDE.md` KPI/budget overrides |
+| **Handoffs** | `clients/{slug}/strategy_brief.json`, `ad_copy.json`, `audience_map.json` |
 
-### Step 3 — Pre-launch hooks (BLOCKING)
+## Clarifications
 
-Each hook fires automatically per `plugin.json` matcher. The skill does NOT call hooks directly — it just calls the MCP create_* tools and the harness runs the hooks. If any hook exits non-zero, the create call is blocked.
+> Before asking: check the conversation, the client profile, and the three handoff files.
+> Only ask for what cannot be determined. Domain maps (objectives, placements, gate ladder)
+> are embedded in `references/` — never ask the user for them.
 
-Hooks that will run:
-- `naming-check.js` on every create
-- `budget-guard.js` on `create_campaign` / `update_campaign`
-- `pixel-check.js` on conversion-objective `create_campaign`
-- `creative-compliance.js` on `create_ad`
-- `utm-enforcer.js` on `create_ad`
+**Required (must resolve before running):**
+1. Which client `{slug}`?
+2. Run intent: dry-run preview (default) or live `--execute`?
 
-If a hook blocks, surface the stderr message verbatim to the user and halt — do not retry around it. The user fixes the underlying input.
+**Optional (ask only if relevant):**
+3. Limit to one `--phase A|B|C`? (default: first/live phase only)
+4. Create missing custom audiences (`--create-audiences`)? This is a consequential write — default off.
 
-### Step 4 — Create campaigns (PAUSED)
+## Workflow
 
-For each filled campaign template, call `create_campaign` with `status: "PAUSED"`. Collect campaign IDs. Do them sequentially — the hook chain runs per call.
+1. Confirm the three handoffs exist; if not, halt naming which `/skill` produces each.
+2. Run dry-run: `node skills/launch/launch.js {slug}`. Read `launch_plan.json` and the summary.
+3. Resolve any `naming_issues`, `copy_used: null`, or `<TBD_>` audiences at the source skill, then re-run dry.
+4. When the brief is `approved` and the plan is executable, run `node skills/launch/launch.js {slug} --execute` (add `--create-audiences` only if intended).
+5. Surface `campaign_log.json` (created tree + errors). Tell the user to reply `activate` in Discord to flip PAUSED → ACTIVE — do not activate from this skill.
 
-### Step 5 — Create adsets (PAUSED)
+## Input / Output Specification
 
-For each adset under each campaign, call `create_adset` with `status: "PAUSED"` and the parent `campaign_id`. Collect adset IDs.
+**Inputs:** CLI `node skills/launch/launch.js <slug> [--execute] [--phase A|B|C] [--create-audiences]`; reads `clients/{slug}/{client_profile,strategy_brief,audience_map,ad_copy}.json`; env `META_ACCESS_TOKEN` (+ `META_APP_SECRET` for proof) on `--execute`.
+**Outputs:** `clients/{slug}/launch_plan.json` (always), `clients/{slug}/campaign_log.json` (on execute), JSON summary on stdout, diagnostics on stderr. May rewrite `audience_map.json` with `resolved_audiences`.
+(Full schemas, exit codes, and example payloads: `references/io-contract.md`.)
 
-### Step 6 — Create ad creatives + ads (PAUSED)
+## Variability Analysis
 
-For each angle in `ad_copy.angles`:
-1. For each `top_pick` (and any explicitly flagged secondary variants), call `create_ad_creative` with the chosen primary text, headline, CTA, page_id, ig_account_id, and destination URL (with UTMs — `utm-enforcer` will fix if missing).
-2. For each adset assigned to this angle, call `create_ad` with the creative ID, ad name following convention `[FORMAT]_[HOOK_CODE]_v[N]`, status `PAUSED`.
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill/code) |
+|--------------------------------|------------------------------------------|
+| Objectives, budgets, audiences, copy, geo, country, account IDs | Naming regexes; `OUTCOME_*`→code/goal/placement maps; PAUSED default; 7d-click/1d-view attribution; `LOWEST_COST_WITHOUT_CAP`; `special_ad_categories: []` |
+| Creative assets per angle (image/video/none) | Asset-resolution + attach logic; link-only fallback |
+| RT/LAL specs present or not | Audience-resolution + fail-closed `<TBD_>` rejection |
 
-Asset handling: the `launch.js` companion now resolves a creative asset per angle automatically. Put an asset reference on the brief's `creative_angles[i]` — a flat `image_hash`/`image_url`/`image_path`/`video_id`/`video_url`, or a nested `asset: {media_type, uri, hash}`. At `--execute`, launch uploads the asset (`/adimages` for images via URL/base64/local file, `/advideos` for video via hosted URL or multipart local file) and attaches the resulting hash/id to the creative — a video_id converts the creative to `video_data`. With no asset reference it falls back to a link-only creative (Meta pulls the URL's OG image). If only design-brief direction exists (no rendered images yet), supply rendered images or asset URLs on the angles before `--execute`.
+## Domain Standards
 
-### Step 7 — Human activation gate
+### Must Follow
+- [ ] Create every campaign/adset/ad with `status: "PAUSED"`.
+- [ ] Names match convention: campaign `[OBJ]_[AUD]_[YYYYMM]`, adset `[PLCMT]_[AGES]_[CODE]`, ad `[FMT]_[HOOK]_v[N]`.
+- [ ] `--execute` only when `strategy_brief.approval.status === "approved"` and account is real (not TBD).
+- [ ] Sales objective attaches `promoted_object.pixel_id`; AI-built creatives carry `ai_disclosed: true` upstream.
 
-After all entities are created PAUSED:
+### Must Avoid
+- Activating to ACTIVE inside this skill; auto-rolling-back partially created entities; raising budgets.
+- Executing a plan with `copy_used: null` or any `<TBD_>` custom audience.
+- Re-deriving structure the brief already decided; hardcoding tokens or account IDs.
 
-1. Build `clients/{slug}/campaign_log.json` with the full tree (campaign IDs, adset IDs, ad IDs, names, budgets, audiences) and `status: "paused"` at the root.
-2. Post a Discord message to `approvals.channel`:
-   > `Campaigns built for {name}. {N} campaigns · {M} adsets · {K} ads · total daily {currency}{X}. All PAUSED. Reply 'activate' to set everything to ACTIVE, or 'activate <campaign_name>' to roll out one at a time.`
-3. Listen for the reply.
-4. On `activate` → call `update_campaign({status:"ACTIVE"})` on each campaign, then `update_ad_status` on each ad. Log activations to Supabase `campaign_log`.
-5. On `activate <name>` → activate only that subtree.
-6. On `cancel` or 24h timeout → leave PAUSED, surface state to user, halt.
-
-### Step 8 — Post-launch logging
-
-The `post-launch.js` PostToolUse hook fires automatically after each `create_campaign` — it inserts into Supabase `campaigns` and sends a per-campaign Discord ping. The skill does not duplicate that work; it only writes the consolidated `campaign_log.json` and the final activation state.
-
-## Output
-
-- `clients/{slug}/campaign_log.json` (full tree + activation state)
-- Rows in `campaigns` table (one per campaign, via post-launch hook)
-- Discord notification(s) in client channel
+### Output Checklist (verify before delivery)
+- [ ] `launch_plan.json` written; `mode` and `naming_issues` reported.
+- [ ] On execute: `campaign_log.json` lists created IDs and any per-stage errors.
+- [ ] User told the exact `activate` next step; nothing left ACTIVE unintentionally.
 
 ## Error Handling
 
-- Any hook block → halt, surface verbatim, do not retry
-- Meta API 4xx on `create_*` → log full error (code, type, fbtrace_id) to `error_log`, halt; do not auto-rollback already-created entities — surface what was created and let the user decide
-- Activation step times out → leave everything PAUSED; this is the safe default
-- Image upload fails for one creative but not others → continue with the working ones, flag the failed slots in `campaign_log.json`
+| Scenario | Action |
+|----------|--------|
+| Missing handoff JSON | Halt (exit 2), name the file + the `/skill` that produces it |
+| Brief not approved on `--execute` | Refuse (exit 3), report current `approval.status` |
+| `ad_account_id` is TBD on `--execute` | Refuse (exit 4) — run `/setup-accounts` |
+| Naming violation on `--execute` | Refuse (exit 5), list offending names — fix inputs |
+| Plan not executable (null copy / TBD audience) | Refuse (exit 6), point to `/creative` or `/audience-map` |
+| Meta API 4xx on a create | Record in `created.errors` (stage/name/fbtrace), continue siblings, NO rollback; surface in log |
+| Audience resolution fails | Warn, continue — the launch_plan gate catches unresolved IDs |
+| One asset upload fails | Record asset error, ship that ad link-only, continue |
 
-## Token Efficiency
+## Dependencies & Security
 
-- All structure decisions come from `strategy_brief.json` — never re-derive them
-- Read `ad_copy.json` and `audience_map.json` once each
-- Hooks run out-of-process; the skill does not invoke or wait on them explicitly
+- **Reuses:** `scripts/lib/meta-graph.js` (`createGraph`, `isTbd`, guard chokepoint), `scripts/lib/audience-resolver.js`, `scripts/lib/launch_media.js`, `scripts/lib/media_upload.js`, `schemas/index.js` (`launchPlan`, `strategyBrief`, `adCopy`, `audienceMap`, `clientProfile`).
+- **External APIs:** Meta Marketing/Graph API **v25.0** (rate limits + endpoints in `references/api-reference.md`).
+- **Secrets:** `META_ACCESS_TOKEN` (+ `META_APP_SECRET`) resolved from env via the graph client — never hardcoded, logged, or written to artifacts.
+
+## Documentation & References
+
+| Resource | URL | Use For |
+|----------|-----|---------|
+| Create campaign edge | https://developers.facebook.com/docs/marketing-api/reference/ad-account/campaigns/ | POST `act_<id>/campaigns`: `objective`, `special_ad_categories`, `status` |
+| AdSet node | https://developers.facebook.com/docs/marketing-api/reference/ad-campaign/ | `targeting`, `optimization_goal`, `billing_event`, `daily_budget`, `bid_strategy` |
+| Ad node | https://developers.facebook.com/docs/marketing-api/reference/adgroup/ | `creative`, `adset_id`, `status` |
+| Outcome objectives (ODAX) | https://developers.facebook.com/blog/post/2023/02/13/outcome-driven-ad-experiences-update/ | The six `OUTCOME_*` enums |
+| Basic ad creation walkthrough | https://developers.facebook.com/docs/marketing-api/get-started/basic-ad-creation/create-an-ad-campaign/ | End-to-end PAUSED-default creation |
+| Marketing API rate limiting | https://developers.facebook.com/docs/marketing-api/overview/rate-limiting/ | Ad-account limits, ads-management subcodes |
+| Handle Errors (Graph API) | https://developers.facebook.com/docs/graph-api/guides/error-handling/ | Error codes, `fbtrace_id`, recovery |
+
+For patterns not covered here, fetch the official docs above, then apply the same
+conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
+
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | Objective/goal/placement maps, naming taxonomy, gate ladder, good/bad plan examples |
+| `references/api-reference.md` | Exact v25.0 endpoints, required fields, rate limits, error codes (cited URLs) |
+| `references/io-contract.md` | Full input/output JSON schemas, exit codes, example payloads, edge cases |

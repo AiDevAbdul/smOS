@@ -20,6 +20,30 @@ loadEnv();
 
 const DEFAULT_WINDOW = 30;
 
+// Meta rate-limit / throttle error codes. The shared client already RETRIES these
+// with backoff; if one still surfaces here it means retries were exhausted, so we
+// must HALT cleanly rather than swallow it per-ad and report bogus "no fatigue".
+// code 4 = app-level, 17 = user-level too-many-calls, 613 = custom rate limit.
+// (Per Meta docs there is no "code 17 subcode 613" pairing.)
+const THROTTLE_CODES = new Set([4, 17, 613]);
+
+class ThrottleError extends Error {
+  constructor(metaError) {
+    super(
+      `Meta rate limit hit (code ${metaError?.code}, type=${metaError?.type}, ` +
+        `fbtrace_id=${metaError?.fbtrace_id}): ${metaError?.message}`
+    );
+    this.name = "ThrottleError";
+    this.metaError = metaError;
+    this.throttled = true;
+  }
+}
+
+function isThrottle(err) {
+  const meta = err?.metaError || err?.response?.data?.error;
+  return !!meta && THROTTLE_CODES.has(meta.code);
+}
+
 const FATIGUE_RULES = {
   high: { freq_min: 4, ctr_decay_max: -0.3 },
   medium: { freq_min: 3, ctr_decay_max: -0.2 },
@@ -73,6 +97,10 @@ async function fetchAdDaily(graph, adId, windowDays) {
     });
     return res.data || [];
   } catch (e) {
+    // Throttle/rate-limit: do NOT swallow and do NOT auto-retry (the shared client
+    // already exhausted its backoff retries). Re-throw so the run halts cleanly and
+    // surfaces the code/type/fbtrace_id — matching the constitution's error policy.
+    if (isThrottle(e)) throw new ThrottleError(e.metaError || e.response?.data?.error);
     return { error: e.message };
   }
 }
@@ -226,7 +254,20 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((e) => {
-  console.error("[creative-intel] FATAL:", e.message);
-  process.exit(1);
-});
+const isEntry = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isEntry) {
+  main().catch((e) => {
+    if (e.throttled) {
+      const m = e.metaError || {};
+      console.error(
+        `[creative-intel] HALTED — Meta rate limit. code=${m.code} type=${m.type} ` +
+          `fbtrace_id=${m.fbtrace_id}. Not auto-retrying; re-run later.`
+      );
+      process.exit(4);
+    }
+    console.error("[creative-intel] FATAL:", e.message);
+    process.exit(1);
+  });
+}
+
+export { fetchAdDaily, isThrottle, ThrottleError, THROTTLE_CODES };

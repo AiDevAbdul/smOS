@@ -1,142 +1,175 @@
 ---
 name: strategy-brief
-description: Use this skill when the user asks to build a campaign strategy brief or synthesize intake/audit/competitor intel into a launch plan (typically via `/strategy-brief {slug}`). Produces the brief that gates Phase 4 — requires explicit human approval in Discord before `/launch` can run.
+description: Use this skill when the user asks to build a campaign strategy brief, synthesize intake/audit/competitor/audience intel into a launch plan, or runs `/strategy-brief {slug}`. It synthesizes the client profile, competitor intel, audience map, and an optional audit into a deterministic objective hierarchy, budget split, audience priority, three creative angles, success metrics, and a 30-day calendar — written as `strategy_brief.json` + `.md`. It gates Phase 4: the brief requires explicit human approval (reject/revise loop) before `/launch` can run.
 ---
 
-# /strategy-brief — Campaign Strategy Synthesis
+# /strategy-brief — Campaign Strategy Synthesis (Phase 3 → gates Phase 4)
 
-## Required Context
+Synthesize the upstream paid-pipeline artifacts into one launch-ready brief. The companion
+script computes every deterministic section (budget split, audience ranking, objective
+phases, success metrics, calendar) from the inputs; Claude appends qualitative phrasing and
+runs the human approval gate. The brief is the single source of truth that `/creative` and
+`/launch` consume.
 
-- `clients/{slug}/client_profile.json`
-- `clients/{slug}/audit_report.md` (and its `summary_json` row in Supabase `reports`)
-- `clients/{slug}/competitor_intel.json`
-- `clients/{slug}/audience_map.json`
-- `clients/{slug}/CLAUDE.md` — for client-specific KPI overrides
-- Discord connector — for posting the brief and listening for the approval reply
-- Supabase connector — for `strategy_briefs` row
+## What This Skill Does
 
-Halt if any of the four input artifacts is missing — surface which one and which skill produces it.
+- Run `node skills/strategy-brief/strategy-brief.js {slug}` to produce `strategy_brief.json` + `strategy_brief.md`.
+- Normalize `competitor_intel.json` + `audience_map.json` (and optional `audit_raw.json`) through their canonical schemas before reading them.
+- Decide an objective hierarchy (Phase A/B/C, `OUTCOME_*` enums) from pixel health + purchase history.
+- Allocate the monthly budget 60/25/15 (cold/warm/LAL) into per-adset daily budgets; flag any adset > $200/day with `needs_approval: true`.
+- Rank audiences (broad → top-2 interest clusters → 2 retargeting → 1 lookalike), trimmed to top 5.
+- Pick three creative angles (pain / aspiration / proof) from `competitor_intel.angles`, dropping any matching `voice.restricted_words` into `excluded_angles`.
+- Stamp a stable `angle_id` on every angle and fail-closed validate the brief before writing.
+- Reconcile profile vs. audit KPI conflicts into an `assumptions` list — never silently override.
+- Run the human approval gate (reject/revise loop, 24h timeout) and persist the Supabase row only after `approve`.
+
+## What This Skill Does NOT Do
+
+- Does NOT pull competitor ads — `/research` produces `competitor_intel.json`.
+- Does NOT build the audience map — `/audience-map` produces `audience_map.json`.
+- Does NOT snapshot accounts — `/audit` produces the optional `audit_raw.json`.
+- Does NOT write ad copy — `/creative` reads `creative_angles` and produces `ad_copy.json`.
+- Does NOT create campaigns/adsets/ads on Meta — `/launch` builds the tree (PAUSED).
+- Does NOT call the Meta API or any network service. Pure local synthesis.
+
+## Before Implementation
+
+Gather context before acting (do not ask the user for what is discoverable):
+
+| Source | Gather |
+|--------|--------|
+| **Codebase** | `schemas/index.js` — verify it still exports `strategyBrief` (with `.normalize`/`.validate`), `competitorIntel`, `audienceMap`, `assertValid`, and `angleId` before relying on them; `scripts/lib/load-env.js` |
+| **Conversation** | Slug, any budget/objective constraints, revision instructions during the approval loop |
+| **Skill References** | Thresholds + taxonomies in `references/domain-standards.md`; exact JSON shapes in `references/io-contract.md`; gate mechanics in `references/approval-gate.md` |
+| **Client Profile** | `clients/{slug}/client_profile.json` + per-client `CLAUDE.md` KPI overrides |
+
+> The script imports `briefSchema.normalize/validate`, `assertValid`, and `angleId` from
+> `schemas/index.js`. If the schema layer is refactored, confirm that export surface still
+> exists before running — a missing export is a runtime failure, not a silent fallback.
+
+## Clarifications
+
+> Before asking: check the conversation, the client profile, and the upstream handoff files.
+> Only ask for what cannot be determined. Domain knowledge (budget split, scoring, calendar
+> shape) is embedded in `references/` and the code — never ask the user for it.
+
+**Required (must resolve before running):**
+1. Which client `{slug}` to brief.
+2. During the approval gate: the user's explicit `approve` or `reject [reason]` decision.
+
+**Optional (ask only if relevant):**
+3. Non-default budget split or objective override (rare — defaults are deliberate).
+4. Which passes to re-run on a `reject` (default: only the passes the reason touches).
 
 ## Workflow
 
-### Pass 1 — Load & reconcile
+1. Confirm `clients/{slug}/client_profile.json` exists (exit 2 if not) and that `competitor_intel.json` + `audience_map.json` exist (exit 3 names which is missing). `audit_raw.json` is OPTIONAL.
+2. Run `node skills/strategy-brief/strategy-brief.js {slug}`. The script normalizes inputs, computes all sections, fail-closed validates, and writes the `.json` + `.md`.
+3. Read the generated `strategy_brief.md`. Enrich the creative-angle prose and calendar narrative if thin — keep the `.json` as the authoritative structured copy and never let the two drift.
+4. Present the brief for approval: `Strategy brief for {name} — reply 'approve' to lock in, or 'reject [reason]' to revise.`
+5. On **reject [reason]**: capture the reason, ask what to revise, re-run only the affected passes, regenerate both files, re-present (loop to step 4).
+6. On **approve**: stamp `approval.status = "approved"` with approver + timestamp, persist the `strategy_briefs` row, print `Strategy brief approved by {user}. Run /creative next.`
+7. If no decision within 24h: re-ping once, then halt and surface. Never auto-approve.
 
-Read all four inputs. Resolve conflicts:
-- If audit shows actual `target_cpa` history that contradicts profile KPI → flag both, default to profile, note divergence in `assumptions`
-- If competitor gaps point to an angle blocked by `voice.restricted_words` → drop the angle, note in `excluded_angles`
+## Input / Output Specification
 
-### Pass 2 — Objective hierarchy
+**Inputs (CLI arg `<slug>`):**
+- `clients/{slug}/client_profile.json` — REQUIRED (exit 2 if absent).
+- `clients/{slug}/competitor_intel.json` — REQUIRED (exit 3 if absent).
+- `clients/{slug}/audience_map.json` — REQUIRED (exit 3 if absent).
+- `clients/{slug}/audit_raw.json` — OPTIONAL (profile-only assumptions when absent).
 
-Decide what runs first and what to scale into, based on:
-- `business.conversion_event`
-- Audit signals (existing pixel events firing, prior winning campaigns)
-- Budget headroom from `kpis.monthly_budget_low/high`
+**Outputs:**
+- `clients/{slug}/strategy_brief.json` — canonical structured brief (validated before write).
+- `clients/{slug}/strategy_brief.md` — human-readable, rendered from the JSON.
+- stdout: one-line JSON summary (`daily_total`, phase/audience/angle counts, `adsets_needing_approval`, file paths, `next`).
+- Supabase `strategy_briefs` row — written by Claude AFTER approval only.
 
-Default progression for a healthy pixel + purchase event:
-1. **Phase A (week 1–2):** Conversions — Purchases on broad + top 1 interest cluster
-2. **Phase B (week 3):** Add retargeting (RT_PIX_30D, RT_ENG_365D) once Phase A has data
-3. **Phase C (week 4+):** Scale into Lookalike 1% + second interest cluster
+(Full schemas, field-by-field, and example payloads: `references/io-contract.md`.)
 
-Variant rules:
-- Cold pixel / no purchase history → start at Traffic or Leads, graduate to Conversions after the pixel learns
-- Low-budget client (< $1k/mo) → broad-only, single audience, no parallel tests
+## Variability Analysis
 
-### Pass 3 — Budget allocation
+| What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
+|--------------------------------|------------------------------------|
+| Monthly budget, KPI targets, conversion events | 60/25/15 cold/warm/LAL split |
+| Pixel health + purchase history → objective phases | Phase A/B/C structure; `OUTCOME_*` enum set |
+| Interest clusters, retargeting/lookalike specs | Audience ranking order; top-5 trim |
+| Competitor angles, restricted words | Pain/aspiration/proof bucketing; angle scoring |
+| Audit presence (optional) | Reconciliation rules; >30% CPA divergence flag |
+| Approver, reason on reject | Approval gate, $200/day flag, 24h timeout |
 
-Allocate `monthly_budget_low` across the objective hierarchy:
-- 60% prospecting cold (broad + interest)
-- 25% retargeting warm
-- 15% lookalike test
+## Domain Standards
 
-Translate to daily budgets per adset. Flag any single adset daily budget > $200 (triggers Discord approval per global guardrails).
+### Must Follow
+- [ ] Default new objective phases to `OUTCOME_*` enums (no legacy objectives).
+- [ ] Allocate budget exactly 60/25/15 unless the client profile overrides.
+- [ ] Stamp a stable `angle_id` on every creative angle (the join key `/creative` + `/launch` match on).
+- [ ] Flag any adset daily budget > $200 with `needs_approval: true`.
+- [ ] Surface every profile/audit conflict in `assumptions` — never silently override.
+- [ ] Hold the approval gate; persist the Supabase row only after `approve`.
 
-### Pass 4 — Audience priority order
+### Must Avoid
+- Inventing competitor angles or audiences not present in the input artifacts.
+- Letting `.md` and `.json` diverge (the `.md` is rendered from the `.json`).
+- Writing a brief whose angles lack `angle_id` (the validator throws — do not bypass).
+- Auto-approving on timeout or treating silence as consent.
 
-Rank the audiences in `audience_map.json` for launch sequence:
-1. Broad (no interest layer)
-2. Best interest cluster (largest healthy cluster, most aligned with USP)
-3. RT_PIX_30D
-4. RT_ENG_365D
-5. LAL 1% from strongest seed
-
-Trim to top 3–5 for the first launch; the rest queue for scale.
-
-### Pass 5 — Creative direction (3 angles to test)
-
-Pick three distinct angles, each tied to a gap in `competitor_intel.gaps` and aligned with `business.usp`:
-- Angle 1: pain-led
-- Angle 2: aspiration / outcome-led
-- Angle 3: social proof / authority
-
-For each angle, specify:
-- Hook archetype (e.g. "POV question", "Stat shock", "Before/After")
-- Recommended format (image / video / carousel) chosen to fill a competitor format gap
-- 1-line creative prompt that `/creative` will expand later
-
-### Pass 6 — Success metrics
-
-Pull KPI thresholds from client CLAUDE.md, then declare per-objective targets:
-- Cold prospecting: CTR, CPM, CPC, CPA, ROAS targets
-- Retargeting: CPA target (typically 50–70% of cold CPA)
-- Scaling gate: 3 consecutive days ROAS > target before budget increase
-
-### Pass 7 — 30-day calendar outline
-
-Week-by-week table:
-- Week 1: Phase A launch, 3 creatives × 2 audiences, learning
-- Week 2: Kill underperformers, refresh worst creative
-- Week 3: Phase B retargeting on
-- Week 4: Phase C lookalike + scale gate evaluation
-
-### Pass 8 — Render & persist
-
-1. Write `clients/{slug}/strategy_brief.json` with all of the above as structured data:
-   ```json
-   {
-     "generated_at": "...",
-     "objective_hierarchy": [{ "phase": "A", "objective": "...", "audiences": [], "start_day": 0 }],
-     "budget_allocation": { "cold_pct": 0.6, "warm_pct": 0.25, "lal_pct": 0.15, "adsets": [{ "name": "...", "daily_budget": 0 }] },
-     "audience_priority": ["..."],
-     "creative_angles": [{ "name": "...", "hook": "...", "format": "...", "prompt": "..." }],
-     "success_metrics": { "cold": {}, "warm": {}, "scale_gate": {} },
-     "calendar": [{ "week": 1, "actions": ["..."] }],
-     "assumptions": ["..."],
-     "excluded_angles": ["..."]
-   }
-   ```
-2. Render `clients/{slug}/strategy_brief.md` — a human-readable version of the same content, suitable to post to Discord and paste into Google Drive.
-
-### Pass 9 — Discord approval workflow
-
-**This is a hard gate. Phase 4 cannot proceed until approval is recorded.**
-
-1. Post `strategy_brief.md` content to the Discord approvals webhook (`DISCORD_WEBHOOK_APPROVALS`). Prefix with: `**Strategy brief for {name} — reply 'approve' to lock in, or 'reject [reason]' to revise.**`
-2. Wait for the user to confirm approval in this session (Discord webhooks are outbound-only; the human replies here or in Discord and confirms verbally).
-3. On **approve**:
-   - Insert a row into Supabase `strategy_briefs`: `client_id`, `brief` (full JSON), `status: 'approved'`, `approved_by`, `approved_at`, `discord_message_id`
-   - Print: `Strategy brief approved by {user}. Run /creative next.`
-4. On **reject [reason]**:
-   - Capture the reason
-   - Ask the user (in the current session) what to revise
-   - Re-run the affected passes only (don't re-do everything)
-   - Re-post the updated brief and loop back to step 2
-5. If no reply within 24h → re-ping the channel once, then halt and surface to the user.
-
-## Output
-
-- `clients/{slug}/strategy_brief.json`
-- `clients/{slug}/strategy_brief.md`
-- Discord message in approvals channel
-- Row in `strategy_briefs` table (only after approval)
+### Output Checklist (verify before delivery)
+- [ ] Both `strategy_brief.json` and `strategy_brief.md` written.
+- [ ] `creative_angles` non-empty, each with a unique `angle_id` and `name`.
+- [ ] Restricted-word angles appear in `excluded_angles`, not `creative_angles`.
+- [ ] Approval status reflects the real user decision; Supabase row only after `approve`.
 
 ## Error Handling
 
-- Missing input artifact → halt and tell the user exactly which skill to run first (`/intake`, `/audit`, `/research`, `/audience-map`)
-- Discord post fails → save the brief locally, surface the webhook URL + error, do not record approval state
-- Conflicting KPI signals between profile and audit → never silently override; surface both in `assumptions`
+| Scenario | Action |
+|----------|--------|
+| No slug arg | Print usage, exit 1 |
+| `client_profile.json` missing | Print path, exit 2 — never guess profile fields |
+| `competitor_intel.json` or `audience_map.json` missing | Print which one + the skill that produces it, exit 3 |
+| `audit_raw.json` missing | Proceed; add a profile-only note to `assumptions` (NOT an error) |
+| Upstream artifact present but structurally invalid (e.g. `competitor_intel.json` exists yet fails `competitorSchema.normalize`/its own `validate` — malformed JSON, wrong root type, `angles` not an array) | The `normalize` step throws on unparseable JSON; a normalized-but-invalid shape surfaces empty downstream sections — inspect, fix the upstream file via its producing skill, re-run. Do NOT hand-edit the artifact to pass. |
+| Brief fails schema validation (e.g. angle missing `angle_id`) | `SchemaError` thrown by `assertValid`; the `.json`/`.md` are NOT written; surface the named field |
+| Profile vs. audit KPI conflict | Record both in `assumptions`, default to profile — never silently override |
+| User rejects | Capture reason, re-run affected passes, regenerate, re-present |
+| No approval decision in 24h | Re-ping once, then halt and surface — never auto-approve |
+| Supabase write fails | Keep local files, surface error, do NOT mark the brief approved |
 
-## Token Efficiency
+## Dependencies & Security
 
-- This skill is pure synthesis — no Meta API calls
-- Read each artifact exactly once; do not re-load between passes
-- The `.md` is generated from the `.json` — never write them out of sync
+- **Reuses:** `schemas/index.js` (`strategyBrief`, `competitorIntel`, `audienceMap`, `assertValid`, `angleId`, `SchemaError`), `scripts/lib/load-env.js`.
+- **Runtime:** Node.js ESM. Only external dependency is `dotenv` (loaded via `load-env`).
+- **External APIs:** none — pure synthesis, no Meta/Stripe/network calls.
+- **Secrets — script:** none required by `strategy-brief.js`. It performs no network I/O; `loadEnv()` is invoked but no secret is consumed during synthesis.
+- **Secrets — post-approval persistence (Claude):** the `strategy_briefs` upsert uses the Supabase **service role key** read from env var **`SUPABASE_SERVICE_ROLE_KEY`** (with `SUPABASE_URL`), resolved through `scripts/lib/load-env.js` from `~/.config/smos/.env` (chmod 600) — never hardcoded, never logged, never echoed into the brief. This key bypasses RLS, so apply least privilege: scope it to the `strategy_briefs` table where possible, never expose it client-side, and rotate it on any suspected leak or staff offboarding.
+
+## Documentation & References
+
+| Resource | URL | Use For |
+|----------|-----|---------|
+| Outcome objectives (ODAX) | https://developers.facebook.com/blog/post/2023/02/13/outcome-driven-ad-experiences-update/ | The six `OUTCOME_*` enums used in the objective hierarchy |
+| Campaign structure guide | https://developers.facebook.com/docs/marketing-api/campaign-structure/ | How campaign → adset → ad nest (informs the calendar plan) |
+| Campaign node reference | https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group/ | `objective`, `bid_strategy`, `special_ad_categories` consumed by `/launch` |
+| Graph API versions list | https://developers.facebook.com/docs/graph-api/changelog/versions/ | Confirm v25.0 is current for the downstream pipeline |
+
+**Fetch vs. cache guidance (per link):**
+- **Re-fetch the ODAX enums and the versions list** when adding/renaming an objective or before a launch cycle — the `OUTCOME_*` set and the current API version are the parts most likely to change. Treat anything older than the last-verified date as stale and confirm against the live page.
+- **Trust the cached convention** for campaign-structure and campaign-node *field semantics* (how campaign→adset→ad nest; what `bid_strategy`/`special_ad_categories` mean) — these are stable and this skill only references them; `/launch` is the skill that actually writes those fields.
+- This skill makes no API calls, so a doc drift never breaks a run here — it only affects what `/launch` later builds. Still, keep the enum list current so the brief never proposes a deprecated objective.
+
+**Good vs. bad use of these docs:**
+- GOOD: "Adding a fourth phase — fetch the ODAX page, confirm `OUTCOME_ENGAGEMENT` is still valid, then use that exact enum string in `objective_hierarchy`."
+- BAD: "I recall the old objective was `CONVERSIONS`, I'll write that." (Legacy objectives were deprecated for *creation* in Marketing API v17.0 — always use the `OUTCOME_*` form from the live page.)
+
+For patterns not covered here, fetch the official docs above, then apply the same
+conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
+
+**Last verified:** 2026-06-22
+
+## Reference Files
+
+| File | When to Read |
+|------|--------------|
+| `references/domain-standards.md` | Budget split, objective decision tree, audience ranking, angle scoring, success-metric defaults, calendar shape, good/bad examples |
+| `references/io-contract.md` | Full JSON schemas for every input + output, example payloads, exit codes, edge-case handling |
+| `references/approval-gate.md` | The human approval mechanism: reject/revise loop, 24h timeout, Discord-vs-Slack reconciliation, Supabase `strategy_briefs` row shape, security |

@@ -65,6 +65,13 @@ export function loadClientProfile(slug) {
   try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; }
 }
 
+export function loadBrandProfile(slug) {
+  if (!slug) return null;
+  const p = resolve(ROOT, "clients", slug, "brand_profile.json");
+  if (!existsSync(p)) return null;
+  try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; }
+}
+
 export function resolveClientSlugFromAccount(adAccountId) {
   if (!adAccountId) return null;
   const id = String(adAccountId).replace(/^act_/, "");
@@ -167,6 +174,109 @@ export function checkCompliance(toolName, input, ctx = {}) {
 
   if (violations.length) return fail(`creative-compliance BLOCKED: ${violations.join("; ")}`);
   return PASS;
+}
+
+/**
+ * AI brand/compliance approval guard (Phase 6 moat). Goes beyond Meta-policy
+ * compliance (checkCompliance) to enforce the CLIENT'S brand against every ad
+ * creative — the thing no incumbent suite does. Two deterministic, fail-closed
+ * dimensions (tone is intentionally NOT auto-judged — guards never guess):
+ *
+ *   1. Off-brand language — the client's own `voice.avoid` list (client_profile)
+ *      plus the brand's `verbal.voice.dont` list (brand_profile). checkCompliance
+ *      only reads `voice.restricted_words`, so `voice.avoid` was silently ignored.
+ *   2. Logo/color lock for AI-generated visuals — once a brand's visual kit is
+ *      approved (visual.logo_approved_at) AND strict mode is on (env
+ *      SMOS_REQUIRE_BRAND_KIT=1 or brand.visual.brand_kit_locked), an AI-generated
+ *      creative must DECLARE the brand kit it used (creative.brand_kit:{colors,logo_url})
+ *      and it must match the approved palette/logo — so AI can't ship off-brand art.
+ *      Detection is explicit-flag based (mirrors ai-disclosure); we never inspect pixels.
+ */
+export function checkBrandCompliance(toolName, input = {}, ctx = {}) {
+  if (!toolName.includes("create_ad")) return PASS;
+  const creative = input?.creative || input?.object_story_spec || input || {};
+  const profile = profileFor(input, ctx);
+  const slug = profile?.slug || profile?.client_slug || ctx?.slug || null;
+  const brand = ctx?.brand || (slug ? loadBrandProfile(slug) : null);
+
+  const violations = [];
+
+  // 1. Off-brand language.
+  const avoid = collectAvoidWords(profile, brand);
+  if (avoid.length) {
+    const text = gatherCreativeText(creative).toLowerCase();
+    const hits = avoid.filter((w) => new RegExp(`\\b${escapeRegex(w)}\\b`).test(text));
+    if (hits.length) violations.push(`off-brand language (voice.avoid): ${hits.join(", ")}`);
+  }
+
+  // 2. Logo/color lock for AI-generated visuals.
+  const kitViolation = checkBrandKitLock(input, creative, brand);
+  if (kitViolation) violations.push(kitViolation);
+
+  if (violations.length) return fail(`brand-compliance BLOCKED: ${violations.join("; ")}`);
+  return PASS;
+}
+
+function collectAvoidWords(profile, brand) {
+  const out = new Set();
+  for (const w of profile?.voice?.avoid || []) if (w) out.add(String(w).toLowerCase());
+  for (const w of profile?.voice?.restricted_words || []) if (w) out.add(String(w).toLowerCase());
+  for (const w of brand?.verbal?.voice?.dont || []) if (w) out.add(String(w).toLowerCase());
+  return [...out];
+}
+
+function checkBrandKitLock(input, creative, brand) {
+  const approvedAt = brand?.visual?.logo_approved_at;
+  const strict = process.env.SMOS_REQUIRE_BRAND_KIT === "1" || brand?.visual?.brand_kit_locked === true;
+  if (!approvedAt || !strict) return null; // opt-in: only enforce on locked brands
+
+  const aiGenerated =
+    input?.ai_generated === true ||
+    creative?.ai_generated === true ||
+    !!creative?.degrees_of_freedom_spec?.creative_features_spec?.standard_enhancements;
+  if (!aiGenerated) return null; // human-made art isn't kit-locked here
+
+  const declared = creative?.brand_kit || input?.brand_kit;
+  if (!declared) {
+    return "AI-generated visual must declare creative.brand_kit {colors, logo_url} matching the approved brand kit (visual kit is locked)";
+  }
+
+  const approved = normalizeHexSet([
+    brand?.visual?.colors?.primary,
+    brand?.visual?.colors?.secondary,
+    brand?.visual?.colors?.accent,
+    ...(brand?.visual?.colors?.neutrals || []),
+  ]);
+  const used = normalizeHexSet(asColorArray(declared.colors));
+  const offPalette = used.filter((c) => !approved.includes(c));
+  if (offPalette.length) {
+    return `AI visual uses off-palette colors ${offPalette.join(", ")} (approved: ${approved.join(", ") || "none"})`;
+  }
+
+  const approvedLogos = [
+    brand?.visual?.logo?.primary_url, brand?.visual?.logo?.mark_url,
+    brand?.visual?.logo?.wordmark_url, brand?.visual?.logo?.mono_url,
+    brand?.visual?.logo?.reverse_url, brand?.visual?.logo?.svg_url,
+  ].filter(Boolean);
+  if (declared.logo_url && approvedLogos.length && !approvedLogos.includes(declared.logo_url)) {
+    return `AI visual uses an unapproved logo "${declared.logo_url}" (not in the approved brand kit)`;
+  }
+  return null;
+}
+
+function asColorArray(c) {
+  if (!c) return [];
+  return Array.isArray(c) ? c : [c];
+}
+
+function normalizeHexSet(arr) {
+  const out = [];
+  for (const c of arr) {
+    if (!c) continue;
+    const hex = String(c).trim().toLowerCase().replace(/\s+/g, "");
+    if (hex && !out.includes(hex)) out.push(hex);
+  }
+  return out;
 }
 
 export async function checkPixel(toolName, input, ctx = {}) {
@@ -351,6 +461,8 @@ export async function guardGraphWrite({ method, path, data = {}, token } = {}) {
     if (!r.ok) throw new GuardError(r.reason, "utm");
     r = checkCompliance(toolName, data, ctx);
     if (!r.ok) throw new GuardError(r.reason, "compliance");
+    r = checkBrandCompliance(toolName, data, ctx);
+    if (!r.ok) throw new GuardError(r.reason, "brand-compliance");
     r = checkAiDisclosure(toolName, data);
     if (!r.ok) throw new GuardError(r.reason, "ai-disclosure");
   }
@@ -369,6 +481,16 @@ function collectUrls(obj, acc = []) {
     else if (typeof v === "object") collectUrls(v, acc);
   }
   return acc;
+}
+
+const TEXT_KEYS = /^(primary_text|message|body|headline|title|name|description|link_description|caption|call_to_action)$/i;
+function gatherCreativeText(obj, acc = []) {
+  if (!obj || typeof obj !== "object") return acc.join(" ");
+  for (const [k, v] of Object.entries(obj)) {
+    if (typeof v === "string" && TEXT_KEYS.test(k)) acc.push(v);
+    else if (v && typeof v === "object") gatherCreativeText(v, acc);
+  }
+  return acc.join(" ");
 }
 
 function pickText(obj, keys) {
