@@ -8,6 +8,9 @@
   "homepage": "https://github.com/smOS",
   "keywords": ["meta-ads", "facebook-ads", "instagram-ads", "social-media", "marketing", "agency", "automation"],
 
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json",
+
   "mcpServers": {
     "meta": {
       "command": "node",
