@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "category": "mechanic",
+    "label": "Mechanic / Auto Repair",
+    "terms_used": [
+      "mechanic shop",
+      "auto repair",
+      "car repair shop",
+      "vehicle repair",
+      "auto mechanic",
+      "oil change service",
+      "engine repair",
+      "brake repair",
+      "transmission repair",
+      "check engine light",
+      "car maintenance",
+      "lube shop",
+      "tune up",
+      "tire rotation"
+    ],
+    "total_unique_ads": 0,
+    "country": "US",
+    "days": 90
+  },
+  "data": {
+    "_all": []
+  }
+}

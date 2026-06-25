@@ -3,6 +3,10 @@
 Market research analyzer — reads category Ad Library JSONs,
 filters to automotive pages only, extracts copy themes, CTAs,
 formats, and generates a strategic HTML report for Blue Rose Auto.
+
+--fetch mode: auto-fetches all category data using expanded semantic term sets
+before analysis. Requires META_ACCESS_TOKEN. Uses LLM term expansion with
+disk cache so repeat runs are free.
 """
 
 import html as ihtml
@@ -10,9 +14,18 @@ import json
 import os
 import re
 import sys
+import time
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+
+# Load smOS env vars (.env / ~/.config/smos/.env) before anything else
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib"))
+try:
+    from load_env import load_env
+    load_env()
+except ImportError:
+    pass
 
 
 # ── Automotive page filter ──────────────────────────────────────────────────
@@ -73,52 +86,57 @@ CTA_TYPE_LABELS = {
 }
 
 
-# ── Category definitions ─────────────────────────────────────────────────────
+# ── Niche category config ────────────────────────────────────────────────────
 
-CATEGORIES = {
-    "mechanic": {
-        "label": "Mechanic / Auto Repair",
-        "file": "cat_auto_repair_mechanic_shop.json",
-        "icon": "🔧",
-        "color": "#0071e3",
-    },
-    "collision": {
-        "label": "Collision / Auto Body",
-        "file": "cat_auto_body_collision_repair.json",
-        "icon": "🚗",
-        "color": "#ff375f",
-    },
-    "detailing": {
-        "label": "Auto Detailing",
-        "file": "cat_auto_detailing_car_detailing.json",
-        "icon": "✨",
-        "color": "#34c759",
-    },
-    "wrap": {
-        "label": "Vehicle Wrap",
-        "file": "cat_vehicle_wrap_commercial_wrap.json",
-        "icon": "🎨",
-        "color": "#ff9f0a",
-    },
-    "tinting": {
-        "label": "Window Tinting",
-        "file": "cat_window_tinting_car_tint.json",
-        "icon": "🪟",
-        "color": "#af52de",
-    },
-    "ceramic": {
-        "label": "Ceramic Coating",
-        "file": "cat_ceramic_coating_paint_coating.json",
-        "icon": "💎",
-        "color": "#5ac8fa",
-    },
-    "ppf": {
-        "label": "Paint Protection Film (PPF)",
-        "file": "cat_paint_protection_film_PPF.json",
-        "icon": "🛡️",
-        "color": "#30d158",
-    },
-}
+DATA_NICHES_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "niches"
+
+def load_niche_categories(niche: str) -> list[dict]:
+    """Load category definitions (with search_terms + synonym_terms) from
+    data/niches/<niche>.json. Falls back to trying common aliases."""
+    candidates = [
+        DATA_NICHES_DIR / f"{niche}.json",
+        DATA_NICHES_DIR / "auto.json",      # alias: automotive → auto
+    ]
+    for path in candidates:
+        if path.exists():
+            with open(path, encoding="utf-8") as f:
+                cfg = json.load(f)
+            return cfg.get("categories", [])
+    return []
+
+
+def _categories_to_dict(cats: list[dict]) -> dict:
+    """Convert categories list to the keyed dict CATEGORIES format."""
+    return {c["key"]: c for c in cats}
+
+
+# ── Category definitions (static fallback, overridden by niche config) ───────
+
+_DEFAULT_CATEGORIES = [
+    {"key": "mechanic", "label": "Mechanic / Auto Repair",
+     "file": "cat_auto_repair_mechanic_shop.json", "icon": "🔧", "color": "#0071e3",
+     "search_terms": ["mechanic shop", "auto repair"], "synonym_terms": []},
+    {"key": "collision", "label": "Collision / Auto Body",
+     "file": "cat_auto_body_collision_repair.json", "icon": "🚗", "color": "#ff375f",
+     "search_terms": ["auto body shop", "collision repair"], "synonym_terms": []},
+    {"key": "detailing", "label": "Auto Detailing",
+     "file": "cat_auto_detailing_car_detailing.json", "icon": "✨", "color": "#34c759",
+     "search_terms": ["auto detailing", "car detailing"], "synonym_terms": []},
+    {"key": "wrap", "label": "Vehicle Wrap",
+     "file": "cat_vehicle_wrap_commercial_wrap.json", "icon": "🎨", "color": "#ff9f0a",
+     "search_terms": ["vehicle wrap", "commercial wrap"], "synonym_terms": []},
+    {"key": "tinting", "label": "Window Tinting",
+     "file": "cat_window_tinting_car_tint.json", "icon": "🪟", "color": "#af52de",
+     "search_terms": ["window tinting", "car tint"], "synonym_terms": []},
+    {"key": "ceramic", "label": "Ceramic Coating",
+     "file": "cat_ceramic_coating_paint_coating.json", "icon": "💎", "color": "#5ac8fa",
+     "search_terms": ["ceramic coating", "paint coating"], "synonym_terms": []},
+    {"key": "ppf", "label": "Paint Protection Film (PPF)",
+     "file": "cat_paint_protection_film_PPF.json", "icon": "🛡️", "color": "#30d158",
+     "search_terms": ["paint protection film", "PPF"], "synonym_terms": []},
+]
+
+CATEGORIES = _categories_to_dict(_DEFAULT_CATEGORIES)
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -215,6 +233,150 @@ def platform_labels(ad: dict) -> list[str]:
     return ad.get("publisher_platforms") or []
 
 
+# ── Semantic term expansion ──────────────────────────────────────────────────
+
+def expand_terms(cat_key: str, cat_label: str, seed_terms: list[str],
+                 synonym_terms: list[str], cache_dir: Path) -> list[str]:
+    """Return a deduplicated list of all search terms for a category.
+
+    Layers (in order):
+      1. seed_terms — from niche config search_terms
+      2. synonym_terms — from niche config synonym_terms (static, curated)
+      3. LLM-expanded terms — claude-haiku generates additional variants,
+         cached to disk so repeat runs cost nothing
+
+    Cap: at most 20 unique terms to avoid excessive API calls.
+    """
+    cache_path = cache_dir / f"terms_cache_{cat_key}.json"
+
+    # Load LLM cache if it exists
+    llm_terms: list[str] = []
+    if cache_path.exists():
+        try:
+            with open(cache_path, encoding="utf-8") as f:
+                llm_terms = json.load(f).get("llm_terms", [])
+            print(f"    [cache] Loaded {len(llm_terms)} LLM terms for '{cat_key}'")
+        except (json.JSONDecodeError, OSError):
+            llm_terms = []
+
+    if not llm_terms:
+        llm_terms = _llm_expand(cat_key, cat_label, seed_terms, synonym_terms)
+        if llm_terms:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(cache_path, "w", encoding="utf-8") as f:
+                json.dump({"cat_key": cat_key, "llm_terms": llm_terms}, f, indent=2)
+            print(f"    [llm] Generated {len(llm_terms)} terms → cached to {cache_path.name}")
+
+    # Merge all layers, preserve order, deduplicate case-insensitively
+    all_terms: list[str] = []
+    seen: set[str] = set()
+    for term in seed_terms + synonym_terms + llm_terms:
+        key = term.strip().lower()
+        if key and key not in seen:
+            seen.add(key)
+            all_terms.append(term.strip())
+
+    return all_terms[:20]  # cap at 20 terms
+
+
+def _llm_expand(cat_key: str, cat_label: str, seed_terms: list[str],
+                synonym_terms: list[str]) -> list[str]:
+    """Call claude-haiku to generate additional semantic search term variants.
+    Returns empty list if the SDK isn't available or the API call fails."""
+    try:
+        import anthropic
+    except ImportError:
+        print(f"    [WARN] anthropic SDK not installed — skipping LLM expansion for '{cat_key}'")
+        return []
+
+    already_covered = seed_terms + synonym_terms
+    prompt = (
+        f"You are a Meta Ad Library search expert.\n"
+        f"Generate 8 short keyword phrases (2-4 words each) to find '{cat_label}' ads on Facebook/Instagram.\n"
+        f"These terms are ALREADY covered — do NOT repeat them: {already_covered}\n"
+        f"Focus on: slang, location-qualified variants, pain-point phrases, and service differentiators.\n"
+        f"Return ONLY a JSON array of strings. No markdown. No explanation."
+    )
+    try:
+        client = anthropic.Anthropic()
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=256,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        # Strip markdown fences if the model wrapped in ```json
+        raw = re.sub(r"^```[a-z]*\n?", "", raw).rstrip("`").strip()
+        terms = json.loads(raw)
+        if isinstance(terms, list):
+            return [str(t) for t in terms if t]
+    except Exception as e:
+        print(f"    [WARN] LLM expansion failed for '{cat_key}': {e}")
+    return []
+
+
+# ── Category data fetch ───────────────────────────────────────────────────────
+
+def fetch_category_data(cat_info: dict, all_terms: list[str], country: str,
+                        days: int, token: str, reports_dir: Path) -> None:
+    """Fetch Ad Library ads for all expanded terms and save a merged,
+    deduplicated JSON to reports/{cat_info['file']}.
+
+    Deduplication is by ad `id` field — an ad that matched 3 different search
+    terms is stored exactly once. The `_matched_terms` key records which terms
+    surfaced it for debugging.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from client import fetch_ads_by_terms  # noqa: E402
+
+    seen_ids: dict[str, dict] = {}   # id → ad dict
+    term_results: dict[str, list] = {}
+
+    for term in all_terms:
+        print(f"      Fetching: '{term}'")
+        try:
+            ads = fetch_ads_by_terms(term, country=country, days=days, token=token)
+        except Exception as e:
+            print(f"      [WARN] Fetch failed for '{term}': {e}")
+            ads = []
+        time.sleep(2.0)  # Ad Library rate limit is tight — 2s keeps well under quota
+
+        fresh = 0
+        for ad in ads:
+            ad_id = ad.get("id")
+            if not ad_id:
+                continue
+            if ad_id not in seen_ids:
+                ad["_matched_terms"] = [term]
+                seen_ids[ad_id] = ad
+                fresh += 1
+            else:
+                # Track all terms that matched this ad (useful for relevance scoring)
+                seen_ids[ad_id].setdefault("_matched_terms", []).append(term)
+
+        term_results[term] = [ad.get("id") for ad in ads if ad.get("id")]
+        print(f"        → {len(ads)} ads ({fresh} new unique)")
+
+    merged_ads = list(seen_ids.values())
+    out = {
+        "meta": {
+            "category": cat_info["key"],
+            "label": cat_info["label"],
+            "terms_used": all_terms,
+            "total_unique_ads": len(merged_ads),
+            "country": country,
+            "days": days,
+        },
+        "data": {"_all": merged_ads},
+    }
+
+    out_path = reports_dir / cat_info["file"]
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(out, f, indent=2)
+
+    print(f"    ✓ {cat_info['label']}: {len(merged_ads)} unique ads → {out_path.name}")
+
+
 # ── Video enrichment via API ──────────────────────────────────────────────────
 
 def _enrich_with_video_counts(all_ads: list[dict], search_terms: list[str]) -> list[dict]:
@@ -274,16 +436,36 @@ def analyze_category(cat_key: str, cat_info: dict, reports_dir: Path) -> dict:
     with open(filepath, encoding="utf-8") as f:
         raw = json.load(f)
 
-    # Flatten all ads (may be keyed by search term or competitor)
-    all_ads = []
-    search_terms_used = []
+    # Flatten all ads, deduplicating by ad id across all term buckets.
+    # Supports both the new merged format (_all key) and the legacy per-term dict.
+    seen_ids: set = set()
+    all_ads: list = []
+    search_terms_used: list = []
+
     data = raw.get("data", {})
     if isinstance(data, dict):
         for key, ads in data.items():
-            search_terms_used.append(key)
-            all_ads.extend(ads if isinstance(ads, list) else [])
+            if key != "_all":
+                search_terms_used.append(key)
+            for ad in (ads if isinstance(ads, list) else []):
+                ad_id = ad.get("id")
+                if ad_id and ad_id in seen_ids:
+                    continue
+                if ad_id:
+                    seen_ids.add(ad_id)
+                all_ads.append(ad)
     elif isinstance(data, list):
-        all_ads = data
+        for ad in data:
+            ad_id = ad.get("id")
+            if ad_id and ad_id in seen_ids:
+                continue
+            if ad_id:
+                seen_ids.add(ad_id)
+            all_ads.append(ad)
+
+    # Use terms_used from meta block if available (new format)
+    if not search_terms_used:
+        search_terms_used = raw.get("meta", {}).get("terms_used", [])
 
     # Enrich with video detection via separate API query
     if search_terms_used and os.environ.get("META_ACCESS_TOKEN"):
@@ -732,16 +914,106 @@ blockquote.copy-sample{{background:#f5f5f7;border-left:3px solid #ccc;padding:10
 
 def main():
     import argparse
-    ap = argparse.ArgumentParser(description="Market research analyzer")
-    ap.add_argument("--niche", default="automotive",
-                    help="niche playbook to render (matches niches/<niche>.json)")
+    ap = argparse.ArgumentParser(
+        description="Market research analyzer",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  python market.py --niche automotive\n"
+            "    Render HTML from cached category JSONs (fast, offline)\n\n"
+            "  python market.py --niche automotive --fetch\n"
+            "    Fetch all category data first (requires META_ACCESS_TOKEN),\n"
+            "    then render. Uses expanded semantic term sets + LLM expansion.\n\n"
+            "  python market.py --niche automotive --fetch --country US --days 90\n"
+            "    Same, with explicit country/days settings.\n"
+        ),
+    )
+    ap.add_argument(
+        "--niche", default="automotive",
+        help="Niche playbook name — matches niches/<niche>.json for the strategy "
+             "cards and data/niches/<niche>.json (or auto.json) for categories. "
+             "(default: automotive)",
+    )
+    ap.add_argument(
+        "--fetch", action="store_true",
+        help="Fetch fresh Ad Library data for all categories before rendering. "
+             "Requires META_ACCESS_TOKEN. Uses semantic term expansion + LLM variants.",
+    )
+    ap.add_argument(
+        "--country", default="US",
+        help="ISO-3166-1 alpha-2 code or 'ALL' (default: US). Only used with --fetch.",
+    )
+    ap.add_argument(
+        "--days", type=int, default=90,
+        help="Lookback window in days (default: 90). Only used with --fetch.",
+    )
+    ap.add_argument(
+        "--no-llm", action="store_true",
+        help="Skip LLM term expansion (use only seed + synonym terms). "
+             "Faster, still much broader than seed-only.",
+    )
+    ap.add_argument(
+        "--output", default=None,
+        help="Output HTML path (default: reports/blue_rose_auto_market_research.html)",
+    )
     args = ap.parse_args()
 
     reports_dir = Path("reports")
-    if not reports_dir.exists():
-        print("[ERROR] reports/ directory not found. Run meta_client.py first.")
-        sys.exit(1)
+    reports_dir.mkdir(exist_ok=True)
 
+    # ── Load category definitions from niche config ───────────────────────────
+    niche_cats = load_niche_categories(args.niche)
+    if niche_cats:
+        global CATEGORIES
+        CATEGORIES = _categories_to_dict(niche_cats)
+        print(f"Loaded {len(CATEGORIES)} categories from niche config ({args.niche})")
+    else:
+        print(f"[WARN] No category config found for niche '{args.niche}' in data/niches/ — using built-in defaults")
+
+    # ── Fetch step ────────────────────────────────────────────────────────────
+    if args.fetch:
+        token = os.environ.get("META_ACCESS_TOKEN", "")
+        if not token:
+            print(
+                "\n[ERROR] --fetch requires META_ACCESS_TOKEN.\n"
+                "  export META_ACCESS_TOKEN=<your_token>\n"
+            )
+            sys.exit(1)
+
+        print(f"\nFetching category data ({args.country}, {args.days}d lookback)...")
+        for cat_key, cat_info in CATEGORIES.items():
+            seed = cat_info.get("search_terms", [])
+            synonyms = cat_info.get("synonym_terms", [])
+
+            print(f"\n  [{cat_info['label']}]")
+            print(f"    Seed terms: {seed}")
+            print(f"    Synonyms:   {len(synonyms)} curated")
+
+            if args.no_llm:
+                all_terms = list(dict.fromkeys(
+                    t.strip().lower() for t in seed + synonyms if t.strip()
+                ))
+                all_terms = [t for t in (seed + synonyms) if t.strip()]
+                # dedup preserving order
+                seen: set = set()
+                deduped = []
+                for t in seed + synonyms:
+                    k = t.strip().lower()
+                    if k not in seen:
+                        seen.add(k)
+                        deduped.append(t.strip())
+                all_terms = deduped[:20]
+            else:
+                all_terms = expand_terms(
+                    cat_key, cat_info["label"], seed, synonyms, reports_dir
+                )
+
+            print(f"    Total unique terms: {len(all_terms)}")
+            fetch_category_data(cat_info, all_terms, args.country, args.days, token, reports_dir)
+
+        print("\nAll categories fetched.\n")
+
+    # ── Analyze + render ──────────────────────────────────────────────────────
     print("Analyzing categories...")
     results = []
     for cat_key, cat_info in CATEGORIES.items():
@@ -752,7 +1024,7 @@ def main():
     generated = datetime.now(timezone.utc).strftime("%B %d, %Y")
     html = build_html(results, generated, niche=args.niche)
 
-    out_path = reports_dir / "blue_rose_auto_market_research.html"
+    out_path = Path(args.output) if args.output else reports_dir / "blue_rose_auto_market_research.html"
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 

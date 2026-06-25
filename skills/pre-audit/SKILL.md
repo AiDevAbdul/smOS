@@ -1,16 +1,23 @@
 ---
 name: pre-audit
-description: Use this skill when the user asks to audit, scope, or pitch an unsigned prospect before client onboarding (typically via `/pre-audit`). Produces a branded HTML+PDF sales artifact scored 0–100 from public data only — Facebook Page, Instagram, Meta Ad Library, website tracking surface, and competitor outspend — with wins, gaps, and three opportunities. No client API access required; the Node wrapper renders the report and advances the CRM deal to `audited`.
+description: Use this skill when the user asks to audit, scope, or pitch an unsigned prospect before client onboarding (typically via `/pre-audit`). Produces a branded HTML+PDF sales artifact scored 0–100 from public data only — Facebook Page, Instagram, Meta Ad Library, website tracking surface, competitor outspend, and a scored competitor creative matrix — with tiered wins/gaps, opportunity sizing, and three recommendations. No client API access required; the Node wrapper renders the report and advances the CRM deal to `audited`.
 ---
 
 # /pre-audit — Pre-Onboarding Prospect Audit (Phase 5)
 
-Produce a sales asset that scores an *unsigned* prospect 0–100 from public surfaces only, then render it through the standardized HTML+PDF template and advance the CRM deal. This is the "before contract" companion to `/audit`: it needs no ad-account or pixel access, so a prospect can be pitched within an hour of first contact.
+Produce a sales asset that scores an *unsigned* prospect 0–100 from public surfaces only,
+then render it through the standardized HTML+PDF template and advance the CRM deal. This is
+the "before contract" companion to `/audit`: it needs no ad-account or pixel access, so a
+prospect can be pitched within an hour of first contact.
+
+The report produces an emotional arc — **recognition → clarity → relief** — across nine
+sections. The prospect sees themselves in the data, understands what is broken, and leaves
+believing the agency can fix it.
 
 ## What This Skill Does
 
-- Gathers public-data inputs (one clarification at a time): Facebook Page, Instagram profile, Meta Ad Library self-check, competitor outspend scan, website tracking surface, optional niche playbook.
-- Writes three input JSON files to `prospects/{slug}/`: `page_audit.json`, `competitor_summary.json`, `synthesis.json` (wins, gaps, opportunities, weighted 0–100 score, outspend ratio).
+- Gathers public-data inputs (one clarification at a time): Facebook Page, Instagram profile, Meta Ad Library self-check, competitor outspend + creative matrix scan, website tracking surface, optional niche playbook.
+- Writes three input JSON files to `prospects/{slug}/`: `page_audit.json`, `competitor_summary.json`, `synthesis.json` (tiered wins/gaps, recommendations, opportunity sizing, 0–100 score, outspend ratio).
 - Runs `node skills/pre-audit/pre-audit.js <slug> --business "Name"` to render the standardized HTML via `scripts/meta-ad-library/pre_audit_report.py`, convert to PDF via `scripts/render_pdf.py`, advance the CRM deal to `audited`, and best-effort insert a `prospect_audits` row.
 
 ## What This Skill Does NOT Do
@@ -52,8 +59,14 @@ Gather context before acting (do not ask the user for what is discoverable):
 ## Workflow
 
 1. Resolve the required clarifications (one question at a time).
-2. Run the public-data passes (details in `references/domain-standards.md` and `references/api-reference.md`): FB+IG page audit, Ad Library self-check, competitor outspend scan, optional niche sweep, website tracking surface. Mark any blocked fetch `unverified` — never fabricate from absence.
-3. Compute the weighted 0–100 score, top-3 wins, gaps, and opportunities, and the `outspend_ratio`.
+2. Run the public-data passes (details in `references/domain-standards.md` and `references/api-reference.md`):
+   - FB+IG page audit (profile completeness, posting frequency, format mix, ER)
+   - Ad Library self-check (active ads, run duration, survival past 60d)
+   - Competitor scan: outspend + creative matrix (hook, visual, CTA, trigger, duration)
+   - Website tracking surface (Pixel, GTM, GA4, conversion events, viewport)
+   - Optional niche sweep
+   Mark any blocked fetch `unverified` — never fabricate from absence.
+3. Compute the 0–100 score (five equal 20% dimensions), three-tier wins/gaps, max-3 recommendations, opportunity sizing (bottom-up + top-down), and 30/60/90 next steps.
 4. Write `page_audit.json`, `competitor_summary.json`, `synthesis.json` to `prospects/{slug}/` (schemas in `references/io-contract.md`).
 5. Run the wrapper: `node skills/pre-audit/pre-audit.js {slug} --business "<Name>" [--niche-html prospects/{slug}/reports/market_<ts>.html] [--no-crm]`.
 6. Send the prospect the HTML/PDF. Print the wrapper's JSON summary; next step is `/proposal {slug}`.
@@ -70,10 +83,11 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 | What VARIES (per prospect / run) | What's CONSTANT (encoded in skill) |
 |----------------------------------|------------------------------------|
-| Business name, page/IG/website URLs, competitors, country, niche | Six-dimension weighted scoring rubric (15/10/20/15/25/15) |
+| Business name, page/IG/website URLs, competitors, country, niche | Five-dimension equal-weight scoring rubric (20% each) |
 | Whether IG / niche file / ads exist (each optional, fail-soft) | Scraping headers (mobile UA, `en_US` locale cookie, `X-IG-App-ID`) |
-| Outspend ratio, score, wins/gaps/opportunities | Standardized HTML template + `@media print` block |
+| Outspend ratio, score, tiered wins/gaps, creative matrix scores | Standardized HTML template (9 sections, warm editorial design) |
 | Tracking stack found (Pixel/GTM/GA4) | CRM transition target = `audited`; output paths under `prospects/{slug}/` |
+| Opportunity sizing inputs (budget, revenue goal) | Industry benchmarks: CPA $38.19, ROAS 1.86×, CPL $27.66 |
 
 ## Domain Standards
 
@@ -92,7 +106,12 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ### Output Checklist (verify before delivery)
 - [ ] `page_audit.json`, `competitor_summary.json`, `synthesis.json` present and schema-valid.
-- [ ] `pre_audit.html` opens; score gauge, six bars, wins/gaps, outspend table render.
+- [ ] `pre_audit.html` opens; canvas score gauge animates, five dimension bars animate on scroll.
+- [ ] All nine sections render: Score, Profile, Organic, Paid Ads, Competitors, Wins & Gaps, Opportunity, Recommendations, Next Steps (CTA).
+- [ ] Creative matrix columns visible in competitor table (or "No competitor data" fallback if none).
+- [ ] Wins & Gaps show tier labels (Quick Win / Retainer Scope / Roadmap) if `wins_tiers` present; falls back to flat list gracefully.
+- [ ] Opportunity Sizing section shows industry benchmarks table; prospect projections shown if `opportunity_sizing` present.
+- [ ] 30/60/90 timeline in CTA section populated (custom or default fallback text).
 - [ ] `pre_audit.pdf` exists (or wrapper logged the Playwright-missing reason).
 - [ ] CRM deal at `audited` with `links.pre_audit` (unless `--no-crm`).
 - [ ] Summary JSON printed; `outspend_ratio` matches the hero headline.

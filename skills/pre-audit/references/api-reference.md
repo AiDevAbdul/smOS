@@ -79,16 +79,30 @@ Returned per-ad (`archived-ad` node): `ad_creative_bodies`, `ad_snapshot_url`, `
 `impressions`, `spend`, `funding_entity`, region/demographic distribution.
 
 **Rate limits / errors** (Graph API rate-limiting page): code **4** app-level, code **17**
-user-level, code **613** custom limit; HTTP **429** = throttled. On 429: backoff 30s, retry
-once, then proceed without the affected competitor. Log full error (code/type/`fbtrace_id`)
-on failure; do not auto-retry beyond the single 429 retry.
+user-level, code **613** custom limit; HTTP **429** = throttled. `client.py` handles all
+three — 429 AND 400 with error code 4/17/613 — with exponential backoff (30s × 2^retry,
+up to 3 retries) before giving up on that term. Log full error (code/type/`fbtrace_id`).
 
 ## Pass 4 — Niche playbook (optional)
 
+`market.py` reads category definitions from `data/niches/<niche>.json` (via
+`load_niche_categories()`). Each category carries `search_terms` (2 seed terms) and
+`synonym_terms` (10–12 curated synonyms). Use `--niche` to name the strategy playbook
+(matches `scripts/meta-ad-library/niches/<niche>.json`) and `--fetch` to pull live data:
+
 ```bash
-python scripts/meta-ad-library/market.py --niche-config data/niches/<niche>.json \
+# Render from pre-fetched category JSONs in reports/ (fast, no API calls)
+python scripts/meta-ad-library/market.py --niche automotive \
+  --output prospects/{slug}/reports/market_<ts>.html
+
+# Fetch + render (requires META_ACCESS_TOKEN, uses semantic term expansion)
+python scripts/meta-ad-library/market.py --niche automotive --fetch \
+  --country <country> --days 90 \
   --output prospects/{slug}/reports/market_<ts>.html
 ```
+
+Category data files (`reports/cat_*.json`) are written by `--fetch` and read by analysis.
+The `--no-llm` flag skips LLM term expansion (seed + synonyms only, still 12–14 terms/cat).
 
 If `data/niches/<niche>.json` is absent, **skip silently** and flag as a gap ("no niche
 playbook on file"). Never block. Pass the resulting HTML to the wrapper via `--niche-html`.

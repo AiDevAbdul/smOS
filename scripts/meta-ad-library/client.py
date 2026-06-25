@@ -172,12 +172,25 @@ def _paginate(params: dict, label: str) -> list[dict]:
             print(f"  [WARN] Network error for '{label}': {e}")
             break
 
+        # Meta returns rate-limit errors as 429 OR as 400 with code 613/17/4.
+        # Treat both the same: exponential backoff, up to 3 retries.
+        is_rate_limit = False
         if resp.status_code == 429:
+            is_rate_limit = True
+        elif resp.status_code == 400:
+            try:
+                err_code = resp.json().get("error", {}).get("code", 0)
+                if err_code in (613, 17, 4):
+                    is_rate_limit = True
+            except Exception:
+                pass
+
+        if is_rate_limit:
             if retries >= 3:
                 print(f"  [WARN] Rate limit hit for '{label}', skipping after 3 retries.")
                 break
-            wait = int(resp.headers.get("Retry-After", 10))
-            print(f"  [WARN] Rate limited — waiting {wait}s (retry {retries + 1}/3)")
+            wait = int(resp.headers.get("Retry-After", 30)) * (2 ** retries)
+            print(f"  [WARN] Rate limited (code {resp.status_code}) — waiting {wait}s (retry {retries + 1}/3)")
             time.sleep(wait)
             retries += 1
             continue

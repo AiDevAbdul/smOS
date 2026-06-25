@@ -50,14 +50,37 @@ Spend and impressions are **ranges**, never exact.
 
 ## Rate Limiting & Errors
 
-| Code | Meaning | Action |
-|------|---------|--------|
-| 4 | App-level throttle | Halt; surface `fbtrace_id`; do not auto-retry |
-| 17 | User-level (`API_EC_USER_TOO_MANY_CALLS`) | Halt; surface `fbtrace_id` |
-| 613 | Custom rate limit | Halt; surface `fbtrace_id` |
+`client.py`'s `_paginate()` handles rate-limit responses uniformly — both HTTP 429 and
+HTTP 400 with error code 4/17/613 trigger the same exponential backoff path:
 
-Watch the `X-App-Usage` / `X-Business-Use-Case-Usage` headers. On any error, log
-`code`/`type`/`fbtrace_id` and stop — the constitution forbids automatic retries.
+| Code | Meaning | Behaviour in `client.py` |
+|------|---------|--------------------------|
+| 4 | App-level throttle | Backoff 30s × 2^retry, up to 3 retries, then skip term |
+| 17 | User-level (`API_EC_USER_TOO_MANY_CALLS`) | Same backoff path |
+| 613 | Custom rate limit | Same backoff path |
+| 429 | HTTP throttle | Same backoff path (uses `Retry-After` header if present) |
+| other 4xx/5xx | Unexpected error | Log and skip (no retry) |
+
+Watch the `X-App-Usage` / `X-Business-Use-Case-Usage` response headers. Always log the
+full error — `code`, `type`, `fbtrace_id` — for debugging. After 3 failed retries on a
+term, proceed to the next term rather than aborting the whole category.
+
+## Semantic Term Expansion (market.py `--fetch` mode)
+
+`market.py` expands each category's search coverage across three layers before hitting the
+Ad Library API. All results are merged and **deduplicated by ad `id`** so the same ad
+matched by multiple terms is counted once:
+
+| Layer | Source | Count | Cost |
+|-------|--------|-------|------|
+| Seed terms | `data/niches/<niche>.json` → `search_terms[]` | 2/category | Free |
+| Synonym terms | `data/niches/<niche>.json` → `synonym_terms[]` | 10–12/category | Free |
+| LLM variants | claude-haiku, disk-cached after first run | ~8/category | Cheap (one-time) |
+
+Total: up to **20 unique terms per category**, capped to avoid quota exhaustion.
+
+Cache file: `reports/terms_cache_<cat_key>.json`. Delete to force regeneration.
+Use `--no-llm` to skip the LLM layer (runs only seed + synonyms — still 12–14 terms).
 
 ## Cited Sources
 

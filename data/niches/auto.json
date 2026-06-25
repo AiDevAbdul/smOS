@@ -7,6 +7,11 @@
       "key": "mechanic",
       "label": "Mechanic / Auto Repair",
       "search_terms": ["mechanic shop", "auto repair"],
+      "synonym_terms": [
+        "car repair shop", "vehicle repair", "auto mechanic", "oil change service",
+        "engine repair", "brake repair", "transmission repair", "check engine light",
+        "car maintenance", "lube shop", "tune up", "tire rotation"
+      ],
       "file": "cat_auto_repair_mechanic_shop.json",
       "icon": "🔧",
       "color": "#0071e3"
@@ -15,6 +20,11 @@
       "key": "collision",
       "label": "Collision / Auto Body",
       "search_terms": ["auto body shop", "collision repair"],
+      "synonym_terms": [
+        "car body repair", "dent repair", "fender repair", "bumper repair",
+        "accident repair", "insurance claim auto", "auto body work", "paint and body shop",
+        "frame repair", "vehicle restoration", "scratch repair car", "body shop estimate"
+      ],
       "file": "cat_auto_body_collision_repair.json",
       "icon": "🚗",
       "color": "#ff375f"
@@ -23,6 +33,11 @@
       "key": "detailing",
       "label": "Auto Detailing",
       "search_terms": ["auto detailing", "car detailing"],
+      "synonym_terms": [
+        "mobile car detailing", "car wash detail", "interior detailing", "exterior detailing",
+        "full detail car", "car cleaning service", "vehicle detailing", "deep clean car",
+        "hand car wash", "car polish service", "steam cleaning car", "detailing shop"
+      ],
       "file": "cat_auto_detailing_car_detailing.json",
       "icon": "✨",
       "color": "#34c759"
@@ -31,6 +46,11 @@
       "key": "wrap",
       "label": "Vehicle Wrap",
       "search_terms": ["vehicle wrap", "commercial wrap"],
+      "synonym_terms": [
+        "car wrap", "truck wrap", "fleet wrap", "vinyl wrap", "vehicle graphics",
+        "car color change wrap", "business vehicle wrap", "van wrap", "custom wrap",
+        "partial wrap", "full wrap", "vehicle branding"
+      ],
       "file": "cat_vehicle_wrap_commercial_wrap.json",
       "icon": "🎨",
       "color": "#ff9f0a"
@@ -39,6 +59,11 @@
       "key": "tinting",
       "label": "Window Tinting",
       "search_terms": ["window tinting", "car tint"],
+      "synonym_terms": [
+        "auto window tint", "vehicle tinting", "UV window tint", "privacy tint car",
+        "ceramic tint", "tinted windows car", "sun protection car windows",
+        "heat rejection tint", "car window film", "residential window tint"
+      ],
       "file": "cat_window_tinting_car_tint.json",
       "icon": "🪟",
       "color": "#af52de"
@@ -47,6 +72,12 @@
       "key": "ceramic",
       "label": "Ceramic Coating",
       "search_terms": ["ceramic coating", "paint coating"],
+      "synonym_terms": [
+        "car ceramic coating", "nano coating car", "hydrophobic car coating",
+        "paint protection coating", "car paint sealant", "professional car coating",
+        "paint correction ceramic", "9H ceramic coat", "car gloss coating",
+        "paint hardener car", "water beading car", "car shine coating"
+      ],
       "file": "cat_ceramic_coating_paint_coating.json",
       "icon": "💎",
       "color": "#5ac8fa"
@@ -55,6 +86,12 @@
       "key": "ppf",
       "label": "Paint Protection Film (PPF)",
       "search_terms": ["paint protection film", "PPF"],
+      "synonym_terms": [
+        "clear bra car", "paint film protection", "car paint guard",
+        "rock chip protection car", "self healing film car", "XPEL PPF",
+        "LLumar paint protection", "invisible shield car", "hood film car",
+        "stone chip film", "car wrap protection", "new car paint protection"
+      ],
       "file": "cat_paint_protection_film_PPF.json",
       "icon": "🛡️",
       "color": "#30d158"
