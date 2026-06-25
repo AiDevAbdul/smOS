@@ -100,6 +100,34 @@ function filterAndDedup(results) {
   return Array.from(seen.values());
 }
 
+// Structure-only clusters for offline / TBD-account mode: no Meta API, so no
+// interest IDs or sizes — one cluster per explicit profile interest, falling
+// back to seed terms. Shape matches what clusterInterests + the schema expect
+// (id + interest_stack are the load-bearing fields downstream).
+function offlineClusters(profile, seeds) {
+  const explicit = (profile.audience?.interests || []).map((s) => String(s).trim()).filter(Boolean);
+  const basis = explicit.length ? explicit : seeds.filter((s) => !s.includes(" ")).slice(0, 5);
+  const seen = new Set();
+  const clusters = [];
+  for (const term of basis) {
+    const id = `INT_${term.toUpperCase().replace(/[^A-Z0-9]+/g, "_").slice(0, 20)}`;
+    if (!term || seen.has(id)) continue;
+    seen.add(id);
+    clusters.push({
+      id,
+      label: term,
+      interest_stack: [term],
+      interests: [{ id: null, name: term, size_lower: null, size_upper: null }],
+      size_estimate_lower: null,
+      size_estimate_upper: null,
+      structure_only: true,
+      anchor_index: clusters.length,
+    });
+    if (clusters.length >= 5) break;
+  }
+  return clusters;
+}
+
 function clusterInterests(interests) {
   // Bucket by the first segment of path (Meta returns ["Interests", "Sports", ...])
   // Falls back to topic if path is missing.
@@ -322,6 +350,11 @@ async function main() {
     // Pass 4: custom audiences
     customAudiences = await loadCustomAudiences(graph, acct.ad_account_id);
     lookalike = pickLookalikeSeed(customAudiences, profile);
+  } else {
+    // Offline / TBD-account: build structure-only clusters from the profile so the
+    // map still satisfies its schema (non-empty clusters) and /strategy-brief has
+    // cold audiences to rank. Sizes are null — they require the live API.
+    clusters = offlineClusters(profile, seeds);
   }
 
   // Lookalike sizes fixed
