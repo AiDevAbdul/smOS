@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Rose Auto Care & Repair Services — Audit Report · smOS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --navy: #0a0f1e;
+    --blue: #3b82f6;
+    --blue-light: #eff6ff;
+    --teal: #0891b2;
+    --green: #10b981;
+    --green-light: #ecfdf5;
+    --amber: #f59e0b;
+    --amber-light: #fffbeb;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-900: #0f172a;
+    --text: #0f172a;
+    --subtext: #64748b;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--gray-50);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #050b18 0%, #0a1628 50%, #071a35 100%);
+    color: white;
+    padding: 64px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(16,185,129,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(59,130,246,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.25);
+    color: #6ee7b7;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #10b981;
+    border-radius: 50%;
+  }
+  .hero h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 8px; }
+  .hero h2 { font-size: 16px; font-weight: 400; color: #64748b; margin-bottom: 0; }
+  .hero-meta {
+    color: #94a3b8;
+    font-size: 14px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* Score ring */
+  .score-ring-wrap { text-align: center; flex-shrink: 0; }
+  .score-ring-wrap .score-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #64748b; margin-bottom: 8px;
+  }
+  .score-ring { position: relative; width: 120px; height: 120px; }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring .track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 8; }
+  .score-ring .fill  { fill: none; stroke-width: 8; stroke-linecap: round;
+                        stroke-dasharray: 314; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
+  .score-value { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .score-value .num { font-size: 30px; font-weight: 800; line-height: 1; }
+  .score-value .den { font-size: 11px; color: #64748b; font-weight: 500; margin-top: 2px; }
+
+  /* ── MAIN ── */
+  .main { max-width: 1000px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  /* ── METRIC STRIP ── */
+  .metric-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  .metric-card {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--gray-200);
+  }
+  .metric-card .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--subtext); margin-bottom: 6px; }
+  .metric-card .value { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .metric-card .sub   { font-size: 11px; color: var(--subtext); margin-top: 3px; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; margin-top: 40px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-title { font-size: 17px; font-weight: 700; color: var(--gray-900); }
+
+  /* ── CARD ── */
+  .card {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--card-shadow); border: 1px solid var(--gray-200);
+    padding: 22px 26px; margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: 14px; font-weight: 700; color: var(--gray-900);
+    display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  }
+  .card-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+  /* ── DATA TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table td { padding: 7px 0; border-bottom: 1px solid var(--gray-100); font-size: 13px; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { color: var(--subtext); width: 190px; }
+  .data-table td:last-child  { font-weight: 500; text-align: right; }
+
+  /* ── STATUS LIST ── */
+  .status-list { display: flex; flex-direction: column; gap: 7px; }
+  .status-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 14px; border-radius: 8px;
+    background: var(--gray-50); font-size: 13.5px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .status-item.green  { background: var(--green-light); }
+  .status-item.green .dot  { background: var(--green); }
+  .status-item.red    { background: var(--red-light); }
+  .status-item.red .dot    { background: var(--red); }
+  .status-item.amber  { background: var(--amber-light); }
+  .status-item.amber .dot  { background: var(--amber); }
+  .status-item.gray   { background: var(--gray-100); }
+  .status-item.gray .dot   { background: var(--gray-400); }
+  .item-text { flex: 1; }
+  .item-title { font-weight: 600; }
+  .item-desc  { font-size: 12px; color: var(--subtext); margin-top: 1px; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .badge.green  { background: var(--green-light);  color: #065f46; }
+  .badge.red    { background: var(--red-light);    color: #991b1b; }
+  .badge.amber  { background: var(--amber-light);  color: #92400e; }
+  .badge.blue   { background: var(--blue-light);   color: #1e40af; }
+  .badge.gray   { background: var(--gray-100);     color: var(--gray-700); }
+
+  /* ── CHECK GRID ── */
+  .check-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 0; }
+  .check-icon {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; flex-shrink: 0; font-weight: 700;
+  }
+  .check-icon.yes { background: var(--green-light); color: var(--green); }
+  .check-icon.no  { background: var(--red-light);   color: var(--red); }
+
+  /* ── PIXEL HEALTH ── */
+  .pixel-health-bar {
+    display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+    background: var(--gray-50); border-radius: 10px; border: 1px solid var(--gray-200);
+    margin-bottom: 12px;
+  }
+  .pixel-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .pixel-label { font-size: 13.5px; }
+  .pixel-label strong { font-weight: 700; display: block; margin-bottom: 2px; }
+  .pixel-label span { color: var(--subtext); font-size: 12px; }
+
+  /* ── RECS ── */
+  .rec-list { display: flex; flex-direction: column; gap: 10px; }
+  .rec-item {
+    display: grid; grid-template-columns: 28px 1fr; gap: 14px;
+    align-items: start; padding: 14px 16px;
+    background: white; border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200); box-shadow: var(--card-shadow);
+  }
+  .rec-num {
+    width: 28px; height: 28px; background: var(--navy); color: white;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .rec-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .rec-desc  { font-size: 13px; color: var(--subtext); }
+
+  /* ── SCORE BREAKDOWN ── */
+  .score-breakdown { display: flex; flex-direction: column; gap: 8px; }
+  .score-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .score-row .sr-label { width: 200px; color: var(--subtext); }
+  .score-row .sr-bar-wrap { flex: 1; height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+  .score-row .sr-bar { height: 100%; border-radius: 3px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+  .score-row .sr-val { width: 40px; text-align: right; font-weight: 600; font-size: 12px; }
+
+  /* ── ALERT BOX ── */
+  .alert {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 18px; border-radius: 10px; margin-bottom: 12px;
+    border-left: 3px solid;
+  }
+  .alert.red   { background: var(--red-light);   border-color: var(--red); }
+  .alert.amber { background: var(--amber-light); border-color: var(--amber); }
+  .alert.green { background: var(--green-light); border-color: var(--green); }
+  .alert-icon  { font-size: 16px; margin-top: 1px; }
+  .alert-body  { font-size: 13.5px; }
+  .alert-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+
+  /* ── COMPLETENESS ── */
+  .completeness-ring {
+    display: flex; align-items: center; gap: 20px; padding: 12px 0;
+  }
+  .c-ring { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+  .c-ring svg { transform: rotate(-90deg); }
+  .c-ring .track { fill: none; stroke: var(--gray-100); stroke-width: 5; }
+  .c-ring .fill  { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 157; }
+  .c-ring .val   { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; }
+  .c-text { font-size: 13.5px; }
+  .c-text strong { font-weight: 700; display: block; font-size: 15px; }
+  .c-text span   { color: var(--subtext); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy); color: #475569; text-align: center;
+    padding: 32px 40px; font-size: 12px; line-height: 1.7;
+  }
+  .footer .brand { color: #64748b; font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .footer a { color: #3b82f6; text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .hero { padding: 40px 20px 36px; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .score-ring-wrap { display: none; }
+    .main { padding: 24px 16px 60px; }
+    .metric-strip { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-2, .card-grid-3 { grid-template-columns: 1fr; }
+    .check-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Full Account Audit</div>
+      <h1 id="client-name">Loading…</h1>
+      <h2 id="account-id">—</h2>
+      <div class="hero-meta">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="hero-date">—</span>
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span id="hero-tz">—</span>
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span id="hero-currency">—</span>
+        </span>
+      </div>
+    </div>
+    <div class="score-ring-wrap">
+      <div class="score-label">Health Score</div>
+      <div class="score-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle class="track" cx="60" cy="60" r="50"/>
+          <circle class="fill" id="score-arc" cx="60" cy="60" r="50"/>
+        </svg>
+        <div class="score-value">
+          <span class="num" id="score-num">—</span>
+          <span class="den">/100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- Metric strip -->
+  <div class="metric-strip">
+    <div class="metric-card">
+      <div class="label">Health Score</div>
+      <div class="value" id="m-score">—</div>
+      <div class="sub">out of 100</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">FB Followers</div>
+      <div class="value" id="m-fb">—</div>
+      <div class="sub">Facebook Page</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">IG Followers</div>
+      <div class="value" id="m-ig">—</div>
+      <div class="sub">Instagram</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Total Spend</div>
+      <div class="value" id="m-spend">—</div>
+      <div class="sub">lifetime</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Campaigns</div>
+      <div class="value" id="m-campaigns">—</div>
+      <div class="sub" id="m-campaigns-sub">total</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Pixel Status</div>
+      <div class="value" id="m-pixel" style="font-size:16px;margin-top:4px">—</div>
+      <div class="sub" id="m-pixel-sub">—</div>
+    </div>
+  </div>
+
+  <!-- Organic: Facebook -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </div>
+    <span class="section-title">Organic — Facebook Page</span>
+  </div>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <div class="card-title">Page Metrics</div>
+      <table class="data-table" id="fb-metrics"></table>
+    </div>
+    <div class="card">
+      <div class="card-title">Page Completeness</div>
+      <div id="fb-completeness"></div>
+      <div id="fb-completeness-checks" class="check-grid" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- Organic: Instagram -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fdf4ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="url(#ig2)"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </div>
+    <span class="section-title">Organic — Instagram</span>
+  </div>
+
+  <div class="card">
+    <table class="data-table" id="ig-metrics"></table>
+  </div>
+
+  <!-- Paid Account -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff7ed">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    </div>
+    <span class="section-title">Paid Account</span>
+  </div>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <div class="card-title">Account Overview</div>
+      <table class="data-table" id="account-metrics"></table>
+    </div>
+    <div class="card">
+      <div class="card-title">Campaign Health</div>
+      <div id="campaign-status" class="status-list"></div>
+    </div>
+  </div>
+
+  <!-- Pixel & Tracking -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <span class="section-title">Pixel &amp; Website Tracking</span>
+  </div>
+
+  <div id="pixel-alert"></div>
+
+  <div class="card">
+    <div class="check-grid" id="tracking-checks"></div>
+  </div>
+
+  <!-- Audiences -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fdf4ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <span class="section-title">Audiences</span>
+  </div>
+
+  <div class="card">
+    <table class="data-table" id="audience-table"></table>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#ecfdf5">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </div>
+    <span class="section-title">Recommended Next Steps</span>
+  </div>
+
+  <div class="rec-list" id="recommendations"></div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="brand">smOS · Social Media Operating System</div>
+  <div>Full account audit — data sourced from Meta Graph API v25.0 and pre-audit public scrape.</div>
+  <div>Prepared by <a href="#">duckercreative.com</a> · <span id="footer-date"></span></div>
+</footer>
+
+<script>
+const DATA = {"slug":"blue-rose-auto","generated_at":"2026-06-25T10:15:51.948Z","organic":{"facebook":{"page_id":"1709708972688957","page_name":"Blue Rose Auto Care & Repair Services","has_page_token":true,"followers":1764,"new_follows_90d":0,"followers_delta_90d":null,"page_completeness":100,"page_completeness_table":"| Field | Set |\n|---|---|\n| Name | ✓ |\n| About | ✓ |\n| Category | ✓ |\n| Website | ✓ |\n| Phone | ✓ |\n| Email | ✓ |\n| Address | ✓ |\n| Profile picture | ✓ |\n| Cover photo | ✓ |","post_count":0,"posts_per_week":0,"days_since_last_post":83,"format_mix_pct":{"video":0,"image":0,"carousel":0,"link":0,"status":0},"engagement_available":true,"engagement_blocked_reason":null,"avg_engagement_rate":null,"best_post":null,"worst_post":null,"insights_error":null},"instagram":{"source":"pre_audit_public_estimate","source_dir":"bluersoeauto","followers":420,"media_count_total":371,"posts_per_week":0.6,"days_since_last_post":96,"is_business_account":true,"bio":"Fix it, Clean it, Protect it.\nCeramic Pro Elite Dealer","note":"Live IG insights unavailable (not linked / blocked); values scraped at pre-audit — treat as public estimate, not baseline.","live_skip_reason":"ig_business_id is TBD"}},"paid":{"account_id":"act_1999616770762846","account_name":"Blue Rose Auto Care and Repair Services","account_status":1,"account_age_days":0,"currency":"USD","timezone":"America/Los_Angeles","total_spend_lifetime":0,"amount_spent_to_date":0,"balance":0,"campaign_count_total":0,"campaign_count_active":0,"campaign_count_archived":0,"best_cpa":null,"best_roas":null,"zombie_count":0,"naming_compliance_pct":0,"custom_audience_count":0,"custom_audience_healthy":0,"custom_audience_broken":0,"audience_issues":[],"pixel_health":"none","pixel_stats":{"data":[]}},"website_tracking":{"meta_pixel_on_site":false,"meta_pixel_id_on_site":null,"conversion_events_on_site":false,"ga4":true,"ga4_id":"G-XV9SFWPKVL","google_tag":true,"google_tag_id":"GT-M6XH7GFT","mobile_responsive":true},"ad_library_history":{"verdict":"NEVER_RUN","active_count":0,"notes":"Zero ads found in Meta Ad Library for last 90 days. Greenfield opportunity."},"pixel_cross_reference":{"account_side_health":"none","installed_on_site":false,"corroborated_finding":"Pixel exists in the ad account but is NOT installed on the website (confirmed by pre-audit scrape) — it cannot track real traffic. Top conversion-tracking blocker."},"pre_audit_source":"bluersoeauto","creative":null,"health_score":40};
+
+function fmt(n, fallback = '—') {
+  if (n == null) return fallback;
+  if (n === 0) return '0';
+  return Number(n).toLocaleString();
+}
+function fmtUSD(n) {
+  if (n == null) return '—';
+  return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function scoreColor(s) {
+  if (s >= 70) return '#10b981';
+  if (s >= 45) return '#f59e0b';
+  return '#ef4444';
+}
+function row(label, value) {
+  return `<tr><td>${label}</td><td>${value}</td></tr>`;
+}
+
+function init() {
+  const d = DATA;
+  const fb = d.organic?.facebook || {};
+  const ig = d.organic?.instagram || {};
+  const paid = d.paid || {};
+  const tracking = d.website_tracking || {};
+  const score = d.health_score ?? 0;
+  const color = scoreColor(score);
+
+  // Hero
+  document.getElementById('client-name').textContent = fb.page_name || d.slug || '—';
+  document.getElementById('account-id').textContent = paid.account_id ? `Ad Account: ${paid.account_id} · ${paid.account_name || ''}` : '—';
+  document.getElementById('hero-date').textContent = new Date(d.generated_at || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  document.getElementById('hero-tz').textContent = paid.timezone || '—';
+  document.getElementById('hero-currency').textContent = paid.currency || 'USD';
+
+  // Score ring
+  document.getElementById('score-num').textContent = score;
+  document.getElementById('score-num').style.color = color;
+  const arc = document.getElementById('score-arc');
+  arc.style.stroke = color;
+  setTimeout(() => arc.style.strokeDashoffset = 314 - (314 * score / 100), 200);
+
+  // Metric strip
+  document.getElementById('m-score').textContent = score;
+  document.getElementById('m-score').style.color = color;
+  document.getElementById('m-fb').textContent = fmt(fb.followers);
+  document.getElementById('m-ig').textContent = fmt(ig.followers);
+  document.getElementById('m-spend').textContent = fmtUSD(paid.total_spend_lifetime);
+  document.getElementById('m-campaigns').textContent = fmt(paid.campaign_count_total, '0');
+  document.getElementById('m-campaigns-sub').textContent = `${fmt(paid.campaign_count_active, '0')} active`;
+  const pixelEl = document.getElementById('m-pixel');
+  const pixelH = paid.pixel_health || 'none';
+  if (pixelH === 'healthy') pixelEl.innerHTML = `<span class="badge green">Healthy</span>`;
+  else if (pixelH === 'degraded') pixelEl.innerHTML = `<span class="badge amber">Degraded</span>`;
+  else pixelEl.innerHTML = `<span class="badge red">Not Firing</span>`;
+  document.getElementById('m-pixel-sub').textContent = tracking.meta_pixel_on_site ? 'Installed on site' : 'Not on website';
+
+  // Facebook metrics
+  document.getElementById('fb-metrics').innerHTML = [
+    row('Page name', fb.page_name || '—'),
+    row('Followers', fmt(fb.followers)),
+    row('New follows (90d)', fmt(fb.new_follows_90d, '0')),
+    row('Posts (last 60d)', fmt(fb.post_count, '0')),
+    row('Posts / week', fb.posts_per_week != null ? fb.posts_per_week.toFixed(1) : '—'),
+    row('Days since last post', fb.days_since_last_post != null ? `${fb.days_since_last_post}d ago` : '—'),
+    row('Avg engagement rate', fb.avg_engagement_rate != null ? `${(fb.avg_engagement_rate * 100).toFixed(2)}%` : '—'),
+  ].join('');
+
+  // FB completeness
+  const pct = fb.page_completeness ?? 0;
+  const cColor = pct >= 80 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#ef4444';
+  const cOffset = 157 - (157 * pct / 100);
+  document.getElementById('fb-completeness').innerHTML = `
+    <div class="completeness-ring">
+      <div class="c-ring">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle class="track" cx="30" cy="30" r="25"/>
+          <circle class="fill" cx="30" cy="30" r="25" style="stroke:${cColor};stroke-dashoffset:${cOffset}"/>
+        </svg>
+        <div class="val" style="color:${cColor}">${pct}</div>
+      </div>
+      <div class="c-text">
+        <strong style="color:${cColor}">${pct >= 80 ? 'Complete' : pct >= 50 ? 'Partial' : 'Incomplete'}</strong>
+        <span>${pct}/100 profile fields filled</span>
+      </div>
+    </div>`;
+
+  // FB completeness checks from table string
+  const tableStr = fb.page_completeness_table || '';
+  const fields = ['Name','About','Category','Website','Phone','Email','Address','Profile picture','Cover photo'];
+  document.getElementById('fb-completeness-checks').innerHTML = fields.map(f => {
+    const ok = tableStr.includes(`| ${f} | ✓`) || tableStr.includes(`${f} | ✓`);
+    return `<div class="check-item"><div class="check-icon ${ok ? 'yes':'no'}">${ok ? '✓':'✗'}</div><span style="font-size:12px">${f}</span></div>`;
+  }).join('');
+
+  // Instagram metrics
+  document.getElementById('ig-metrics').innerHTML = [
+    row('Followers', fmt(ig.followers)),
+    row('Total media', fmt(ig.media_count_total)),
+    row('Posts / week', ig.posts_per_week != null ? ig.posts_per_week.toFixed(1) : '—'),
+    row('Days since last post', ig.days_since_last_post != null ? `${ig.days_since_last_post}d ago` : '—'),
+    row('Business account', ig.is_business_account ? '✓ Yes' : '—'),
+    row('Bio', ig.bio ? `"${ig.bio.replace(/\n/g,' ')}"` : '—'),
+    row('Data source', ig.source === 'pre_audit_public_estimate' ? 'Public estimate (pre-audit)' : 'Live API'),
+  ].join('');
+
+  // Account metrics
+  document.getElementById('account-metrics').innerHTML = [
+    row('Account ID', `<code style="font-size:11px">${paid.account_id || '—'}</code>`),
+    row('Status', paid.account_status === 1 ? '<span class="badge green">Active</span>' : '<span class="badge red">Inactive</span>'),
+    row('Total spend (lifetime)', fmtUSD(paid.total_spend_lifetime)),
+    row('Current balance', fmtUSD(paid.balance)),
+    row('Campaigns (total)', fmt(paid.campaign_count_total, '0')),
+    row('Campaigns (active)', fmt(paid.campaign_count_active, '0')),
+    row('Naming compliance', paid.naming_compliance_pct != null ? `${paid.naming_compliance_pct}%` : '—'),
+    row('Best ROAS seen', paid.best_roas != null ? paid.best_roas.toFixed(2) : '—'),
+    row('Best CPA seen', paid.best_cpa != null ? fmtUSD(paid.best_cpa) : '—'),
+  ].join('');
+
+  // Campaign health status items
+  const cs = [];
+  if ((paid.campaign_count_total ?? 0) === 0) cs.push({ cls: 'amber', title: 'No campaigns yet', desc: 'Account is active but no campaigns have been created.' });
+  else cs.push({ cls: 'green', title: `${paid.campaign_count_total} total campaigns`, desc: `${paid.campaign_count_active} currently active` });
+  if ((paid.zombie_count ?? 0) > 0) cs.push({ cls: 'red', title: `${paid.zombie_count} zombie campaigns`, desc: 'Active campaigns with no delivery for 14+ days — pausing recommended.' });
+  if ((paid.naming_compliance_pct ?? 100) < 80) cs.push({ cls: 'amber', title: 'Naming violations detected', desc: `${100 - (paid.naming_compliance_pct||0)}% of campaigns don't follow the naming convention.` });
+  if (cs.length === 0) cs.push({ cls: 'green', title: 'Account structure healthy', desc: 'No structural issues detected.' });
+  document.getElementById('campaign-status').innerHTML = cs.map(i =>
+    `<div class="status-item ${i.cls}"><div class="dot"></div><div class="item-text"><div class="item-title">${i.title}</div><div class="item-desc">${i.desc}</div></div></div>`
+  ).join('');
+
+  // Pixel alert
+  const px = d.pixel_cross_reference || {};
+  if (px.corroborated_finding) {
+    const isBlocked = !tracking.meta_pixel_on_site;
+    document.getElementById('pixel-alert').innerHTML = `
+      <div class="alert ${isBlocked ? 'red' : 'amber'}">
+        <div class="alert-icon">${isBlocked ? '🔴' : '🟡'}</div>
+        <div class="alert-body"><strong>${isBlocked ? 'Pixel not on website' : 'Pixel issue detected'}</strong>${px.corroborated_finding}</div>
+      </div>`;
+  }
+
+  // Tracking checks
+  const checks = [
+    { label: 'Meta Pixel on site', ok: !!tracking.meta_pixel_on_site },
+    { label: 'Conversion events', ok: !!tracking.conversion_events_on_site },
+    { label: 'Google Analytics 4', ok: !!tracking.ga4 },
+    { label: 'Google Tag Manager', ok: !!tracking.google_tag },
+    { label: 'Mobile responsive', ok: !!tracking.mobile_responsive },
+    { label: 'Account pixel set up', ok: paid.pixel_health !== 'none' },
+  ];
+  document.getElementById('tracking-checks').innerHTML = checks.map(c =>
+    `<div class="check-item"><div class="check-icon ${c.ok ? 'yes':'no'}">${c.ok ? '✓':'✗'}</div><span>${c.label}</span></div>`
+  ).join('');
+
+  // Audiences
+  document.getElementById('audience-table').innerHTML = [
+    row('Custom audiences', fmt(paid.custom_audience_count, '0')),
+    row('Healthy audiences', fmt(paid.custom_audience_healthy, '0')),
+    row('Broken / stale', fmt(paid.custom_audience_broken, '0')),
+    row('Issues', (paid.audience_issues || []).length > 0 ? paid.audience_issues.join('; ') : 'None detected'),
+  ].join('');
+
+  // Recommendations
+  const recs = [];
+  if (!tracking.meta_pixel_on_site) recs.push({ title: 'Install & verify the Meta Pixel', desc: 'Deploy base code site-wide, add Lead + PageView events, confirm firing in Test Events. Use CAPI for resilience.' });
+  if ((fb.days_since_last_post ?? 0) > 30) recs.push({ title: 'Resume organic posting on Facebook', desc: `Page has been silent for ${fb.days_since_last_post} days. Restart 1–2 posts/week to re-warm the ${fmt(fb.followers)}-follower base.` });
+  if ((ig.days_since_last_post ?? 0) > 30) recs.push({ title: 'Resume Instagram content', desc: `Last post was ${ig.days_since_last_post} days ago. Prioritize Reels — Meta rewards them with organic reach.` });
+  if ((paid.custom_audience_count ?? 0) === 0) recs.push({ title: 'Build first Custom Audience', desc: 'Create a page engager + website visitor audience. Seed a 1% Lookalike for prospecting.' });
+  if (recs.length === 0) recs.push({ title: 'Scale top-performing campaigns', desc: 'Apply ≤20% budget increases to campaigns above ROAS target.' });
+
+  document.getElementById('recommendations').innerHTML = recs.map((r, i) =>
+    `<div class="rec-item"><div class="rec-num">${i+1}</div><div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div></div></div>`
+  ).join('');
+
+  // Footer
+  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+init();
+</script>
+</body>
+</html>

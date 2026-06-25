@@ -43,11 +43,12 @@
   "accounts": {
     "website": "https://blueroseauto.com/",
     "facebook_handle": "BlueRoseAuto",
-    "facebook_page_id": "TBD_FB_PAGE_ID",
+    "facebook_page_id": "1709708972688957",
+    "pre_audit_slug": "bluersoeauto",
     "instagram_handle": "blueroseauto",
     "instagram_business_id": "TBD_IG_BUSINESS_ID",
-    "ad_account_id": "TBD_AD_ACCOUNT_ID",
-    "pixel_id": "TBD_PIXEL_ID",
+    "ad_account_id": "act_1999616770762846",
+    "pixel_id": "2183558222437003",
     "timezone": "America/Los_Angeles",
     "currency": "USD"
   },

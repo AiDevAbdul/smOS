@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "blue-rose-auto",
+    "type": "pre-audit",
+    "date": "2026-06-25",
+    "client": "blue-rose-auto",
+    "url": "/reports/blue-rose-auto/2026-06-25-pre-audit.html",
+    "generated_at": "2026-06-25T10:58:39.265Z"
+  },
+  {
+    "slug": "blue-rose-auto",
+    "type": "audit",
+    "date": "2026-06-25",
+    "client": "Blue Rose Auto Care & Repair Services",
+    "url": "/reports/blue-rose-auto/2026-06-25-audit.html",
+    "generated_at": "2026-06-25T11:03:10.923Z"
+  },
+  {
+    "slug": "bluersoeauto",
+    "type": "pre-audit",
+    "date": "2026-06-25",
+    "client": "Blue Rose Auto",
+    "url": "/reports/bluersoeauto/2026-06-25-pre-audit.html",
+    "generated_at": "2026-06-25T11:12:07.953Z"
+  }
+]

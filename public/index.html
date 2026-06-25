@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>smOS Reports</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0a0f1e;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .logo { font-size: 28px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .logo span { color: #3b82f6; }
+  .sub { color: #64748b; font-size: 14px; margin-bottom: 48px; }
+  .report-list { width: 100%; max-width: 640px; }
+  .report-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; background: #111827; border: 1px solid #1e2a3d;
+    border-radius: 12px; margin-bottom: 10px;
+    text-decoration: none; color: inherit;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .report-item:hover { border-color: #3b82f6; background: #0d1b35; }
+  .ri-left .ri-client { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .ri-left .ri-meta   { font-size: 12px; color: #64748b; }
+  .badge {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 3px 9px; border-radius: 20px;
+  }
+  .badge.audit     { background: rgba(59,130,246,0.12); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
+  .badge.pre-audit { background: rgba(168,85,247,0.10); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.2); }
+  .empty { color: #475569; font-size: 14px; text-align: center; padding: 40px; }
+</style>
+</head>
+<body>
+<div class="logo">sm<span>OS</span></div>
+<div class="sub">Client Reports Portal</div>
+<div class="report-list" id="list">
+  <div class="empty">Loading reports…</div>
+</div>
+<script>
+fetch('/reports/index.json')
+  .then(r => r.ok ? r.json() : [])
+  .then(reports => {
+    const el = document.getElementById('list');
+    if (!reports.length) { el.innerHTML = '<div class="empty">No reports yet.</div>'; return; }
+    el.innerHTML = reports.map(r => `
+      <a class="report-item" href="${r.url}">
+        <div class="ri-left">
+          <div class="ri-client">${r.client}</div>
+          <div class="ri-meta">${r.date} · ${r.slug}</div>
+        </div>
+        <span class="badge ${r.type}">${r.type}</span>
+      </a>`).join('');
+  })
+  .catch(() => {
+    document.getElementById('list').innerHTML = '<div class="empty">No reports yet.</div>';
+  });
+</script>
+</body>
+</html>

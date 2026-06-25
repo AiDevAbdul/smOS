@@ -14,7 +14,7 @@
  *         clients/<slug>/audit_report.md (template-filled, Claude appends analysis)
  */
 
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
@@ -25,14 +25,80 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
 loadEnv();
 
+// Meta deprecated page_fans / page_fan_adds / page_fan_removes / page_impressions_unique
+// (they 400 with "must be a valid insights metric"). page_daily_follows is the live
+// replacement for follower growth; page_views_total + page_post_engagements still work.
 const PAGE_INSIGHT_METRICS = [
-  "page_fans",
-  "page_fan_adds",
-  "page_fan_removes",
-  "page_impressions_unique",
   "page_post_engagements",
   "page_views_total",
+  "page_daily_follows",
 ];
+
+// Locate the prospect-stage pre-audit artifacts for this client. Public-only data
+// (website tracking, Ad Library verdict, scraped IG) that the Graph API never exposes
+// — never re-derived, only carried forward and clearly labeled. Resolution order:
+//   1. explicit profile.accounts.pre_audit_slug
+//   2. prospects/<client slug>/
+//   3. any prospects/* whose page_audit.json website/FB-handle matches the profile
+function loadPreAudit(slug, profile, readdirSync) {
+  const acct = profile.accounts || {};
+  const tryDir = (d) => {
+    const p = resolve(ROOT, "prospects", d, "page_audit.json");
+    if (!existsSync(p)) return null;
+    try {
+      const page = JSON.parse(readFileSync(p, "utf8"));
+      const synthPath = resolve(ROOT, "prospects", d, "synthesis.json");
+      const synthesis = existsSync(synthPath) ? JSON.parse(readFileSync(synthPath, "utf8")) : null;
+      return { source_dir: d, page_audit: page, synthesis };
+    } catch { return null; }
+  };
+
+  if (acct.pre_audit_slug) { const hit = tryDir(acct.pre_audit_slug); if (hit) return hit; }
+  const direct = tryDir(slug);
+  if (direct) return direct;
+
+  // Match across all prospects by website host or FB handle.
+  const norm = (s) => String(s || "").toLowerCase().replace(/^https?:\/\/(www\.)?/, "").replace(/\/.*$/, "");
+  const wantSite = norm(acct.website);
+  const wantHandle = String(acct.facebook_handle || "").toLowerCase();
+  const prospectsDir = resolve(ROOT, "prospects");
+  if (!existsSync(prospectsDir)) return null;
+  for (const d of readdirSync(prospectsDir)) {
+    const hit = tryDir(d);
+    if (!hit) continue;
+    const pa = hit.page_audit;
+    if ((wantSite && norm(pa.website) === wantSite) ||
+        (wantHandle && String(pa.facebook?.handle || "").toLowerCase() === wantHandle)) {
+      return hit;
+    }
+  }
+  return null;
+}
+
+// Distill the carry-forward fields from a loaded pre-audit. These are website/public
+// signals the Graph API can't return for /audit — the genuine reuse payload.
+function preAuditCarryForward(pre) {
+  if (!pre) return null;
+  const pa = pre.page_audit || {};
+  return {
+    source_dir: pre.source_dir,
+    captured_hint: pa.captured_at || null,
+    website_tracking: {
+      meta_pixel_on_site: pa.tracking?.meta_pixel ?? null,
+      meta_pixel_id_on_site: pa.tracking?.pixel_id ?? null,
+      conversion_events_on_site: pa.tracking?.conversion_events ?? null,
+      ga4: pa.tracking?.ga4 ?? null,
+      ga4_id: pa.tracking?.ga4_id ?? null,
+      google_tag: pa.tracking?.google_tag ?? null,
+      google_tag_id: pa.tracking?.google_tag_id ?? null,
+      mobile_responsive: pa.tracking?.mobile_responsive ?? null,
+    },
+    ad_library: { verdict: pa.ads?.verdict ?? null, active_count: pa.ads?.active_count ?? null, notes: pa.ads?.notes ?? null },
+    instagram_public: pa.instagram || null,   // fallback only when live IG is blocked
+    services: pa.services || null,
+    website_meta: pa.website_meta || null,
+  };
+}
 
 function pct(part, total) {
   if (!total) return 0;
@@ -43,22 +109,62 @@ function isoDaysAgo(days) {
   return new Date(Date.now() - days * 86400_000).toISOString().slice(0, 10);
 }
 
-async function auditFacebookPage(graph, pageId) {
+// Rich post fetch needs the review-gated `pages_read_user_content` permission. When the
+// app lacks it Meta returns code 10; we fall back to a minimal published_posts pull that
+// still yields cadence + format mix (just not per-post engagement). engagement_available
+// records which path we took so the report can label depth honestly.
+async function fetchPagePosts(graph, pageId) {
+  const richFields =
+    "id,message,created_time,status_type,attachments{media_type,type}," +
+    "reactions.summary(true),comments.summary(true),shares," +
+    "insights.metric(post_impressions,post_engaged_users)";
+  try {
+    const posts = await graph.paginate(`/${pageId}/published_posts`, { fields: richFields, since: isoDaysAgo(60), limit: 50 }, 60);
+    return { posts, engagement_available: true };
+  } catch (e) {
+    if (e.metaError?.code !== 10) throw e; // only the permission gap falls back
+    const posts = await graph
+      .paginate(`/${pageId}/published_posts`, { fields: "id,created_time,status_type,attachments{media_type,type}", since: isoDaysAgo(60), limit: 50 }, 60)
+      .catch(() => []);
+    return { posts, engagement_available: false, engagement_blocked_reason: "pages_read_user_content not granted (code 10)" };
+  }
+}
+
+// Page Insights / published_posts require a PAGE access token, not the user token
+// (Meta error 210 otherwise). Resolve it from /me/accounts; if the user has no role on
+// the page, fall back to the user token (public fields still resolve).
+async function resolvePageGraph(userGraph, pageId) {
+  try {
+    const accts = await userGraph.paginate("/me/accounts", { fields: "id,access_token", limit: 200 }, 500);
+    const row = accts.find((p) => p.id === String(pageId));
+    if (row?.access_token) return { graph: createGraph(row.access_token), hasPageToken: true };
+  } catch { /* fall through to user token */ }
+  return { graph: userGraph, hasPageToken: false };
+}
+
+async function auditFacebookPage(userGraph, pageId) {
   if (isTbd(pageId)) return { skipped: true, reason: "page_id is TBD" };
 
-  const [page, posts, insights] = await Promise.all([
+  const { graph, hasPageToken } = await resolvePageGraph(userGraph, pageId);
+
+  // Window-independent dormancy probe: the single most-recent post regardless of the
+  // 60-day analysis window. Without this, a page dormant longer than the window reports
+  // "0 posts / unknown last post" — losing the most important organic signal.
+  const latestPost = await graph
+    .get(`/${pageId}/published_posts`, { fields: "created_time", limit: 1 })
+    .then((r) => r.data?.[0]?.created_time || null)
+    .catch(() => null);
+
+  const [page, postsResult, insights] = await Promise.all([
     graph.get(`/${pageId}`, { fields: "id,name,fan_count,about,category,website,phone,emails,location,picture,cover" }),
-    graph.paginate(`/${pageId}/posts`, {
-      fields: "id,message,created_time,status_type,attachments{media_type,type},reactions.summary(true),comments.summary(true),shares,insights.metric(post_impressions,post_engaged_users)",
-      since: isoDaysAgo(60),
-      limit: 50,
-    }, 60),
+    fetchPagePosts(graph, pageId),
     graph.get(`/${pageId}/insights`, {
       metric: PAGE_INSIGHT_METRICS.join(","),
       period: "day",
       since: isoDaysAgo(90),
     }).catch((e) => ({ error: e.message, data: [] })),
   ]);
+  const { posts, engagement_available } = postsResult;
 
   // Format mix
   const formats = { video: 0, image: 0, carousel: 0, link: 0, status: 0, other: 0 };
@@ -85,22 +191,31 @@ async function auditFacebookPage(graph, pageId) {
   }
   scored.sort((a, b) => b.er - a.er);
 
-  // 90-day follower delta from insights
+  // Follower growth (90d). Net delta (adds − removes) is no longer exposed by Meta;
+  // page_daily_follows gives new follows only — labeled accordingly.
   const sumMetric = (name) =>
     (insights.data || []).find((m) => m.name === name)?.values?.reduce((a, v) => a + (v.value || 0), 0) || 0;
-  const fanAdds = sumMetric("page_fan_adds");
-  const fanRemoves = sumMetric("page_fan_removes");
+  const newFollows90d = sumMetric("page_daily_follows");
+
+  // Most recent post → dormancy signal. Prefer the window-independent probe so a page
+  // dormant longer than the analysis window still reports its true last-post age.
+  const newestInWindow = posts.reduce((acc, p) => (!acc || p.created_time > acc ? p.created_time : acc), null);
+  const newest = latestPost || newestInWindow;
+  const daysSinceLastPost = newest ? Math.round((Date.now() - new Date(newest).getTime()) / 86400_000) : null;
 
   const windowDays = 60;
   return {
     page_id: page.id,
     page_name: page.name,
+    has_page_token: hasPageToken,
     followers: page.fan_count,
-    followers_delta_90d: fanAdds - fanRemoves,
+    new_follows_90d: newFollows90d,
+    followers_delta_90d: null, // net delta deprecated by Meta; see new_follows_90d
     page_completeness: scorePageCompleteness(page),
     page_completeness_table: completenessTable(page),
     post_count: posts.length,
     posts_per_week: Math.round((posts.length / (windowDays / 7)) * 10) / 10,
+    days_since_last_post: daysSinceLastPost,
     format_mix_pct: {
       video: pct(formats.video, posts.length),
       image: pct(formats.image, posts.length),
@@ -108,9 +223,11 @@ async function auditFacebookPage(graph, pageId) {
       link: pct(formats.link, posts.length),
       status: pct(formats.status, posts.length),
     },
-    avg_engagement_rate: totalImpressions ? Math.round((totalEngagement / totalImpressions) * 10000) / 100 : 0,
-    best_post: scored[0] || null,
-    worst_post: scored[scored.length - 1] || null,
+    engagement_available,
+    engagement_blocked_reason: postsResult.engagement_blocked_reason || null,
+    avg_engagement_rate: engagement_available && totalImpressions ? Math.round((totalEngagement / totalImpressions) * 10000) / 100 : null,
+    best_post: engagement_available ? scored[0] || null : null,
+    worst_post: engagement_available ? scored[scored.length - 1] || null : null,
     insights_error: insights.error || null,
   };
 }
@@ -292,27 +409,26 @@ function classifyPixelHealth(stats) {
 }
 
 function computeHealthScore(d) {
-  const fbScore = d.organic.facebook?.page_completeness ?? 0;
+  const fb = d.organic.facebook || {};
+  const paid = d.paid || {};
   const pixelMap = { full: 100, partial: 60, none: 0 };
-  const pixelScore = pixelMap[d.paid.pixel_health || "none"];
-  const audienceScore = d.paid.custom_audience_count
-    ? (d.paid.custom_audience_healthy / d.paid.custom_audience_count) * 100
-    : 0;
-  const namingScore = d.paid.naming_compliance_pct ?? 0;
-  const postingScore = Math.min(((d.organic.facebook?.posts_per_week ?? 0) / 3) * 100, 100);
-  const erScore = Math.min(((d.organic.facebook?.avg_engagement_rate ?? 0) / 3) * 100, 100); // 3% ER = 100
-  // financial: active account + nonzero balance
-  const financialScore = d.paid.account_status === 1 ? 100 : 50;
 
-  return Math.round(
-    fbScore * 0.15 +
-    pixelScore * 0.2 +
-    audienceScore * 0.15 +
-    namingScore * 0.1 +
-    postingScore * 0.1 +
-    erScore * 0.15 +
-    financialScore * 0.15
-  );
+  // Each component is [score, weight, available]. Unavailable components (e.g. engagement
+  // rate when pages_read_user_content is missing) are dropped and the remaining weights
+  // renormalized — a permission gap shouldn't be scored as a zero.
+  const components = [
+    [fb.page_completeness ?? 0, 0.15, fb.page_completeness != null],
+    [pixelMap[paid.pixel_health || "none"], 0.2, !paid.skipped],
+    [paid.custom_audience_count ? (paid.custom_audience_healthy / paid.custom_audience_count) * 100 : 0, 0.15, !paid.skipped],
+    [paid.naming_compliance_pct ?? 0, 0.1, !paid.skipped && (paid.campaign_count_total ?? 0) > 0],
+    [Math.min(((fb.posts_per_week ?? 0) / 3) * 100, 100), 0.1, fb.posts_per_week != null],
+    [Math.min(((fb.avg_engagement_rate ?? 0) / 3) * 100, 100), 0.15, fb.avg_engagement_rate != null], // 3% ER = 100; dropped if engagement blocked
+    [paid.account_status === 1 ? 100 : 50, 0.15, !paid.skipped],
+  ];
+
+  const live = components.filter(([, , ok]) => ok);
+  const totalWeight = live.reduce((a, [, w]) => a + w, 0) || 1;
+  return Math.round(live.reduce((a, [s, w]) => a + s * (w / totalWeight), 0));
 }
 
 function fillTemplate(template, vars) {
@@ -324,9 +440,11 @@ function buildVars(profile, data, healthScore) {
   const ig = data.organic.instagram || {};
   const paid = data.paid || {};
   const acct = profile.accounts || {};
+  const wt = data.website_tracking || {};
 
   const fmt = (n, d = 0) => (n == null ? "—" : Number(n).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d }));
   const money = (n) => (n == null ? "—" : `${acct.currency || "$"} ${fmt(n, 2)}`);
+  const yn = (v) => (v == null ? "unknown" : v ? "✓ yes" : "✗ no");
 
   return {
     CLIENT_NAME: profile.name,
@@ -344,6 +462,11 @@ function buildVars(profile, data, healthScore) {
     PAGE_NAME: fb.page_name || "—",
     FB_FOLLOWERS: fmt(fb.followers),
     FB_FOLLOWERS_DELTA: fmt(fb.followers_delta_90d),
+    FB_NEW_FOLLOWS_90D: fb.new_follows_90d != null ? fmt(fb.new_follows_90d) : "—",
+    FB_DAYS_SINCE_LAST_POST: fb.days_since_last_post ?? "—",
+    FB_ENGAGEMENT_NOTE: fb.engagement_available === false
+      ? ` _(per-post engagement unavailable — ${fb.engagement_blocked_reason || "permission gap"}; cadence & format mix are live)_`
+      : "",
     PAGE_COMPLETENESS: fb.page_completeness ?? "—",
     FB_POST_COUNT: fb.post_count ?? "—",
     FB_POSTS_PER_WEEK: fb.posts_per_week ?? "—",
@@ -351,7 +474,7 @@ function buildVars(profile, data, healthScore) {
     FB_IMAGE_PCT: fb.format_mix_pct?.image ?? 0,
     FB_CAROUSEL_PCT: fb.format_mix_pct?.carousel ?? 0,
     FB_LINK_PCT: fb.format_mix_pct?.link ?? 0,
-    FB_AVG_ER: fb.avg_engagement_rate ?? 0,
+    FB_AVG_ER: fb.avg_engagement_rate ?? "—",
     FB_BEST_POST_LINK: fb.best_post ? `https://facebook.com/${fb.best_post.id}` : "—",
     FB_BEST_POST_ER: fb.best_post ? Math.round(fb.best_post.er * 10000) / 100 : "—",
     FB_WORST_POST_LINK: fb.worst_post ? `https://facebook.com/${fb.worst_post.id}` : "—",
@@ -377,8 +500,21 @@ function buildVars(profile, data, healthScore) {
     PIXEL_ID: acct.pixel_id || "—",
     PIXEL_STATUS: paid.pixel_health || "—",
     PIXEL_LAST_FIRED: paid.pixel_stats?.skipped ? "n/a" : "—",
+    PIXEL_ON_SITE: yn(wt.meta_pixel_on_site),
     PIXEL_EVENTS_FIRING: paid.pixel_stats?.data?.filter((e) => e.count > 0).map((e) => e.event).join(", ") || "—",
     PIXEL_EVENTS_MISSING: paid.pixel_health === "full" ? "—" : "_(review Standard Events list)_",
+    PIXEL_CROSSREF_FINDING: data.pixel_cross_reference?.corroborated_finding
+      ? `\n> 🔴 **Corroborated:** ${data.pixel_cross_reference.corroborated_finding}`
+      : "",
+    PRE_AUDIT_SOURCE: data.pre_audit_source || "none found",
+    TRACKING_PIXEL_ID_NOTE: wt.meta_pixel_id_on_site ? ` (id \`${wt.meta_pixel_id_on_site}\`)` : "",
+    TRACKING_CONV_EVENTS: yn(wt.conversion_events_on_site),
+    TRACKING_GA4: wt.ga4 ? `✓ yes${wt.ga4_id ? ` (\`${wt.ga4_id}\`)` : ""}` : yn(wt.ga4),
+    TRACKING_GTM: wt.google_tag ? `✓ yes${wt.google_tag_id ? ` (\`${wt.google_tag_id}\`)` : ""}` : yn(wt.google_tag),
+    TRACKING_MOBILE: yn(wt.mobile_responsive),
+    AD_LIBRARY_VERDICT: data.ad_library_history?.verdict
+      ? `${data.ad_library_history.verdict}${data.ad_library_history.notes ? ` — ${data.ad_library_history.notes}` : ""}`
+      : "—",
     CA_COUNT: paid.custom_audience_count ?? 0,
     CA_HEALTHY: paid.custom_audience_healthy ?? 0,
     CA_BROKEN: paid.custom_audience_broken ?? 0,
@@ -425,7 +561,58 @@ async function main() {
     noPaid ? Promise.resolve({ skipped: true }) : auditAdAccount(graph, acct.ad_account_id, acct.pixel_id).catch((e) => ({ error: e.message })),
   ]);
 
-  const data = { slug, generated_at: new Date().toISOString(), organic: { facebook, instagram }, paid, creative: null };
+  // Reuse the prospect-stage pre-audit (public-only) instead of re-deriving it. Never
+  // overrides live API data — it supplies website/tracking signals the Graph API can't
+  // return, fills IG when live IG is blocked, and corroborates the pixel finding.
+  const pre = loadPreAudit(slug, profile, readdirSync);
+  const carry = preAuditCarryForward(pre);
+  if (carry) console.error(`[audit] reusing pre-audit from prospects/${carry.source_dir}/ (no re-fetch)`);
+  else console.error(`[audit] no pre-audit found — live data only`);
+
+  // IG fallback: if live IG was skipped/blocked but pre-audit scraped public IG stats,
+  // carry them forward, clearly labeled as a public estimate (never as live insight).
+  let instagramOut = instagram;
+  const igLive = instagram && !instagram.skipped && !instagram.error;
+  if (!igLive && carry?.instagram_public) {
+    instagramOut = {
+      source: "pre_audit_public_estimate",
+      source_dir: carry.source_dir,
+      followers: carry.instagram_public.followers ?? null,
+      media_count_total: carry.instagram_public.posts_total ?? null,
+      posts_per_week: carry.instagram_public.posts_per_week ?? null,
+      days_since_last_post: carry.instagram_public.days_since_last_post ?? null,
+      is_business_account: carry.instagram_public.is_business_account ?? null,
+      bio: carry.instagram_public.bio ?? null,
+      note: "Live IG insights unavailable (not linked / blocked); values scraped at pre-audit — treat as public estimate, not baseline.",
+      live_skip_reason: instagram?.reason || instagram?.error || null,
+    };
+  }
+
+  // Pixel cross-reference: combine live account-side health with the website-side scrape.
+  let pixelCrossRef = null;
+  if (!paid.skipped && carry?.website_tracking) {
+    const onSite = carry.website_tracking.meta_pixel_on_site;
+    pixelCrossRef = {
+      account_side_health: paid.pixel_health ?? null,
+      installed_on_site: onSite,
+      corroborated_finding:
+        onSite === false && (paid.pixel_health === "none" || paid.pixel_health === "partial")
+          ? "Pixel exists in the ad account but is NOT installed on the website (confirmed by pre-audit scrape) — it cannot track real traffic. Top conversion-tracking blocker."
+          : null,
+    };
+  }
+
+  const data = {
+    slug,
+    generated_at: new Date().toISOString(),
+    organic: { facebook, instagram: instagramOut },
+    paid,
+    website_tracking: carry?.website_tracking || null,
+    ad_library_history: carry?.ad_library || null,
+    pixel_cross_reference: pixelCrossRef,
+    pre_audit_source: carry?.source_dir || null,
+    creative: null,
+  };
   const healthScore = computeHealthScore(data);
   data.health_score = healthScore;
 

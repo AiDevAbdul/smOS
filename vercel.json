@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "outputDirectory": "public",
+  "buildCommand": null,
+  "installCommand": null,
+  "routes": [
+    {
+      "src": "/reports/(.*)",
+      "dest": "/reports/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/reports/(.*)\\.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    }
+  ]
+}

@@ -11,10 +11,11 @@ Capture a complete, point-in-time snapshot of a client's Meta presence — organ
 
 - Run `skills/audit/audit.js <slug> [--no-paid] [--no-ig]`, the deterministic data-fetch + transform + template-fill companion.
 - Fetch three passes in parallel via `createGraph()`: Facebook Page (profile, 60-day posts, 90-day insights), Instagram (profile, 60-day media, 28-day insights), ad account (account, lifetime campaigns, custom audiences, pixel stats).
-- Derive metrics: page completeness, follower delta, posts/week, format mix, engagement rate, best/worst post, lifetime spend, best CPA/ROAS, naming compliance, zombie campaigns, audience health, pixel-health class.
-- Compute the weighted 0–100 health score (weights in `references/domain-standards.md`).
+- **Reuse the prospect-stage pre-audit instead of re-deriving public data.** The script auto-loads `prospects/{slug}/page_audit.json` (override via `accounts.pre_audit_slug`; else matched by website/handle) and carries forward the website/tracking signals the Graph API can't return — **is the pixel installed on the site**, GA4/GTM IDs, conversion-events, mobile-responsive, plus the Ad Library `verdict`. Live API is always the source of truth; pre-audit only fills what the API can't, falls back for blocked IG (clearly labeled a public estimate), and **corroborates the pixel finding** (account-side health × on-site install → a single high-confidence cross-reference).
+- Derive metrics: page completeness, follower growth (`page_daily_follows`; net delta is deprecated by Meta), posts/week, **days-since-last-post (window-independent dormancy probe)**, format mix, engagement rate, best/worst post, lifetime spend, best CPA/ROAS, naming compliance, zombie campaigns, audience health, pixel-health class.
+- Compute the weighted 0–100 health score (weights in `references/domain-standards.md`). **Permission-blocked components (e.g. engagement when `pages_read_user_content` is absent) are dropped and the remaining weights renormalized — never scored as a zero.**
 - Write `clients/{slug}/audit_raw.json`, fill `templates/audit-report.md` → `clients/{slug}/audit_report.md`, and write `clients/{slug}/baseline_snapshot.json` (locked only when real FB engagement was captured).
-- After the script returns: append the qualitative analysis (Top-3 wins / issues / next steps) into the report, render HTML + PDF, and insert the Supabase `reports` row.
+- After the script returns: append the qualitative analysis (Top-3 wins / issues / next steps) into the report, render HTML + PDF via the standardized renderer, and insert the Supabase `reports` row.
 
 ## What This Skill Does NOT Do
 
@@ -30,7 +31,8 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 | Source | Gather |
 |--------|--------|
-| **Codebase** | `skills/audit/audit.js`, `scripts/lib/meta-graph.js` (`createGraph`, `isTbd`), `schemas/baseline_snapshot.js`, `templates/audit-report.md`, `scripts/render_pdf.py` |
+| **Codebase** | `skills/audit/audit.js`, `scripts/lib/meta-graph.js` (`createGraph`, `isTbd`), `scripts/audit_report_html.js` (standardized renderer), `schemas/baseline_snapshot.js`, `templates/audit-report.md`, `scripts/render_pdf.py` |
+| **Pre-audit (reused)** | `prospects/{slug}/page_audit.json` (+ `synthesis.json`) — public website/tracking + Ad Library data carried forward; set `accounts.pre_audit_slug` if the prospect dir name differs from the client slug |
 | **Conversation** | The `{slug}`; whether the user wants to skip paid (`--no-paid`) or IG (`--no-ig`) |
 | **Skill References** | Scoring weights, thresholds, taxonomies, I/O contract (see Reference Files) |
 | **Client Profile** | `clients/{slug}/client_profile.json` (`accounts.facebook_page_id`, `instagram_business_id`, `ad_account_id`, `pixel_id`, `currency`) + per-client `CLAUDE.md` KPI overrides |
@@ -53,8 +55,8 @@ Gather context before acting (do not ask the user for what is discoverable):
 2. Run `node skills/audit/audit.js {slug}` (add `--no-paid` / `--no-ig` when requested). The script fetches, derives, scores, writes `audit_raw.json` + `audit_report.md`, and writes `baseline_snapshot.json` if absent.
 3. Read the JSON summary the script prints to stdout (health score, follower counts, spend, pixel health, paths, errors).
 4. Read `audit_raw.json` and write the qualitative analysis into the report: replace the `_(Claude to fill)_` placeholders for Top-3 wins, Top-3 issues, Top-3 next steps — grounded only in the raw data.
-5. Render HTML + PDF: convert `audit_report.md` → HTML, then `python scripts/render_pdf.py <report.html> --output <report.pdf>`.
-6. Insert a Supabase `reports` row (`client_id`, `type:'audit'`, `report_url`, `created_at`, `summary_json`). Do not re-fetch Meta data — downstream skills read `audit_raw.json` / Supabase.
+5. Render HTML + PDF via the **one standardized renderer** — `node scripts/audit_report_html.js {slug}` (reads `audit_raw.json` + the filled `audit_report.md`, writes `clients/{slug}/reports/{date}_audit.html`), then `python scripts/render_pdf.py <report.html>`. Never hand-write a per-client HTML; if a section is missing, edit `scripts/audit_report_html.js` so every client inherits it.
+6. Insert a Supabase `reports` row. **Use the real schema** (`report_type` enum, `report_url`, `generated_at`, `generated_by`, `key_metrics` jsonb — NOT `type`/`summary_json`). Run `scripts/baseline-snapshot.js` for the immutable `baseline_snapshots` row (`raw_data` jsonb). Do not re-fetch Meta data — downstream skills read `audit_raw.json` / Supabase.
 7. Output one line to the user: health score + report path.
 
 ## Input / Output Specification
@@ -84,6 +86,8 @@ Gather context before acting (do not ask the user for what is discoverable):
 ### Must Avoid
 - Overwriting a locked baseline, or hand-locking an unlocked one.
 - Requesting IG `impressions` (deprecated; use `views`/`reach` — see references).
+- Requesting deprecated Page insight metrics `page_fans` / `page_fan_adds` / `page_fan_removes` / `page_impressions_unique` (they 400 "must be a valid insights metric"; use `page_daily_follows` / `page_post_engagements` / `page_views_total`).
+- Calling `/{page}/posts` or fetching Page Insights with the **user** token — both need a **page access token** (resolved from `/me/accounts`) and `/posts` needs `pages_read_user_content`; use `/published_posts` with a minimal-fields fallback.
 - Auto-retrying Meta errors or proceeding past a `TokenExpiredError`.
 - Asking the user for thresholds/weights that live in `references/`.
 

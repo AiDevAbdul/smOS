@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blue Rose Auto — Pre-Audit Report · smOS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --navy: #0a0f1e;
+    --navy-mid: #111827;
+    --navy-light: #1e2a3d;
+    --blue: #3b82f6;
+    --blue-light: #eff6ff;
+    --teal: #0891b2;
+    --green: #10b981;
+    --green-light: #ecfdf5;
+    --amber: #f59e0b;
+    --amber-light: #fffbeb;
+    --red: #ef4444;
+    --red-light: #fef2f2;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-700: #334155;
+    --gray-900: #0f172a;
+    --text: #0f172a;
+    --subtext: #64748b;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+    --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12), 0 12px 32px rgba(0,0,0,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--gray-50);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0a0f1e 0%, #0d1b35 45%, #0a2a4a 100%);
+    color: white;
+    padding: 64px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(59,130,246,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: #93c5fd;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .hero-meta {
+    color: #94a3b8;
+    font-size: 14px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .hero-meta svg { opacity: 0.7; }
+
+  /* Score ring */
+  .score-ring-wrap {
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .score-ring-wrap .score-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+  .score-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring .track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; }
+  .score-ring .fill  { fill: none; stroke-width: 8; stroke-linecap: round;
+                        stroke-dasharray: 314; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
+  .score-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-value .num { font-size: 30px; font-weight: 800; line-height: 1; }
+  .score-value .den { font-size: 11px; color: #64748b; font-weight: 500; margin-top: 2px; }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 40px 80px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-top: 44px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--subtext);
+    margin-left: auto;
+  }
+
+  /* ── METRIC CARDS ── */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  .metric-card {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--gray-200);
+  }
+  .metric-card .label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--subtext);
+    margin-bottom: 6px;
+  }
+  .metric-card .value {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .metric-card .sub {
+    font-size: 12px;
+    color: var(--subtext);
+    margin-top: 4px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--gray-200);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--gray-900);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* ── STATUS ITEMS ── */
+  .status-list { display: flex; flex-direction: column; gap: 8px; }
+  .status-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--gray-50);
+    font-size: 13.5px;
+  }
+  .status-item .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+  .status-item.green  { background: var(--green-light); }
+  .status-item.green .dot  { background: var(--green); }
+  .status-item.red    { background: var(--red-light); }
+  .status-item.red .dot    { background: var(--red); }
+  .status-item.amber  { background: var(--amber-light); }
+  .status-item.amber .dot  { background: var(--amber); }
+  .status-item .item-text { flex: 1; }
+  .status-item .item-title { font-weight: 600; }
+  .status-item .item-desc  { font-size: 12px; color: var(--subtext); margin-top: 1px; }
+
+  /* ── DATA ROWS ── */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table td {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13.5px;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table td:first-child { color: var(--subtext); width: 200px; }
+  .data-table td:last-child  { font-weight: 500; text-align: right; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .badge.green  { background: var(--green-light);  color: #065f46; }
+  .badge.red    { background: var(--red-light);    color: #991b1b; }
+  .badge.amber  { background: var(--amber-light);  color: #92400e; }
+  .badge.blue   { background: var(--blue-light);   color: #1e40af; }
+  .badge.gray   { background: var(--gray-100);     color: var(--gray-700); }
+
+  /* ── OPPORTUNITY BOX ── */
+  .opportunity {
+    background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+  }
+  .opportunity .opp-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e40af;
+    margin-bottom: 4px;
+  }
+  .opportunity .opp-desc {
+    font-size: 13.5px;
+    color: var(--gray-700);
+    line-height: 1.55;
+  }
+
+  /* ── COMPETITOR CARD ── */
+  .comp-verdict {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: white;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 16px;
+  }
+  .comp-big {
+    font-size: 40px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    color: var(--green);
+  }
+  .comp-verdict .comp-label { font-size: 13.5px; color: var(--gray-700); line-height: 1.5; }
+  .comp-verdict .comp-label strong { font-weight: 700; }
+
+  /* ── RECOMMENDATIONS ── */
+  .rec-list { display: flex; flex-direction: column; gap: 10px; }
+  .rec-item {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 16px;
+    background: white;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--card-shadow);
+  }
+  .rec-num {
+    width: 28px; height: 28px;
+    background: var(--navy);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .rec-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .rec-desc  { font-size: 13px; color: var(--subtext); }
+
+  /* ── SCORE BREAKDOWN ── */
+  .score-breakdown { display: flex; flex-direction: column; gap: 8px; }
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+  .score-row .sr-label { width: 180px; color: var(--subtext); }
+  .score-row .sr-bar-wrap {
+    flex: 1;
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .score-row .sr-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .score-row .sr-val { width: 40px; text-align: right; font-weight: 600; font-size: 12px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy);
+    color: #475569;
+    text-align: center;
+    padding: 32px 40px;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .footer .brand {
+    color: #64748b;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  .footer a { color: #3b82f6; text-decoration: none; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--gray-200); margin: 20px 0; }
+
+  /* ── CHECK TABLE ── */
+  .check-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 6px 0;
+  }
+  .check-icon {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+  .check-icon.yes { background: var(--green-light); color: var(--green); }
+  .check-icon.no  { background: var(--red-light);   color: var(--red); }
+
+  @media (max-width: 768px) {
+    .hero { padding: 40px 24px 36px; }
+    .hero-inner { grid-template-columns: 1fr; }
+    .score-ring-wrap { display: none; }
+    .main { padding: 24px 16px 60px; }
+    .metric-grid { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-2 { grid-template-columns: 1fr; }
+    .check-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">Pre-Audit Report</div>
+      <h1 id="client-name">Loading…</h1>
+      <div class="hero-meta">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="hero-location">—</span>
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="hero-date">—</span>
+        </span>
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <a id="hero-website" href="#" style="color:#93c5fd;" target="_blank">—</a>
+        </span>
+      </div>
+    </div>
+    <div class="score-ring-wrap">
+      <div class="score-label">Readiness Score</div>
+      <div class="score-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle class="track" cx="60" cy="60" r="50"/>
+          <circle class="fill" id="score-arc" cx="60" cy="60" r="50"/>
+        </svg>
+        <div class="score-value">
+          <span class="num" id="score-num">—</span>
+          <span class="den">/100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- Top metrics -->
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="label">Overall Score</div>
+      <div class="value" id="m-score" style="color:var(--blue)">—</div>
+      <div class="sub">out of 100</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">FB Page</div>
+      <div class="value" id="m-fb" style="font-size:18px;margin-top:4px">—</div>
+      <div class="sub" id="m-fb-sub">Facebook</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">IG Followers</div>
+      <div class="value" id="m-ig">—</div>
+      <div class="sub" id="m-ig-sub">Instagram</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Ads Status</div>
+      <div class="value" id="m-ads" style="font-size:18px;margin-top:4px">—</div>
+      <div class="sub" id="m-ads-sub">Meta Ad Library</div>
+    </div>
+  </div>
+
+  <!-- Social Presence -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <span class="section-title">Social Presence</span>
+  </div>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook Page
+      </div>
+      <table class="data-table" id="fb-table"></table>
+    </div>
+    <div class="card">
+      <div class="card-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="url(#ig-grad)"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </div>
+      <table class="data-table" id="ig-table"></table>
+    </div>
+  </div>
+
+  <!-- Paid Readiness -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fdf4ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <span class="section-title">Paid Readiness</span>
+  </div>
+
+  <div class="card">
+    <div class="status-list" id="paid-status"></div>
+  </div>
+
+  <!-- Website & Tracking -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <span class="section-title">Website &amp; Tracking</span>
+  </div>
+
+  <div class="card">
+    <div class="check-grid" id="tracking-checks"></div>
+  </div>
+
+  <!-- Competitive Landscape -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff7ed">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+    </div>
+    <span class="section-title">Competitive Landscape</span>
+  </div>
+
+  <div class="comp-verdict" id="comp-card"></div>
+
+  <!-- Wins & Gaps -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#ecfdf5">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <span class="section-title">Wins &amp; Gaps</span>
+  </div>
+
+  <div class="card-grid-2">
+    <div class="card">
+      <div class="card-title" style="color:#065f46">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        What's Working
+      </div>
+      <div class="status-list" id="wins-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#991b1b">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        What's Blocking Growth
+      </div>
+      <div class="status-list" id="gaps-list"></div>
+    </div>
+  </div>
+
+  <!-- Opportunities -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff7ed">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    <span class="section-title">Growth Opportunities</span>
+  </div>
+
+  <div class="rec-list" id="opportunities-list"></div>
+
+  <!-- Score Breakdown -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    </div>
+    <span class="section-title">Score Breakdown</span>
+  </div>
+
+  <div class="card">
+    <div class="score-breakdown" id="score-breakdown"></div>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="section-header">
+    <div class="section-icon" style="background:#0a0f1e">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </div>
+    <span class="section-title" style="color:var(--gray-900)">Recommended Next Steps</span>
+  </div>
+
+  <div class="rec-list" id="recommendations"></div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="brand">smOS · Social Media Operating System</div>
+  <div>This report was generated automatically from public data sources and the Meta API.</div>
+  <div>Prepared by <a href="#">duckercreative.com</a> · <span id="footer-date"></span></div>
+</footer>
+
+<script>
+const DATA = {"business_name":"Blue Rose Auto","slug":"bluersoeauto","website":"https://blueroseauto.com","location":"Springfield & Eugene, OR","services":["collision repair","commercial wraps","paint protection film","ceramic coating","auto detailing"],"niche":"auto","facebook":{"url":"https://www.facebook.com/BlueRoseAuto/","handle":"BlueRoseAuto","fetch_status":"blocked_scrape","verified":false,"notes":"Page exists (confirmed via website schema sameAs). Likes unverified — FB mobile scrape blocked."},"instagram":{"handle":"blueroseauto","followers":420,"following":560,"posts_total":371,"posts_in_sample":12,"posts_per_week":0.6,"days_since_last_post":96,"has_reels":true,"highlights":6,"is_business_account":true,"is_verified":false,"bio":"Fix it, Clean it, Protect it.\nCeramic Pro Elite Dealer","category":"Auto Detailing Service"},"ads":{"running":false,"active_count":0,"days_checked":90,"verdict":"NEVER_RUN","notes":"Zero ads found in Meta Ad Library for last 90 days. Greenfield opportunity."},"tracking":{"meta_pixel":false,"pixel_id":null,"google_tag":true,"google_tag_id":"GT-M6XH7GFT","ga4":true,"ga4_id":"G-XV9SFWPKVL","conversion_events":false,"mobile_responsive":true},"website_meta":{"title":"Blue Rose Auto Care & Repair Services | Springfield & Eugene, OR","description":"Blue Rose Auto offers expert auto care services, providing reliable diagnostics, maintenance, and repairs to keep vehicles run smoothly","page_size_bytes":281612,"script_tags":46,"cms":"WordPress","seo_plugin":"Yoast SEO"},"competitors":{"local_market_ads":"NONE_FOUND","outspend_ratio":0,"verdict":"Local market untapped — no named competitors running Meta ads in last 90 days. First-mover advantage available."},"score":{"total":31,"breakdown":{"page_completeness":{"weight":0.15,"raw":65,"weighted":9.75},"posting_consistency":{"weight":0.1,"raw":10,"weighted":1},"ad_maturity":{"weight":0.2,"raw":0,"weighted":0},"outspend_gap":{"weight":0.15,"raw":80,"weighted":12},"pixel_tracking":{"weight":0.25,"raw":20,"weighted":5},"niche_playbook":{"weight":0.15,"raw":22,"weighted":3.3}}},"wins":["Ceramic Pro Elite Dealer certification — premium PPF/ceramic positioning commands higher ticket prices ($1,500–$5,000+ jobs)","GA4 + Google Tag installed — website analytics foundation exists, shows digital awareness beyond average auto shop","371 Instagram posts + 6 highlights — substantial content library available to repurpose into ad creative"],"gaps":["No Meta Pixel installed — every website visitor is invisible, zero retargeting capability, ad optimization flying blind","96-day posting gap — social media dormancy signals inactivity to both algorithm and potential customers","Zero paid advertising in 90+ days — not capturing intent-driven local searches for collision repair, wraps, or PPF"],"opportunities":["Install Meta Pixel + CAPI → unlock retargeting of website visitors and seed lookalike audiences from day one","Collision/insurance claim campaign — 'We work with all insurances. Free estimates.' is the #1 converting hook in the category","PPF new-car-owner campaign — Ceramic Pro Elite status justifies premium positioning; target new vehicle owners in Eugene/Springfield DMA"],"audit_date":"2026-06-25"};
+
+function fmt(n, fallback = '—') {
+  if (n == null) return fallback;
+  if (n === 0) return fallback === '0' ? '0' : fallback;
+  return Number(n).toLocaleString();
+}
+function scoreColor(s) {
+  if (s >= 70) return '#10b981';
+  if (s >= 45) return '#f59e0b';
+  return '#ef4444';
+}
+function row(label, value) {
+  return `<tr><td>${label}</td><td>${value}</td></tr>`;
+}
+function statusItem(cls, title, desc) {
+  return `<div class="status-item ${cls}"><div class="dot"></div><div class="item-text"><div class="item-title">${title}</div><div class="item-desc">${desc}</div></div></div>`;
+}
+
+function init() {
+  const d = DATA;
+  const score = d.score?.total ?? 0;
+  const color = scoreColor(score);
+
+  // ── Hero ──
+  document.getElementById('client-name').textContent = d.business_name || '—';
+  document.getElementById('hero-location').textContent = d.location || '—';
+  document.getElementById('hero-date').textContent = new Date(d.audit_date || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const wa = document.getElementById('hero-website');
+  wa.textContent = (d.website || '').replace(/^https?:\/\//, '');
+  wa.href = d.website || '#';
+
+  // ── Score ring ──
+  document.getElementById('score-num').textContent = score;
+  document.getElementById('score-num').style.color = color;
+  const arc = document.getElementById('score-arc');
+  arc.style.stroke = color;
+  setTimeout(() => arc.style.strokeDashoffset = 314 - (314 * score / 100), 200);
+
+  // ── Metric cards ──
+  document.getElementById('m-score').textContent = score;
+  document.getElementById('m-score').style.color = color;
+
+  // FB: may have followers or may just have handle (scrape blocked)
+  const fbFollowers = d.facebook?.followers ?? d.facebook?.likes ?? null;
+  const fbEl = document.getElementById('m-fb');
+  if (fbFollowers != null) {
+    fbEl.textContent = fbFollowers.toLocaleString();
+    document.getElementById('m-fb-sub').textContent = 'Facebook followers';
+  } else if (d.facebook?.handle) {
+    fbEl.innerHTML = `<span class="badge blue">@${d.facebook.handle}</span>`;
+    document.getElementById('m-fb-sub').textContent = d.facebook.fetch_status === 'blocked_scrape' ? 'count unavailable' : 'Facebook';
+  } else {
+    fbEl.textContent = '—';
+  }
+
+  // IG followers
+  const igFollowers = d.instagram?.followers ?? null;
+  document.getElementById('m-ig').textContent = igFollowers != null ? igFollowers.toLocaleString() : '—';
+  document.getElementById('m-ig-sub').textContent = d.instagram?.days_since_last_post != null
+    ? `last post ${d.instagram.days_since_last_post}d ago` : 'Instagram';
+
+  // Ads status
+  const adsEl = document.getElementById('m-ads');
+  adsEl.innerHTML = d.ads?.running
+    ? `<span class="badge green">Running</span>`
+    : `<span class="badge gray">No Ads</span>`;
+  document.getElementById('m-ads-sub').textContent = d.ads?.verdict || 'Meta Ad Library';
+
+  // ── Facebook table ──
+  const fbHandle = d.facebook?.handle ? `<a href="${d.facebook.url || '#'}" target="_blank" style="color:var(--blue)">@${d.facebook.handle}</a>` : '—';
+  document.getElementById('fb-table').innerHTML = [
+    row('Handle', fbHandle),
+    row('Followers', fbFollowers != null ? fbFollowers.toLocaleString() : d.facebook?.fetch_status === 'blocked_scrape' ? '<span style="color:var(--amber);font-size:12px">Scrape blocked — unverified</span>' : '—'),
+    row('Posts / week', d.facebook?.posts_per_week != null ? d.facebook.posts_per_week.toFixed(1) : '—'),
+    row('Last post', d.facebook?.days_since_last_post != null ? `${d.facebook.days_since_last_post}d ago` : '—'),
+    row('Page verified', d.facebook?.verified ? '✓ Yes' : '—'),
+    d.facebook?.notes ? row('Note', `<span style="font-size:11px;color:var(--subtext)">${d.facebook.notes}</span>`) : '',
+  ].join('');
+
+  // ── Instagram table ──
+  document.getElementById('ig-table').innerHTML = [
+    row('Handle', d.instagram?.handle ? `<a href="https://instagram.com/${d.instagram.handle}" target="_blank" style="color:var(--blue)">@${d.instagram.handle}</a>` : '—'),
+    row('Followers', igFollowers != null ? igFollowers.toLocaleString() : '—'),
+    row('Following', d.instagram?.following != null ? d.instagram.following.toLocaleString() : '—'),
+    row('Total posts', d.instagram?.posts_total != null ? d.instagram.posts_total.toLocaleString() : '—'),
+    row('Posts / week', d.instagram?.posts_per_week != null ? d.instagram.posts_per_week.toFixed(1) : '—'),
+    row('Last post', d.instagram?.days_since_last_post != null ? `${d.instagram.days_since_last_post}d ago` : '—'),
+    row('Has Reels', d.instagram?.has_reels ? '✓ Yes' : '—'),
+    row('Business account', d.instagram?.is_business_account ? '✓ Yes' : '—'),
+    d.instagram?.bio ? row('Bio', `<span style="font-size:11px;font-style:italic">"${d.instagram.bio.replace(/\n/g,' ')}"</span>`) : '',
+  ].join('');
+
+  // ── Paid readiness ──
+  document.getElementById('paid-status').innerHTML = [
+    { cls: d.ads?.verdict === 'NEVER_RUN' ? 'amber' : 'green',
+      title: 'Ad History',
+      desc: d.ads?.notes || d.ads?.verdict || '—' },
+    { cls: d.tracking?.meta_pixel ? 'green' : 'red',
+      title: 'Meta Pixel',
+      desc: d.tracking?.meta_pixel
+        ? `Pixel installed on website${d.tracking.pixel_id ? ` (${d.tracking.pixel_id})` : ''}`
+        : 'No Meta Pixel detected — conversion tracking unavailable, retargeting impossible' },
+    { cls: d.tracking?.ga4 ? 'green' : 'amber',
+      title: 'Google Analytics 4',
+      desc: d.tracking?.ga4 ? `GA4 present${d.tracking.ga4_id ? ` (${d.tracking.ga4_id})` : ''}` : 'GA4 not detected' },
+    { cls: d.tracking?.google_tag ? 'green' : 'amber',
+      title: 'Google Tag Manager',
+      desc: d.tracking?.google_tag ? `GTM present${d.tracking.google_tag_id ? ` (${d.tracking.google_tag_id})` : ''}` : 'GTM not detected' },
+    { cls: d.tracking?.mobile_responsive ? 'green' : 'red',
+      title: 'Mobile Responsive',
+      desc: d.tracking?.mobile_responsive ? 'Website passes mobile responsiveness check' : 'Website may not be mobile-optimized' },
+  ].map(i => statusItem(i.cls, i.title, i.desc)).join('');
+
+  // ── Website & Tracking checks ──
+  const wm = d.website_meta || {};
+  document.getElementById('tracking-checks').innerHTML = [
+    { label: 'Meta Pixel', ok: !!d.tracking?.meta_pixel },
+    { label: 'Conversion Events', ok: !!d.tracking?.conversion_events },
+    { label: 'Google Analytics 4', ok: !!d.tracking?.ga4 },
+    { label: 'Google Tag Manager', ok: !!d.tracking?.google_tag },
+    { label: 'Mobile Responsive', ok: !!d.tracking?.mobile_responsive },
+    { label: 'Ads Running', ok: !!d.ads?.running },
+  ].map(c => `<div class="check-item"><div class="check-icon ${c.ok ? 'yes' : 'no'}">${c.ok ? '✓' : '✗'}</div><span>${c.label}</span></div>`).join('') +
+  (wm.cms || wm.seo_plugin ? `<div class="check-item" style="grid-column:1/-1;border-top:1px solid var(--gray-100);padding-top:8px;margin-top:4px;color:var(--subtext);font-size:12px">
+    ${wm.cms ? `CMS: <strong>${wm.cms}</strong>` : ''}${wm.cms && wm.seo_plugin ? ' · ' : ''}${wm.seo_plugin ? `SEO: <strong>${wm.seo_plugin}</strong>` : ''}
+    ${wm.script_tags ? ` · ${wm.script_tags} scripts loaded` : ''}
+  </div>` : '');
+
+  // ── Competitive landscape ──
+  const isUntapped = d.competitors?.local_market_ads === 'NONE_FOUND' || d.competitors?.outspend_ratio === 0;
+  document.getElementById('comp-card').innerHTML = `
+    <div class="comp-big" style="color:${isUntapped ? 'var(--green)' : 'var(--red)'}">${isUntapped ? '0' : (d.competitors?.outspend_ratio ?? '?')}</div>
+    <div>
+      <div class="comp-label"><strong>${isUntapped ? 'First-mover advantage available' : 'Competitors running ads'}</strong></div>
+      <div class="comp-label" style="color:var(--subtext);font-size:13px;margin-top:4px">${d.competitors?.verdict || '—'}</div>
+    </div>`;
+
+  // ── Wins ──
+  const wins = d.wins || [];
+  document.getElementById('wins-list').innerHTML = wins.length
+    ? wins.map(w => statusItem('green', w.split(' — ')[0], w.split(' — ').slice(1).join(' — '))).join('')
+    : statusItem('gray', 'No wins recorded', 'Run a full audit to surface wins.');
+
+  // ── Gaps ──
+  const gaps = d.gaps || [];
+  document.getElementById('gaps-list').innerHTML = gaps.length
+    ? gaps.map(g => statusItem('red', g.split(' — ')[0], g.split(' — ').slice(1).join(' — '))).join('')
+    : statusItem('gray', 'No gaps recorded', 'Run a full audit to surface gaps.');
+
+  // ── Opportunities ──
+  const opps = d.opportunities || [];
+  document.getElementById('opportunities-list').innerHTML = opps.length
+    ? opps.map((o, i) => `<div class="rec-item"><div class="rec-num" style="background:#f97316">${i+1}</div><div><div class="rec-title">${o.split(' → ')[0]}</div><div class="rec-desc">${o.split(' → ').slice(1).join(' → ')}</div></div></div>`).join('')
+    : '<div class="rec-item"><div class="rec-num">1</div><div><div class="rec-title">Run full audit</div><div class="rec-desc">Complete the onboarding audit to unlock personalized opportunities.</div></div></div>';
+
+  // ── Score breakdown ──
+  const labels = {
+    page_completeness:   'Page Completeness',
+    posting_consistency: 'Posting Consistency',
+    ad_maturity:         'Ad Maturity',
+    pixel_tracking:      'Pixel & Tracking',
+    pixel_health:        'Pixel Health',
+    outspend_gap:        'Competitive Gap',
+    niche_playbook:      'Niche Playbook',
+    audience_quality:    'Audience Quality',
+    website_tracking:    'Website Tracking',
+  };
+  const breakdown = d.score?.breakdown || {};
+  document.getElementById('score-breakdown').innerHTML = Object.entries(breakdown).map(([k, v]) => {
+    const pct = v?.raw ?? 0;
+    const wt  = v?.weight != null ? ` <span style="font-size:11px;color:var(--gray-400)">(${Math.round(v.weight*100)}% weight)</span>` : '';
+    const barColor = pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#ef4444';
+    return `<div class="score-row">
+      <span class="sr-label">${labels[k] || k}${wt}</span>
+      <div class="sr-bar-wrap"><div class="sr-bar" style="width:${pct}%;background:${barColor}"></div></div>
+      <span class="sr-val" style="color:${barColor}">${pct}</span>
+    </div>`;
+  }).join('') || '<div style="color:var(--subtext);font-size:13px">No breakdown available.</div>';
+
+  // ── Recommendations (from gaps array, or derived) ──
+  const recSources = d.gaps?.length ? d.gaps : [];
+  const derived = [];
+  if (!d.tracking?.meta_pixel) derived.push({ title: 'Install & verify the Meta Pixel', desc: 'Deploy base code site-wide, add Lead + PageView events, enable Test Events.' });
+  if ((d.instagram?.days_since_last_post ?? 0) > 30) derived.push({ title: 'Resume organic posting', desc: `Last post was ${d.instagram?.days_since_last_post}d ago. Restart 2× Reels/week to re-warm the algorithm.` });
+  if (!d.ads?.running) derived.push({ title: 'Launch first Meta campaign', desc: `${isUntapped ? 'No competitors running ads — first-mover advantage available.' : 'Start with a warm retargeting audience.'} Begin paused; activate after pixel confirms.` });
+  const finalRecs = derived.length ? derived : recSources.map(g => ({ title: g.split(' — ')[0], desc: g.split(' — ').slice(1).join(' — ') }));
+
+  document.getElementById('recommendations').innerHTML = finalRecs.map((r, i) =>
+    `<div class="rec-item"><div class="rec-num">${i+1}</div><div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div></div></div>`
+  ).join('');
+
+  // Footer
+  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+init();
+</script>
+</body>
+</html>

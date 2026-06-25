@@ -21,11 +21,11 @@
 ## Organic Audit — Facebook Page
 
 - **Page name:** {{PAGE_NAME}}
-- **Followers:** {{FB_FOLLOWERS}} (90-day change: {{FB_FOLLOWERS_DELTA}})
+- **Followers:** {{FB_FOLLOWERS}} (new follows, 90d: {{FB_NEW_FOLLOWS_90D}})
 - **Page completeness:** {{PAGE_COMPLETENESS}}/100
-- **Posts (last 60 days):** {{FB_POST_COUNT}} ({{FB_POSTS_PER_WEEK}}/week)
+- **Posts (last 60 days):** {{FB_POST_COUNT}} ({{FB_POSTS_PER_WEEK}}/week) · last post {{FB_DAYS_SINCE_LAST_POST}} days ago
 - **Format mix:** {{FB_VIDEO_PCT}}% video · {{FB_IMAGE_PCT}}% image · {{FB_CAROUSEL_PCT}}% carousel · {{FB_LINK_PCT}}% link
-- **Avg engagement rate:** {{FB_AVG_ER}}%
+- **Avg engagement rate:** {{FB_AVG_ER}}%{{FB_ENGAGEMENT_NOTE}}
 - **Best post:** {{FB_BEST_POST_LINK}} — {{FB_BEST_POST_ER}}% ER
 - **Worst post:** {{FB_WORST_POST_LINK}} — {{FB_WORST_POST_ER}}% ER
 
@@ -56,9 +56,22 @@
 ### Pixel Health
 
 - **Pixel ID:** `{{PIXEL_ID}}`
-- **Status:** {{PIXEL_STATUS}} ({{PIXEL_LAST_FIRED}})
+- **Status (account-side):** {{PIXEL_STATUS}} ({{PIXEL_LAST_FIRED}})
+- **Installed on website:** {{PIXEL_ON_SITE}}
 - **Events firing:** {{PIXEL_EVENTS_FIRING}}
 - **Missing events (recommended to add):** {{PIXEL_EVENTS_MISSING}}
+{{PIXEL_CROSSREF_FINDING}}
+
+### Website & Tracking — carried from pre-audit ({{PRE_AUDIT_SOURCE}})
+
+> Public website-scrape signals from the prospect-stage pre-audit — the Graph API does not expose these. Not re-fetched.
+
+- **Meta Pixel on site:** {{PIXEL_ON_SITE}}{{TRACKING_PIXEL_ID_NOTE}}
+- **Conversion events on site:** {{TRACKING_CONV_EVENTS}}
+- **Google Analytics 4:** {{TRACKING_GA4}}
+- **Google Tag Manager:** {{TRACKING_GTM}}
+- **Mobile responsive:** {{TRACKING_MOBILE}}
+- **Ad Library history:** {{AD_LIBRARY_VERDICT}}
 
 ### Audiences
 

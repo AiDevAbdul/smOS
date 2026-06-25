@@ -1,18 +1,93 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-06-19T06:32:17.510Z",
+  "generated_at": "2026-06-25T10:15:51.948Z",
   "organic": {
     "facebook": {
-      "skipped": true,
-      "reason": "page_id is TBD"
+      "page_id": "1709708972688957",
+      "page_name": "Blue Rose Auto Care & Repair Services",
+      "has_page_token": true,
+      "followers": 1764,
+      "new_follows_90d": 0,
+      "followers_delta_90d": null,
+      "page_completeness": 100,
+      "page_completeness_table": "| Field | Set |\n|---|---|\n| Name | ✓ |\n| About | ✓ |\n| Category | ✓ |\n| Website | ✓ |\n| Phone | ✓ |\n| Email | ✓ |\n| Address | ✓ |\n| Profile picture | ✓ |\n| Cover photo | ✓ |",
+      "post_count": 0,
+      "posts_per_week": 0,
+      "days_since_last_post": 83,
+      "format_mix_pct": {
+        "video": 0,
+        "image": 0,
+        "carousel": 0,
+        "link": 0,
+        "status": 0
+      },
+      "engagement_available": true,
+      "engagement_blocked_reason": null,
+      "avg_engagement_rate": null,
+      "best_post": null,
+      "worst_post": null,
+      "insights_error": null
     },
     "instagram": {
-      "skipped": true
+      "source": "pre_audit_public_estimate",
+      "source_dir": "bluersoeauto",
+      "followers": 420,
+      "media_count_total": 371,
+      "posts_per_week": 0.6,
+      "days_since_last_post": 96,
+      "is_business_account": true,
+      "bio": "Fix it, Clean it, Protect it.\nCeramic Pro Elite Dealer",
+      "note": "Live IG insights unavailable (not linked / blocked); values scraped at pre-audit — treat as public estimate, not baseline.",
+      "live_skip_reason": "ig_business_id is TBD"
     }
   },
   "paid": {
-    "skipped": true
+    "account_id": "act_1999616770762846",
+    "account_name": "Blue Rose Auto Care and Repair Services",
+    "account_status": 1,
+    "account_age_days": 0,
+    "currency": "USD",
+    "timezone": "America/Los_Angeles",
+    "total_spend_lifetime": 0,
+    "amount_spent_to_date": 0,
+    "balance": 0,
+    "campaign_count_total": 0,
+    "campaign_count_active": 0,
+    "campaign_count_archived": 0,
+    "best_cpa": null,
+    "best_roas": null,
+    "zombie_count": 0,
+    "naming_compliance_pct": 0,
+    "custom_audience_count": 0,
+    "custom_audience_healthy": 0,
+    "custom_audience_broken": 0,
+    "audience_issues": [],
+    "pixel_health": "none",
+    "pixel_stats": {
+      "data": []
+    }
   },
+  "website_tracking": {
+    "meta_pixel_on_site": false,
+    "meta_pixel_id_on_site": null,
+    "conversion_events_on_site": false,
+    "ga4": true,
+    "ga4_id": "G-XV9SFWPKVL",
+    "google_tag": true,
+    "google_tag_id": "GT-M6XH7GFT",
+    "mobile_responsive": true
+  },
+  "ad_library_history": {
+    "verdict": "NEVER_RUN",
+    "active_count": 0,
+    "notes": "Zero ads found in Meta Ad Library for last 90 days. Greenfield opportunity."
+  },
+  "pixel_cross_reference": {
+    "account_side_health": "none",
+    "installed_on_site": false,
+    "corroborated_finding": "Pixel exists in the ad account but is NOT installed on the website (confirmed by pre-audit scrape) — it cannot track real traffic. Top conversion-tracking blocker."
+  },
+  "pre_audit_source": "bluersoeauto",
   "creative": null,
-  "health_score": 8
+  "health_score": 40
 }

@@ -38,7 +38,7 @@ export function buildSnapshotRow(clientId, auditData, auditReportUrl) {
     historical_best_cpa: paid.best_cpa ?? null,
     historical_best_roas: paid.best_roas ?? null,
     audit_report_url: auditReportUrl ?? null,
-    raw_audit: auditData,
+    raw_data: auditData,
   };
 }
 
