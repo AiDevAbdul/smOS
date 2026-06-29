@@ -20,7 +20,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync, copyFileSync, mkd
 import { resolve, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
-import { reportHead, heroHeader, reportFooter } from "../../scripts/lib/design_system.js";
+import { reportHead, reportFooter } from "../../scripts/lib/design_system.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -122,7 +122,9 @@ for (const phase of PHASES) {
   }
   n += 1;
   const num = String(n).padStart(2, "0");
-  const actions = hits.map((hit, i) => {
+  // Group phases (reports) keep every match; single phases take only the newest.
+  const used = phase.group ? hits : hits.slice(0, 1);
+  const actions = used.map((hit, i) => {
     // single phases → {NN}-{key}.html ; group phases keep their dated basename
     const destName = phase.group
       ? `${num}-${basename(hit.srcPath)}`
@@ -153,11 +155,15 @@ function stepBlock(num, title, desc, actions, pending) {
     </div>`;
 }
 
-// ── Overview view (_roadmap.html) — the numbered roadmap shown in the viewer ──
+// ── Overview view (_roadmap.html) — the numbered journey shown in the viewer ──
+// No big hero here — the dark shell header is the hero. A thin eyebrow keeps the
+// view from competing with the shell chrome (kills the double-hero problem).
 const roadmapHtml = `<!DOCTYPE html>
 <html lang="en">${reportHead({ title: `${clientName} — Overview` })}
 <body><div class="ds-wrap">
-${heroHeader({ title: clientName, subtitle: `Your engagement, start to finish · updated ${today}`, eyebrow: `${agencyName} · Client Hub` })}
+  <div class="ds-eyebrow">Engagement roadmap · updated ${today}</div>
+  <h1 style="font-size:var(--ds-fs-display);letter-spacing:-0.026em;margin:2px 0 6px;">Your journey, end to end</h1>
+  <p class="ds-caption" style="margin:0 0 8px;max-width:60ch;">Every phase of your engagement with ${esc(agencyName)} — open any deliverable from the menu, or step through the path below.</p>
   <div class="ds-roadmap">
 ${stepsHtml.join("\n")}
   </div>
@@ -165,11 +171,19 @@ ${reportFooter(today)}
 </div></body></html>`;
 writeFileSync(resolve(publicDir, "_roadmap.html"), roadmapHtml);
 
-// ── Hub shell (index.html) — phase menu top + bottom framing a same-tab viewer ─
+// ── Hub shell (index.html) — dark "OS console": menu + progress + viewer window ─
+const deliveredPhases = menuItems.filter((m) => !m.disabled).length;
+const totalPhases = PHASES.length;
+const progressHtml = `<div class="ds-progress ds-anim" style="animation-delay:.05s">
+      <div class="ds-progress__label"><span>Engagement progress</span><span class="ds-progress__count">${deliveredPhases} of ${totalPhases} delivered</span></div>
+      <div class="ds-progress__track">${Array.from({ length: totalPhases }, (_, i) =>
+        `<span class="ds-progress__seg${i < deliveredPhases ? " is-done" : ""}"></span>`).join("")}</div>
+    </div>`;
+
 function menuHtml(pos) {
   const home = `<button class="ds-hubnav__btn is-active" data-src="_roadmap.html"><span class="n">&#8962;</span> Overview</button>`;
   const items = menuItems.map((m) => m.disabled
-    ? `<span class="ds-hubnav__btn is-disabled"><span class="n">${m.num}</span> ${esc(m.title)}</span>`
+    ? `<span class="ds-hubnav__btn is-disabled" aria-disabled="true"><span class="n">${m.num}</span> ${esc(m.title)}</span>`
     : `<button class="ds-hubnav__btn" data-src="${esc(m.src)}"><span class="n">${m.num}</span> ${esc(m.title)}</button>`
   ).join("\n      ");
   return `<nav class="ds-hubnav${pos === "bottom" ? " ds-hubnav--bottom" : ""}" aria-label="Report navigation (${pos})">
@@ -178,26 +192,48 @@ function menuHtml(pos) {
     </nav>`;
 }
 
+// Inline aurora favicon (self-contained, no external asset) + social meta.
+const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a84ff"/><stop offset="0.52" stop-color="#5e5ce6"/><stop offset="1" stop-color="#7d3cff"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="#0b0b10"/><rect x="6.5" y="6.5" width="19" height="19" rx="5" fill="url(#g)"/></svg>`;
+const extraHead = `<meta name="description" content="${esc(clientName)} — engagement hub by ${esc(agencyName)}">
+<meta property="og:title" content="${esc(clientName)} — Engagement Hub">
+<meta property="og:description" content="Your full engagement with ${esc(agencyName)}, in one place.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,${encodeURIComponent(faviconSvg)}">`;
+
 const html = `<!DOCTYPE html>
-<html lang="en">${reportHead({ title: `${clientName} — Engagement Hub` })}
+<html lang="en">${reportHead({ title: `${clientName} — Engagement Hub`, extraHead })}
 <body><div class="ds-hub">
-  <div class="ds-hub__head">${esc(clientName)} — Engagement Hub <span>${esc(agencyName)}</span></div>
+  <a class="ds-skip" href="#viewer-main">Skip to report</a>
+  <header class="ds-hub__head">
+    <div class="ds-hub__id ds-anim">
+      <div class="ds-hub__eyebrow">${esc(agencyName)} · Client Hub</div>
+      <h1 class="ds-hub__title">${esc(clientName)}</h1>
+      <div class="ds-hub__sub">Your engagement, start to finish · updated ${today}</div>
+    </div>
+    ${progressHtml}
+  </header>
   ${menuHtml("top")}
-  <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
+  <main class="ds-viewer-wrap ds-anim" id="viewer-main" tabindex="-1" style="animation-delay:.1s">
+    <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
+    <div class="ds-viewer__loader" id="loader" aria-hidden="true"><div class="ds-spinner"></div></div>
+  </main>
   ${menuHtml("bottom")}
 </div>
 <script>
   (function () {
     var viewer = document.getElementById("viewer");
+    var loader = document.getElementById("loader");
+    var main = document.getElementById("viewer-main");
+    viewer.addEventListener("load", function () { loader.classList.remove("is-on"); });
     document.addEventListener("click", function (e) {
       var b = e.target.closest(".ds-hubnav__btn[data-src]");
       if (!b) return;
       var src = b.getAttribute("data-src");
-      viewer.setAttribute("src", src);
-      // keep top + bottom menus in sync
+      if (viewer.getAttribute("src") !== src) { loader.classList.add("is-on"); viewer.setAttribute("src", src); }
       document.querySelectorAll(".ds-hubnav__btn").forEach(function (x) {
         x.classList.toggle("is-active", x.getAttribute("data-src") === src);
       });
+      main.focus({ preventScroll: true });
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   })();

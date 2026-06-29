@@ -66,10 +66,26 @@
   /* ---- Gradients ---- */
   --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
   --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
+  /* Signature aurora — blue → indigo → violet. Used ONLY on the progress spine,
+     active states, and hero accent. The one place boldness is spent. */
+  --ds-grad-brand: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 52%, #7d3cff 100%);
+
+  /* ---- "Operating system" shell (dark hub chrome that frames light reports) ---- */
+  --ds-shell:     #0b0b10;   /* console canvas (cool near-black) */
+  --ds-shell-2:   #16161d;   /* raised shell surface: bars, chips */
+  --ds-shell-3:   #20212a;   /* chip hover / hairline fills */
+  --ds-shell-ink: #f5f5f7;   /* primary text on shell */
+  --ds-shell-mut: #a1a1ab;   /* secondary text on shell */
+  --ds-shell-line:#2a2b35;   /* borders on shell */
+
+  /* ---- Display type scale ---- */
+  --ds-fs-display: clamp(30px, 4.2vw, 46px);
 
   /* ---- Motion ---- */
-  --ds-ease: cubic-bezier(.4, 0, .2, 1);
-  --ds-dur:  220ms;
+  --ds-ease:       cubic-bezier(.4, 0, .2, 1);
+  --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
+  --ds-dur:        220ms;
+  --ds-dur-fast:   140ms;
 }
 
 /* ---------------------------------------------------------------- Base ---- */
@@ -140,14 +156,14 @@ li { margin: 4px 0; }
 
 /* -------------------------------------------------------------- Hero ------ */
 .ds-hero {
-  background: var(--ds-grad-blue);
+  background: var(--ds-grad-brand);
   color: #fff;
   border-radius: var(--ds-r-lg);
-  padding: 40px 36px;
+  padding: 44px 40px;
   margin-bottom: 28px;
-  box-shadow: var(--ds-shadow);
+  box-shadow: 0 12px 32px rgba(94,92,230,.28);
 }
-.ds-hero h1 { color: #fff; margin: 0; font-size: 30px; }
+.ds-hero h1 { color: #fff; margin: 0; font-size: var(--ds-fs-display); letter-spacing: -0.026em; }
 .ds-hero .ds-eyebrow { color: rgba(255,255,255,.82); }
 .ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
 
@@ -298,8 +314,10 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-btn--ghost:hover { background: var(--ds-ink-tint); }
 .ds-btn[aria-disabled="true"] {
-  background: var(--ds-ink-tint);
-  color: var(--ds-faint);
+  background: transparent;
+  border: 1px dashed var(--ds-line-strong);
+  color: var(--ds-muted);
+  font-weight: 500;
   cursor: default;
   pointer-events: none;
 }
@@ -316,7 +334,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   gap: 18px;
   padding-bottom: 24px;
 }
-/* connector line linking one badge to the next */
+/* connector spine — aurora gradient on delivered steps, grey on pending */
 .ds-step:not(:last-child)::before {
   content: "";
   position: absolute;
@@ -324,15 +342,16 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   top: 48px;
   bottom: -4px;
   width: 2px;
-  background: var(--ds-line-strong);
+  background-image: var(--ds-grad-brand);
 }
+.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
 .ds-step-num {
   position: relative;
   z-index: 1;
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--ds-blue);
+  background-image: var(--ds-grad-brand);
   color: #fff;
   font-weight: 700;
   font-size: 19px;
@@ -340,11 +359,12 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--ds-shadow-sm);
+  box-shadow: 0 4px 12px rgba(94,92,230,.32);
 }
 .ds-step.is-pending .ds-step-num {
-  background: var(--ds-ink-tint);
+  background: var(--ds-surface);
   color: var(--ds-faint);
+  border: 2px dashed var(--ds-line-strong);
   box-shadow: none;
 }
 .ds-step-body {
@@ -353,7 +373,10 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   border-radius: var(--ds-r);
   padding: 18px 20px;
   box-shadow: var(--ds-shadow-sm);
+  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
 }
+.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
+.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
 .ds-step.is-pending .ds-step-body {
   background: var(--ds-surface-2);
   border-style: dashed;
@@ -374,44 +397,121 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
 }
 
-/* -------------------------------------------------- Hub (menu + viewer) --- */
-/* Single-tab deliverables hub: a phase menu pinned top AND bottom, framing an
-   iframe that shows the selected report in the same tab. Used by /bundle. */
-.ds-hub { min-height: 100vh; display: flex; flex-direction: column; background: var(--ds-bg); }
+/* -------------------------------------------------- Hub (OS console) ------ */
+/* The /bundle deliverables hub is a single-tab "operating system" console: a
+   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
+   frames each report as a bright, elevated "window" (the iframe). Dark chrome
+   around a light document = intentional app framing (no double-hero). */
+.ds-hub {
+  min-height: 100dvh; display: flex; flex-direction: column;
+  background: var(--ds-shell); color: var(--ds-shell-ink);
+}
+.ds-skip {
+  position: absolute; left: 12px; top: -48px; z-index: 100;
+  background: var(--ds-shell-2); color: var(--ds-shell-ink);
+  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
+  transition: top var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-skip:focus { top: 12px; text-decoration: none; }
+
+/* Header = the hero. Client name + agency + a live progress meter. */
 .ds-hub__head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 12px; padding: 16px 22px 4px; font-weight: 700; font-size: 18px;
-  letter-spacing: -0.01em;
+  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
+  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
+  border-bottom: 1px solid var(--ds-shell-line);
 }
-.ds-hub__head span { font-weight: 500; font-size: 13px; color: var(--ds-muted); }
+.ds-hub__id { min-width: 0; }
+.ds-hub__eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ds-shell-mut); margin-bottom: 8px;
+}
+.ds-hub__title {
+  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
+  line-height: 1.02; margin: 0; color: #fff;
+  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
+}
+.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
+
+/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
+.ds-progress { min-width: 220px; flex: 0 1 320px; }
+.ds-progress__label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
+}
+.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
+.ds-progress__track { display: flex; gap: 5px; }
+.ds-progress__seg {
+  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
+}
+.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
+
+/* Chip menu (top + bottom) */
 .ds-hubnav {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  padding: 12px 22px; background: var(--ds-glass);
-  backdrop-filter: saturate(180%) blur(12px);
-  -webkit-backdrop-filter: saturate(180%) blur(12px);
-  border-bottom: 1px solid var(--ds-line); position: sticky; top: 0; z-index: 10;
+  display: flex; gap: 8px; align-items: center;
+  padding: 12px 24px; background: rgba(11,11,16,.72);
+  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--ds-shell-line);
+  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
 }
-.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-line); position: static; }
+.ds-hubnav::-webkit-scrollbar { display: none; }
+.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
 .ds-hubnav__btn {
-  display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
   font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
-  padding: 8px 14px 8px 8px; border-radius: var(--ds-r-pill);
-  background: var(--ds-ink-tint); color: var(--ds-ink-2);
-  border: 1px solid transparent; cursor: pointer;
-  transition: background var(--ds-dur) var(--ds-ease), color var(--ds-dur) var(--ds-ease);
+  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
+  background: var(--ds-shell-2); color: var(--ds-shell-ink);
+  border: 1px solid var(--ds-shell-line); cursor: pointer;
+  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
+              transform var(--ds-dur-fast) var(--ds-ease);
 }
 .ds-hubnav__btn .n {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 20px; height: 20px; border-radius: 50%;
-  background: var(--ds-blue); color: #fff; font-size: 11px; font-weight: 700;
-  font-variant-numeric: tabular-nums; flex: none;
+  width: 21px; height: 21px; border-radius: 50%;
+  background: var(--ds-shell-3); color: var(--ds-shell-ink);
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
 }
-.ds-hubnav__btn:hover { background: var(--ds-blue-tint); }
-.ds-hubnav__btn.is-active { background: var(--ds-blue); color: #fff; }
-.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.28); }
-.ds-hubnav__btn.is-disabled { opacity: .45; cursor: default; }
-.ds-hubnav__btn.is-disabled .n { background: var(--ds-faint); }
-.ds-viewer { flex: 1 1 auto; width: 100%; border: 0; min-height: 72vh; background: var(--ds-bg); }
+.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
+.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
+.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
+.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
+.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
+
+/* Viewer = a bright elevated "window" floating in the dark shell. */
+.ds-viewer-wrap {
+  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
+  overflow: hidden; background: var(--ds-bg);
+  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
+}
+.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
+.ds-viewer__loader {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--ds-bg); opacity: 0; visibility: hidden;
+  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
+}
+.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
+.ds-spinner {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
+  animation: ds-spin .8s linear infinite;
+}
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+
+/* Entrance: chips + spine stagger in on load */
+@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
+
+@media (max-width: 760px) {
+  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
+  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
+  .ds-hub__head { padding: 18px 16px 14px; }
+  .ds-progress { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-anim, .ds-spinner { animation: none; }
+  .ds-hubnav__btn:hover { transform: none; }
+}
+
+/* --------------------------------------------------------- Footer --------- */
 
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {

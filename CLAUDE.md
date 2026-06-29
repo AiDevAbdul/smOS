@@ -249,7 +249,11 @@ components). Spec & component reference: **`design-system/MASTER.md`**.
   classes — do not hand-roll CSS.
 - Aesthetic: SF Pro system type (no web fonts), `#f5f5f7` canvas, `#1d1d1f` ink, iOS
   semantic colors (`#0071e3`/`#34c759`/`#ff9f0a`/`#ff3b30`), soft elevation, 14px radii,
-  tabular numerals, blue-gradient hero. Maintained with the `ui-ux-pro-max` skill.
+  tabular numerals. **Evolved 2026-06-30 (bolder, still ONE system):** report heroes and
+  all accents use the signature **aurora gradient** `--ds-grad-brand` (blue→indigo→violet);
+  the `/bundle` hub is a dark "operating-system console" (`--ds-shell*`) framing bright
+  report windows, with a clamped display scale (`--ds-fs-display`) and motion tokens.
+  Maintained with the `frontend-design` + `ui-ux-pro-max` skills.
 
 ---
 

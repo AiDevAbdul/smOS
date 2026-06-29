@@ -74,7 +74,10 @@ Semantic, not decorative: status is always color **+** text/icon (WCAG `color-no
 `ds-callout` (`--good/warn/bad`) · `ds-table-wrap` + `table` · `ds-chart` + `ds-chart__title` · `ds-footer` ·
 `ds-btn` (`--ghost`; `aria-disabled="true"` = inert) ·
 `ds-roadmap` › `ds-step` (`.is-pending` = muted/dashed) › `ds-step-num` (circular numbered badge), `ds-step-body` (`ds-step-title` / `ds-step-desc` / `ds-step-actions`). Numbered client-journey hub used by `/bundle`.
-`ds-hub` (flex-column shell) › `ds-hub__head` + `ds-hubnav` (`--bottom`; glass sticky menu bar) › `ds-hubnav__btn` (`.n` numbered badge; `.is-active` / `.is-disabled`) + `ds-viewer` (same-tab iframe). The `/bundle` single-tab viewer: phase menu top + bottom framing a report iframe.
+**`/bundle` "operating-system console"** (dark shell framing bright report windows):
+`ds-hub` (dark `--ds-shell` flex-column) › `ds-skip` (skip link) · `ds-hub__head` (`ds-hub__eyebrow` / `ds-hub__title` gradient-clip / `ds-hub__sub`) · `ds-progress` (`__label`/`__count`/`__track`/`__seg.is-done` — segmented meter, aurora on delivered) · `ds-hubnav` (`--bottom`; glass sticky, horizontal-scroll on mobile, hidden bottom nav <760px) › `ds-hubnav__btn` (`.n` numbered badge; `.is-active` = aurora; `.is-disabled`) · `ds-viewer-wrap` (elevated window) › `ds-viewer` (same-tab iframe) + `ds-viewer__loader` (`.is-on`) › `ds-spinner`. Entrance: `ds-anim` (`ds-rise`).
+
+**Tokens (bolder evolution):** `--ds-grad-brand` (aurora blue→indigo→violet — the one bold accent, used on `ds-hero`, progress, spine, active chip) · `--ds-shell*` (dark console chrome) · `--ds-fs-display` (clamped display scale) · `--ds-ease-out` / `--ds-dur-fast` (motion).
 
 Charts use `CHART_PALETTE` order + `CHART_THEME` (SF font, gray grid, point-style legend).
 
