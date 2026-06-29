@@ -57,7 +57,10 @@ Gather context before acting (do not ask the user for what is discoverable):
 3. It resolves each journey phase, copies hits into `public/reports/{slug}/`, and writes the hub `index.html`.
 4. It updates `public/reports/index.json` and prints the summary (included/missing phases, public URL).
 5. Review the hub locally (open `public/reports/{slug}/index.html`), then — only with the
-   user's go-ahead — `vercel deploy --prod` and share `https://{domain}/reports/{slug}/`.
+   user's go-ahead — `vercel deploy --prod` and share the `share_url`. All client hubs
+   live under one neutral Vercel project (**`smos-reports`**, repo-linked via `.vercel/`);
+   each client is its own path: `https://smos-reports.vercel.app/reports/{slug}/`. One
+   deploy ships every client. (Override the base with `SMOS_REPORTS_BASE_URL`.)
 
 ## Input / Output Specification
 

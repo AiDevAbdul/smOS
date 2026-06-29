@@ -60,13 +60,17 @@ Button `href`s are **relative filenames** (hub sits in the same dir) → work bo
 ```json
 {
   "hub": "<abs path to index.html>",
-  "public_url": "/reports/{slug}/",
+  "public_path": "/reports/{slug}/",
+  "share_url": "https://smos-reports.vercel.app/reports/{slug}/",
   "included_phases": ["pre-audit","audit", ...],
   "missing_phases": ["research"],
   "files_copied": 7,
-  "deploy_hint": "vercel deploy --prod   (then share the public_url; deploy is a separate, explicit step)"
+  "deploy_hint": "vercel deploy --prod   (deploy is a separate, explicit step; then share share_url)"
 }
 ```
+
+`share_url` base defaults to the neutral `smos-reports` Vercel project; override with
+the `SMOS_REPORTS_BASE_URL` env var (e.g. a custom domain).
 
 ## Exit codes
 
@@ -79,5 +83,7 @@ Button `href`s are **relative filenames** (hub sits in the same dir) → work bo
 ## Deploy (separate, explicit step)
 
 `public/` is served per the repo's `vercel.json` (`outputDirectory: public`, `/reports/*`
-routed, HTML cache headers). After review, deploy with `vercel deploy --prod` and share
-`https://{domain}/reports/{slug}/`. The skill never auto-deploys.
+routed, HTML cache headers). The repo is linked (via `.vercel/`) to one neutral project,
+**`smos-reports`** — every client hub deploys there as its own path, so a single
+`vercel deploy --prod` ships all clients. After review, deploy and share the `share_url`
+(`https://smos-reports.vercel.app/reports/{slug}/`). The skill never auto-deploys.

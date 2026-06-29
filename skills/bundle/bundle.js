@@ -171,12 +171,16 @@ next.push({ slug, type: "bundle", client: clientName, date: today, url: `/report
 writeFileSync(manifestPath, JSON.stringify(next, null, 2) + "\n");
 
 // ── Report ────────────────────────────────────────────────────────────────────
-const publicUrl = `/reports/${slug}/`;
+// All client hubs live under one neutral Vercel project (smos-reports); each
+// client is its own path. Override the base via SMOS_REPORTS_BASE_URL.
+const baseUrl = (process.env.SMOS_REPORTS_BASE_URL || "https://smos-reports.vercel.app").replace(/\/$/, "");
+const publicPath = `/reports/${slug}/`;
 console.log(JSON.stringify({
   hub: hubPath,
-  public_url: publicUrl,
+  public_path: publicPath,
+  share_url: `${baseUrl}${publicPath}`,
   included_phases: included.map((i) => i.phase),
   missing_phases: missing,
   files_copied: included.length,
-  deploy_hint: "vercel deploy --prod   (then share the public_url; deploy is a separate, explicit step)",
+  deploy_hint: "vercel deploy --prod   (deploy is a separate, explicit step; then share share_url)",
 }, null, 2));
