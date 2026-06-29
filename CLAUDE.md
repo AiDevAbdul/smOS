@@ -65,6 +65,27 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | Track trending topics, Google Trends, Reddit signals for content timing | `social-media-trends-research` |
 | Real-time web search inside the agent loop (research, news, SERP data) | `brave-search` MCP |
 
+### Per-Platform Content Production (organic content team)
+
+`/content-plan` builds the cross-platform calendar; these ready-made skills produce the
+**platform-native** asset for each item. Every one MUST shape its output to
+`skills/content-plan/references/platform-specs.md` (the per-platform SOP — media specs,
+copy limits, algorithm signals, publish-path status). Re-verify that file's freshness date
+before a big push.
+
+| User intent | Skill to invoke |
+|---|---|
+| Repurpose one pillar into many platform-native posts (LinkedIn/X/IG/TikTok/FB) | `social` |
+| Write a Facebook post (format-typed variants, FB algo best-practice) | `facebook-posts` |
+| Write a LinkedIn post / document-carousel / poll (B2B) | `linkedin-posts` |
+| Script + produce short-form video (TikTok / Reels / Shorts) | `video-shorts`, `remotion` |
+| Time content to trends before producing | `social-media-trends-research` |
+
+**Publish-path reality (per `platform-specs.md` §6):** `/publish` automates **Facebook +
+Instagram only** today. **TikTok, LinkedIn, YouTube are gated** (audit/partner approval) —
+for those the content SOP ends at *finished asset + platform-native caption handed to the
+human*. Never fake a dispatch the API cannot perform.
+
 ---
 
 ## Zero-Start Onboarding (Phase 0)

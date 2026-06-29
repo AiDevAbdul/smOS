@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Social Content Specs — 2026 Production Guide</title>
+
+<style>/* ============================================================================
+   smOS Design System — "Cupertino"
+   Single source of truth for every client-facing report & template.
+   Apple / iOS visual language: SF Pro system type, #f5f5f7 canvas, #1d1d1f ink,
+   system semantic colors, soft elevation, generous radii, 8pt rhythm.
+
+   DO NOT fork this per report. Renderers read this file at render time via
+   scripts/lib/design_system.js (Node) and scripts/lib/design_system.py (Python)
+   and inline it. Edit here once; every deliverable inherits it.
+   ============================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Surfaces (Apple light-gray system) ---- */
+  --ds-bg:        #f5f5f7;   /* page canvas */
+  --ds-surface:   #ffffff;   /* cards, tables, sheets */
+  --ds-surface-2: #fbfbfd;   /* zebra rows, subtle fills */
+  --ds-glass:     rgba(255,255,255,.72);
+
+  /* ---- Ink / text ---- */
+  --ds-ink:    #1d1d1f;      /* primary text */
+  --ds-ink-2:  #3a3a3c;      /* strong secondary */
+  --ds-muted:  #6e6e73;      /* secondary / captions (Apple gray) */
+  --ds-faint:  #8e8e93;      /* tertiary / footnotes */
+
+  /* ---- Lines ---- */
+  --ds-line:        #e2e2e7;
+  --ds-line-strong: #d2d2d7;
+
+  /* ---- Brand + iOS system semantic colors ---- */
+  --ds-blue:        #0071e3;  /* primary action (Apple keynote blue) */
+  --ds-blue-strong: #0066cc;
+  --ds-indigo:      #5e5ce6;
+  --ds-green:       #34c759;  /* systemGreen — success / scale */
+  --ds-amber:       #ff9f0a;  /* systemOrange — at risk / warn */
+  --ds-red:         #ff3b30;  /* systemRed — critical / pause */
+  --ds-purple:      #af52de;  /* systemPurple */
+  --ds-teal:        #5ac8fa;  /* systemTeal */
+  --ds-pink:        #ff375f;  /* systemPink */
+
+  /* ---- Soft tints for callouts / pills (light) ---- */
+  --ds-blue-tint:  #eef5ff;
+  --ds-green-tint: #e7f9ed;
+  --ds-amber-tint: #fff5e6;
+  --ds-red-tint:   #ffece9;
+  --ds-ink-tint:   #f2f2f7;
+
+  /* ---- Type ---- */
+  --ds-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+             "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ds-font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Radius ---- */
+  --ds-r-sm: 10px;
+  --ds-r:    14px;
+  --ds-r-lg: 20px;
+  --ds-r-xl: 28px;
+  --ds-r-pill: 980px;
+
+  /* ---- Elevation (low-contrast, Apple-soft) ---- */
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.06);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.10);
+
+  /* ---- Gradients ---- */
+  --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+  --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
+
+  /* ---- Motion ---- */
+  --ds-ease: cubic-bezier(.4, 0, .2, 1);
+  --ds-dur:  220ms;
+}
+
+/* ---------------------------------------------------------------- Base ---- */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--ds-font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  background: var(--ds-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ds-ink);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 .5em;
+  font-weight: 600;
+}
+h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.022em; }
+h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; }
+h3 { font-size: 19px; }
+h4 { font-size: 16px; }
+
+p  { margin: .65em 0; }
+a  { color: var(--ds-blue-strong); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+small, .ds-caption { color: var(--ds-muted); font-size: 13px; }
+
+code, kbd, samp {
+  font-family: var(--ds-font-mono);
+  font-size: 88%;
+  background: var(--ds-ink-tint);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--ds-line);
+  margin: 32px 0;
+}
+
+ul, ol { margin: .6em 0 .6em 2px; padding-left: 22px; }
+li { margin: 4px 0; }
+
+/* Tabular numerals everywhere numbers live — prevents column jitter */
+.ds-num, td, th, .ds-kpi__value, .ds-metric { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------- Layout ---- */
+.ds-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+}
+.ds-wrap--wide { max-width: 1200px; }
+
+.ds-section { margin: 36px 0; }
+
+/* -------------------------------------------------------------- Hero ------ */
+.ds-hero {
+  background: var(--ds-grad-blue);
+  color: #fff;
+  border-radius: var(--ds-r-lg);
+  padding: 40px 36px;
+  margin-bottom: 28px;
+  box-shadow: var(--ds-shadow);
+}
+.ds-hero h1 { color: #fff; margin: 0; font-size: 30px; }
+.ds-hero .ds-eyebrow { color: rgba(255,255,255,.82); }
+.ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
+
+.ds-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ds-muted);
+  margin-bottom: 6px;
+}
+
+/* -------------------------------------------------------------- Card ------ */
+.ds-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 22px 24px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-card + .ds-card { margin-top: 16px; }
+
+/* --------------------------------------------------------- KPI cards ------ */
+.ds-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.ds-kpi {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-kpi__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+}
+.ds-kpi__value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 6px 0 2px;
+}
+.ds-kpi__delta { font-size: 13px; font-weight: 500; }
+.ds-kpi__delta--up   { color: var(--ds-green); }
+.ds-kpi__delta--down { color: var(--ds-red); }
+
+/* --------------------------------------------------------- Badges --------- */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--ds-r-pill);
+  line-height: 1.3;
+}
+.ds-badge--good { background: var(--ds-green-tint); color: #1c7a3e; }
+.ds-badge--warn { background: var(--ds-amber-tint); color: #9a5b00; }
+.ds-badge--bad  { background: var(--ds-red-tint);   color: #b3261e; }
+.ds-badge--info { background: var(--ds-blue-tint);  color: var(--ds-blue-strong); }
+.ds-badge--neutral { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
+
+/* --------------------------------------------------------- Callouts ------- */
+.ds-callout {
+  border-radius: var(--ds-r);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-left: 4px solid var(--ds-blue);
+  background: var(--ds-blue-tint);
+}
+.ds-callout--good { border-left-color: var(--ds-green); background: var(--ds-green-tint); }
+.ds-callout--warn { border-left-color: var(--ds-amber); background: var(--ds-amber-tint); }
+.ds-callout--bad  { border-left-color: var(--ds-red);   background: var(--ds-red-tint); }
+
+/* ---------------------------------------------------------- Tables -------- */
+.ds-table-wrap {
+  overflow-x: auto;
+  margin: 18px 0;
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  box-shadow: var(--ds-shadow-sm);
+}
+table.ds-table, .ds-table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+.ds-table-wrap thead th, table.ds-table thead th {
+  background: var(--ds-grad-ink);
+  color: #fff;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.ds-table-wrap tbody td, table.ds-table tbody td {
+  padding: 11px 16px;
+  border-top: 1px solid var(--ds-line);
+}
+.ds-table-wrap tbody tr:nth-child(even),
+table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
+
+/* ---------------------------------------------------------- Charts -------- */
+/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
+.ds-chart {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 20px;
+  box-shadow: var(--ds-shadow-sm);
+  margin: 18px 0;
+}
+.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+/* --------------------------------------------------------- Footer --------- */
+.ds-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ds-line);
+  color: var(--ds-faint);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------- A11y ----------- */
+:focus-visible { outline: 2px solid var(--ds-blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* --------------------------------------------------------- Print ---------- */
+@page { size: Letter; margin: 14mm; }
+@media print {
+  body { background: #fff; }
+  .ds-card, .ds-kpi, .ds-table-wrap, .ds-chart { box-shadow: none; }
+  .ds-hero { box-shadow: none; }
+  .ds-section, .ds-card, .ds-kpi, .ds-chart, .ds-table-wrap { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+}
+
+/* --------------------------------------------------------- Responsive ----- */
+@media (max-width: 640px) {
+  .ds-wrap { padding: 24px 16px 56px; }
+  .ds-hero { padding: 28px 22px; }
+  h1 { font-size: 26px; }
+  .ds-kpi__value { font-size: 26px; }
+}
+</style>
+</head>
+<body><div class="ds-wrap">
+<header class="ds-hero">
+<div class="ds-eyebrow">Content Team Reference</div>
+<h1>Social Content Specs — 2026 Production Guide</h1>
+<div class="ds-meta">Facebook · Instagram · TikTok · LinkedIn · YouTube</div>
+</header>
+<h2>How to use this guide</h2>
+<p>This is your production reference for every post we ship. For each platform you'll find the <strong>media specs</strong> (sizes, lengths, formats), <strong>caption rules</strong> (limits + where the hook must land), and <strong>what the 2026 algorithm rewards</strong> — so every asset is built to perform, not just to fill a slot.</p>
+<p>&gt; <strong>Vertical-first, always.</strong> 9:16 (1080×1920) is the default for video on every platform. The hook has to land in the <strong>first 1–3 seconds</strong> or the post dies. Front-load the hook <em>and</em> your main keyword before the caption cuts off at "…more."</p>
+<hr>
+<h2>The 5 rules that apply everywhere</h2>
+<ol>
+<li><strong>Hook in the first 1–3 seconds.</strong> Watch-time and completion decide reach on every platform now.</li>
+<li><strong>Front-load the caption.</strong> Every platform truncates — put the hook and primary keyword in the first ~125 characters.</li>
+<li><strong>3–5 hashtags, not 30.</strong> Hashtags are de-emphasized in 2026. Use a few targeted ones; stuffing does nothing (or hurts).</li>
+<li><strong>Write for search.</strong> TikTok, Instagram, YouTube and LinkedIn are all search engines now. Keyword-rich captions, on-screen text, and alt text drive discovery as much as hashtags.</li>
+<li><strong>Original content wins; reposting loses.</strong> Recycled/duplicated posts get suppressed (Instagram openly penalizes 10+ reposts in 30 days). Disclose AI-generated media — undisclosed AI gets down-ranked.</li>
+</ol>
+<hr>
+<h2>Facebook</h2>
+<p><strong>Media sizes</strong></p>
+<div class="ds-table-wrap"><table><thead><tr><th>Use</th><th>Size</th><th>Ratio</th></tr></thead><tbody><tr><td>Feed image (best mobile reach)</td><td>1080 × 1350</td><td>4:5</td></tr><tr><td>Feed square</td><td>1080 × 1080</td><td>1:1</td></tr><tr><td>Reels / Stories</td><td>1080 × 1920</td><td>9:16</td></tr></tbody></table></div>
+<ul>
+<li><strong>Reels:</strong> 9:16, 1080×1920, <strong>3–90 seconds</strong>, MP4. Burn captions into the video (most people scroll with sound off).</li>
+<li><strong>Feed video:</strong> 16:9, 1:1, or 4:5.</li>
+</ul>
+<p><strong>Captions:</strong> keep it short — <strong>40–80 characters gets the most reach</strong>. Only the first ~125 characters show before "See more." Use <strong>1–3 hashtags</strong> max. Don't put links in the post body (it cuts reach) — <strong>put the link in the first comment</strong>.</p>
+<p><strong>What wins in 2026:</strong> Reels and video dominate (video is shared ~12× more than anything else). <strong>Shares and saves matter more than likes.</strong> Aim for 15–30s Reels. Post ~4–5×/week — more isn't better. Best days: Tue/Wed/Thu.</p>
+<hr>
+<h2>Instagram</h2>
+<p><strong>Media sizes</strong></p>
+<ul>
+<li><strong>Feed image: 4:5 — 1080 × 1350</strong> is the default now. (Square is no longer optimal.)</li>
+<li><strong>Reels / Stories:</strong> 9:16, 1080×1920. Keep key elements inside the center (top/bottom get covered by UI).</li>
+<li><strong>Reels:</strong> up to <strong>3 minutes</strong>. Regular feed video posts as a Reel now.</li>
+</ul>
+<p><strong>Captions:</strong> up to 2,200 characters; hook in the first ~125. Use <strong>3–5 hashtags</strong>. Captions aren't clickable — drive to <strong>link in bio</strong> or a <strong>Stories link sticker</strong>. Always fill in <strong>alt text</strong> (helps search + accessibility).</p>
+<p><strong>What wins in 2026:</strong> <strong>watch time is the #1 signal</strong>, then <strong>DM shares ("sends")</strong>, then likes. <strong>Design posts people want to send to a friend</strong> — that's what reaches new audiences. Reels for reach; carousels for saves and dwell time. Keep content original — reposts get you excluded from recommendations.</p>
+<hr>
+<h2>TikTok</h2>
+<p><strong>Media specs</strong></p>
+<ul>
+<li><strong>9:16, 1080 × 1920</strong>, MP4 or MOV.</li>
+<li>Length: <strong>3 seconds minimum</strong>, up to 10 min (in-app) / 60 min (upload) — but <strong>15–30 seconds performs best</strong>.</li>
+<li>Photo carousels: 2–10 images, 1080×1920.</li>
+<li>Keep key elements centered (edges get covered by the UI).</li>
+</ul>
+<p><strong>Captions:</strong> up to 4,000 characters now — TikTok turned captions into an SEO tool, so <strong>pack in keywords</strong>. Only ~80–150 characters show before "…more," so front-load the hook. <strong>3–5 hashtags.</strong> Optimal length ~150–300 characters.</p>
+<p><strong>What wins in 2026:</strong> <strong>completion rate</strong> — getting people to watch to the end. <strong>~70% completion triggers the viral push, 80%+ is strong.</strong> Hook in the first 1–2 seconds. Post <strong>3–5×/week</strong>. Ride trending audio while it's relevant. <strong>TikTok is a search engine</strong> (84% of searches are people exploring) — put keywords in your caption, on-screen text, and voiceover.</p>
+<hr>
+<h2>LinkedIn</h2>
+<p><strong>Media specs</strong></p>
+<ul>
+<li><strong>Images:</strong> 1200×627 (landscape), 1080×1080 (square), or <strong>1080×1350 (portrait — best on mobile)</strong>.</li>
+<li><strong>Document "carousels":</strong> upload a PDF that swipes like slides — 1080×1080 or 1080×1350, <strong>5–10 slides</strong> is the sweet spot. (These are the single best-performing format.)</li>
+<li><strong>Video:</strong> 3 seconds–10 min; 1:1, 16:9, or 9:16.</li>
+</ul>
+<p><strong>Captions:</strong> up to 3,000 characters; optimal ~150–250 words. The "See more" cut-off is brutal — <strong>~140 characters on mobile</strong> — so the hook has to land there. Use <strong>3–5 hashtags</strong>.</p>
+<p><strong>What wins in 2026:</strong> <strong>dwell time</strong> (a 60-second read is worth ~13× a 3-second scroll) and <strong>comments</strong> (worth far more than likes). Lead with <strong>knowledge and expertise</strong> — educational beats promotional. ⚠️ <strong>Outbound links cut reach ~60%, and the old "link in first comment" trick is now penalized too</strong> — deliver the value natively and link only as a secondary step. Reply to comments fast; the first hour decides everything. Post 2–5×/week.</p>
+<hr>
+<h2>YouTube</h2>
+<p><strong>Media specs</strong></p>
+<ul>
+<li><strong>Shorts:</strong> 9:16, <strong>up to 3 minutes</strong>, 1080×1920. (Must be vertical and ≤3 min to land on the Shorts shelf.)</li>
+<li><strong>Long-form:</strong> 16:9, 1920×1080 or higher.</li>
+<li><strong>Thumbnail:</strong> 1280×720, under 2 MB. This is your single biggest click driver — invest in it.</li>
+</ul>
+<p><strong>Text:</strong> Title up to 100 characters (keyword in the first ~60). Description up to 5,000 characters — put the keyword in the first line. <code>#Shorts</code> is no longer required.</p>
+<p><strong>What wins in 2026:</strong> <strong>viewer satisfaction</strong> now matters more than raw watch time (YouTube measures whether people come back and keep watching). Shorts and long-form are ranked separately — for <strong>Shorts</strong>, the swipe-vs-watch decision in the first 1–3 seconds + replays + shares; for <strong>long-form</strong>, retention and click-through (thumbnail + title). Be consistent. Disclosed AI content is fine; undisclosed AI gets down-ranked.</p>
+<hr>
+<h2>Quick reference</h2>
+<div class="ds-table-wrap"><table><thead><tr><th>Platform</th><th>Video ratio</th><th>Best video length</th><th>Caption hook by</th><th>Hashtags</th><th>The #1 thing that wins</th></tr></thead><tbody><tr><td><strong>Facebook</strong></td><td>9:16 (Reels)</td><td>15–30s</td><td>~125 chars</td><td>1–3</td><td>Shares &amp; saves</td></tr><tr><td><strong>Instagram</strong></td><td>9:16</td><td>15–30s (≤3 min)</td><td>~125 chars</td><td>3–5</td><td>DM shares ("sends")</td></tr><tr><td><strong>TikTok</strong></td><td>9:16</td><td>15–30s</td><td>~80–150 chars</td><td>3–5</td><td>Completion rate (~70%+)</td></tr><tr><td><strong>LinkedIn</strong></td><td>1:1 / 9:16</td><td>≤60s</td><td>~140 chars</td><td>3–5</td><td>Dwell time + comments</td></tr><tr><td><strong>YouTube</strong></td><td>9:16 (Shorts) / 16:9</td><td>Shorts ≤3 min</td><td>Title first 60 chars</td><td>—</td><td>Thumbnail CTR + retention</td></tr></tbody></table></div>
+<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
+</div></body></html>

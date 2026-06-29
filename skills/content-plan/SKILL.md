@@ -135,3 +135,4 @@ conventions. See also `skills/references-shared.md` for the canonical doc-URL ma
 | `references/domain-standards.md` | Pillar taxonomy, cadence + Reels-first formula, Social-SEO rules, good/bad calendar examples |
 | `references/api-reference.md` | Downstream `/publish` endpoints/fields/version/limits the calendar must satisfy (IG + Pages) |
 | `references/io-contract.md` | Full `content_plan` / `content_calendar` JSON schemas, example payloads, edge cases, exit codes |
+| `references/platform-specs.md` | Per-platform SOP (FB/IG/TikTok/LinkedIn/YouTube): media specs, copy limits, 2026 algorithm signals, publish-path status — read when fanning a pillar into platform-native variants |
