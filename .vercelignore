@@ -1,0 +1,6 @@
+# This is a static site: only public/ is served (vercel.json → outputDirectory: public).
+# Ignore everything at the root, then re-include the static output + its config.
+# Keeps heavy source (clients/, prospects/ research dumps, node_modules) out of the upload.
+/*
+!/public
+!/vercel.json
