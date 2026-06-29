@@ -14,7 +14,7 @@ step badges + an "Open" button per phase). The shareable link is `/reports/{slug
 
 - Walk a fixed client-journey manifest and resolve each phase's rendered HTML (newest wins).
 - Copy each resolved report into `public/reports/{slug}/` under a normalized `{NN}-{phase}.html` name.
-- Render the hub `index.html` using the design-system `ds-roadmap` component (numbered steps).
+- Render `_roadmap.html` (the numbered `ds-roadmap` "Overview") and the hub `index.html` shell — a phase menu pinned **top and bottom** (`ds-hubnav`) framing a same-tab `<iframe>` viewer (`ds-viewer`). Clicking a menu chip or a roadmap button swaps the report into the iframe in place.
 - Show missing phases as muted "In progress" steps so the client sees the full arc (suppress with `--only-ready`).
 - Update the `public/reports/index.json` manifest with a `{type:"bundle"}` entry (de-duped per slug).
 - Print a JSON summary: hub path, public URL, included/missing phases, deploy hint.

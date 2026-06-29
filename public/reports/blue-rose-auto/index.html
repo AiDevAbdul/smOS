@@ -380,6 +380,45 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
 }
 
+/* -------------------------------------------------- Hub (menu + viewer) --- */
+/* Single-tab deliverables hub: a phase menu pinned top AND bottom, framing an
+   iframe that shows the selected report in the same tab. Used by /bundle. */
+.ds-hub { min-height: 100vh; display: flex; flex-direction: column; background: var(--ds-bg); }
+.ds-hub__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; padding: 16px 22px 4px; font-weight: 700; font-size: 18px;
+  letter-spacing: -0.01em;
+}
+.ds-hub__head span { font-weight: 500; font-size: 13px; color: var(--ds-muted); }
+.ds-hubnav {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 12px 22px; background: var(--ds-glass);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--ds-line); position: sticky; top: 0; z-index: 10;
+}
+.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-line); position: static; }
+.ds-hubnav__btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
+  padding: 8px 14px 8px 8px; border-radius: var(--ds-r-pill);
+  background: var(--ds-ink-tint); color: var(--ds-ink-2);
+  border: 1px solid transparent; cursor: pointer;
+  transition: background var(--ds-dur) var(--ds-ease), color var(--ds-dur) var(--ds-ease);
+}
+.ds-hubnav__btn .n {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--ds-blue); color: #fff; font-size: 11px; font-weight: 700;
+  font-variant-numeric: tabular-nums; flex: none;
+}
+.ds-hubnav__btn:hover { background: var(--ds-blue-tint); }
+.ds-hubnav__btn.is-active { background: var(--ds-blue); color: #fff; }
+.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.28); }
+.ds-hubnav__btn.is-disabled { opacity: .45; cursor: default; }
+.ds-hubnav__btn.is-disabled .n { background: var(--ds-faint); }
+.ds-viewer { flex: 1 1 auto; width: 100%; border: 0; min-height: 72vh; background: var(--ds-bg); }
+
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {
   margin-top: 48px;
@@ -416,93 +455,46 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 </style>
 </head>
-<body><div class="ds-wrap">
-<header class="ds-hero">
-<div class="ds-eyebrow">Ducker Creative · Client Hub</div>
-<h1>Blue Rose Auto Care &amp; Repair Services</h1>
-<div class="ds-meta">Your engagement, start to finish · updated 2026-06-29</div>
-</header>
-  <div class="ds-roadmap">
-    <div class="ds-step">
-      <div class="ds-step-num">1</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Pre-Audit</div>
-        <p class="ds-step-desc">Where you started — market &amp; account snapshot before we engaged.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="01-pre-audit.html">Pre-Audit &rarr;</a>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step">
-      <div class="ds-step-num">2</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Account Audit</div>
-        <p class="ds-step-desc">Full Facebook, Instagram &amp; pixel health audit with a scored breakdown.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="02-audit.html">Open Audit &rarr;</a>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step is-pending">
-      <div class="ds-step-num">3</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Market Research</div>
-        <p class="ds-step-desc">Competitor creative intelligence and category benchmarking.</p>
-        <div class="ds-step-actions">
-        <span class="ds-btn" aria-disabled="true">In progress</span>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step">
-      <div class="ds-step-num">4</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Strategy Brief</div>
-        <p class="ds-step-desc">The paid-media game plan: objectives, offers, and creative angles.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="04-strategy-brief.html">Open Strategy &rarr;</a>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step">
-      <div class="ds-step-num">5</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Audience Map</div>
-        <p class="ds-step-desc">Targeting plan — audience clusters, interests, and lookalikes.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="05-audience-map.html">Open Audience Map &rarr;</a>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step">
-      <div class="ds-step-num">6</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Ad Creative</div>
-        <p class="ds-step-desc">Scored, voice-checked ad copy package ready to launch.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="06-ad-creative.html">Open Ad Copy &rarr;</a>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step">
-      <div class="ds-step-num">7</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Content Plan</div>
-        <p class="ds-step-desc">Your organic content pillars and the Reels-first calendar.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="07-content-plan.html">Open Content Plan &rarr;</a>
-        </div>
-      </div>
-    </div>
-    <div class="ds-step">
-      <div class="ds-step-num">8</div>
-      <div class="ds-step-body">
-        <div class="ds-step-title">Performance Reports</div>
-        <p class="ds-step-desc">Ongoing results — weekly, monthly, and before/after reviews.</p>
-        <div class="ds-step-actions">
-        <a class="ds-btn" href="08-2026-06-19_weekly.html">Weekly Report · 2026-06-19 &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </div>
-<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
-</div></body></html>
+<body><div class="ds-hub">
+  <div class="ds-hub__head">Blue Rose Auto Care &amp; Repair Services — Engagement Hub <span>Ducker Creative</span></div>
+  <nav class="ds-hubnav" aria-label="Report navigation (top)">
+      <button class="ds-hubnav__btn is-active" data-src="_roadmap.html"><span class="n">&#8962;</span> Overview</button>
+      <button class="ds-hubnav__btn" data-src="01-pre-audit.html"><span class="n">1</span> Pre-Audit</button>
+      <button class="ds-hubnav__btn" data-src="02-audit.html"><span class="n">2</span> Account Audit</button>
+      <span class="ds-hubnav__btn is-disabled"><span class="n">3</span> Market Research</span>
+      <button class="ds-hubnav__btn" data-src="04-strategy-brief.html"><span class="n">4</span> Strategy Brief</button>
+      <button class="ds-hubnav__btn" data-src="05-audience-map.html"><span class="n">5</span> Audience Map</button>
+      <button class="ds-hubnav__btn" data-src="06-ad-creative.html"><span class="n">6</span> Ad Creative</button>
+      <button class="ds-hubnav__btn" data-src="07-content-plan.html"><span class="n">7</span> Content Plan</button>
+      <button class="ds-hubnav__btn" data-src="08-2026-06-19_weekly.html"><span class="n">8</span> Performance Reports</button>
+    </nav>
+  <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
+  <nav class="ds-hubnav ds-hubnav--bottom" aria-label="Report navigation (bottom)">
+      <button class="ds-hubnav__btn is-active" data-src="_roadmap.html"><span class="n">&#8962;</span> Overview</button>
+      <button class="ds-hubnav__btn" data-src="01-pre-audit.html"><span class="n">1</span> Pre-Audit</button>
+      <button class="ds-hubnav__btn" data-src="02-audit.html"><span class="n">2</span> Account Audit</button>
+      <span class="ds-hubnav__btn is-disabled"><span class="n">3</span> Market Research</span>
+      <button class="ds-hubnav__btn" data-src="04-strategy-brief.html"><span class="n">4</span> Strategy Brief</button>
+      <button class="ds-hubnav__btn" data-src="05-audience-map.html"><span class="n">5</span> Audience Map</button>
+      <button class="ds-hubnav__btn" data-src="06-ad-creative.html"><span class="n">6</span> Ad Creative</button>
+      <button class="ds-hubnav__btn" data-src="07-content-plan.html"><span class="n">7</span> Content Plan</button>
+      <button class="ds-hubnav__btn" data-src="08-2026-06-19_weekly.html"><span class="n">8</span> Performance Reports</button>
+    </nav>
+</div>
+<script>
+  (function () {
+    var viewer = document.getElementById("viewer");
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest(".ds-hubnav__btn[data-src]");
+      if (!b) return;
+      var src = b.getAttribute("data-src");
+      viewer.setAttribute("src", src);
+      // keep top + bottom menus in sync
+      document.querySelectorAll(".ds-hubnav__btn").forEach(function (x) {
+        x.classList.toggle("is-active", x.getAttribute("data-src") === src);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  })();
+</script>
+</body></html>

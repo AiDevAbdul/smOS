@@ -34,7 +34,8 @@ the hub links only to client-facing HTML.
 
 | Path | What |
 |------|------|
-| `public/reports/{slug}/index.html` | The hub (the shareable link `/reports/{slug}/`) |
+| `public/reports/{slug}/index.html` | The hub **shell** (the shareable link `/reports/{slug}/`): a phase menu pinned top + bottom framing a same-tab `<iframe>` viewer |
+| `public/reports/{slug}/_roadmap.html` | The **Overview** view (numbered `ds-roadmap`) — the iframe's default `src` |
 | `public/reports/{slug}/{NN}-{phase}.html` | Copied single-phase report (e.g. `04-strategy-brief.html`) |
 | `public/reports/{slug}/{NN}-{origname}.html` | Copied group report, dated basename preserved (e.g. `08-2026-06-19_weekly.html`) |
 | `public/reports/index.json` | Appended/replaced `bundle` entry (de-duped by `slug`+`type`) |

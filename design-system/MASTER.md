@@ -74,6 +74,7 @@ Semantic, not decorative: status is always color **+** text/icon (WCAG `color-no
 `ds-callout` (`--good/warn/bad`) · `ds-table-wrap` + `table` · `ds-chart` + `ds-chart__title` · `ds-footer` ·
 `ds-btn` (`--ghost`; `aria-disabled="true"` = inert) ·
 `ds-roadmap` › `ds-step` (`.is-pending` = muted/dashed) › `ds-step-num` (circular numbered badge), `ds-step-body` (`ds-step-title` / `ds-step-desc` / `ds-step-actions`). Numbered client-journey hub used by `/bundle`.
+`ds-hub` (flex-column shell) › `ds-hub__head` + `ds-hubnav` (`--bottom`; glass sticky menu bar) › `ds-hubnav__btn` (`.n` numbered badge; `.is-active` / `.is-disabled`) + `ds-viewer` (same-tab iframe). The `/bundle` single-tab viewer: phase menu top + bottom framing a report iframe.
 
 Charts use `CHART_PALETTE` order + `CHART_THEME` (SF font, gray grid, point-style legend).
 

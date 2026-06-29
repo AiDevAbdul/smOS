@@ -107,6 +107,7 @@ else for (const f of readdirSync(publicDir)) if (/^\d{2}-/.test(f)) rmSync(resol
 const included = [];
 const missing = [];
 const stepsHtml = [];
+const menuItems = []; // { num, title, src|null, disabled } — feeds the top+bottom menu
 let n = 0;
 
 for (const phase of PHASES) {
@@ -116,6 +117,7 @@ for (const phase of PHASES) {
     if (onlyReady) continue;
     n += 1;
     stepsHtml.push(stepBlock(n, phase.title, phase.desc, [], true));
+    menuItems.push({ num: n, title: phase.title, src: null, disabled: true });
     continue;
   }
   n += 1;
@@ -130,6 +132,8 @@ for (const phase of PHASES) {
     return { href: destName, label: hit.label || phase.title };
   });
   stepsHtml.push(stepBlock(n, phase.title, phase.desc, actions, false));
+  // Menu jumps to the phase's first (newest) report; the roadmap lists the rest.
+  menuItems.push({ num: n, title: phase.title, src: actions[0].href, disabled: false });
 }
 
 function stepBlock(num, title, desc, actions, pending) {
@@ -149,9 +153,9 @@ function stepBlock(num, title, desc, actions, pending) {
     </div>`;
 }
 
-// ── Assemble the hub page ─────────────────────────────────────────────────────
-const html = `<!DOCTYPE html>
-<html lang="en">${reportHead({ title: `${clientName} — Engagement Hub` })}
+// ── Overview view (_roadmap.html) — the numbered roadmap shown in the viewer ──
+const roadmapHtml = `<!DOCTYPE html>
+<html lang="en">${reportHead({ title: `${clientName} — Overview` })}
 <body><div class="ds-wrap">
 ${heroHeader({ title: clientName, subtitle: `Your engagement, start to finish · updated ${today}`, eyebrow: `${agencyName} · Client Hub` })}
   <div class="ds-roadmap">
@@ -159,6 +163,46 @@ ${stepsHtml.join("\n")}
   </div>
 ${reportFooter(today)}
 </div></body></html>`;
+writeFileSync(resolve(publicDir, "_roadmap.html"), roadmapHtml);
+
+// ── Hub shell (index.html) — phase menu top + bottom framing a same-tab viewer ─
+function menuHtml(pos) {
+  const home = `<button class="ds-hubnav__btn is-active" data-src="_roadmap.html"><span class="n">&#8962;</span> Overview</button>`;
+  const items = menuItems.map((m) => m.disabled
+    ? `<span class="ds-hubnav__btn is-disabled"><span class="n">${m.num}</span> ${esc(m.title)}</span>`
+    : `<button class="ds-hubnav__btn" data-src="${esc(m.src)}"><span class="n">${m.num}</span> ${esc(m.title)}</button>`
+  ).join("\n      ");
+  return `<nav class="ds-hubnav${pos === "bottom" ? " ds-hubnav--bottom" : ""}" aria-label="Report navigation (${pos})">
+      ${home}
+      ${items}
+    </nav>`;
+}
+
+const html = `<!DOCTYPE html>
+<html lang="en">${reportHead({ title: `${clientName} — Engagement Hub` })}
+<body><div class="ds-hub">
+  <div class="ds-hub__head">${esc(clientName)} — Engagement Hub <span>${esc(agencyName)}</span></div>
+  ${menuHtml("top")}
+  <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
+  ${menuHtml("bottom")}
+</div>
+<script>
+  (function () {
+    var viewer = document.getElementById("viewer");
+    document.addEventListener("click", function (e) {
+      var b = e.target.closest(".ds-hubnav__btn[data-src]");
+      if (!b) return;
+      var src = b.getAttribute("data-src");
+      viewer.setAttribute("src", src);
+      // keep top + bottom menus in sync
+      document.querySelectorAll(".ds-hubnav__btn").forEach(function (x) {
+        x.classList.toggle("is-active", x.getAttribute("data-src") === src);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  })();
+</script>
+</body></html>`;
 
 const hubPath = resolve(publicDir, "index.html");
 writeFileSync(hubPath, html);
