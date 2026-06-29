@@ -10,27 +10,33 @@ Inputs (paths flag-driven, all required except --niche-html):
   --output            output HTML path
   --niche-html        optional embedded link to market_<ts>.html
 
-Design: warm editorial palette (ink/ground/signal/resolve) with DM Serif Display +
-DM Sans + JetBrains Mono. Canvas radial gauge, sticky left-rail nav, 9 sections.
-Emotional arc: recognition → clarity → relief.
+Design: smOS Apple/Cupertino design system (design-system/smos-design-system.css)
+— SF Pro system type, #f5f5f7 canvas, iOS semantic colors. Canvas radial gauge,
+sticky left-rail nav, 9 sections. Emotional arc: recognition → clarity → relief.
 """
 
 import argparse
 import html as ihtml
 import json
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Shared smOS design system (Apple/Cupertino) — single source of truth.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from design_system import design_system_css  # noqa: E402
+
 
 # ── Design tokens ───────────────────────────────────────────────────────────
-INK     = "#1A1A24"
-GROUND  = "#F7F6F2"
-SIGNAL  = "#C8402A"
-RESOLVE = "#2A6B5C"
-RULE    = "#E2E0D8"
-MUTED   = "#6B6860"
-AMBER   = "#D4860A"
+# Apple/Cupertino palette (aligned with design-system/smos-design-system.css)
+INK     = "#1d1d1f"
+GROUND  = "#f5f5f7"
+SIGNAL  = "#ff3b30"
+RESOLVE = "#34c759"
+RULE    = "#e2e2e7"
+MUTED   = "#6e6e73"
+AMBER   = "#ff9f0a"
 
 
 def score_color(v: float) -> str:
@@ -317,6 +323,7 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
     # ── FB about + IG bio snippets ──
     fb_about = (fb.get("about", "") or "")[:120]
     ig_bio   = (ig.get("bio",   "") or "")[:120]
+    ds_css   = design_system_css()
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -324,12 +331,11 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pre-Audit · {e(business)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+{ds_css}
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 
+/* pre-audit local tokens mapped onto the smOS design system (Apple palette) */
 :root {{
   --ink:     {INK};
   --ground:  {GROUND};
@@ -338,13 +344,13 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
   --rule:    {RULE};
   --muted:   {MUTED};
   --amber:   {AMBER};
-  --radius:  12px;
-  --shadow:  0 2px 18px rgba(26,26,36,.08);
+  --radius:  var(--ds-r);
+  --shadow:  var(--ds-shadow);
 }}
 
 html {{ scroll-behavior: smooth; }}
 body {{
-  font-family: "DM Sans", system-ui, sans-serif;
+  font-family: var(--ds-font);
   background: var(--ground); color: var(--ink);
   line-height: 1.6; font-size: 15px;
 }}
@@ -359,12 +365,12 @@ body {{
   display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center;
 }}
 .hero-eyebrow {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase;
   color: var(--muted); margin-bottom: 10px;
 }}
 .hero h1 {{
-  font-family: "DM Serif Display", serif;
+  font-family: var(--ds-font);
   font-size: 40px; line-height: 1.1; font-weight: 400;
   margin-bottom: 8px;
 }}
@@ -373,7 +379,7 @@ body {{
   line-height: 1.55; max-width: 540px; margin-bottom: 20px;
 }}
 .hero-date {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 10px; color: var(--muted); margin-bottom: 16px;
 }}
 .pills {{ display: flex; flex-wrap: wrap; gap: 8px; }}
@@ -386,18 +392,18 @@ body {{
 /* Score block */
 .score-block {{ text-align: center; flex-shrink: 0; }}
 .score-band-label {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
   color: var(--muted); margin-top: 8px;
 }}
 .outspend-block {{ margin-top: 20px; }}
 .outspend-eyebrow {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
   color: var(--muted); margin-bottom: 4px;
 }}
 .outspend-ratio {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 32px; font-weight: 700; color: var(--signal); line-height: 1;
 }}
 .outspend-caption {{
@@ -429,7 +435,7 @@ body {{
   color: var(--ink); background: var(--rule);
 }}
 .rail-section-label {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase;
   color: var(--rule); padding: 16px 10px 4px; list-style: none;
 }}
@@ -438,7 +444,7 @@ body {{
 .content {{ min-width: 0; }}
 .section {{ margin-bottom: 52px; scroll-margin-top: 28px; }}
 .section-heading {{
-  font-family: "DM Serif Display", serif;
+  font-family: var(--ds-font);
   font-size: 25px; font-weight: 400; color: var(--ink); margin-bottom: 4px;
 }}
 .section-sub {{
@@ -453,12 +459,12 @@ body {{
 .card + .card {{ margin-top: 10px; }}
 .card-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }}
 .card-label {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
   color: var(--muted); margin-bottom: 4px;
 }}
 .card-value {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.1;
 }}
 .card-caption {{ font-size: 11px; color: var(--muted); margin-top: 4px; }}
@@ -472,7 +478,7 @@ table {{ width: 100%; border-collapse: collapse; font-size: 13px; }}
 thead th {{
   background: var(--ink); color: var(--ground);
   padding: 11px 14px; text-align: left;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 9px; font-weight: 700; letter-spacing: .9px;
   text-transform: uppercase; white-space: nowrap;
 }}
@@ -480,12 +486,12 @@ tbody tr {{ border-bottom: 1px solid var(--rule); }}
 tbody tr:last-child {{ border-bottom: none; }}
 tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 .page-name {{ font-weight: 600; }}
-.mono {{ font-family: "JetBrains Mono", monospace; }}
+.mono {{ font-family: var(--ds-font-mono); }}
 .muted {{ color: var(--muted); }}
 .small {{ font-size: 11px; }}
 .dim-label {{ font-weight: 500; font-size: 13px; }}
 .dim-weight {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 11px; color: var(--muted); text-align: right;
 }}
 
@@ -500,7 +506,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
   transition: width .85s cubic-bezier(.4,0,.2,1);
 }}
 .bar-num {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 13px; font-weight: 700; min-width: 30px;
 }}
 
@@ -518,7 +524,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 .wins-card {{ border-top: 3px solid {RESOLVE}; }}
 .gaps-card {{ border-top: 3px solid {SIGNAL}; }}
 .card-type-label {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
   margin-bottom: 14px;
 }}
@@ -526,7 +532,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 .gaps-card .card-type-label {{ color: {SIGNAL}; }}
 .tier-group {{ margin-bottom: 10px; }}
 .tier-label {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 8px; letter-spacing: 1.4px; text-transform: uppercase;
   color: var(--muted); margin-bottom: 6px;
   padding-bottom: 4px; border-bottom: 1px solid var(--rule);
@@ -552,7 +558,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
   margin-bottom: 10px;
 }}
 .rec-num {{
-  font-family: "DM Serif Display", serif;
+  font-family: var(--ds-font);
   font-size: 36px; font-weight: 400; color: var(--rule);
   line-height: 1; text-align: center; padding-top: 2px;
 }}
@@ -561,7 +567,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 .rec-action   {{ font-size: 13px; margin-bottom: 4px; }}
 .rec-outcome  {{
   font-size: 11px; color: {RESOLVE}; font-weight: 700;
-  font-family: "JetBrains Mono", monospace; letter-spacing: .3px;
+  font-family: var(--ds-font-mono); letter-spacing: .3px;
 }}
 
 /* ── CTA ──────────────────────────────────────────────────────── */
@@ -571,7 +577,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 }}
 .cta-inner {{ max-width: 520px; margin: 0 auto; }}
 .cta-heading {{
-  font-family: "DM Serif Display", serif;
+  font-family: var(--ds-font);
   font-size: 32px; font-weight: 400; margin-bottom: 10px;
 }}
 .cta-sub {{
@@ -585,7 +591,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 }}
 .timeline-row:last-child {{ border-bottom: 1px solid rgba(226,224,216,.12); }}
 .timeline-day {{
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 10px; color: {RESOLVE}; font-weight: 700;
   min-width: 50px; padding-top: 3px; letter-spacing: .5px;
 }}
@@ -605,7 +611,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 /* ── Footer ───────────────────────────────────────────────────── */
 .footer {{
   text-align: center; padding: 22px;
-  font-family: "JetBrains Mono", monospace;
+  font-family: var(--ds-font-mono);
   font-size: 10px; color: var(--muted); letter-spacing: .5px;
   border-top: 1px solid var(--rule); background: var(--ground);
 }}
@@ -916,11 +922,11 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
       }}
 
       ctx.fillStyle = color;
-      ctx.font = 'bold 28px "JetBrains Mono", monospace';
+      ctx.font = 'bold 28px var(--ds-font-mono)';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(score, cx, cy - 6);
       ctx.fillStyle = MUTED;
-      ctx.font = '11px "DM Sans", sans-serif';
+      ctx.font = '11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
       ctx.fillText('/100', cx, cy + 13);
     }}
     frame();

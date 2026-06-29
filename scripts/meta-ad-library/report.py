@@ -8,6 +8,10 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+# Shared smOS design system (Apple/Cupertino) — single source of truth.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from design_system import design_system_css, CHART_THEME  # noqa: E402
+
 
 def score_color(score: float) -> str:
     if score >= 80:
@@ -139,6 +143,7 @@ def build_html(data: dict) -> str:
         </tr>"""
 
     pill_badges = "".join(f'<span class="pill">{n}</span>' for n in names)
+    ds_css = design_system_css()
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -148,13 +153,14 @@ def build_html(data: dict) -> str:
 <title>Meta Ads Competitor Analysis</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
+{ds_css}
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
 body {{
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
-    background: #f5f5f7; color: #1d1d1f; line-height: 1.5;
+    font-family: var(--ds-font);
+    background: var(--ds-bg); color: var(--ds-ink); line-height: 1.5;
 }}
 .header {{
-    background: linear-gradient(135deg, #0071e3 0%, #30d158 100%);
+    background: var(--ds-grad-blue);
     padding: 48px 40px 40px; color: #fff;
 }}
 .header h1 {{ font-size: 36px; font-weight: 700; letter-spacing: -0.5px; }}
@@ -303,8 +309,9 @@ tbody td {{ padding: 14px 16px; vertical-align: middle; }}
 </div>
 
 <script>
+{CHART_THEME}
 const labels = {labels_json};
-const chartColors = ['#0071e3','#34c759','#ff375f','#ff9f0a','#af52de','#5ac8fa'];
+const chartColors = ['#0071e3','#34c759','#ff9f0a','#af52de','#5ac8fa','#ff375f','#5e5ce6'];
 
 // Ad Volume
 new Chart(document.getElementById('adVolumeChart'), {{

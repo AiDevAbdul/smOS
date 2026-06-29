@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blue Rose Auto Care &amp; Repair Services — Audience Map</title>
+
+<style>/* ============================================================================
+   smOS Design System — "Cupertino"
+   Single source of truth for every client-facing report & template.
+   Apple / iOS visual language: SF Pro system type, #f5f5f7 canvas, #1d1d1f ink,
+   system semantic colors, soft elevation, generous radii, 8pt rhythm.
+
+   DO NOT fork this per report. Renderers read this file at render time via
+   scripts/lib/design_system.js (Node) and scripts/lib/design_system.py (Python)
+   and inline it. Edit here once; every deliverable inherits it.
+   ============================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Surfaces (Apple light-gray system) ---- */
+  --ds-bg:        #f5f5f7;   /* page canvas */
+  --ds-surface:   #ffffff;   /* cards, tables, sheets */
+  --ds-surface-2: #fbfbfd;   /* zebra rows, subtle fills */
+  --ds-glass:     rgba(255,255,255,.72);
+
+  /* ---- Ink / text ---- */
+  --ds-ink:    #1d1d1f;      /* primary text */
+  --ds-ink-2:  #3a3a3c;      /* strong secondary */
+  --ds-muted:  #6e6e73;      /* secondary / captions (Apple gray) */
+  --ds-faint:  #8e8e93;      /* tertiary / footnotes */
+
+  /* ---- Lines ---- */
+  --ds-line:        #e2e2e7;
+  --ds-line-strong: #d2d2d7;
+
+  /* ---- Brand + iOS system semantic colors ---- */
+  --ds-blue:        #0071e3;  /* primary action (Apple keynote blue) */
+  --ds-blue-strong: #0066cc;
+  --ds-indigo:      #5e5ce6;
+  --ds-green:       #34c759;  /* systemGreen — success / scale */
+  --ds-amber:       #ff9f0a;  /* systemOrange — at risk / warn */
+  --ds-red:         #ff3b30;  /* systemRed — critical / pause */
+  --ds-purple:      #af52de;  /* systemPurple */
+  --ds-teal:        #5ac8fa;  /* systemTeal */
+  --ds-pink:        #ff375f;  /* systemPink */
+
+  /* ---- Soft tints for callouts / pills (light) ---- */
+  --ds-blue-tint:  #eef5ff;
+  --ds-green-tint: #e7f9ed;
+  --ds-amber-tint: #fff5e6;
+  --ds-red-tint:   #ffece9;
+  --ds-ink-tint:   #f2f2f7;
+
+  /* ---- Type ---- */
+  --ds-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+             "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ds-font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Radius ---- */
+  --ds-r-sm: 10px;
+  --ds-r:    14px;
+  --ds-r-lg: 20px;
+  --ds-r-xl: 28px;
+  --ds-r-pill: 980px;
+
+  /* ---- Elevation (low-contrast, Apple-soft) ---- */
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.06);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.10);
+
+  /* ---- Gradients ---- */
+  --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+  --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
+
+  /* ---- Motion ---- */
+  --ds-ease: cubic-bezier(.4, 0, .2, 1);
+  --ds-dur:  220ms;
+}
+
+/* ---------------------------------------------------------------- Base ---- */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--ds-font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  background: var(--ds-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ds-ink);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 .5em;
+  font-weight: 600;
+}
+h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.022em; }
+h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; }
+h3 { font-size: 19px; }
+h4 { font-size: 16px; }
+
+p  { margin: .65em 0; }
+a  { color: var(--ds-blue-strong); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+small, .ds-caption { color: var(--ds-muted); font-size: 13px; }
+
+code, kbd, samp {
+  font-family: var(--ds-font-mono);
+  font-size: 88%;
+  background: var(--ds-ink-tint);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--ds-line);
+  margin: 32px 0;
+}
+
+ul, ol { margin: .6em 0 .6em 2px; padding-left: 22px; }
+li { margin: 4px 0; }
+
+/* Tabular numerals everywhere numbers live — prevents column jitter */
+.ds-num, td, th, .ds-kpi__value, .ds-metric { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------- Layout ---- */
+.ds-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+}
+.ds-wrap--wide { max-width: 1200px; }
+
+.ds-section { margin: 36px 0; }
+
+/* -------------------------------------------------------------- Hero ------ */
+.ds-hero {
+  background: var(--ds-grad-blue);
+  color: #fff;
+  border-radius: var(--ds-r-lg);
+  padding: 40px 36px;
+  margin-bottom: 28px;
+  box-shadow: var(--ds-shadow);
+}
+.ds-hero h1 { color: #fff; margin: 0; font-size: 30px; }
+.ds-hero .ds-eyebrow { color: rgba(255,255,255,.82); }
+.ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
+
+.ds-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ds-muted);
+  margin-bottom: 6px;
+}
+
+/* -------------------------------------------------------------- Card ------ */
+.ds-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 22px 24px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-card + .ds-card { margin-top: 16px; }
+
+/* --------------------------------------------------------- KPI cards ------ */
+.ds-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.ds-kpi {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-kpi__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+}
+.ds-kpi__value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 6px 0 2px;
+}
+.ds-kpi__delta { font-size: 13px; font-weight: 500; }
+.ds-kpi__delta--up   { color: var(--ds-green); }
+.ds-kpi__delta--down { color: var(--ds-red); }
+
+/* --------------------------------------------------------- Badges --------- */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--ds-r-pill);
+  line-height: 1.3;
+}
+.ds-badge--good { background: var(--ds-green-tint); color: #1c7a3e; }
+.ds-badge--warn { background: var(--ds-amber-tint); color: #9a5b00; }
+.ds-badge--bad  { background: var(--ds-red-tint);   color: #b3261e; }
+.ds-badge--info { background: var(--ds-blue-tint);  color: var(--ds-blue-strong); }
+.ds-badge--neutral { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
+
+/* --------------------------------------------------------- Callouts ------- */
+.ds-callout {
+  border-radius: var(--ds-r);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-left: 4px solid var(--ds-blue);
+  background: var(--ds-blue-tint);
+}
+.ds-callout--good { border-left-color: var(--ds-green); background: var(--ds-green-tint); }
+.ds-callout--warn { border-left-color: var(--ds-amber); background: var(--ds-amber-tint); }
+.ds-callout--bad  { border-left-color: var(--ds-red);   background: var(--ds-red-tint); }
+
+/* ---------------------------------------------------------- Tables -------- */
+.ds-table-wrap {
+  overflow-x: auto;
+  margin: 18px 0;
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  box-shadow: var(--ds-shadow-sm);
+}
+table.ds-table, .ds-table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+.ds-table-wrap thead th, table.ds-table thead th {
+  background: var(--ds-grad-ink);
+  color: #fff;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.ds-table-wrap tbody td, table.ds-table tbody td {
+  padding: 11px 16px;
+  border-top: 1px solid var(--ds-line);
+}
+.ds-table-wrap tbody tr:nth-child(even),
+table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
+
+/* ---------------------------------------------------------- Charts -------- */
+/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
+.ds-chart {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 20px;
+  box-shadow: var(--ds-shadow-sm);
+  margin: 18px 0;
+}
+.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+/* --------------------------------------------------------- Footer --------- */
+.ds-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ds-line);
+  color: var(--ds-faint);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------- A11y ----------- */
+:focus-visible { outline: 2px solid var(--ds-blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* --------------------------------------------------------- Print ---------- */
+@page { size: Letter; margin: 14mm; }
+@media print {
+  body { background: #fff; }
+  .ds-card, .ds-kpi, .ds-table-wrap, .ds-chart { box-shadow: none; }
+  .ds-hero { box-shadow: none; }
+  .ds-section, .ds-card, .ds-kpi, .ds-chart, .ds-table-wrap { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+}
+
+/* --------------------------------------------------------- Responsive ----- */
+@media (max-width: 640px) {
+  .ds-wrap { padding: 24px 16px 56px; }
+  .ds-hero { padding: 28px 22px; }
+  h1 { font-size: 26px; }
+  .ds-kpi__value { font-size: 26px; }
+}
+</style>
+</head>
+<body><div class="ds-wrap">
+<header class="ds-hero">
+<div class="ds-eyebrow">smOS · Targeting</div>
+<h1>Blue Rose Auto Care &amp; Repair Services — Audience Map</h1>
+<div class="ds-meta">5 clusters · 6 retargeting layers</div>
+</header>
+<h2>Overview</h2>
+<p>Targeting plan for <strong>Blue Rose Auto Care &amp; Repair Services</strong> — 5 interest clusters, 6 retargeting layers, 4 lookalikes.</p>
+<h2>Geo &amp; Demographics</h2>
+<ul>
+<li><strong>Geo:</strong> 30mi around Springfield, OR 97478</li>
+<li><strong>Age:</strong> 28–60 · <strong>Gender:</strong> all</li>
+<li><strong>Language:</strong> en</li>
+</ul>
+<h2>Interest Clusters</h2>
+<div class="ds-table-wrap"><table><thead><tr><th>Cluster</th><th>Objective</th><th>Income layer</th><th>Est. size</th><th>Interests</th></tr></thead><tbody><tr><td>Mechanical / Repair — broad</td><td>LEADS</td><td>mid_broad</td><td>180k-220k</td><td>Auto repair, Car maintenance, Brakes, Engine, Oil change</td></tr><tr><td>Cosmetic / Luxury Owner</td><td>LEADS, OUTCOME_AWARENESS</td><td>higher_income_zips_plus_luxury_interest</td><td>55k-80k</td><td>Ceramic coating, Paint protection film, Car detailing, Auto detailing, Window tinting</td></tr><tr><td>Tesla &amp; EV Owners</td><td>LEADS, OUTCOME_AWARENESS</td><td>—</td><td>8k-15k</td><td>Tesla, Inc., Tesla Model 3, Tesla Model Y, Tesla Model S, Electric vehicle</td></tr><tr><td>Truck / Off-road / Lifted</td><td>LEADS</td><td>—</td><td>35k-55k</td><td>Ford F-150, Ram Trucks, Chevrolet Silverado, Jeep Wrangler, Off-roading</td></tr><tr><td>Local Fleet Managers</td><td>LEADS</td><td>—</td><td>5k-12k</td><td>Fleet management, Small business owner, Contractor (general), Construction</td></tr></tbody></table></div>
+<h2>Retargeting Layers</h2>
+<div class="ds-table-wrap"><table><thead><tr><th>Layer</th><th>Source</th><th>Window</th><th>Min-size warning</th></tr></thead><tbody><tr><td>RT_PIX_30D</td><td>pixel</td><td>30d</td><td>1000</td></tr><tr><td>RT_PIX_60D</td><td>pixel</td><td>60d</td><td>1000</td></tr><tr><td>RT_IG_ENG_365D</td><td>instagram_engagement</td><td>365d</td><td>—</td></tr><tr><td>RT_FB_ENG_365D</td><td>facebook_engagement</td><td>365d</td><td>—</td></tr><tr><td>RT_FORM_SUBMIT_180D</td><td>pixel_event:Lead</td><td>180d</td><td>—</td></tr><tr><td>RT_VIDEO_75PCT_30D</td><td>video_view_75pct</td><td>30d</td><td>—</td></tr></tbody></table></div>
+<h2>Lookalikes</h2>
+<div class="ds-table-wrap"><table><thead><tr><th>Lookalike</th><th>Seed</th><th>Country</th><th>%</th></tr></thead><tbody><tr><td>LAL_CUSTOMER_LIST_1PCT</td><td>customer_list_email_phone_12mo</td><td>US</td><td>1%</td></tr><tr><td>LAL_CUSTOMER_LIST_3PCT</td><td>customer_list_email_phone_12mo</td><td>US</td><td>3%</td></tr><tr><td>LAL_CUSTOMER_LIST_5PCT</td><td>customer_list_email_phone_12mo</td><td>US</td><td>5%</td></tr><tr><td>LAL_LEAD_180D_1PCT</td><td>RT_FORM_SUBMIT_180D</td><td>US</td><td>1%</td></tr></tbody></table></div>
+<h2>Exclusions</h2>
+<ul>
+<li><strong>EXC_RECENT_LEADS_30D</strong> — exclude from all cold prospecting adsets to avoid double-counting and stale CPL inflation</li>
+<li><strong>EXC_EMPLOYEES</strong> — exclude employees from every adset (vanity engagement risk)</li>
+<li><strong>EXC_PURCHASED_60D</strong> — exclude from acquisition adsets, include in upsell adsets only</li>
+</ul>
+<h2>Recommended Ad Sets</h2>
+<div class="ds-table-wrap"><table><thead><tr><th>Ad set</th><th>Cluster</th><th>Objective</th><th>Daily budget</th></tr></thead><tbody><tr><td>FEED_2860_INTLUXCOS</td><td>INT_LUX_COS</td><td>OUTCOME_LEADS</td><td>$25–$50</td></tr><tr><td>REELS_2860_INTTESLAEV</td><td>INT_TESLA_EV</td><td>OUTCOME_LEADS</td><td>$15–$30</td></tr><tr><td>FEED_2860_INTMECHBROAD</td><td>INT_MECH_BROAD</td><td>OUTCOME_LEADS</td><td>$20–$40</td></tr><tr><td>BROAD_2860_AWARE</td><td>broad_geo_only</td><td>OUTCOME_AWARENESS</td><td>$15–$30</td></tr></tbody></table></div>
+<p>_Generated by smOS <code>/audience-map</code>. Overlap analysis is finalized against live API data before launch._</p>
+<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
+</div></body></html>

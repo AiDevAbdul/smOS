@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { designSystemCss } from "./lib/design_system.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const esc = (s) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
@@ -71,9 +72,11 @@ function render(slug) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(name)} — Account Audit (${date})</title>
 <style>
-:root{--ink:#1a1f2e;--mut:#5b6478;--line:#e6e8ef;--blue:#1d4ed8;--bg:#f7f8fb;--good:#0f9d58;--warn:#e8a300;--bad:#d93025}
+${designSystemCss()}
+/* /audit local tokens aliased to the smOS design system (Apple palette) */
+:root{--ink:var(--ds-ink);--mut:var(--ds-muted);--line:var(--ds-line);--blue:var(--ds-blue);--bg:var(--ds-bg);--good:#1c7a3e;--warn:#9a5b00;--bad:#b3261e}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font:15px/1.55 var(--ds-font);color:var(--ink);background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .wrap{max-width:860px;margin:0 auto;padding:40px 28px}
 header{border-bottom:3px solid var(--blue);padding-bottom:18px;margin-bottom:28px}
 .brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);font-weight:700}

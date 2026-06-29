@@ -50,6 +50,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Social listening + organic competitor benchmark** | `/listening` |
 | **Creative asset library (DAM)** | `/assets` |
 | **Client-facing white-label dashboard** | `/portal` |
+| **Bundle all reports into one shareable client hub (single link)** | `/bundle` |
 
 ### Strategic Intelligence Layer (external skills)
 | User intent | Skill to invoke |
