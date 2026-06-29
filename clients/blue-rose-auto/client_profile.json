@@ -9,12 +9,24 @@
     "price_high": 3500,
     "blended_avg_ticket": 700,
     "business_model": "local_service",
-    "usp": "30+ years experience · ASE-certified · Tesla-capable · premium materials · precision craftsmanship",
-    "conversion_events": ["Lead", "Schedule"],
-    "primary_cta": ["Book Now", "Get a Quote"],
+    "usp": "30+ years experience \u00b7 ASE-certified \u00b7 Tesla-capable \u00b7 premium materials \u00b7 precision craftsmanship",
+    "conversion_events": [
+      "Lead",
+      "Schedule"
+    ],
+    "primary_cta": [
+      "Book Now",
+      "Get a Quote"
+    ],
     "service_categories": {
-      "mechanical": { "price_low": 150, "price_high": 800 },
-      "cosmetic": { "price_low": 300, "price_high": 3500 }
+      "mechanical": {
+        "price_low": 150,
+        "price_high": 800
+      },
+      "cosmetic": {
+        "price_low": 300,
+        "price_high": 3500
+      }
     },
     "seasonality": "steady_year_round"
   },
@@ -24,11 +36,28 @@
     "state": "OR",
     "country": "US",
     "service_radius_miles": 30,
-    "service_area": ["Springfield", "Eugene", "Junction City", "Coburg", "Santa Clara", "Veneta", "Cottage Grove", "Creswell", "Harrisburg", "Lowell"]
+    "service_area": [
+      "Springfield",
+      "Eugene",
+      "Junction City",
+      "Coburg",
+      "Santa Clara",
+      "Veneta",
+      "Cottage Grove",
+      "Creswell",
+      "Harrisburg",
+      "Lowell"
+    ]
   },
   "audience": {
-    "primary_customers": ["everyday_drivers_repair", "cosmetic_spend_owners_luxury_tesla"],
-    "age_range": [28, 60],
+    "primary_customers": [
+      "everyday_drivers_repair",
+      "cosmetic_spend_owners_luxury_tesla"
+    ],
+    "age_range": [
+      28,
+      60
+    ],
     "gender": "balanced",
     "income_layering": {
       "repair_adsets": "mid_broad",
@@ -36,9 +65,26 @@
     }
   },
   "voice": {
-    "tone": ["confident", "hands-on", "no-nonsense", "craftsman"],
-    "avoid": ["salesy hype", "fake urgency", "miracle", "guaranteed", "cure", "best ever"],
-    "signature_phrases": ["30+ years", "ASE-certified", "Tesla-capable", "precision craftsmanship"]
+    "tone": [
+      "confident",
+      "hands-on",
+      "no-nonsense",
+      "craftsman"
+    ],
+    "avoid": [
+      "salesy hype",
+      "fake urgency",
+      "miracle",
+      "guaranteed",
+      "cure",
+      "best ever"
+    ],
+    "signature_phrases": [
+      "30+ years",
+      "ASE-certified",
+      "Tesla-capable",
+      "precision craftsmanship"
+    ]
   },
   "accounts": {
     "website": "https://blueroseauto.com/",
@@ -50,7 +96,8 @@
     "ad_account_id": "act_1999616770762846",
     "pixel_id": "2183558222437003",
     "timezone": "America/Los_Angeles",
-    "currency": "USD"
+    "currency": "USD",
+    "instagram_url": "https://www.instagram.com/blueroseauto/"
   },
   "contacts": {
     "phone": "(541) 641-8877",
@@ -58,7 +105,11 @@
   },
   "drive_folder_id": "1mixyt5-wb_dD9_77WgVngFIxnAPyRsPl",
   "kpis": {
-    "aware": { "cpm_max": 15, "frequency_7d_min": 1.5, "frequency_7d_max": 3.0 },
+    "aware": {
+      "cpm_max": 15,
+      "frequency_7d_min": 1.5,
+      "frequency_7d_max": 3.0
+    },
     "leads": {
       "target_cpa": 35,
       "target_ctr_link": 1.0,
@@ -70,16 +121,24 @@
   "monthly_budget": {
     "planning_assumption_low": 1500,
     "planning_assumption_high": 3000,
-    "client_confirmed": null
+    "client_confirmed": 1500
   },
-  "objectives": ["OUTCOME_AWARENESS", "OUTCOME_LEADS"],
+  "objectives": [
+    "OUTCOME_AWARENESS",
+    "OUTCOME_LEADS"
+  ],
   "competitors": [],
   "research_mode": "generic_keyword_search",
   "approvals": {
-    "channel": "in_thread_planning_mode",
+    "channel": "discord",
     "budget_increase_cap_daily": 200,
     "budget_increase_cap_weekly": 500,
-    "operating_hours_local": [6, 21]
+    "operating_hours_local": [
+      6,
+      21
+    ],
+    "discord_channel_id": "1518175826112282705",
+    "discord_webhook_env": "DISCORD_APPROVALS_WEBHOOK_BLUE_ROSE_AUTO"
   },
   "special_ad_categories": [],
   "assets": {
@@ -88,11 +147,6 @@
     "vehicle_photos": "client_to_provide"
   },
   "blockers_before_live": [
-    "facebook_page_id",
-    "instagram_business_id",
-    "ad_account_id",
-    "pixel_id",
-    "confirmed_monthly_budget",
-    "discord_approvals_webhook"
+    "instagram_business_id"
   ]
 }

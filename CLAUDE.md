@@ -51,6 +51,20 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Creative asset library (DAM)** | `/assets` |
 | **Client-facing white-label dashboard** | `/portal` |
 
+### Strategic Intelligence Layer (external skills)
+| User intent | Skill to invoke |
+|---|---|
+| Apply psychology / persuasion to ad copy or creative | `marketing-psychology` |
+| Mine audience voice-of-customer (Reddit, G2, forums, transcripts) | `customer-research` |
+| Design an A/B test with statistical rigor | `ab-testing` |
+| Plan a content strategy (pillars, topic clusters, editorial calendar) | `content-strategy` |
+| Research / profile competitors from their URLs | `competitor-profiling` |
+| Create/repurpose organic social content (LinkedIn, IG, TikTok, FB) | `social` |
+| Deep multi-source research with citations (pre-audit enrichment) | `firecrawl-deep-research` |
+| Find keywords, search volume, topic clusters, long-tail terms | `keyword-research` |
+| Track trending topics, Google Trends, Reddit signals for content timing | `social-media-trends-research` |
+| Real-time web search inside the agent loop (research, news, SERP data) | `brave-search` MCP |
+
 ---
 
 ## Zero-Start Onboarding (Phase 0)
@@ -195,6 +209,26 @@ All client-facing reports (`/pre-audit`, `/audit`, `/before-after`, `/report`, `
 - PDF conversion is handled by the shared helper `scripts/render_pdf.py` (headless Chromium via Playwright). Every report skill calls it after writing the HTML.
 - First-time setup: `pip install playwright && python -m playwright install chromium`.
 
+### Design system — "Cupertino" (the one visual standard)
+
+Every client-facing report and template uses **one** Apple/iOS design system. Single
+source of truth: **`design-system/smos-design-system.css`** (tokens + base + `ds-*`
+components). Spec & component reference: **`design-system/MASTER.md`**.
+
+- **Never inline raw hex or fork styles per report.** Renderers read the CSS at render
+  time via `scripts/lib/design_system.js` (Node) and `scripts/lib/design_system.py`
+  (Python) and inline it (self-contained HTML, works offline + in PDF). Edit the CSS
+  once → every deliverable inherits it.
+- Loaders expose `designSystemCss()`/`design_system_css()`, `reportHead`/`report_head`,
+  `heroHeader`/`hero_header`, `reportFooter`, and (Python) `CHART_PALETTE` + `CHART_THEME`.
+- Wired renderers: `md_to_html.js` (/report, /analyze, /before-after, /monthly-review),
+  `audit_report_html.js` (/audit, /audit-creative), `pre_audit_report.py` (/pre-audit),
+  `report.py` (/research). Any new report skill MUST import a loader and reuse `ds-*`
+  classes — do not hand-roll CSS.
+- Aesthetic: SF Pro system type (no web fonts), `#f5f5f7` canvas, `#1d1d1f` ink, iOS
+  semantic colors (`#0071e3`/`#34c759`/`#ff9f0a`/`#ff3b30`), soft elevation, 14px radii,
+  tabular numerals, blue-gradient hero. Maintained with the `ui-ux-pro-max` skill.
+
 ---
 
 ## Error Handling
@@ -210,3 +244,5 @@ All client-facing reports (`/pre-audit`, `/audit`, `/before-after`, `/report`, `
 
 <!-- Updated by /intake for each new client -->
 <!-- Format: - [Client Name](clients/[slug]/CLAUDE.md) · Status: active -->
+
+- [Blue Rose Auto](clients/blue-rose-auto/CLAUDE.md) · Status: Planning mode (no live Meta accounts yet) · Engagement start: 2026-06-18

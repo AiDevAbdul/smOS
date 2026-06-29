@@ -30,7 +30,7 @@
         "name": "TRAFFIC_BROAD_202606",
         "objective": "OUTCOME_TRAFFIC",
         "status": "PAUSED",
-        "daily_budget": "2000",
+        "daily_budget": 1000,
         "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
         "special_ad_categories": []
       },
@@ -40,7 +40,7 @@
             "campaign_id": "<pending>",
             "name": "REELS_2860_BROAD",
             "status": "PAUSED",
-            "daily_budget": "2000",
+            "daily_budget": 1000,
             "billing_event": "IMPRESSIONS",
             "optimization_goal": "LINK_CLICKS",
             "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
@@ -243,7 +243,7 @@
         "name": "TRAFFIC_INTMECHBROAD_202606",
         "objective": "OUTCOME_TRAFFIC",
         "status": "PAUSED",
-        "daily_budget": "2000",
+        "daily_budget": 1000,
         "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
         "special_ad_categories": []
       },
@@ -253,7 +253,7 @@
             "campaign_id": "<pending>",
             "name": "REELS_2860_INTMECHBROAD",
             "status": "PAUSED",
-            "daily_budget": "2000",
+            "daily_budget": 1000,
             "billing_event": "IMPRESSIONS",
             "optimization_goal": "LINK_CLICKS",
             "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
@@ -485,7 +485,7 @@
         "name": "TRAFFIC_INTLUXCOS_202606",
         "objective": "OUTCOME_TRAFFIC",
         "status": "PAUSED",
-        "daily_budget": "2000",
+        "daily_budget": 1000,
         "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
         "special_ad_categories": []
       },
@@ -495,7 +495,7 @@
             "campaign_id": "<pending>",
             "name": "REELS_2860_INTLUXCOS",
             "status": "PAUSED",
-            "daily_budget": "2000",
+            "daily_budget": 1000,
             "billing_event": "IMPRESSIONS",
             "optimization_goal": "LINK_CLICKS",
             "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
@@ -735,7 +735,7 @@
         "name": "TRAFFIC_RTPIX30D_202606",
         "objective": "OUTCOME_TRAFFIC",
         "status": "PAUSED",
-        "daily_budget": "1250",
+        "daily_budget": 625,
         "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
         "special_ad_categories": []
       },
@@ -745,7 +745,7 @@
             "campaign_id": "<pending>",
             "name": "REELS_2860_RTPIX30D",
             "status": "PAUSED",
-            "daily_budget": "1250",
+            "daily_budget": 625,
             "billing_event": "IMPRESSIONS",
             "optimization_goal": "LINK_CLICKS",
             "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
@@ -953,7 +953,7 @@
         "name": "TRAFFIC_RTPIX60D_202606",
         "objective": "OUTCOME_TRAFFIC",
         "status": "PAUSED",
-        "daily_budget": "1250",
+        "daily_budget": 625,
         "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
         "special_ad_categories": []
       },
@@ -963,7 +963,7 @@
             "campaign_id": "<pending>",
             "name": "REELS_2860_RTPIX60D",
             "status": "PAUSED",
-            "daily_budget": "1250",
+            "daily_budget": 625,
             "billing_event": "IMPRESSIONS",
             "optimization_goal": "LINK_CLICKS",
             "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
@@ -1165,5 +1165,6 @@
     }
   ],
   "naming_issues": [],
-  "mode": "DRY_RUN"
+  "mode": "DRY_RUN",
+  "reground_note": "Budgets scaled 0.5x to client-confirmed $1,500/mo (paid only) on 2026-06-29."
 }

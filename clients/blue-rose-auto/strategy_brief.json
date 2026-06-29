@@ -28,8 +28,8 @@
     }
   ],
   "budget_allocation": {
-    "monthly_budget": 3000,
-    "daily_total": 100,
+    "monthly_budget": 1500,
+    "daily_total": 50,
     "split": {
       "cold_pct": 0.6,
       "warm_pct": 0.25,
@@ -40,35 +40,35 @@
         "audience_id": "BROAD",
         "audience_label": "BROAD",
         "role": "cold",
-        "daily_budget": 20,
+        "daily_budget": 10.0,
         "needs_approval": false
       },
       {
         "audience_id": "INT_MECH_BROAD",
         "audience_label": "Mechanical / Repair — broad",
         "role": "cold",
-        "daily_budget": 20,
+        "daily_budget": 10.0,
         "needs_approval": false
       },
       {
         "audience_id": "INT_LUX_COS",
         "audience_label": "Cosmetic / Luxury Owner",
         "role": "cold",
-        "daily_budget": 20,
+        "daily_budget": 10.0,
         "needs_approval": false
       },
       {
         "audience_id": "RT_PIX_30D",
         "audience_label": "RT_PIX_30D",
         "role": "warm",
-        "daily_budget": 12.5,
+        "daily_budget": 6.25,
         "needs_approval": false
       },
       {
         "audience_id": "RT_PIX_60D",
         "audience_label": "RT_PIX_60D",
         "role": "warm",
-        "daily_budget": 12.5,
+        "daily_budget": 6.25,
         "needs_approval": false
       }
     ]
@@ -184,7 +184,9 @@
       ]
     }
   ],
-  "assumptions": [],
+  "assumptions": [
+    "Re-grounded from $3000/mo planning range to client-confirmed $1,500/mo (paid ads only) on 2026-06-29; daily budgets scaled 0.5x, cold/warm/lal split preserved."
+  ],
   "excluded_angles": [],
   "approval": {
     "status": "pending",
