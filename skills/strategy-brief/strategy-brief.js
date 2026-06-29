@@ -24,6 +24,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { competitorIntel as competitorSchema, audienceMap as audienceMapSchema, strategyBrief as briefSchema, assertValid } from "../../schemas/index.js";
+import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -288,7 +289,7 @@ function round(n, d) {
   return Math.round(n * f) / f;
 }
 
-function renderMarkdown(brief, profile) {
+export function renderMarkdown(brief, profile) {
   const lines = [];
   lines.push(`# Strategy Brief — ${profile.name}`);
   lines.push(``);
@@ -420,11 +421,20 @@ async function main() {
 
   const jsonPath = resolve(dir, "strategy_brief.json");
   const mdPath = resolve(dir, "strategy_brief.md");
+  const md = renderMarkdown(brief, profile);
   writeFileSync(jsonPath, JSON.stringify(brief, null, 2));
-  writeFileSync(mdPath, renderMarkdown(brief, profile));
+  writeFileSync(mdPath, md);
+
+  // Client-facing approval deliverable: design-system HTML + PDF (Cupertino).
+  const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, md, {
+    title: `${profile?.name || slug} — Strategy Brief`,
+    subtitle: `Paid media plan · $${brief.budget_allocation.daily_total}/day`,
+    eyebrow: "smOS · Strategy",
+  });
 
   console.error(`[strategy-brief] wrote ${jsonPath}`);
   console.error(`[strategy-brief] wrote ${mdPath}`);
+  console.error(`[strategy-brief] wrote ${htmlPath}${pdfOk ? " + .pdf" : " (PDF skipped)"}`);
 
   console.log(JSON.stringify({
     slug,
@@ -436,11 +446,15 @@ async function main() {
     assumptions: brief.assumptions.length,
     json: jsonPath,
     md: mdPath,
-    next: "post strategy_brief.md to Discord for approval, then run /creative",
+    html: htmlPath,
+    next: "post strategy_brief.html/.pdf to Discord for approval, then run /creative",
   }, null, 2));
 }
 
-main().catch((e) => {
-  console.error("[strategy-brief] FATAL:", e.message);
-  process.exit(1);
-});
+// Only run as a CLI — guard so importing renderMarkdown() doesn't trigger main().
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("[strategy-brief] FATAL:", e.message);
+    process.exit(1);
+  });
+}

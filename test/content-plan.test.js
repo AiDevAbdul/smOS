@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { contentPlan as schema } from "../schemas/index.js";
-import { buildPlan } from "../skills/content-plan/content-plan.js";
+import { buildPlan, renderMarkdown } from "../skills/content-plan/content-plan.js";
 
 const profile = {
   business: { niche: "dental" },
@@ -54,4 +54,16 @@ test("a plan with a corrupt item fails the publishable gate naming the field", (
   const v = schema.validate(plan, { requirePublishable: true });
   assert.equal(v.ok, false);
   assert.ok(v.errors.some((e) => /publish_at/.test(e)), v.errors.join("; "));
+});
+
+test("renderMarkdown produces a design-system-ready deliverable with pillars + calendar", () => {
+  const plan = buildPlan({ profile, slug: "acme", weeks: 2, from: new Date("2026-06-01T00:00:00Z") });
+  const md = renderMarkdown(plan, { name: "Acme Dental" });
+  assert.ok(md.includes("Acme Dental"), "client name in overview");
+  assert.ok(/## Content Pillars/.test(md), "pillars section");
+  assert.ok(/## Posting Calendar/.test(md), "calendar section");
+  // every pillar appears as a table row
+  for (const p of plan.pillars) assert.ok(md.includes(p.name), `pillar ${p.name} rendered`);
+  // a markdown table separator exists (so md_to_html renders <table>)
+  assert.ok(/\|---\|/.test(md.replace(/ /g, "")) || /\|---/.test(md), "markdown table present");
 });

@@ -57,12 +57,13 @@ Gather context before acting (do not ask the user for what is discoverable):
 3. `buildPlan` derives pillars and a deterministic Reels-first calendar (start = next Monday, 13:00 UTC).
 4. The plan is validated `requirePublishable: !draft`. On error: default HALTS exit 4 naming the field; `--draft` only warns.
 5. Writes `content_plan.json` (full `{ pillars, items }`) and `content_calendar.json` (`{ items }` for `/publish`).
-6. Best-effort inserts a row into Supabase `content_plans` (silently skipped if env unset).
+6. Renders the client-facing deliverable `content_plan.md` → `content_plan.html` + `content_plan.pdf` via the shared design-system renderer (`scripts/lib/md_to_html.js`, "Cupertino" look) — never hand-roll CSS here.
+7. Best-effort inserts a row into Supabase `content_plans` (silently skipped if env unset).
 
 ## Input / Output Specification
 
 **Inputs:** arg `<slug>`; flags `--weeks=N`, `--draft`; file `clients/{slug}/client_profile.json`; env (optional) `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`.
-**Outputs:** `clients/{slug}/content_plan.json`, `clients/{slug}/content_calendar.json`; Supabase `content_plans` row (best-effort).
+**Outputs:** `clients/{slug}/content_plan.json`, `clients/{slug}/content_calendar.json`, `clients/{slug}/content_plan.md` + `.html` + `.pdf` (design-system deliverable); Supabase `content_plans` row (best-effort).
 **Exit codes:** `0` ok · `1` fatal · `2` missing slug arg · `3` missing profile · `4` failed publishable validation.
 (Full schemas, payloads, and edge cases: `references/io-contract.md`.)
 
