@@ -20,6 +20,7 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { baselineSnapshot as baselineSchema } from "../../schemas/index.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -544,7 +545,7 @@ async function main() {
   const noPaid = args.includes("--no-paid");
   const noIg = args.includes("--no-ig");
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -617,14 +618,14 @@ async function main() {
   data.health_score = healthScore;
 
   // Write raw
-  const rawPath = resolve(ROOT, "clients", slug, "audit_raw.json");
+  const rawPath = P.clientFile(slug, "audit_raw.json", { forWrite: true });
   writeFileSync(rawPath, JSON.stringify(data, null, 2));
 
   // Fill template
   const template = readFileSync(resolve(ROOT, "templates/audit-report.md"), "utf8");
   const vars = buildVars(profile, data, healthScore);
   const filled = fillTemplate(template, vars);
-  const reportPath = resolve(ROOT, "clients", slug, "audit_report.md");
+  const reportPath = P.clientFile(slug, "audit_report.md", { forWrite: true });
   writeFileSync(reportPath, filled);
 
   console.error(`[audit] wrote ${rawPath}`);
@@ -634,7 +635,7 @@ async function main() {
   // Locked (immutable_locked_at) ONLY when real FB engagement was captured; an
   // unlocked snapshot makes /before-after refuse to run (its safety gate).
   const fbReal = !facebook?.error && Number.isFinite(facebook?.avg_engagement_rate);
-  const baselinePath = resolve(ROOT, "clients", slug, "baseline_snapshot.json");
+  const baselinePath = P.clientFile(slug, "baseline_snapshot.json", { forWrite: true });
   if (existsSync(baselinePath)) {
     console.error(`[audit] baseline_snapshot.json already exists — baselines are immutable, NOT overwriting`);
   } else {

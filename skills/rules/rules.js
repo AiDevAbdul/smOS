@@ -20,6 +20,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -177,7 +178,7 @@ async function main() {
   }
   const dryRun = rest.includes("--dry-run");
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -202,7 +203,7 @@ async function main() {
       case "install":
         result = await installRules(graph, act, kpis, dryRun);
         result.slug = slug;
-        writeFileSync(resolve(ROOT, "clients", slug, "rules_log.json"), JSON.stringify(result, null, 2));
+        writeFileSync(P.clientFile(slug, "rules_log.json", { forWrite: true }), JSON.stringify(result, null, 2));
         break;
       case "preview": {
         const name = rest.find((x) => !x.startsWith("--"));
@@ -226,7 +227,7 @@ async function main() {
         const name = rest.find((x) => !x.startsWith("--"));
         if (!name) throw new Error("history requires a rule name");
         result = await ruleHistory(graph, act, name);
-        writeFileSync(resolve(ROOT, "clients", slug, `rule_history_${name}.json`), JSON.stringify(result, null, 2));
+        writeFileSync(P.clientFile(slug, `rule_history_${name}.json`, { forWrite: true }), JSON.stringify(result, null, 2));
         break;
       }
       default:

@@ -17,6 +17,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { clientFile } from "./paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -36,7 +37,8 @@ function envSlugKey(base, slug) {
 
 export function loadProfile(slug) {
   if (!slug) return null;
-  const p = resolve(ROOT, "clients", slug, "client_profile.json");
+  // Canonical clients/<slug>/profile.json, with legacy client_profile.json fallback.
+  const p = clientFile(slug, "client_profile.json");
   if (!existsSync(p)) return null;
   try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; }
 }

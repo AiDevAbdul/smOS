@@ -24,6 +24,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { normalizeKpis } from "../../scripts/lib/metrics.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -269,7 +270,7 @@ async function main() {
   }
   const days = parseInt(argVal(argv, "--days", String(DEFAULT_DAYS)), 10);
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) throw new Error(`Profile not found: ${profilePath}`);
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));
   const acct = profile.accounts || {};
@@ -279,7 +280,7 @@ async function main() {
   }
 
   const audienceMap = (() => {
-    const p = resolve(ROOT, "clients", slug, "audience_map.json");
+    const p = P.clientFile(slug, "audience_map.json");
     return existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null;
   })();
 
@@ -315,10 +316,8 @@ async function main() {
   ].filter(Boolean);
 
   const month = ymd(new Date(Date.now() - 86_400_000)).slice(0, 7);
-  const reportsDir = resolve(ROOT, "clients", slug, "reports");
-  mkdirSync(reportsDir, { recursive: true });
 
-  const recPath = resolve(ROOT, "clients", slug, "strategy_recommendations.json");
+  const recPath = P.clientFile(slug, "strategy_recommendations.json", { forWrite: true });
   writeFileSync(recPath, JSON.stringify({
     client_slug: slug,
     month,
@@ -327,7 +326,7 @@ async function main() {
     note: "Recommendations are heuristic-generated. Have Claude review + add qualitative actions before sending to client.",
   }, null, 2));
 
-  const inputsPath = resolve(reportsDir, `${month}_monthly_inputs.json`);
+  const inputsPath = P.ensureParent(P.clientReport(slug, month, "monthly-review", "raw.json"));
   writeFileSync(inputsPath, JSON.stringify({
     client_slug: slug,
     month,
@@ -346,7 +345,7 @@ async function main() {
   }, null, 2));
 
   // Render markdown skeleton (Claude can elaborate)
-  const mdPath = resolve(reportsDir, `${month}_monthly_review.md`);
+  const mdPath = P.ensureParent(P.clientReport(slug, month, "monthly-review", "md"));
   const md = renderMd({ slug, profile, month, days, trends, fatigue, lifecycle, ranking, placementRanked, recommendations: recommendationsSkeleton, daily });
   writeFileSync(mdPath, md);
 

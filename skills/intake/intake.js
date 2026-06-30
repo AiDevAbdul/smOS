@@ -28,6 +28,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { clientProfile as profileSchema } from "../../schemas/index.js";
 import { checkZeroStartPrereqs } from "../../scripts/lib/guards.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -364,7 +365,7 @@ async function main() {
   const clientDir = resolve(ROOT, "clients", slug);
   mkdirSync(clientDir, { recursive: true });
 
-  const profilePath = resolve(clientDir, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json", { forWrite: true });
   if (existsSync(profilePath)) {
     const backupPath = resolve(clientDir, `client_profile.backup.${Date.now()}.json`);
     copyFileSync(profilePath, backupPath);

@@ -7,7 +7,13 @@ __pycache__/
 *.log
 clients/*/private/
 data/cache/
-reports/*.pdf
+
+# Generated, regenerable renders — keep source .json + authored .md in git, not these.
+# PDFs are large and rebuilt from md/html by render_pdf.py; HTML is rebuilt by renderers.
+*.pdf
+clients/**/deliverables/**/*.html
+clients/**/reports/**/*.html
+public/reports/
 
 # Prospect working data (scrapes, raw HTML, per-prospect renders)
 prospects/

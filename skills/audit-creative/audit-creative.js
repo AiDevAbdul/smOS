@@ -20,6 +20,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -102,7 +103,7 @@ function buildBatches(assets) {
 }
 
 async function collect(slug) {
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) throw new Error(`Profile not found: ${profilePath}`);
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));
   const acct = profile.accounts || {};
@@ -155,7 +156,7 @@ async function collect(slug) {
     instructions: "For each batch, send the vision_prompt + the batch's image URLs to Claude. Claude returns a JSON array; merge each result into assets[].vision_scores. Then run: node skills/audit-creative/audit-creative.js " + slug + " aggregate",
   };
 
-  const outPath = resolve(ROOT, "clients", slug, "creative_assets.json");
+  const outPath = P.clientFile(slug, "creative_assets.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(out, null, 2));
 
   console.log(JSON.stringify({
@@ -213,7 +214,7 @@ function weightedScore(a) {
 }
 
 function aggregate(slug) {
-  const assetsPath = resolve(ROOT, "clients", slug, "creative_assets.json");
+  const assetsPath = P.clientFile(slug, "creative_assets.json");
   if (!existsSync(assetsPath)) throw new Error(`Run collect first: ${assetsPath} not found`);
   const data = JSON.parse(readFileSync(assetsPath, "utf8"));
   const assets = data.assets || [];
@@ -256,7 +257,7 @@ function aggregate(slug) {
   });
 
   // Patch audit_report.md
-  const reportPath = resolve(ROOT, "clients", slug, "audit_report.md");
+  const reportPath = P.clientFile(slug, "audit_report.md");
   let patched = false;
   if (existsSync(reportPath)) {
     const original = readFileSync(reportPath, "utf8");
@@ -271,7 +272,7 @@ function aggregate(slug) {
   }
 
   // Also write a standalone JSON summary
-  const summaryPath = resolve(ROOT, "clients", slug, "creative_audit_summary.json");
+  const summaryPath = P.clientFile(slug, "creative_audit_summary.json", { forWrite: true });
   writeFileSync(summaryPath, JSON.stringify({
     client_slug: slug,
     generated_at: new Date().toISOString(),

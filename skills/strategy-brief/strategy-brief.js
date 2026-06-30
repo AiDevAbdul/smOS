@@ -25,6 +25,7 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { competitorIntel as competitorSchema, audienceMap as audienceMapSchema, strategyBrief as briefSchema, assertValid } from "../../schemas/index.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -367,16 +368,17 @@ async function main() {
     process.exit(1);
   }
   const dir = resolve(ROOT, "clients", slug);
-  const profile = loadJsonIfExists(resolve(dir, "client_profile.json"));
+  const profilePath = P.clientFile(slug, "client_profile.json");
+  const profile = loadJsonIfExists(profilePath);
   if (!profile) {
-    console.error(`Profile not found: ${dir}/client_profile.json`);
+    console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
   }
-  const competitorRaw = loadJsonIfExists(resolve(dir, "competitor_intel.json"));
+  const competitorRaw = loadJsonIfExists(P.clientFile(slug, "competitor_intel.json"));
   const competitor = competitorRaw ? competitorSchema.normalize(competitorRaw) : null;
-  const audienceMapRaw = loadJsonIfExists(resolve(dir, "audience_map.json"));
+  const audienceMapRaw = loadJsonIfExists(P.clientFile(slug, "audience_map.json"));
   const audienceMap = audienceMapRaw ? audienceMapSchema.normalize(audienceMapRaw) : null;
-  const audit = loadJsonIfExists(resolve(dir, "audit_raw.json"));
+  const audit = loadJsonIfExists(P.clientFile(slug, "audit_raw.json"));
 
   const missing = [];
   if (!competitor) missing.push("competitor_intel.json (run /research)");
@@ -419,8 +421,8 @@ async function main() {
   // Fail-closed: refuse to write a brief whose angles lack join keys.
   assertValid("strategy_brief", briefSchema.normalize(brief), briefSchema.validate);
 
-  const jsonPath = resolve(dir, "strategy_brief.json");
-  const mdPath = resolve(dir, "strategy_brief.md");
+  const jsonPath = P.clientFile(slug, "strategy_brief.json", { forWrite: true });
+  const mdPath = P.clientFile(slug, "strategy_brief.md", { forWrite: true });
   const md = renderMarkdown(brief, profile);
   writeFileSync(jsonPath, JSON.stringify(brief, null, 2));
   writeFileSync(mdPath, md);

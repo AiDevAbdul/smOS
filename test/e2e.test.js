@@ -5,6 +5,7 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, existsSyn
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import { launchPlan as launchPlanSchema } from "../schemas/index.js";
+import * as P from "../scripts/lib/paths.js";
 
 // E2E gate (Phase 1.9): run the REAL pipeline scripts on a fresh fixture client
 // and assert the launch plan is fully resolved — the headline regression the
@@ -30,11 +31,12 @@ function setup() {
   rmSync(FIX, { recursive: true, force: true });
   mkdirSync(FIX, { recursive: true });
   for (const f of ["client_profile.json", "competitor_intel.json", "audience_map.json"]) {
-    copyFileSync(resolve(SRC, f), resolve(FIX, f));
+    const dest = P.clientFile(SLUG, f, { forWrite: true });
+    copyFileSync(P.clientFile("blue-rose-auto", f), dest);
   }
   // Pre-resolve custom audiences (simulates a prior `--create-audiences` pass) so
   // the plan has real IDs — lets the gate also assert ZERO <TBD_> audiences.
-  const mapPath = resolve(FIX, "audience_map.json");
+  const mapPath = P.clientFile(SLUG, "audience_map.json");
   const map = JSON.parse(readFileSync(mapPath, "utf8"));
   const resolved = {};
   let n = 1000;
@@ -83,13 +85,13 @@ test("E2E: fresh-client pipeline yields a launch plan with ZERO copy_used:null",
     assert.equal(lint.status, 0, `creative lint failed:\n${lint.stderr}`);
 
     // angle_id must have flowed from the brief into ad_copy.json
-    const adCopy = JSON.parse(readFileSync(resolve(FIX, "ad_copy.json"), "utf8"));
+    const adCopy = JSON.parse(readFileSync(P.clientFile(SLUG, "ad_copy.json"), "utf8"));
     assert.ok(adCopy.angles.every((a) => a.angle_id), "ad_copy angle missing angle_id join key");
 
     const launch = run("skills/launch/launch.js"); // dry-run
     assert.equal(launch.status, 0, `launch dry-run failed:\n${launch.stderr}`);
 
-    const plan = launchPlanSchema.normalize(JSON.parse(readFileSync(resolve(FIX, "launch_plan.json"), "utf8")));
+    const plan = launchPlanSchema.normalize(JSON.parse(readFileSync(P.clientFile(SLUG, "launch_plan.json"), "utf8")));
     assert.ok(plan.ads.length > 0, "launch plan produced no ads");
     const nulls = plan.ads.filter((ad) => !ad.copy_used);
     assert.equal(nulls.length, 0,

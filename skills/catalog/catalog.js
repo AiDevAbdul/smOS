@@ -17,6 +17,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -60,8 +61,8 @@ function parseCsv(text) {
 }
 
 function loadProducts(slug) {
-  const csvPath = resolve(ROOT, "clients", slug, "products.csv");
-  const jsonPath = resolve(ROOT, "clients", slug, "products.json");
+  const csvPath = P.clientFile(slug, "products.csv");
+  const jsonPath = P.clientFile(slug, "products.json");
   if (existsSync(csvPath)) return parseCsv(readFileSync(csvPath, "utf8"));
   if (existsSync(jsonPath)) {
     const data = JSON.parse(readFileSync(jsonPath, "utf8"));
@@ -203,7 +204,7 @@ async function main() {
     process.exit(1);
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -239,7 +240,7 @@ async function main() {
         const products = loadProducts(slug);
         result = await syncProducts(graph, catalogId, products);
         result.input_total = products.length;
-        const logPath = resolve(ROOT, "clients", slug, "catalog_sync_log.json");
+        const logPath = P.clientFile(slug, "catalog_sync_log.json", { forWrite: true });
         writeFileSync(logPath, JSON.stringify({ slug, generated_at: new Date().toISOString(), ...result }, null, 2));
         console.error(`[catalog] wrote ${logPath}`);
         const v = result.verification;

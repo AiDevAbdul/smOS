@@ -20,6 +20,7 @@ import { resolveToken } from "../../scripts/lib/tokens.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { mapLiftStudy } from "../../scripts/lib/lift_study.js";
 import { insert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -31,7 +32,7 @@ const method = (process.argv.find((a) => a.startsWith("--method="))?.split("=")[
 const OFFLINE = process.env.SMOS_OFFLINE === "1";
 
 const dir = resolve(ROOT, "clients", slug);
-const profilePath = resolve(dir, "client_profile.json");
+const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 
@@ -45,7 +46,7 @@ async function pullLiftStudy(studyId, token) {
 
 // Source priority: (1) a live Meta Conversion Lift study when a study id +
 // token are available, (2) a provided export (lift_export.json), (3) HALT.
-const exportPath = resolve(dir, "lift_export.json");
+const exportPath = P.clientFile(slug, "lift_export.json");
 const studyId = (process.argv.find((a) => a.startsWith("--study-id="))?.split("=")[1])
   || process.env.SMOS_LIFT_STUDY_ID || profile?.attribution?.lift_study_id;
 let rows = [];
@@ -60,7 +61,7 @@ if (!OFFLINE && studyId) {
       rows = liftRows;
       periodStart = periodStart || study.start_time || null;
       periodEnd = periodEnd || study.end_time || null;
-      writeFileSync(resolve(dir, "lift_study_raw.json"), JSON.stringify(study, null, 2));
+      writeFileSync(P.clientFile(slug, "lift_study_raw.json", { forWrite: true }), JSON.stringify(study, null, 2));
       if (!rows.length) console.error(`note: lift study ${studyId} returned no measurable incremental cells (still running, or unsupported result shape).`);
     } catch (e) { console.error(`lift study pull failed: ${e.message}`); }
   } else {
@@ -83,7 +84,7 @@ const report = schema.normalize({ client_slug: slug, method, rows,
 const v = schema.validate(report);
 if (!v.ok) { console.error("attribution_report INVALID:\n  - " + v.errors.join("\n  - ")); process.exit(5); }
 
-writeFileSync(resolve(dir, "attribution_report.json"), JSON.stringify(report, null, 2));
+writeFileSync(P.clientFile(slug, "attribution_report.json", { forWrite: true }), JSON.stringify(report, null, 2));
 
 const md = [
   `# Incrementality Report — ${slug}`,
@@ -95,7 +96,7 @@ const md = [
     `| ${r.entity_name || r.entity_id} | ${r.last_click_conversions} | ${r.incremental_conversions ?? "—"} | ${r.incremental_cpa != null ? "$" + r.incremental_cpa : "—"} | ${r.incrementality_factor ?? "—"} |`),
 ].join("\n");
 
-writeHtmlAndPdf(resolve(dir, "attribution_report.md"), md, { title: `Incrementality — ${slug}`, subtitle: report.method });
+writeHtmlAndPdf(P.clientFile(slug, "attribution_report.md", { forWrite: true }), md, { title: `Incrementality — ${slug}`, subtitle: report.method });
 
 if (supabaseConfigured()) {
   try {

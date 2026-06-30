@@ -27,6 +27,7 @@ import { twoProportionZ, scaleSignificance } from "../../scripts/lib/stats.js";
 import { opportunityScore } from "../../scripts/lib/opportunity.js";
 import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -320,7 +321,7 @@ async function main() {
   }
   const noBreakdowns = args.includes("--no-breakdowns");
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -462,7 +463,7 @@ async function main() {
     segment_highlights: segmentHighlights,
   };
 
-  const outPath = resolve(ROOT, "clients", slug, "performance_analysis.json");
+  const outPath = P.clientFile(slug, "performance_analysis.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[analyze] wrote ${outPath}`);
 
@@ -497,7 +498,7 @@ async function main() {
       ``,
       (ranking.top_roas || []).slice(0, 5).map((w) => `- ${w.name || w.id} — ROAS ${w.metrics?.last_7d?.roas ?? "—"}`).join("\n") || "_None yet._",
     ].join("\n");
-    const mdPath = resolve(ROOT, "clients", slug, "performance_analysis.md");
+    const mdPath = P.clientFile(slug, "performance_analysis.md", { forWrite: true });
     writeFileSync(mdPath, md);
     const { pdfOk } = writeHtmlAndPdf(mdPath, md, { title: `${profile.name || slug} — Performance Analysis`, subtitle: "Last 7 days" });
     console.error(`[analyze] wrote ${mdPath} + HTML${pdfOk ? " + PDF" : " (PDF skipped)"}`);

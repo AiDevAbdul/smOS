@@ -25,6 +25,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { baselineSnapshot as baselineSchema, clientProfile as profileSchema } from "../../schemas/index.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -209,8 +210,8 @@ async function main() {
     process.exit(1);
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
-  const baselinePath = resolve(ROOT, "clients", slug, "baseline_snapshot.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
+  const baselinePath = P.clientFile(slug, "baseline_snapshot.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -329,11 +330,9 @@ async function main() {
   const template = readFileSync(resolve(ROOT, "templates/before-after.md"), "utf8");
   const filled = fillTemplate(template, vars);
 
-  const reportsDir = resolve(ROOT, "clients", slug, "reports");
-  if (!existsSync(reportsDir)) mkdirSync(reportsDir, { recursive: true });
   const today = isoToday();
-  const mdPath = resolve(reportsDir, `${today}_before_after.md`);
-  const rawPath = resolve(reportsDir, `${today}_before_after_raw.json`);
+  const mdPath = P.ensureParent(P.clientReport(slug, today, "before-after", "md"));
+  const rawPath = P.ensureParent(P.clientReport(slug, today, "before-after", "raw.json"));
   writeFileSync(mdPath, filled);
   writeFileSync(
     rawPath,

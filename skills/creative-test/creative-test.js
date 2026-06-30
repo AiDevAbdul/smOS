@@ -32,6 +32,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { strategyBrief as briefSchema, adCopy as adCopySchema } from "../../schemas/index.js";
 import { twoProportionZ, scaleSignificance, wilsonLowerBound } from "../../scripts/lib/stats.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -165,8 +166,7 @@ function main() {
   const evaluate = args.includes("--evaluate");
   const metric = (args.find((a) => a.startsWith("--metric=")) || "--metric=ctr").split("=")[1];
 
-  const dir = resolve(ROOT, "clients", slug);
-  const readJ = (f) => (existsSync(resolve(dir, f)) ? JSON.parse(readFileSync(resolve(dir, f), "utf8")) : null);
+  const readJ = (f) => { const p = P.clientFile(slug, f); return existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null; };
 
   if (evaluate) {
     const plan = readJ("creative_test_plan.json");
@@ -175,7 +175,7 @@ function main() {
     if (!results) { console.error("HALT: creative_test_results.json missing — supply per-cell impressions/results."); process.exit(3); }
     const decision = evaluateResults({ plan, results });
     if (!decision.ok) { console.error(`HALT: ${decision.error}`); process.exit(4); }
-    writeFileSync(resolve(dir, "creative_test_decision.json"), JSON.stringify(decision, null, 2));
+    writeFileSync(P.clientFile(slug, "creative_test_decision.json", { forWrite: true }), JSON.stringify(decision, null, 2));
     console.log(JSON.stringify({ slug, verdict: decision.decision.verdict, cell: decision.decision.cell_id || null }, null, 2));
     return;
   }
@@ -188,10 +188,10 @@ function main() {
   if (!v.ok) { console.error("HALT: strategy_brief invalid:\n  - " + v.errors.join("\n  - ")); process.exit(4); }
 
   const plan = buildTestPlan({ brief, adCopy, metric });
-  writeFileSync(resolve(dir, "creative_test_plan.json"), JSON.stringify({ slug, generated_at: new Date().toISOString(), ...plan }, null, 2));
+  writeFileSync(P.clientFile(slug, "creative_test_plan.json", { forWrite: true }), JSON.stringify({ slug, generated_at: new Date().toISOString(), ...plan }, null, 2));
 
   const name = brief.client_name || slug;
-  const mdPath = resolve(dir, "creative_test_plan.md");
+  const mdPath = P.clientFile(slug, "creative_test_plan.md", { forWrite: true });
   const md = renderPlanMd(plan, name);
   writeFileSync(mdPath, md);
   try {

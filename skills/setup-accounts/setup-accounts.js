@@ -20,6 +20,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import * as clientProfile from "../../schemas/client_profile.js";
 import { checkZeroStartPrereqs } from "../../scripts/lib/guards.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -31,7 +32,7 @@ const MANUAL_STEPS = [
   "asset_access_granted_at",
 ];
 
-function profilePathFor(slug) { return resolve(ROOT, "clients", slug, "client_profile.json"); }
+function profilePathFor(slug) { return P.clientFile(slug, "client_profile.json"); }
 
 function loadProfile(slug) {
   const p = profilePathFor(slug);

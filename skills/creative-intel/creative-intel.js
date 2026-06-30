@@ -13,6 +13,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -137,7 +138,7 @@ async function main() {
     process.exit(1);
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -239,7 +240,7 @@ async function main() {
     flag_counts: flagCounts,
   };
 
-  const outPath = resolve(ROOT, "clients", slug, "creative_intel.json");
+  const outPath = P.clientFile(slug, "creative_intel.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[creative-intel] wrote ${outPath}`);
 

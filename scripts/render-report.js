@@ -13,6 +13,7 @@
 import fs   from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import * as P from './lib/paths.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -37,7 +38,9 @@ const ROOT = path.join(__dirname, '..');
 function findSourceJson(t, s) {
   if (t === 'pre-audit') {
     const candidates = [
-      path.join(ROOT, 'prospects', s, 'page_audit.json'),
+      P.prospectData(s, 'page_audit.json'),          // canonical
+      P.prospectData(s, 'pre_audit.json'),
+      path.join(ROOT, 'prospects', s, 'page_audit.json'), // legacy flat
       path.join(ROOT, 'prospects', s, 'pre_audit.json'),
     ];
     for (const c of candidates) if (fs.existsSync(c)) return c;
@@ -45,6 +48,7 @@ function findSourceJson(t, s) {
   }
   if (t === 'audit') {
     const candidates = [
+      P.clientFile(s, 'audit_raw.json'),             // canonical data/ (legacy fallback built in)
       path.join(ROOT, 'clients', s, 'audit_raw.json'),
     ];
     for (const c of candidates) if (fs.existsSync(c)) return c;

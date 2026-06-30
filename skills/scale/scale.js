@@ -22,6 +22,7 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -296,13 +297,13 @@ async function main() {
     const next = args[rbIdx + 1];
     const logPath = next && !next.startsWith("--")
       ? resolve(ROOT, next)
-      : resolve(ROOT, "clients", slug, "scaling_log.json");
+      : P.clientFile(slug, "scaling_log.json");
     await rollback(logPath, execute);
     return;
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
-  const analysisPath = resolve(ROOT, "clients", slug, "performance_analysis.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
+  const analysisPath = P.clientFile(slug, "performance_analysis.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -417,7 +418,7 @@ async function main() {
     decisions: results,
   };
 
-  const outPath = resolve(ROOT, "clients", slug, "scaling_log.json");
+  const outPath = P.clientFile(slug, "scaling_log.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[scale] wrote ${outPath}`);
 

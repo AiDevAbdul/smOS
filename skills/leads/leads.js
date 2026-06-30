@@ -13,6 +13,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -162,13 +163,13 @@ async function fetchLeads(graph, formId, token, since) {
 }
 
 function loadState(slug) {
-  const p = resolve(ROOT, "clients", slug, "leads_state.json");
+  const p = P.clientFile(slug, "leads_state.json");
   if (!existsSync(p)) return { forms: {} };
   return JSON.parse(readFileSync(p, "utf8"));
 }
 
 function saveState(slug, state) {
-  const p = resolve(ROOT, "clients", slug, "leads_state.json");
+  const p = P.clientFile(slug, "leads_state.json", { forWrite: true });
   writeFileSync(p, JSON.stringify(state, null, 2));
 }
 
@@ -226,7 +227,7 @@ async function main() {
     process.exit(1);
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -276,7 +277,7 @@ async function main() {
 
     // Rebuild flat CSV from all stored leads
     const allLeads = readAllLeadsForCsv(slug);
-    const csvPath = resolve(ROOT, "clients", slug, "leads_export.csv");
+    const csvPath = P.clientFile(slug, "leads_export.csv", { forWrite: true });
     writeLeadsCsv(allLeads, csvPath);
 
     const tiers = allLeads.reduce((m, l) => ({ ...m, [l.tier]: (m[l.tier] || 0) + 1 }), {});

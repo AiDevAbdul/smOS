@@ -25,6 +25,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { audienceMap as audienceMapSchema } from "../../schemas/index.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 /**
  * Render the audience map as a client-facing markdown deliverable. HTML+PDF are
@@ -381,7 +382,7 @@ async function main() {
   }
   const offline = rest.includes("--offline");
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -468,12 +469,11 @@ async function main() {
   const v = audienceMapSchema.validate(map);
   if (!v.ok) map.diagnostics.issues.push(...v.errors.map((e) => `schema: ${e}`));
 
-  const dir = resolve(ROOT, "clients", slug);
-  const outPath = resolve(dir, "audience_map.json");
+  const outPath = P.clientFile(slug, "audience_map.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(map, null, 2));
 
   // Client-facing deliverable: markdown + design-system HTML + PDF (Cupertino).
-  const mdPath = resolve(dir, "audience_map.md");
+  const mdPath = P.clientFile(slug, "audience_map.md", { forWrite: true });
   const md = renderMarkdown(map, profile);
   writeFileSync(mdPath, md);
   const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, md, {

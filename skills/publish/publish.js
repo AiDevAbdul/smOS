@@ -15,6 +15,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -142,8 +143,8 @@ async function main() {
     process.exit(1);
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
-  const calendarPath = resolve(ROOT, "clients", slug, "content_calendar.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
+  const calendarPath = P.clientFile(slug, "content_calendar.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -173,7 +174,7 @@ async function main() {
   }
 
   const graph = createGraph();
-  const logPath = resolve(ROOT, "clients", slug, "publish_log.json");
+  const logPath = P.clientFile(slug, "publish_log.json", { forWrite: true });
   let igLimitReached = false;
   const summary = { published: 0, scheduled: 0, errors: 0 };
 

@@ -17,6 +17,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { mdToHtml } from "../../scripts/lib/md_to_html.js";
 import { getDeal } from "../../scripts/lib/crm-store.js";
 import { listInvoices } from "../../scripts/lib/billing-store.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -25,7 +26,7 @@ loadEnv({ silent: true });
 const slug = process.argv[2];
 if (!slug) { console.error("usage: portal.js <slug>"); process.exit(2); }
 const dir = resolve(ROOT, "clients", slug);
-const profilePath = resolve(dir, "client_profile.json");
+const profilePath = P.clientFile(slug, "client_profile.json"); // canonical profile.json, legacy fallback
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 const clientName = profile?.business?.name || profile?.name || slug;
@@ -34,7 +35,7 @@ function readJson(p) {
   if (!existsSync(p)) return null;
   try { return JSON.parse(readFileSync(p, "utf8")); } catch { return null; }
 }
-function readClientJson(name) { return readJson(resolve(dir, name)); }
+function readClientJson(name) { return readJson(P.clientFile(slug, name)); }
 
 const catalog = readJson(resolve(ROOT, "config", "services.json")) || { agency: {} };
 let agencyEmail = catalog.agency?.email;

@@ -15,21 +15,31 @@ import { spawnSync } from "node:child_process";
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import * as P from "../../scripts/lib/paths.js";
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
-/** Absolute path to a file inside a fixture client's dir. */
+/**
+ * Absolute path to a fixture client's file, RESOLVED for reading: prefers the
+ * canonical bucket (where rewired skills now write their output) and falls back
+ * to the legacy flat location (where makeClient writes inputs). Asserts use this.
+ */
 export function clientPath(slug, file) {
-  return resolve(ROOT, "clients", slug, file);
+  return P.clientFile(slug, file);
 }
 
-/** Create a fresh fixture client dir, writing the given { filename: object } map as JSON. */
+/**
+ * Create a fresh fixture client dir, writing inputs to the LEGACY flat location.
+ * Skills read via clientFile(), which falls back to flat, so flat fixtures are
+ * found; skill OUTPUTS land in the canonical buckets and are read back via
+ * clientPath() above. Keeping inputs flat avoids pre-creating every data/ subdir.
+ */
 export function makeClient(slug, files = {}) {
   const dir = resolve(ROOT, "clients", slug);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   for (const [name, value] of Object.entries(files)) {
-    writeFileSync(clientPath(slug, name), JSON.stringify(value, null, 2));
+    writeFileSync(resolve(dir, name), JSON.stringify(value, null, 2));
   }
   return dir;
 }

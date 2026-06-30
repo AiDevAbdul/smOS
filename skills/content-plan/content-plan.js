@@ -29,6 +29,7 @@ import { contentPlan as schema } from "../../schemas/index.js";
 import { insert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 import { keywordFirstCaption, altText } from "../../scripts/lib/social_seo.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -164,7 +165,7 @@ async function main() {
   const draft = process.argv.includes("--draft");
 
   const dir = resolve(ROOT, "clients", slug);
-  const profilePath = resolve(dir, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found — run /intake first.`); process.exit(3); }
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 
@@ -185,12 +186,12 @@ async function main() {
     }
   }
 
-  writeFileSync(resolve(dir, "content_plan.json"), JSON.stringify(plan, null, 2));
+  writeFileSync(P.clientFile(slug, "content_plan.json", { forWrite: true }), JSON.stringify(plan, null, 2));
   // The /publish-facing calendar is just the items array under { items }.
-  writeFileSync(resolve(dir, "content_calendar.json"), JSON.stringify({ items: plan.items }, null, 2));
+  writeFileSync(P.clientFile(slug, "content_calendar.json", { forWrite: true }), JSON.stringify({ items: plan.items }, null, 2));
 
   // Client-facing deliverable: markdown + design-system HTML + PDF (Cupertino).
-  const mdPath = resolve(dir, "content_plan.md");
+  const mdPath = P.clientFile(slug, "content_plan.md", { forWrite: true });
   const md = renderMarkdown(plan, profile);
   writeFileSync(mdPath, md);
   const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, md, {

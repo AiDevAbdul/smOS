@@ -20,6 +20,7 @@ import { spawnSync } from "node:child_process";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { competitorIntel as competitorSchema } from "../../schemas/index.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -84,12 +85,11 @@ async function main() {
   const days = parseInt(argVal(argv, "--days", "90"), 10);
   const skipClassify = argHas(argv, "--skip-classify");
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) throw new Error(`Profile not found: ${profilePath}`);
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 
-  const reportsDirEarly = resolve(ROOT, "clients", slug, "reports");
-  const intelPathEarly = resolve(ROOT, "clients", slug, "competitor_intel.json");
+  const intelPathEarly = P.clientFile(slug, "competitor_intel.json");
 
   // ── Synthesis mode ──────────────────────────────────────────────────────────
   // When the client opts out of a live named-competitor Ad Library pull, /research
@@ -112,9 +112,8 @@ async function main() {
         "(mode:'generic_keyword_synthesis' or a category_landscape block). " +
         "Create the synthesized intel first, then rerun with --synthesis.");
     }
-    mkdirSync(reportsDirEarly, { recursive: true });
-    const stampS = ts();
-    const htmlS = resolve(reportsDirEarly, `competitor_report_${stampS}.html`);
+    const dateS = new Date().toISOString().slice(0, 10);
+    const htmlS = P.ensureParent(P.clientReport(slug, dateS, "competitor", "html"));
     console.error(`[research] synthesis mode — rendering HTML from ${intelPathEarly}…`);
     runPy(["scripts/meta-ad-library/report.py", "--input", intelPathEarly, "--output", htmlS]);
     const pdfS = htmlS.replace(/\.html$/, ".pdf");
@@ -146,8 +145,9 @@ async function main() {
   const geoTargets = profile.audience?.geo_targets || (profile.location?.country ? [profile.location.country] : ["US"]);
   const country = argVal(argv, "--country", geoTargets[0] || "US");
 
-  const reportsDir = resolve(ROOT, "clients", slug, "reports");
-  mkdirSync(reportsDir, { recursive: true });
+  const today = new Date().toISOString().slice(0, 10);
+  const htmlReportPath = P.ensureParent(P.clientReport(slug, today, "competitor", "html"));
+  const reportsDir = dirname(htmlReportPath);
 
   // Step 1: resolve competitor names → page IDs
   console.error(`[research] resolving ${competitors.length} competitors in ${country}…`);
@@ -166,7 +166,7 @@ async function main() {
   const stamp = ts();
   const rawPath = resolve(reportsDir, `raw_${stamp}.json`);
   const analyzedPath = resolve(reportsDir, `analyzed_${stamp}.json`);
-  const htmlPath = resolve(reportsDir, `competitor_report_${stamp}.html`);
+  const htmlPath = htmlReportPath;
 
   // Step 2: client.py fetch
   console.error(`[research] fetching ads from Ad Library (last ${days}d)…`);
@@ -262,7 +262,7 @@ async function main() {
     resolved_page_ids: resolved,
   });
 
-  const intelPath = resolve(ROOT, "clients", slug, "competitor_intel.json");
+  const intelPath = P.clientFile(slug, "competitor_intel.json", { forWrite: true });
   writeFileSync(intelPath, JSON.stringify(intel, null, 2));
 
   console.log(JSON.stringify({

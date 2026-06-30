@@ -16,12 +16,13 @@
  * Usage: node skills/bundle/bundle.js <slug> [--only-ready]
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, copyFileSync, mkdirSync, rmSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, copyFileSync, mkdirSync, rmSync } from "node:fs";
 import { resolve, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { reportHead, reportFooter } from "../../scripts/lib/design_system.js";
 import { mdToHtml } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -32,7 +33,7 @@ const onlyReady = process.argv.includes("--only-ready");
 if (!slug || slug.startsWith("--")) { console.error("usage: bundle.js <slug> [--only-ready]"); process.exit(2); }
 
 const clientDir = resolve(ROOT, "clients", slug);
-const profilePath = resolve(clientDir, "client_profile.json");
+const profilePath = P.clientFile(slug, "client_profile.json"); // canonical profile.json, legacy fallback
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found. Run /intake first.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 const clientName = profile?.business?.name || profile?.name || slug;
@@ -40,7 +41,7 @@ const clientName = profile?.business?.name || profile?.name || slug;
 const catalog = readJson(resolve(ROOT, "config", "services.json")) || { agency: {} };
 const agencyName = catalog.agency?.name || "smOS";
 
-const reportsDir = resolve(clientDir, "reports");
+const reportsDir = P.clientReportsRoot(slug);
 const publicDir = resolve(ROOT, "public", "reports", slug);
 const today = new Date().toISOString().slice(0, 10);
 
@@ -61,6 +62,33 @@ function matchIn(dir, re, labeller) {
 function firstOf(...lists) { for (const l of lists) if (l.length) return l.slice(0, 1); return []; }
 
 /**
+ * Scan dated reports in BOTH layouts:
+ *   new    → reports/<date>/<stem>.html   (stem e.g. "weekly", "audit", "before-after")
+ *   legacy → reports/<date>_<stem>.html   (stem e.g. "weekly", "before_after")
+ * `stemRe` matches the stem in either dash or underscore form.
+ */
+function scanReports(stemRe, labeller) {
+  const root = reportsDir;
+  if (!existsSync(root)) return [];
+  const out = [];
+  for (const entry of readdirSync(root)) {
+    const full = resolve(root, entry);
+    let st; try { st = statSync(full); } catch { continue; }
+    if (st.isDirectory()) {
+      for (const f of readdirSync(full)) {
+        const stem = f.replace(/\.html$/, "");
+        if (/\.html$/.test(f) && stemRe.test(stem)) out.push({ srcPath: resolve(full, f), date: entry, label: labeller(entry, stem) });
+      }
+    } else if (/\.html$/.test(entry)) {
+      const m = entry.match(/^(\d{4}-\d{2}-\d{2}|\d{4}-\d{2})_(.+)\.html$/);
+      if (m && stemRe.test(m[2])) out.push({ srcPath: full, date: m[1], label: labeller(m[1], m[2]) });
+      else if (/^competitor_report_.*\.html$/.test(entry) && stemRe.test("competitor")) out.push({ srcPath: full, date: "", label: labeller("", "competitor") });
+    }
+  }
+  return out.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+}
+
+/**
  * Render the shared content-creation SOP (platform-specs.md) into a design-system HTML
  * inside the client's reports dir, so the hub can include it like any other deliverable.
  * Returns the rendered path, or null if the source SOP is missing. Rendered once per
@@ -75,8 +103,7 @@ function renderContentSops() {
     subtitle: `${clientName} · Per-platform production playbook`,
     eyebrow: agencyName,
   });
-  if (!existsSync(reportsDir)) mkdirSync(reportsDir, { recursive: true });
-  const out = resolve(reportsDir, "content_sops.html");
+  const out = P.clientFile(slug, "content_sops.html", { forWrite: true }); // → deliverables/content-sops/
   writeFileSync(out, html);
   return out;
 }
@@ -94,32 +121,36 @@ const PHASES = [
   { key: "pre-audit", title: "Pre-Audit",
     desc: "Where you started — market & account snapshot before we engaged.",
     resolve: () => firstOf(
+      exact(P.prospectDeliverable(slug, "pre-audit", "html"), "Pre-Audit"),
       exact(resolve(ROOT, "prospects", slug, "pre_audit.html"), "Pre-Audit"),
       matchIn(publicDir, /-pre-audit\.html$/, () => "Pre-Audit")) },
   { key: "audit", title: "Account Audit",
     desc: "Full Facebook, Instagram & pixel health audit with a scored breakdown.",
-    resolve: () => matchIn(reportsDir, /_audit\.html$/, () => "Open Audit") },
+    resolve: () => scanReports(/^audit$/, () => "Open Audit") },
   { key: "research", title: "Market Research",
     desc: "Competitor creative intelligence and category benchmarking.",
-    resolve: () => matchIn(reportsDir, /^competitor_report_.*\.html$/, () => "Open Research") },
+    resolve: () => scanReports(/^competitor$/, () => "Open Research") },
   { key: "strategy-brief", title: "Strategy Brief",
     desc: "The paid-media game plan: objectives, offers, and creative angles.",
-    resolve: () => exact(resolve(clientDir, "strategy_brief.html"), "Open Strategy") },
+    resolve: () => exact(P.clientFile(slug, "strategy_brief.html"), "Open Strategy") },
   { key: "audience-map", title: "Audience Map",
     desc: "Targeting plan — audience clusters, interests, and lookalikes.",
-    resolve: () => exact(resolve(clientDir, "audience_map.html"), "Open Audience Map") },
+    resolve: () => exact(P.clientFile(slug, "audience_map.html"), "Open Audience Map") },
   { key: "ad-creative", title: "Ad Creative",
     desc: "Scored, voice-checked ad copy package ready to launch.",
-    resolve: () => exact(resolve(clientDir, "ad_copy.html"), "Open Ad Copy") },
+    resolve: () => exact(P.clientFile(slug, "ad_copy.html"), "Open Ad Copy") },
   { key: "content-plan", title: "Content Plan",
     desc: "Your organic content pillars and the Reels-first calendar.",
-    resolve: () => exact(resolve(clientDir, "content_plan.html"), "Open Content Plan") },
+    resolve: () => exact(P.clientFile(slug, "content_plan.html"), "Open Content Plan") },
   { key: "content-sops", title: "Content Creation SOPs",
     desc: "The per-platform production playbook — media specs, copy limits, algorithm signals, and publish paths for every channel.",
     resolve: () => { const p = renderContentSops(); return p ? [{ srcPath: p, label: "Open SOPs" }] : []; } },
   { key: "reports", title: "Performance Reports", group: true,
     desc: "Ongoing results — weekly, monthly, and before/after reviews.",
-    resolve: () => matchIn(reportsDir, /_(weekly|monthly_review|before_after)\.html$/, reportLabel) },
+    resolve: () => scanReports(/^(weekly|monthly[-_]review|before[-_]after)$/, (date, stem) => {
+      const pretty = REPORT_TYPE[stem.replace(/-/g, "_")] || stem.replace(/[-_]/g, " ");
+      return date ? `${pretty} · ${date}` : pretty;
+    }) },
 ];
 
 // ── Resolve + copy ──────────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { register, recordMetrics, topPerformers, loadIndex } from "../../scripts/lib/dam.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -20,7 +21,7 @@ loadEnv({ silent: true });
 
 const [slug, cmd, ...rest] = process.argv.slice(2);
 if (!slug || !cmd) { console.error("usage: assets.js <slug> <register|metrics|top> ..."); process.exit(2); }
-if (!existsSync(resolve(ROOT, "clients", slug, "client_profile.json"))) {
+if (!existsSync(P.clientFile(slug, "client_profile.json"))) {
   console.error(`HALT: client ${slug} not found.`); process.exit(3);
 }
 

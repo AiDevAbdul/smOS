@@ -33,6 +33,7 @@ import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { adCopy as adCopySchema, audienceMap as audienceMapSchema, strategyBrief as briefSchema, clientProfile as profileSchema, launchPlan as launchPlanSchema } from "../../schemas/index.js";
 import { resolveAudiences, applyResolved, resolvedIdFor } from "../../scripts/lib/audience-resolver.js";
 import { readAssetRef, attachMedia, resolveAssetMedia } from "../../scripts/lib/launch_media.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -421,11 +422,10 @@ async function main() {
     process.exit(1);
   }
 
-  const dir = resolve(ROOT, "clients", slug);
-  const readJ = (f) => (existsSync(resolve(dir, f)) ? JSON.parse(readFileSync(resolve(dir, f), "utf8")) : null);
+  const readJ = (f) => { const p = P.clientFile(slug, f); return existsSync(p) ? JSON.parse(readFileSync(p, "utf8")) : null; };
   // Normalize every input to its canonical shape on read, so drifted field names
   // in older artifacts resolve to the names the builder expects.
-  const profile = profileSchema.normalize(JSON.parse(readFileSync(resolve(dir, "client_profile.json"), "utf8")));
+  const profile = profileSchema.normalize(JSON.parse(readFileSync(P.clientFile(slug, "client_profile.json"), "utf8")));
   const briefRaw = readJ("strategy_brief.json");
   const brief = briefRaw ? briefSchema.normalize(briefRaw) : null;
   const audienceMapRaw = readJ("audience_map.json");
@@ -470,7 +470,7 @@ async function main() {
       });
       audienceMap = applyResolved(audienceMap, r.resolved);
       // Persist resolved IDs back to audience_map.json so brief/launch reuse them.
-      writeFileSync(resolve(dir, "audience_map.json"), JSON.stringify(audienceMap, null, 2));
+      writeFileSync(P.clientFile(slug, "audience_map.json", { forWrite: true }), JSON.stringify(audienceMap, null, 2));
       const resolvedCount = Object.keys(r.resolved).length;
       console.error(`[launch] audience resolution: ${resolvedCount} resolved, ${r.created.length} created`);
       for (const w of r.warnings) console.error(`[launch]   ⚠ ${w}`);
@@ -493,7 +493,7 @@ async function main() {
   }
 
   // Always write the plan
-  const planPath = resolve(dir, "launch_plan.json");
+  const planPath = P.clientFile(slug, "launch_plan.json", { forWrite: true });
   writeFileSync(planPath, JSON.stringify({
     slug,
     generated_at: new Date().toISOString(),
@@ -523,7 +523,7 @@ async function main() {
   if (execute) {
     const graph = createGraph();
     created = await executePlan(graph, plan, profile);
-    const logPath = resolve(dir, "campaign_log.json");
+    const logPath = P.clientFile(slug, "campaign_log.json", { forWrite: true });
     writeFileSync(logPath, JSON.stringify({
       slug,
       generated_at: new Date().toISOString(),

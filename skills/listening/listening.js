@@ -17,6 +17,7 @@ import { resolveToken } from "../../scripts/lib/tokens.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { benchmarkFromMedia } from "../../scripts/lib/organic_bench.js";
 import { insert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -27,13 +28,13 @@ if (!slug) { console.error("usage: listening.js <slug>"); process.exit(2); }
 const OFFLINE = process.env.SMOS_OFFLINE === "1";
 
 const dir = resolve(ROOT, "clients", slug);
-const profilePath = resolve(dir, "client_profile.json");
+const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 
 // A live capture (from MCP get_mentions / public page fields) is dropped here by the
 // agent; the scaffold seeds competitor stubs from the profile so the contract runs.
-const capturePath = resolve(dir, "listening_capture.json");
+const capturePath = P.clientFile(slug, "listening_capture.json");
 const capture = existsSync(capturePath) ? JSON.parse(readFileSync(capturePath, "utf8")) : {};
 
 const handles = profile?.competitors?.map?.((c) => c.handle || c.name).filter(Boolean) || profile?.competitor_handles || [];
@@ -98,7 +99,7 @@ const snapshot = schema.normalize({
 const v = schema.validate(snapshot);
 if (!v.ok) { console.error("listening_snapshot INVALID:\n  - " + v.errors.join("\n  - ")); process.exit(4); }
 
-writeFileSync(resolve(dir, "listening_snapshot.json"), JSON.stringify(snapshot, null, 2));
+writeFileSync(P.clientFile(slug, "listening_snapshot.json", { forWrite: true }), JSON.stringify(snapshot, null, 2));
 
 if (supabaseConfigured()) {
   try {

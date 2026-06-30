@@ -19,6 +19,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { adCopy as adCopySchema, angleId, assertValid } from "../../schemas/index.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -110,13 +111,13 @@ function argVal(args, flag) {
 }
 
 function loadProfile(slug) {
-  const p = resolve(ROOT, "clients", slug, "client_profile.json");
+  const p = P.clientFile(slug, "client_profile.json");
   if (!existsSync(p)) throw new Error(`Profile not found: ${p}`);
   return JSON.parse(readFileSync(p, "utf8"));
 }
 
 function loadBrief(slug) {
-  const p = resolve(ROOT, "clients", slug, "strategy_brief.json");
+  const p = P.clientFile(slug, "strategy_brief.json");
   if (!existsSync(p)) throw new Error(`Strategy brief not found: ${p}`);
   const brief = JSON.parse(readFileSync(p, "utf8"));
   return brief;
@@ -406,11 +407,11 @@ function main() {
   // angle_id join key, or an angle with no usable copy).
   assertValid("ad_copy", adCopySchema.normalize(out), adCopySchema.validate);
 
-  const outPath = resolve(ROOT, "clients", slug, "ad_copy.json");
+  const outPath = P.clientFile(slug, "ad_copy.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(out, null, 2));
 
   // Client-facing deliverable: markdown + design-system HTML + PDF (Cupertino).
-  const mdPath = resolve(ROOT, "clients", slug, "ad_copy.md");
+  const mdPath = P.clientFile(slug, "ad_copy.md", { forWrite: true });
   const md = renderMarkdown(out, profile);
   writeFileSync(mdPath, md);
   const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, md, {

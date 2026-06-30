@@ -21,6 +21,7 @@ import { inboxItem as schema } from "../../schemas/index.js";
 import { resolveToken } from "../../scripts/lib/tokens.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { upsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -32,14 +33,15 @@ const slaMinutes = Number((process.argv.find((a) => a.startsWith("--sla-minutes=
 const OFFLINE = process.env.SMOS_OFFLINE === "1";
 
 const dir = resolve(ROOT, "clients", slug);
-const profilePath = resolve(dir, "client_profile.json");
+const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found — run /intake first.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 const pageId = profile?.accounts?.facebook_page_id;
 const igId = profile?.accounts?.instagram_business_id;
 
 const tok = resolveToken("page", slug, { profile });
-const inboxPath = resolve(dir, "inbox.json");
+const inboxReadPath = P.clientFile(slug, "inbox.json");
+const inboxPath = P.clientFile(slug, "inbox.json", { forWrite: true });
 
 async function pullLive(token) {
   // Build the client on the PAGE token so appsecret_proof is computed from the
@@ -116,7 +118,7 @@ async function pullLive(token) {
   let rawItems = [];
   if (OFFLINE || !tok.token) {
     if (!tok.token && !OFFLINE) console.error(`note: no page token for ${slug} (${tok.tried?.join(", ")}) — normalizing existing inbox only.`);
-    if (existsSync(inboxPath)) rawItems = JSON.parse(readFileSync(inboxPath, "utf8")).items || [];
+    if (existsSync(inboxReadPath)) rawItems = JSON.parse(readFileSync(inboxReadPath, "utf8")).items || [];
   } else {
     rawItems = await pullLive(tok.token);
   }

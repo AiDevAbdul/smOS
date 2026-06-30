@@ -23,6 +23,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { normalizeKpis } from "../../scripts/lib/metrics.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -206,9 +207,9 @@ function fillTemplate(template, vars) {
   });
 }
 
-function loadOptimizerActions(clientDir, weekStart, weekEnd) {
+function loadOptimizerActions(slug, weekStart, weekEnd) {
   // Until Supabase is back online, look for local optimizer logs the agent may have written.
-  const localLog = resolve(clientDir, "optimizer_log.json");
+  const localLog = P.clientFile(slug, "optimizer_log.json");
   if (!existsSync(localLog)) return [];
   try {
     const all = JSON.parse(readFileSync(localLog, "utf8"));
@@ -232,8 +233,7 @@ async function main() {
   }
   const weArg = argv.includes("--week-end") ? argv[argv.indexOf("--week-end") + 1] : null;
 
-  const clientDir = resolve(ROOT, "clients", slug);
-  const profilePath = resolve(clientDir, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -244,7 +244,7 @@ async function main() {
   const kpis = normalizeKpis(profile);
 
   const window = windowFromArgs(weArg);
-  const baselinePath = resolve(clientDir, "baseline_snapshot.json");
+  const baselinePath = P.clientFile(slug, "baseline_snapshot.json");
   const baseline = existsSync(baselinePath) ? JSON.parse(readFileSync(baselinePath, "utf8")) : null;
 
   if (isTbd(acct.ad_account_id)) {
@@ -287,7 +287,7 @@ async function main() {
   const cpaTarget = kpis.cpa_target ?? null;
   const roasTarget = kpis.roas_target ?? null;
 
-  const optimizerActions = loadOptimizerActions(clientDir, window.week_start, window.week_end);
+  const optimizerActions = loadOptimizerActions(slug, window.week_start, window.week_end);
 
   const vars = {
     client_name: profile.name,
@@ -352,12 +352,9 @@ async function main() {
   }
 
   // Write output
-  const reportsDir = resolve(clientDir, "reports");
-  if (!existsSync(reportsDir)) mkdirSync(reportsDir, { recursive: true });
-
   const template = readFileSync(resolve(ROOT, "templates/weekly-report.md"), "utf8");
   const filled = fillTemplate(template, vars);
-  const mdPath = resolve(reportsDir, `${window.week_end}_weekly.md`);
+  const mdPath = P.ensureParent(P.clientReport(slug, window.week_end, "weekly", "md"));
   writeFileSync(mdPath, filled);
 
   // Ship HTML + PDF alongside the markdown (every client-facing report does).
@@ -367,7 +364,7 @@ async function main() {
   });
   console.error(`[report] wrote ${htmlPath}${pdfOk ? " + PDF" : " (PDF skipped)"}`);
 
-  const rawPath = resolve(reportsDir, `${window.week_end}_weekly_raw.json`);
+  const rawPath = P.ensureParent(P.clientReport(slug, window.week_end, "weekly", "raw.json"));
   writeFileSync(rawPath, JSON.stringify({
     slug, window, vars,
     metrics: { now, prior },

@@ -16,6 +16,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -177,7 +178,7 @@ async function main() {
     process.exit(1);
   }
 
-  const profilePath = resolve(ROOT, "clients", slug, "client_profile.json");
+  const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) {
     console.error(`Profile not found: ${profilePath}`);
     process.exit(2);
@@ -229,7 +230,7 @@ async function main() {
     next_steps: nextSteps,
   };
 
-  const outPath = resolve(ROOT, "clients", slug, "capi_report.json");
+  const outPath = P.clientFile(slug, "capi_report.json", { forWrite: true });
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[capi-setup] wrote ${outPath}`);
 
