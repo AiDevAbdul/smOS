@@ -1,0 +1,33 @@
+name: smOS CI
+
+# Runs the full test suite + syntax checks on every push and PR so guard/schema
+# regressions can't land silently. Tests run in a writable workspace (the suite
+# creates and unlinks fixtures, which fails on read-only mounts).
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Syntax-check hooks and libs
+        run: |
+          for f in hooks/*.js scripts/lib/*.js skills/**/*.js mcp/meta-server/tools/*.js; do
+            [ -f "$f" ] && node --check "$f" || true
+          done
+
+      - name: Run test suite
+        run: node --test test/*.test.js

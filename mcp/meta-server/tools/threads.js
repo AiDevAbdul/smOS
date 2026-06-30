@@ -12,6 +12,7 @@
  */
 
 import axios from "axios";
+import { resolveToken } from "../../../scripts/lib/tokens.js";
 
 const THREADS_BASE = "https://graph.threads.net/v1.0";
 
@@ -49,11 +50,16 @@ export const tools = [
 ];
 
 function threadsToken(args) {
-  return (
-    args.threads_access_token ||
-    (args.slug && process.env[`META_THREADS_TOKEN_${String(args.slug).toUpperCase().replace(/[^A-Z0-9]/g, "_")}`]) ||
-    process.env.META_THREADS_TOKEN
-  );
+  const { token, source, global_fallback } = resolveToken("threads", args.slug, {
+    override: args.threads_access_token,
+  });
+  if (global_fallback) {
+    console.error(
+      `[threads] ⚠ falling back to GLOBAL threads token (${source}) for slug='${args.slug || "?"}'. ` +
+      `Set META_THREADS_TOKEN_${String(args.slug || "SLUG").toUpperCase().replace(/[^A-Z0-9]/g, "_")} for multi-client safety.`
+    );
+  }
+  return token;
 }
 
 async function tRequest(method, path, params = {}, data = null, token) {

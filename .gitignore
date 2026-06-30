@@ -16,3 +16,10 @@ prospects/
 proposals/
 contracts/
 .vercel
+
+# Test-run artifacts / fixtures
+logs/
+clients/__*/
+clients/_gatetest/
+clients/it-intake-audit-fixture/
+billing/__*/

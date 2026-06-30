@@ -109,6 +109,24 @@ export function createGraph(token = process.env.META_ACCESS_TOKEN, opts = {}) {
     return err;
   }
 
+  // Durable, non-blocking error capture. Lazy-imported so meta-graph stays light
+  // and so a missing/unconfigured supabase module can never break a Graph call.
+  function logTerminalError(err, method, path) {
+    try {
+      const meta = err?.metaError || {};
+      import("./supabase.js")
+        .then((m) => m.logError({
+          source: "meta-graph",
+          code: meta.code ?? null,
+          type: meta.type ?? null,
+          message: err?.message || String(err),
+          fbtrace_id: meta.fbtrace_id ?? null,
+          path: `${method} ${path}`,
+        }))
+        .catch(() => {});
+    } catch { /* never throw from the logger */ }
+  }
+
   async function request(method, path, params = {}, data = null) {
     // Fail-closed guardrails: every account mutation runs the shared rule-set
     // BEFORE the HTTP request leaves the process. Throws GuardError on a block.
@@ -130,8 +148,8 @@ export function createGraph(token = process.env.META_ACCESS_TOKEN, opts = {}) {
       } catch (rawErr) {
         const err = normalizeError(rawErr);
         lastErr = err;
-        if (err.tokenExpired) throw err;          // never retry a dead token
-        if (attempt >= maxRetries || !isRetryable(err)) throw err;
+        if (err.tokenExpired) { logTerminalError(err, method, path); throw err; } // never retry a dead token
+        if (attempt >= maxRetries || !isRetryable(err)) { logTerminalError(err, method, path); throw err; }
         await sleep(backoffMs(attempt, baseDelayMs, err));
       }
     }

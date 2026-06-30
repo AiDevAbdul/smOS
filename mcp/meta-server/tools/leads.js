@@ -12,7 +12,12 @@
  * Lead forms require a Page access token, not the user token.
  *
  * Leads expire from Meta's storage after 90 days — pull regularly.
+ *
+ * Multi-client token safety: page tokens resolve through the shared
+ * scripts/lib/tokens.js (per-client META_PAGE_TOKEN_<SLUG> preferred).
  */
+
+import { resolveToken } from "../../../scripts/lib/tokens.js";
 
 export const tools = [
   {
@@ -22,7 +27,8 @@ export const tools = [
       type: "object",
       properties: {
         page_id: { type: "string" },
-        page_access_token: { type: "string", description: "Required. Page-level token; user token will not work." },
+        page_access_token: { type: "string", description: "Page-level token; user token will not work." },
+        slug: { type: "string", description: "Client slug — resolves the per-client page token (META_PAGE_TOKEN_<SLUG> or profile.accounts.page_token). Preferred in a multi-client agency." },
         name: { type: "string", description: "Internal form name (not shown to users)" },
         locale: { type: "string", default: "en_US" },
         privacy_policy: {
@@ -136,7 +142,16 @@ export const tools = [
 ];
 
 function token(args) {
-  return args.page_access_token || process.env.META_PAGE_TOKEN;
+  const { token: t, source, global_fallback } = resolveToken("page", args.slug, {
+    override: args.page_access_token,
+  });
+  if (global_fallback) {
+    console.error(
+      `[leads] ⚠ falling back to GLOBAL page token (${source}) for slug='${args.slug || "?"}'. ` +
+      `Set META_PAGE_TOKEN_${String(args.slug || "SLUG").toUpperCase().replace(/[^A-Z0-9]/g, "_")} for multi-client safety.`
+    );
+  }
+  return t;
 }
 
 function asAccessParams(t) {

@@ -97,13 +97,19 @@ function profileFor(input, ctx) {
 // ============================ individual rules ============================
 
 export function checkNaming(toolName, input) {
-  const name = input?.name;
-  if (!name) return PASS;
+  // Order matters: "create_adset".includes("create_ad") is true, so adset is
+  // tested before ad.
   let kind;
   if (toolName.includes("create_campaign")) kind = "campaign";
   else if (toolName.includes("create_adset")) kind = "adset";
   else if (toolName.includes("create_ad")) kind = "ad";
   else return PASS;
+  const name = input?.name;
+  // Fail-closed: a create_* with no name must be BLOCKED, not waved through. A
+  // direct Graph write (or an aliased field) would otherwise skip naming entirely.
+  if (!name) {
+    return fail(`naming-check BLOCKED: ${kind} create requires a 'name'. Expected: ${NAMING_HINTS[kind]}`);
+  }
   if (!NAMING_PATTERNS[kind].test(name)) {
     return fail(`naming-check BLOCKED: "${name}" does not match ${kind} convention. Expected: ${NAMING_HINTS[kind]}`);
   }
@@ -111,8 +117,16 @@ export function checkNaming(toolName, input) {
 }
 
 export function checkBudget(toolName, input, ctx = {}) {
-  const proposedCents = Number(input?.daily_budget ?? 0);
-  if (!proposedCents) return PASS;
+  const raw = input?.daily_budget;
+  // A genuinely absent budget is legitimate (e.g. CBO ad sets carry no budget) →
+  // PASS. But if a value IS supplied it must be a finite, non-negative number; a
+  // NaN/garbage value must never coerce to falsy and slip through as "no budget".
+  if (raw == null || raw === "") return PASS;
+  const proposedCents = Number(raw);
+  if (!Number.isFinite(proposedCents) || proposedCents < 0) {
+    return fail(`budget-guard BLOCKED: daily_budget "${raw}" is not a valid non-negative number.`);
+  }
+  if (proposedCents === 0) return PASS;
   const proposedUSD = proposedCents / 100;
 
   const profile = profileFor(input, ctx);

@@ -67,6 +67,44 @@ export async function select(table, filters = {}, columns = "*") {
   return rest("GET", table, { query: { select: columns, ...filters } });
 }
 
+/**
+ * Durable error logging (closes the CLAUDE.md "Meta API errors → Supabase error_log"
+ * promise that nothing previously implemented). Best-effort and NON-blocking:
+ *   - always appends a line to logs/error_log.jsonl (works offline)
+ *   - additionally inserts into the Supabase `error_log` table when configured
+ * Never throws — error logging must not itself break the calling path.
+ *
+ * row: { source, code, type, message, fbtrace_id, path, slug, context }
+ */
+export async function logError(row = {}) {
+  const entry = {
+    ts: new Date().toISOString(),
+    source: row.source || "unknown",
+    code: row.code ?? null,
+    type: row.type ?? null,
+    message: String(row.message ?? "").slice(0, 1000),
+    fbtrace_id: row.fbtrace_id ?? null,
+    path: row.path ?? null,
+    slug: row.slug ?? null,
+    context: row.context ?? null,
+  };
+  // 1. Local append (offline-safe). Lazy import to keep this module light.
+  try {
+    const { appendFileSync, mkdirSync } = await import("node:fs");
+    const { resolve, dirname } = await import("node:path");
+    const { fileURLToPath } = await import("node:url");
+    const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+    const dir = resolve(root, "logs");
+    try { mkdirSync(dir, { recursive: true }); } catch {}
+    appendFileSync(resolve(dir, "error_log.jsonl"), JSON.stringify(entry) + "\n");
+  } catch { /* logging must never throw */ }
+  // 2. Supabase mirror (best-effort).
+  try {
+    if (supabaseConfigured()) await insert("error_log", entry);
+  } catch { /* swallow — local log already has it */ }
+  return entry;
+}
+
 /** Resolve a client's UUID by slug (cached per-process). Returns null if absent. */
 const _clientIdCache = new Map();
 export async function clientIdBySlug(slug) {

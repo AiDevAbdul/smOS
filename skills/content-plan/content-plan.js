@@ -28,6 +28,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { contentPlan as schema } from "../../schemas/index.js";
 import { insert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import { keywordFirstCaption, altText } from "../../scripts/lib/social_seo.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -90,10 +91,19 @@ export function buildPlan({ profile, slug, weeks = 4, from = new Date() }) {
         platform: "instagram",
         format,
         publish_at: when.toISOString(),
-        message: `[${pillar.name}] ${kw}: _(creative agent to write keyword-first caption)_`,
+        // Social-SEO: lead the caption with the target keyword (search-as-discovery
+        // signal) and hand a keyword-first scaffold to /creative to finish in voice.
+        message: keywordFirstCaption(
+          `${pillar.name}: ${kw}. _(creative agent to finish in brand voice — keep the keyword in the first line)_`,
+          kw
+        ),
         keywords: pillar.keywords,
-        hashtags: pillar.keywords.map((k) => "#" + String(k).replace(/[^a-z0-9]/gi, "")).filter((h) => h.length > 1),
-        alt_text: `${pillar.name} ${format} about ${kw} for ${niche}`,
+        // Cap to 3–5 targeted tags (per platform-specs.md) instead of dumping every keyword.
+        hashtags: pillar.keywords
+          .slice(0, 5)
+          .map((k) => "#" + String(k).replace(/[^a-z0-9]/gi, ""))
+          .filter((h) => h.length > 1),
+        alt_text: altText({ subject: `${pillar.name}: ${kw}`, format, brand: profile?.name || slug, keyword: kw }),
         ...(format === "carousel"
           ? { items: [{ media_type: "IMAGE" }, { media_type: "IMAGE" }, { media_type: "IMAGE" }] }
           : {}),

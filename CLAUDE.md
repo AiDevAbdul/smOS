@@ -32,6 +32,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | Audience targeting plan | `/audience-map` |
 | Campaign strategy | `/strategy-brief` |
 | Write ad copy | `/creative` |
+| Design or evaluate a structured creative test (hook/concept/format) | `/creative-test` |
 | Launch a campaign | `/launch` |
 | Check performance | `/analyze` |
 | Scale winners / kill losers | `/scale` |
@@ -53,6 +54,14 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Bundle all reports into one shareable client hub (single link)** | `/bundle` |
 
 ### Strategic Intelligence Layer (external skills)
+
+> **⚠ Dependency status (verified 2026-06-30):** these are **external skills NOT
+> bundled with smOS** — they are not present in `skills/` and must be installed
+> separately (e.g. from a Claude skills/plugin marketplace) before the routes below
+> resolve. If a skill is not installed, do the work inline with the available tools
+> (WebSearch, the meta-ad-library research pipeline, etc.) and tell the user the
+> dedicated skill is not installed — never pretend a missing skill ran.
+
 | User intent | Skill to invoke |
 |---|---|
 | Apply psychology / persuasion to ad copy or creative | `marketing-psychology` |
@@ -68,11 +77,18 @@ You manage real ad accounts with real budgets. Every action you take that touche
 
 ### Per-Platform Content Production (organic content team)
 
-`/content-plan` builds the cross-platform calendar; these ready-made skills produce the
+`/content-plan` builds the cross-platform calendar; these skills produce the
 **platform-native** asset for each item. Every one MUST shape its output to
 `skills/content-plan/references/platform-specs.md` (the per-platform SOP — media specs,
 copy limits, algorithm signals, publish-path status). Re-verify that file's freshness date
 before a big push.
+
+> **⚠ Dependency status (verified 2026-06-30):** the content-production skills below
+> (`social`, `facebook-posts`, `linkedin-posts`, `video-shorts`, `remotion`) are
+> **external and NOT bundled** with smOS — they are not in `skills/`. Until installed,
+> `/content-plan` produces the calendar + keyword-first captions (via `social_seo.js`)
+> and hands finished-copy production to the human or to `/creative`. Do not route to an
+> uninstalled skill as if it exists.
 
 | User intent | Skill to invoke |
 |---|---|

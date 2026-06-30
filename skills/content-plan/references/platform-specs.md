@@ -60,12 +60,16 @@ posts get reduced reach → post media natively, **link in first comment**.
 the core Reels signal; **shares & saves outweigh likes**; early engagement velocity
 decisive. Cadence ~4.7 posts/week median — overposting hurts. Best Tue/Wed/Thu.
 
-**Publish path: ✅ AUTOMATED (built).** Graph API v25.0 — `/publish` already dispatches
-feed/photo/video. **Reels** use the 3-phase `/{page-id}/video_reels` flow
+**Publish path: ⚠ PARTIAL.** `/publish` (publish.js) currently dispatches **FB feed
+text/link posts and photo posts** (`/{page-id}/feed`, `/{page-id}/photos`) — these are
+built and tested. **FB video and Reels are SPEC'd but NOT yet wired in publish.js**
+(roadmap). When built, **Reels** use the 3-phase `/{page-id}/video_reels` flow
 (`start` → upload to `rupload.facebook.com` → `finish` + `video_state=PUBLISHED`); the
 old single-shot path is deprecated. Scopes: `pages_manage_posts` + `pages_read_engagement`
 + `pages_show_list` (Page/System-User token). **Rate cap: 30 Reels/24h per Page.**
 Requires App Review + Business Verification (see `docs/agency-foundation.md`).
+Until FB video lands, hand finished video assets to the human for FB, or publish the
+Reel on Instagram (built).
 
 ---
 
@@ -191,7 +195,7 @@ passes (audit also lifts the quota). Set the **AI-content label** on GenAI-deriv
 
 | Platform | Automated publish? | Path | Pre-req before live |
 |---|---|---|---|
-| Facebook | ✅ built | Graph API v25.0 (`/feed`, `/photos`, `/videos`, `/video_reels`) | App Review + Biz Verification |
+| Facebook | ⚠ partial | Graph API v25.0 — **built:** `/feed`, `/photos`. **Not yet wired:** `/videos`, `/video_reels` | App Review + Biz Verification |
 | Instagram | ✅ built | Graph API v25.0 (container → publish) | `instagram_business_content_publish` scope |
 | TikTok | ⚙️ not built | Content Posting API — **Upload-draft first**, Direct Post post-audit | Content-posting audit (~2–4 wk) for Direct Post |
 | LinkedIn | ⚙️ not built | Posts API (Company Page) | Community Management API tiered approval |

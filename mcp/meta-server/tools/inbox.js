@@ -19,6 +19,8 @@
  * the window may be closed, rather than burning a failed call.
  */
 
+import { resolveToken } from "../../../scripts/lib/tokens.js";
+
 export const tools = [
   {
     name: "get_conversations",
@@ -81,13 +83,18 @@ export const tools = [
 ];
 
 function pageToken(args) {
-  // Per-client token preferred; MCP callers pass page_access_token, or set
-  // META_PAGE_TOKEN_<SLUG>. Global META_PAGE_TOKEN is a last-resort fallback.
-  return (
-    args.page_access_token ||
-    (args.slug && process.env[`META_PAGE_TOKEN_${String(args.slug).toUpperCase().replace(/[^A-Z0-9]/g, "_")}`]) ||
-    process.env.META_PAGE_TOKEN
-  );
+  // Centralized per-client resolution: override → META_PAGE_TOKEN_<SLUG> →
+  // profile.accounts.page_token → global META_PAGE_TOKEN (flagged, discouraged).
+  const { token, source, global_fallback } = resolveToken("page", args.slug, {
+    override: args.page_access_token,
+  });
+  if (global_fallback) {
+    console.error(
+      `[inbox] ⚠ falling back to GLOBAL page token (${source}) for slug='${args.slug || "?"}'. ` +
+      `Set META_PAGE_TOKEN_${String(args.slug || "SLUG").toUpperCase().replace(/[^A-Z0-9]/g, "_")} for multi-client safety.`
+    );
+  }
+  return token;
 }
 
 export async function handle(toolName, args, client) {

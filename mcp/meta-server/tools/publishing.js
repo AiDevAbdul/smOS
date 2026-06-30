@@ -7,7 +7,13 @@
  * - Carousels: create child containers first (is_carousel_item=true), then a parent container with children=<ids>.
  * - Comment moderation: hide is POST /{comment_id} {is_hidden:true}; delete is DELETE /{comment_id}.
  * - IG publishing has a 100 calls/day limit per IG account (v25.0).
+ *
+ * Multi-client token safety: page tokens resolve through the shared
+ * scripts/lib/tokens.js (per-client META_PAGE_TOKEN_<SLUG> preferred), so a
+ * multi-client agency never publishes to the wrong Page via a global token.
  */
+
+import { resolveToken } from "../../../scripts/lib/tokens.js";
 
 export const tools = [
   {
@@ -22,7 +28,8 @@ export const tools = [
         image_url: { type: "string", description: "Public URL of an image to attach. For Page-hosted images, upload first via /{page_id}/photos." },
         scheduled_publish_time: { type: "number", description: "Unix timestamp (seconds). Must be 10 min – 6 months in future. Pair with published=false." },
         published: { type: "boolean", description: "Set false when scheduling. Defaults to true.", default: true },
-        page_access_token: { type: "string", description: "Override env META_PAGE_TOKEN. Page access tokens are required — user tokens won't publish." },
+        page_access_token: { type: "string", description: "Override token. Page access tokens are required — user tokens won't publish." },
+        slug: { type: "string", description: "Client slug — resolves the per-client page token (META_PAGE_TOKEN_<SLUG> or profile.accounts.page_token). Preferred over a global token in a multi-client agency." },
       },
       required: ["page_id"],
     },
@@ -111,7 +118,18 @@ export const tools = [
 ];
 
 function pageToken(args) {
-  return args.page_access_token || process.env.META_PAGE_TOKEN;
+  // Per-client resolution via the shared resolver: override → META_PAGE_TOKEN_<SLUG>
+  // → profile.accounts.page_token → global META_PAGE_TOKEN (flagged, discouraged).
+  const { token, source, global_fallback } = resolveToken("page", args.slug, {
+    override: args.page_access_token,
+  });
+  if (global_fallback) {
+    console.error(
+      `[publishing] ⚠ falling back to GLOBAL page token (${source}) for slug='${args.slug || "?"}'. ` +
+      `Set META_PAGE_TOKEN_${String(args.slug || "SLUG").toUpperCase().replace(/[^A-Z0-9]/g, "_")} to guarantee the right Page in a multi-client setup.`
+    );
+  }
+  return token;
 }
 
 async function pollContainerStatus(client, containerId, { timeoutMs = 60_000, intervalMs = 3000 } = {}) {

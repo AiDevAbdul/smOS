@@ -155,15 +155,32 @@ function buildTargeting(audience, audienceMap, profile) {
     targeting.custom_audiences = [{ id: realId || `<TBD_${audience.id}>` }];
   }
 
+  // Advantage+ Audience (2026 default). Meta now expects an explicit decision on
+  // most ad sets: advantage_audience:1 treats interests/lookalikes as a *suggestion*
+  // and lets delivery expand; advantage_audience:0 honors the spec exactly. We turn
+  // it ON for prospecting (broad / interest seeds) where expansion helps, and OFF
+  // for retargeting/lookalike where exact control + exclusions matter. Overridable
+  // per audience via `audience.advantage_audience`.
+  const defaultAdvantage =
+    audience.source === "broad" || audience.source === "interest_cluster" ? 1 : 0;
+  const advantageAudience =
+    audience.advantage_audience != null ? (audience.advantage_audience ? 1 : 0) : defaultAdvantage;
+  targeting.targeting_automation = { advantage_audience: advantageAudience };
+
   return targeting;
 }
 
-function buildAdsetPayload({ campaignId, adsetEntry, audience, audienceMap, profile, brief, angle }) {
+function buildAdsetPayload({ campaignId, adsetEntry, audience, audienceMap, profile, brief, angle, budgetMode, placementMode }) {
   const acct = profile.accounts || {};
   const format = angle?.format || "single_image";
   const targeting = buildTargeting(audience, audienceMap, profile);
-  const placement = FORMAT_PLACEMENTS[format] || FORMAT_PLACEMENTS.single_image;
-  Object.assign(targeting, placement);
+  // Placement: 'advantage' (default, 2026 best practice) lets Meta optimize across
+  // all eligible positions — we leave placements unset (automatic). 'manual' applies
+  // the format-restricted FORMAT_PLACEMENTS map for cases that genuinely require it.
+  if (placementMode === "manual") {
+    const placement = FORMAT_PLACEMENTS[format] || FORMAT_PLACEMENTS.single_image;
+    Object.assign(targeting, placement);
+  }
 
   const name = buildAdsetName(format, targeting.age_min, targeting.age_max, audience);
   const phase = brief.objective_hierarchy.find((p) => true);
@@ -173,7 +190,10 @@ function buildAdsetPayload({ campaignId, adsetEntry, audience, audienceMap, prof
     campaign_id: campaignId,
     name,
     status: "PAUSED",
-    daily_budget: String(Math.round(adsetEntry.daily_budget * 100)), // cents
+    // ABO: the ad set carries the budget. CBO/Advantage Campaign Budget: the budget
+    // lives on the campaign and MUST be omitted here (Meta rejects an ad-set budget
+    // when campaign budget optimization is on). This was the double-budget bug.
+    ...(budgetMode === "abo" ? { daily_budget: String(Math.round(adsetEntry.daily_budget * 100)) } : {}),
     billing_event: "IMPRESSIONS",
     optimization_goal: OPTIMIZATION_GOAL[objective] || "LINK_CLICKS",
     bid_strategy: "LOWEST_COST_WITHOUT_CAP",
@@ -194,14 +214,16 @@ function buildAdsetPayload({ campaignId, adsetEntry, audience, audienceMap, prof
   return payload;
 }
 
-function buildCampaignPayload({ phase, audience, profile, brief, dailyBudget }) {
+function buildCampaignPayload({ phase, audience, profile, brief, dailyBudget, budgetMode }) {
   const name = buildCampaignName(phase, audience);
   return {
     ad_account_id: profile.accounts?.ad_account_id,
     name,
     objective: phase.objective,
     status: "PAUSED",
-    daily_budget: String(Math.round(dailyBudget * 100)),
+    // CBO (Advantage Campaign Budget): budget lives here, NOT on the ad set.
+    // ABO: budget lives on the ad set, so the campaign carries none.
+    ...(budgetMode === "cbo" ? { daily_budget: String(Math.round(dailyBudget * 100)) } : {}),
     bid_strategy: "LOWEST_COST_WITHOUT_CAP",
     special_ad_categories: [],
   };
@@ -267,6 +289,12 @@ function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
   const adsets = brief.budget_allocation?.adsets || [];
   const angles = brief.creative_angles || [];
 
+  // Budget model: 'cbo' (Advantage Campaign Budget — 2026 default; budget on the
+  // campaign) or 'abo' (budget on the ad set). Placement model: 'advantage'
+  // (automatic placements — default) or 'manual'. Either is set on the brief.
+  const budgetMode = (brief.budget_mode || "cbo").toLowerCase() === "abo" ? "abo" : "cbo";
+  const placementMode = (brief.placement_mode || "advantage").toLowerCase() === "manual" ? "manual" : "advantage";
+
   const campaigns = [];
   for (const a of audiences) {
     const adsetEntry = adsets.find((s) => s.audience_id === a.id);
@@ -279,6 +307,7 @@ function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
       profile,
       brief,
       dailyBudget: adsetEntry.daily_budget,
+      budgetMode,
     });
 
     // One adset per (audience × creative angle format)? Standard pattern: one adset per audience, multiple ads inside.
@@ -290,6 +319,8 @@ function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
       profile,
       brief,
       angle: angles[0],
+      budgetMode,
+      placementMode,
     });
 
     const ads = angles.map((angle, idx) => {
