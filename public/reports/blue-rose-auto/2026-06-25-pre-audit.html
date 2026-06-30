@@ -3,34 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>blue-rose-auto — Pre-Audit Report · smOS</title>
+<title>Blue Rose Auto — Pre-Audit Report</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
   :root {
-    --navy: #0a0f1e;
-    --navy-mid: #111827;
-    --navy-light: #1e2a3d;
-    --blue: #3b82f6;
-    --blue-light: #eff6ff;
-    --teal: #0891b2;
-    --green: #10b981;
-    --green-light: #ecfdf5;
-    --amber: #f59e0b;
-    --amber-light: #fffbeb;
-    --red: #ef4444;
-    --red-light: #fef2f2;
-    --gray-50: #f8fafc;
-    --gray-100: #f1f5f9;
-    --gray-200: #e2e8f0;
-    --gray-400: #94a3b8;
-    --gray-500: #64748b;
-    --gray-700: #334155;
-    --gray-900: #0f172a;
-    --text: #0f172a;
-    --subtext: #64748b;
-    --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
-    --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.12), 0 12px 32px rgba(0,0,0,0.10);
+    --bg: #f5f5f7;
+    --card: #ffffff;
+    --border: #d2d2d7;
+    --text: #1d1d1f;
+    --subtext: #6e6e73;
+    --accent: #0071e3;
+    --accent-light: #e8f0fb;
+    --red: #ff375f;
+    --red-light: #fff0f3;
+    --green: #30d158;
+    --green-light: #f0fdf4;
+    --yellow: #ff9f0a;
+    --yellow-light: #fff8ec;
+    --gray: #8e8e93;
+    --gray-light: #f5f5f7;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
     --radius: 16px;
     --radius-sm: 10px;
   }
@@ -38,715 +30,844 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--gray-50);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+    background: var(--bg);
     color: var(--text);
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── HERO ── */
-  .hero {
-    background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 52%, #7d3cff 100%);
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     color: white;
-    padding: 64px 40px 56px;
+    padding: 60px 40px 50px;
+    text-align: center;
     position: relative;
     overflow: hidden;
   }
-  .hero::before {
+  .header::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(59,130,246,0.12) 0%, transparent 70%);
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 60% 40%, rgba(0,113,227,0.15) 0%, transparent 60%);
     pointer-events: none;
   }
-  .hero-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 40px;
-    align-items: center;
-  }
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(59,130,246,0.15);
-    border: 1px solid rgba(59,130,246,0.3);
-    color: #93c5fd;
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 5px 12px;
+    padding: 5px 14px;
     border-radius: 20px;
-    margin-bottom: 16px;
-  }
-  .hero-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: #3b82f6;
-    border-radius: 50%;
-  }
-  .hero h1 {
-    font-size: 36px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 8px;
-  }
-  .hero-meta {
-    color: #94a3b8;
-    font-size: 14px;
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
-  .hero-meta span { display: flex; align-items: center; gap: 6px; }
-  .hero-meta svg { opacity: 0.7; }
-
-  /* Score ring */
-  .score-ring-wrap {
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .score-ring-wrap .score-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #64748b;
-    margin-bottom: 8px;
-  }
-  .score-ring {
-    position: relative;
-    width: 120px;
-    height: 120px;
-  }
-  .score-ring svg { transform: rotate(-90deg); }
-  .score-ring .track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; }
-  .score-ring .fill  { fill: none; stroke-width: 8; stroke-linecap: round;
-                        stroke-dasharray: 314; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
-  .score-value {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .score-value .num { font-size: 30px; font-weight: 800; line-height: 1; }
-  .score-value .den { font-size: 11px; color: #64748b; font-weight: 500; margin-top: 2px; }
-
-  /* ── MAIN LAYOUT ── */
-  .main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 40px 40px 80px;
-  }
-
-  /* ── SECTION HEADER ── */
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     margin-bottom: 20px;
-    margin-top: 44px;
   }
-  .section-header:first-child { margin-top: 0; }
-  .section-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
+  .header h1 {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .header .subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 40px;
+  }
+
+  /* SCORE GAUGE */
+  .score-container {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .gauge-wrap {
+    position: relative;
+    width: 180px;
+    height: 180px;
+  }
+  .gauge-svg { transform: rotate(-90deg); }
+  .gauge-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 12; }
+  .gauge-fill { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1.5s ease; }
+  .gauge-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .gauge-score {
+    font-size: 44px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .gauge-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  .score-verdict {
+    text-align: left;
+    max-width: 280px;
+  }
+  .verdict-headline {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .verdict-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  /* MAIN CONTENT */
+  .main { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ALERT BANNER */
+  .alert-banner {
+    background: linear-gradient(135deg, #ff375f, #ff6b35);
+    color: white;
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow-lg);
+  }
+  .alert-icon { font-size: 28px; flex-shrink: 0; }
+  .alert-content h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .alert-content p { font-size: 14px; opacity: 0.9; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
     flex-shrink: 0;
   }
-  .section-title {
+  .card-header h2 {
     font-size: 17px;
-    font-weight: 700;
-    color: var(--gray-900);
+    font-weight: 600;
   }
-  .section-subtitle {
+  .card-header .card-sub {
     font-size: 13px;
     color: var(--subtext);
-    margin-left: auto;
+    margin-top: 1px;
   }
+  .card-body { padding: 20px 24px; }
 
-  /* ── METRIC CARDS ── */
-  .metric-grid {
+  /* STATUS PILL */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pill-red { background: var(--red-light); color: var(--red); }
+  .pill-green { background: var(--green-light); color: #1a7f3c; }
+  .pill-yellow { background: var(--yellow-light); color: #9a5f00; }
+  .pill-gray { background: var(--gray-light); color: var(--gray); }
+  .pill-blue { background: var(--accent-light); color: var(--accent); }
+
+  /* METRICS GRID */
+  .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px;
-    margin-bottom: 32px;
   }
   .metric-card {
-    background: white;
+    background: var(--gray-light);
     border-radius: var(--radius-sm);
-    padding: 18px 20px;
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--gray-200);
+    padding: 16px;
+    text-align: center;
   }
-  .metric-card .label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--subtext);
-    margin-bottom: 6px;
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
   }
-  .metric-card .value {
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-  .metric-card .sub {
+  .metric-label {
     font-size: 12px;
+    color: var(--subtext);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .metric-note {
+    font-size: 11px;
     color: var(--subtext);
     margin-top: 4px;
   }
 
-  /* ── CARD ── */
-  .card {
-    background: white;
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--gray-200);
-    padding: 24px 28px;
-    margin-bottom: 16px;
-  }
-  .card-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: var(--gray-900);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  /* ── STATUS ITEMS ── */
-  .status-list { display: flex; flex-direction: column; gap: 8px; }
-  .status-item {
+  /* CHECKLIST */
+  .checklist { list-style: none; }
+  .checklist li {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 10px 14px;
-    border-radius: 8px;
-    background: var(--gray-50);
-    font-size: 13.5px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
   }
-  .status-item .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
-  .status-item.green  { background: var(--green-light); }
-  .status-item.green .dot  { background: var(--green); }
-  .status-item.red    { background: var(--red-light); }
-  .status-item.red .dot    { background: var(--red); }
-  .status-item.amber  { background: var(--amber-light); }
-  .status-item.amber .dot  { background: var(--amber); }
-  .status-item .item-text { flex: 1; }
-  .status-item .item-title { font-weight: 600; }
-  .status-item .item-desc  { font-size: 12px; color: var(--subtext); margin-top: 1px; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .check-label { flex: 1; }
+  .check-label strong { display: block; font-weight: 600; }
+  .check-label span { color: var(--subtext); font-size: 13px; }
 
-  /* ── DATA ROWS ── */
-  .data-table { width: 100%; border-collapse: collapse; }
-  .data-table td {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 13.5px;
-  }
-  .data-table tr:last-child td { border-bottom: none; }
-  .data-table td:first-child { color: var(--subtext); width: 200px; }
-  .data-table td:last-child  { font-weight: 500; text-align: right; }
-
-  /* ── BADGE ── */
-  .badge {
-    display: inline-flex;
+  /* SCORE BAR */
+  .score-dimension {
+    display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 3px 10px;
-    border-radius: 20px;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .score-dimension:last-child { margin-bottom: 0; }
+  .dim-label { width: 160px; font-size: 13px; color: var(--subtext); flex-shrink: 0; }
+  .dim-bar { flex: 1; height: 8px; background: #e8e8ed; border-radius: 4px; overflow: hidden; }
+  .dim-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+  .dim-score { width: 36px; text-align: right; font-size: 13px; font-weight: 600; }
+
+  /* OPPORTUNITY CARDS */
+  .opps { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .opp-card {
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 1px solid;
+    display: flex;
+    gap: 16px;
+  }
+  .opp-card.priority-1 { background: #fff8ec; border-color: #ffe0a0; }
+  .opp-card.priority-2 { background: #edf8ff; border-color: #a8d4f5; }
+  .opp-card.priority-3 { background: #f0fdf4; border-color: #a0d8b0; }
+  .opp-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .priority-1 .opp-num { background: #ff9f0a; color: white; }
+  .priority-2 .opp-num { background: #0071e3; color: white; }
+  .priority-3 .opp-num { background: #30d158; color: white; }
+  .opp-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .opp-desc { font-size: 13px; color: var(--subtext); line-height: 1.5; }
+  .opp-impact { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* WINS/GAPS */
+  .win-gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .win-gap-grid { grid-template-columns: 1fr; } }
+  .win-gap-col { }
+  .win-gap-col h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .win-gap-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .win-gap-item:last-child { border-bottom: none; }
+
+  /* COMPETITOR TABLE */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .comp-table th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--subtext);
+  }
+  .comp-table td { padding: 12px; border-bottom: 1px solid var(--border); }
+  .comp-table tr:last-child td { border-bottom: none; }
+
+  /* NICHE PLAYBOOK */
+  .playbook-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 680px) { .playbook-grid { grid-template-columns: 1fr; } }
+  .playbook-card {
+    background: var(--gray-light);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    border-left: 3px solid;
+  }
+  .playbook-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+  .playbook-card ul { list-style: none; font-size: 12px; color: var(--subtext); }
+  .playbook-card ul li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .playbook-card ul li:last-child { border-bottom: none; }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    color: white;
+    padding: 40px;
+    border-radius: var(--radius);
+    text-align: center;
+    margin-top: 32px;
+  }
+  .cta-section h2 { font-size: 26px; font-weight: 700; margin-bottom: 12px; }
+  .cta-section p { font-size: 15px; color: rgba(255,255,255,0.7); margin-bottom: 28px; line-height: 1.6; }
+  .cta-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 4px;
+    transition: opacity 0.2s;
+  }
+  .cta-btn:hover { opacity: 0.85; }
+  .cta-btn.secondary {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: var(--subtext);
+  }
+
+  /* SECTION LABEL */
+  .section-label {
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .badge.green  { background: var(--green-light);  color: #065f46; }
-  .badge.red    { background: var(--red-light);    color: #991b1b; }
-  .badge.amber  { background: var(--amber-light);  color: #92400e; }
-  .badge.blue   { background: var(--blue-light);   color: #1e40af; }
-  .badge.gray   { background: var(--gray-100);     color: var(--gray-700); }
-
-  /* ── OPPORTUNITY BOX ── */
-  .opportunity {
-    background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
-    border: 1px solid #bfdbfe;
-    border-radius: var(--radius);
-    padding: 24px 28px;
+    letter-spacing: 1.5px;
+    color: var(--subtext);
     margin-bottom: 16px;
-  }
-  .opportunity .opp-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: #1e40af;
-    margin-bottom: 4px;
-  }
-  .opportunity .opp-desc {
-    font-size: 13.5px;
-    color: var(--gray-700);
-    line-height: 1.55;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
   }
 
-  /* ── COMPETITOR CARD ── */
-  .comp-verdict {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
-    background: white;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-    box-shadow: var(--card-shadow);
-    margin-bottom: 16px;
-  }
-  .comp-big {
-    font-size: 40px;
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    color: var(--green);
-  }
-  .comp-verdict .comp-label { font-size: 13.5px; color: var(--gray-700); line-height: 1.5; }
-  .comp-verdict .comp-label strong { font-weight: 700; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
 
-  /* ── RECOMMENDATIONS ── */
-  .rec-list { display: flex; flex-direction: column; gap: 10px; }
-  .rec-item {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 14px;
-    align-items: start;
-    padding: 14px 16px;
-    background: white;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-    box-shadow: var(--card-shadow);
-  }
-  .rec-num {
-    width: 28px; height: 28px;
-    background: var(--navy);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .rec-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-  .rec-desc  { font-size: 13px; color: var(--subtext); }
-
-  /* ── SCORE BREAKDOWN ── */
-  .score-breakdown { display: flex; flex-direction: column; gap: 8px; }
-  .score-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-  }
-  .score-row .sr-label { width: 180px; color: var(--subtext); }
-  .score-row .sr-bar-wrap {
-    flex: 1;
-    height: 6px;
-    background: var(--gray-100);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .score-row .sr-bar {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 1s cubic-bezier(.4,0,.2,1);
-  }
-  .score-row .sr-val { width: 40px; text-align: right; font-weight: 600; font-size: 12px; }
-
-  /* ── FOOTER ── */
-  .footer {
-    background: var(--navy);
-    color: #475569;
-    text-align: center;
-    padding: 32px 40px;
-    font-size: 12px;
-    line-height: 1.7;
-  }
-  .footer .brand {
-    color: #64748b;
-    font-weight: 700;
-    font-size: 13px;
-    margin-bottom: 4px;
-  }
-  .footer a { color: #3b82f6; text-decoration: none; }
-
-  /* ── DIVIDER ── */
-  .divider { height: 1px; background: var(--gray-200); margin: 20px 0; }
-
-  /* ── CHECK TABLE ── */
-  .check-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-  }
-  .check-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    padding: 6px 0;
-  }
-  .check-icon {
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    flex-shrink: 0;
-    font-weight: 700;
-  }
-  .check-icon.yes { background: var(--green-light); color: var(--green); }
-  .check-icon.no  { background: var(--red-light);   color: var(--red); }
-
-  @media (max-width: 768px) {
-    .hero { padding: 40px 24px 36px; }
-    .hero-inner { grid-template-columns: 1fr; }
-    .score-ring-wrap { display: none; }
-    .main { padding: 24px 16px 60px; }
-    .metric-grid { grid-template-columns: repeat(2, 1fr); }
-    .card-grid-2 { grid-template-columns: 1fr; }
-    .check-grid { grid-template-columns: repeat(2, 1fr); }
+  .tag {
+    display: inline-block;
+    background: var(--gray-light);
+    color: var(--subtext);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin: 2px;
   }
 </style>
 </head>
 <body>
 
-<!-- ── HERO ── -->
-<header class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="hero-badge">Pre-Audit Report</div>
-      <h1 id="client-name">Loading…</h1>
-      <div class="hero-meta">
-        <span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span id="hero-location">—</span>
-        </span>
-        <span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          <span id="hero-date">—</span>
-        </span>
-        <span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          <a id="hero-website" href="#" style="color:#93c5fd;" target="_blank">—</a>
-        </span>
+<!-- HEADER / HERO -->
+<div class="header">
+  <div class="header-badge">Pre-Audit Intelligence Report</div>
+  <h1>Blue Rose Auto</h1>
+  <div class="subtitle">Springfield &amp; Eugene, OR &nbsp;·&nbsp; Collision Repair · Commercial Wraps · Paint Protection Film</div>
+
+  <div class="score-container">
+    <div class="gauge-wrap">
+      <svg class="gauge-svg" viewBox="0 0 180 180" width="180" height="180">
+        <circle class="gauge-bg" cx="90" cy="90" r="72"/>
+        <circle class="gauge-fill" cx="90" cy="90" r="72"
+          stroke="#ff9f0a"
+          stroke-dasharray="452.4"
+          stroke-dashoffset="312.1"/>
+      </svg>
+      <div class="gauge-center">
+        <div class="gauge-score" style="color:#ff9f0a;">31</div>
+        <div class="gauge-label">/ 100</div>
       </div>
     </div>
-    <div class="score-ring-wrap">
-      <div class="score-label">Readiness Score</div>
-      <div class="score-ring">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle class="track" cx="60" cy="60" r="50"/>
-          <circle class="fill" id="score-arc" cx="60" cy="60" r="50"/>
-        </svg>
-        <div class="score-value">
-          <span class="num" id="score-num">—</span>
-          <span class="den">/100</span>
+    <div class="score-verdict">
+      <div class="verdict-headline">Significant room to grow — and a clear path to get there.</div>
+      <div class="verdict-sub">No Meta ads running. No pixel installed. Competitors equally quiet. This is a first-mover window that won't stay open long in the Eugene/Springfield DMA.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ALERT -->
+  <div class="alert-banner">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-content">
+      <h3>Meta Pixel Not Installed — You're Flying Blind</h3>
+      <p>Every visitor who hits blueroseauto.com walks away invisible. No retargeting. No lookalike audiences. No conversion optimization. This is the #1 fix.</p>
+    </div>
+  </div>
+
+  <!-- ARE YOU RUNNING ADS? -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#fff0f3;">📢</div>
+      <div>
+        <h2>Are You Running Ads?</h2>
+        <div class="card-sub">Meta Ad Library scan · Last 90 days · US</div>
+      </div>
+      <div style="margin-left:auto;"><span class="pill pill-red">❌ Not Running</span></div>
+    </div>
+    <div class="card-body">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-value" style="color:var(--red);">0</div>
+          <div class="metric-label">Active Ads</div>
+          <div class="metric-note">Last 90 days</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" style="color:var(--red);">$0</div>
+          <div class="metric-label">Est. Ad Spend</div>
+          <div class="metric-note">No paid activity</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" style="color:var(--yellow);">🟡</div>
+          <div class="metric-label">Ad Maturity</div>
+          <div class="metric-note">Greenfield</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" style="color:var(--green);">Now</div>
+          <div class="metric-label">Opportunity</div>
+          <div class="metric-note">First-mover open</div>
+        </div>
+      </div>
+      <p style="margin-top:16px;font-size:14px;color:var(--subtext);line-height:1.6;">
+        Blue Rose Auto has run <strong>zero paid campaigns</strong> on Meta in at least the last 90 days. For a shop with three high-ticket services (collision, wraps, PPF), this means every lead that could have been captured via Facebook and Instagram has gone to word-of-mouth alone. The business is entirely acquisition-dark on the largest local ad platform.
+      </p>
+    </div>
+  </div>
+
+  <!-- PAGE HEALTH -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#edf8ff;">📱</div>
+      <div>
+        <h2>Page Health</h2>
+        <div class="card-sub">Facebook · Instagram · Website</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="two-col" style="margin-bottom:20px;">
+        <div>
+          <div class="section-label">Instagram @blueroseauto</div>
+          <div class="metrics-grid" style="grid-template-columns:1fr 1fr;">
+            <div class="metric-card">
+              <div class="metric-value">420</div>
+              <div class="metric-label">Followers</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value">371</div>
+              <div class="metric-label">Posts</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color:var(--red);">96</div>
+              <div class="metric-label">Days Since Post</div>
+              <div class="metric-note">⚠️ Dormant</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color:var(--red);">0.6×</div>
+              <div class="metric-label">Posts/Week</div>
+              <div class="metric-note">Target: 3+</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Presence Checklist</div>
+          <ul class="checklist">
+            <li>
+              <span class="check-icon">✅</span>
+              <span class="check-label">
+                <strong>Facebook Page</strong>
+                <span>BlueRoseAuto — active page confirmed</span>
+              </span>
+            </li>
+            <li>
+              <span class="check-icon">✅</span>
+              <span class="check-label">
+                <strong>Instagram Business Account</strong>
+                <span>@blueroseauto · professional profile</span>
+              </span>
+            </li>
+            <li>
+              <span class="check-icon">✅</span>
+              <span class="check-label">
+                <strong>Bio / Positioning</strong>
+                <span>"Ceramic Pro Elite Dealer" — premium differentiator</span>
+              </span>
+            </li>
+            <li>
+              <span class="check-icon">✅</span>
+              <span class="check-label">
+                <strong>Instagram Highlights</strong>
+                <span>6 highlights — good content organization</span>
+              </span>
+            </li>
+            <li>
+              <span class="check-icon">✅</span>
+              <span class="check-label">
+                <strong>Reels Enabled</strong>
+                <span>Has Clips/Reels capability</span>
+              </span>
+            </li>
+            <li>
+              <span class="check-icon">⚠️</span>
+              <span class="check-label">
+                <strong>Posting Frequency</strong>
+                <span>0.6/week — 96 days since last post</span>
+              </span>
+            </li>
+            <li>
+              <span class="check-icon">⚠️</span>
+              <span class="check-label">
+                <strong>Follower/Following Ratio</strong>
+                <span>420 followers / 560 following — inverted</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-label" style="margin-top:4px;">Score Breakdown</div>
+      <div class="score-dimension">
+        <div class="dim-label">Page Completeness</div>
+        <div class="dim-bar"><div class="dim-fill" style="width:65%;background:var(--yellow);"></div></div>
+        <div class="dim-score">65</div>
+      </div>
+      <div class="score-dimension">
+        <div class="dim-label">Posting Consistency</div>
+        <div class="dim-bar"><div class="dim-fill" style="width:10%;background:var(--red);"></div></div>
+        <div class="dim-score">10</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPETITOR OUTSPEND -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#f0fdf4;">🏆</div>
+      <div>
+        <h2>Competitor Outspend</h2>
+        <div class="card-sub">Eugene/Springfield OR auto market · Meta Ad Library · 90 days</div>
+      </div>
+      <div style="margin-left:auto;"><span class="pill pill-green">✅ Level Field</span></div>
+    </div>
+    <div class="card-body">
+      <div style="background:var(--green-light);border:1px solid #a0d8b0;border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;">
+        <div style="font-size:15px;font-weight:600;color:#1a7f3c;margin-bottom:6px;">🚀 First-Mover Advantage Available</div>
+        <div style="font-size:13px;color:#2d6a3f;line-height:1.6;">No local auto body, wrap, or PPF competitors in the Eugene/Springfield DMA are currently running Meta ads. The first shop to activate a well-structured campaign owns the market before anyone else shows up in the feed.</div>
+      </div>
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Local Ad Activity</th>
+            <th>Threat Level</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Collision / Body Repair</strong></td>
+            <td><span class="pill pill-green">No Active Ads</span></td>
+            <td>🟢 Low</td>
+            <td>Insurance-claim hook wide open</td>
+          </tr>
+          <tr>
+            <td><strong>Vehicle / Commercial Wraps</strong></td>
+            <td><span class="pill pill-green">No Active Ads</span></td>
+            <td>🟢 Low</td>
+            <td>Fleet/commercial B2B untouched</td>
+          </tr>
+          <tr>
+            <td><strong>Paint Protection Film</strong></td>
+            <td><span class="pill pill-green">No Active Ads</span></td>
+            <td>🟢 Low</td>
+            <td>Ceramic Pro Elite = unique local positioning</td>
+          </tr>
+          <tr>
+            <td><strong>Auto Detailing</strong></td>
+            <td><span class="pill pill-yellow">Limited</span></td>
+            <td>🟡 Medium</td>
+            <td>Category active nationally; local quiet</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:14px;font-size:13px;color:var(--subtext);">Outspend ratio vs nearest competitor: <strong style="color:var(--green);">Tied at $0</strong> — clean slate, no incumbent spending advantage to overcome.</p>
+    </div>
+  </div>
+
+  <!-- NICHE PLAYBOOK GAP -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#fff8ec;">🎯</div>
+      <div>
+        <h2>Niche Playbook Gap</h2>
+        <div class="card-sub">Category hooks, CTAs, and formats you're not using</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:14px;color:var(--subtext);margin-bottom:20px;line-height:1.6;">
+        The niche playbook for auto services identifies proven winning hooks by category. Here's what's working across your three service lines — and what Blue Rose Auto isn't running yet.
+      </p>
+      <div class="playbook-grid">
+        <div class="playbook-card" style="border-color:#ff375f;">
+          <h4>🚗 Collision Repair</h4>
+          <ul>
+            <li>Hook: "We work with all insurance companies"</li>
+            <li>Format: Before/after carousel</li>
+            <li>CTA: "Free Estimate"</li>
+            <li>Offer: Free rental/tow partnership</li>
+            <li>Angle: Insurance claim expertise</li>
+          </ul>
+          <div style="margin-top:10px;"><span class="pill pill-red">Not Running</span></div>
+        </div>
+        <div class="playbook-card" style="border-color:#ff9f0a;">
+          <h4>🎨 Commercial Wraps</h4>
+          <ul>
+            <li>Hook: "Turn your fleet into moving billboards"</li>
+            <li>Format: Portfolio carousel</li>
+            <li>CTA: "Get a Free Quote"</li>
+            <li>Angle: B2B fleet targeting</li>
+            <li>Audience: Local business owners</li>
+          </ul>
+          <div style="margin-top:10px;"><span class="pill pill-red">Not Running</span></div>
+        </div>
+        <div class="playbook-card" style="border-color:#30d158;">
+          <h4>🛡️ Paint Protection Film</h4>
+          <ul>
+            <li>Hook: "Protect your investment from day one"</li>
+            <li>Format: Scratch demo / side-by-side video</li>
+            <li>CTA: "Get a Free Quote"</li>
+            <li>Offer: Bundle PPF + Ceramic Coating</li>
+            <li>Target: New car owners</li>
+          </ul>
+          <div style="margin-top:10px;"><span class="pill pill-red">Not Running</span></div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:14px;background:var(--accent-light);border-radius:var(--radius-sm);border:1px solid #b8d4f5;">
+        <div style="font-size:13px;color:var(--accent);font-weight:600;">💎 Ceramic Pro Elite Dealer — Untapped Differentiator</div>
+        <div style="font-size:13px;color:#1a4b8a;margin-top:4px;line-height:1.6;">This certification is a premium positioning statement most competitors can't claim. It justifies $2K–$6K PPF packages and attracts new luxury/sports car buyers. This alone deserves its own ad campaign targeting recent vehicle purchases in Lane County.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRACKING SURFACE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#fff0f3;">🔍</div>
+      <div>
+        <h2>Tracking Surface</h2>
+        <div class="card-sub">Pixel · Analytics · Conversion events</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <ul class="checklist">
+        <li>
+          <span class="check-icon">❌</span>
+          <span class="check-label">
+            <strong>Meta Pixel</strong>
+            <span>NOT installed — zero retargeting, zero lookalike audiences, zero conversion optimization possible</span>
+          </span>
+          <span class="pill pill-red">Critical</span>
+        </li>
+        <li>
+          <span class="check-icon">❌</span>
+          <span class="check-label">
+            <strong>Conversion Events</strong>
+            <span>No purchase, lead, or contact form events firing</span>
+          </span>
+          <span class="pill pill-red">Critical</span>
+        </li>
+        <li>
+          <span class="check-icon">✅</span>
+          <span class="check-label">
+            <strong>Google Analytics 4</strong>
+            <span>G-XV9SFWPKVL installed — web traffic data flowing</span>
+          </span>
+          <span class="pill pill-green">Active</span>
+        </li>
+        <li>
+          <span class="check-icon">✅</span>
+          <span class="check-label">
+            <strong>Google Tag Manager</strong>
+            <span>GT-M6XH7GFT — tag infrastructure ready for pixel deployment</span>
+          </span>
+          <span class="pill pill-green">Active</span>
+        </li>
+        <li>
+          <span class="check-icon">✅</span>
+          <span class="check-label">
+            <strong>Mobile Responsive</strong>
+            <span>Viewport meta tag present — mobile-optimized for ad landing</span>
+          </span>
+          <span class="pill pill-green">Confirmed</span>
+        </li>
+        <li>
+          <span class="check-icon">⚠️</span>
+          <span class="check-label">
+            <strong>Conversions API (CAPI)</strong>
+            <span>Not configured — server-side tracking gap (iOS 14+ blind spot)</span>
+          </span>
+          <span class="pill pill-yellow">Missing</span>
+        </li>
+      </ul>
+
+      <div style="margin-top:16px;padding:14px;background:var(--red-light);border-radius:var(--radius-sm);border:1px solid #ffb8c6;">
+        <div style="font-size:13px;color:var(--red);font-weight:600;">What This Means for Your Ad Campaigns</div>
+        <div style="font-size:13px;color:#8b0022;margin-top:4px;line-height:1.6;">Without the Meta Pixel, every dollar spent on ads is optimized for <em>clicks</em>, not <em>customers</em>. Meta's algorithm can't learn who books appointments, can't build custom audiences from your website visitors, and can't create lookalike audiences from your best customers. Installing the Pixel is the #1 prerequisite — it's Day 1, Step 1.</div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <strong style="font-size:13px;">Silver lining:</strong>
+        <span style="font-size:13px;color:var(--subtext);"> GTM is already installed — dropping the Meta Pixel takes 15 minutes using the GTM container, no developer needed.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WINS & GAPS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#f0fdf4;">⚡</div>
+      <div>
+        <h2>Wins &amp; Gaps</h2>
+        <div class="card-sub">What's working · What's missing</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="win-gap-grid">
+        <div class="win-gap-col">
+          <h3><span>✅</span> Top 3 Wins</h3>
+          <div class="win-gap-item">
+            <span style="color:var(--green);font-size:16px;">💎</span>
+            <span><strong>Ceramic Pro Elite Dealer</strong> — premium PPF/ceramic certification that most competitors can't claim. Commands $2K–$6K+ ticket prices and attracts luxury car buyers.</span>
+          </div>
+          <div class="win-gap-item">
+            <span style="color:var(--green);font-size:16px;">📊</span>
+            <span><strong>GA4 + Google Tag installed</strong> — digital analytics foundation exists. GTM is ready to deploy the Meta Pixel in minutes.</span>
+          </div>
+          <div class="win-gap-item">
+            <span style="color:var(--green);font-size:16px;">📸</span>
+            <span><strong>371 Instagram posts + 6 highlights</strong> — substantial content library to repurpose into ad creative without a full shoot budget.</span>
+          </div>
+        </div>
+        <div class="win-gap-col">
+          <h3><span>🔴</span> Top 3 Gaps</h3>
+          <div class="win-gap-item">
+            <span style="color:var(--red);font-size:16px;">❌</span>
+            <span><strong>No Meta Pixel</strong> — every website visitor is invisible. Retargeting, lookalike audiences, and conversion optimization are all locked out until this is installed.</span>
+          </div>
+          <div class="win-gap-item">
+            <span style="color:var(--red);font-size:16px;">💤</span>
+            <span><strong>96-day posting gap</strong> — 3+ months of social silence signals inactivity to both the algorithm and prospects checking the profile before booking.</span>
+          </div>
+          <div class="win-gap-item">
+            <span style="color:var(--red);font-size:16px;">📢</span>
+            <span><strong>Zero paid advertising</strong> — high-ticket services (collision, PPF, wraps) require consistent top-of-funnel demand generation, not just word-of-mouth.</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</header>
 
-<!-- ── MAIN ── -->
-<main class="main">
-
-  <!-- Top metrics -->
-  <div class="metric-grid">
-    <div class="metric-card">
-      <div class="label">Overall Score</div>
-      <div class="value" id="m-score" style="color:var(--blue)">—</div>
-      <div class="sub">out of 100</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">FB Followers</div>
-      <div class="value" id="m-fb">—</div>
-      <div class="sub">Facebook Page</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">IG Followers</div>
-      <div class="value" id="m-ig">—</div>
-      <div class="sub">Instagram</div>
-    </div>
-    <div class="metric-card">
-      <div class="label">Ads Status</div>
-      <div class="value" id="m-ads" style="font-size:18px;margin-top:4px">—</div>
-      <div class="sub" id="m-ads-sub">Meta Ad Library</div>
-    </div>
-  </div>
-
-  <!-- Social Presence -->
-  <div class="section-header">
-    <div class="section-icon" style="background:#eff6ff">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    </div>
-    <span class="section-title">Social Presence</span>
-  </div>
-
-  <div class="card-grid-2">
-    <div class="card">
-      <div class="card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Facebook Page
+  <!-- OPPORTUNITIES -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon" style="background:#fff8ec;">🚀</div>
+      <div>
+        <h2>Three Opportunities</h2>
+        <div class="card-sub">Ordered by impact-per-dollar · Actionable immediately</div>
       </div>
-      <table class="data-table" id="fb-table"></table>
     </div>
-    <div class="card">
-      <div class="card-title">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="url(#ig-grad)"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        Instagram
+    <div class="card-body">
+      <div class="opps">
+        <div class="opp-card priority-1">
+          <div class="opp-num">1</div>
+          <div>
+            <div class="opp-title">Install Meta Pixel via GTM — Unlock Retargeting from Day One</div>
+            <div class="opp-desc">GTM is already live on the site. Installing the Pixel via the GTM container takes 15 minutes and zero developer work. Once it fires, every website visitor becomes a retargeting audience — people who viewed the PPF page, the collision page, or submitted a contact form can all be re-engaged with specific ads. This is the foundation that makes every other campaign dramatically more effective.</div>
+            <div class="opp-impact" style="color:#9a5f00;">⚡ Impact: Foundation · Unblocks all ad optimization · Priority: This Week</div>
+          </div>
+        </div>
+        <div class="opp-card priority-2">
+          <div class="opp-num">2</div>
+          <div>
+            <div class="opp-title">Collision Insurance Claim Campaign — "We Work With All Insurances"</div>
+            <div class="opp-desc">The #1 converting hook in the collision/body category nationally. "We handle your insurance claim. Free estimate. No stress." removes the biggest objection customers have (paperwork + hassle). Run as a Facebook Lead Ad with a pre-filled form — captures name, email, phone, and vehicle info in two taps. Target 25–65 year-olds in Lane County within 15 miles. Budget: $15–20/day. Expected CPL in this market: $25–45.</div>
+            <div class="opp-impact" style="color:#0057b3;">🎯 Impact: High · Est. CPL $25–45 · Timeline: Launch within 2 weeks</div>
+          </div>
+        </div>
+        <div class="opp-card priority-3">
+          <div class="opp-num">3</div>
+          <div>
+            <div class="opp-title">PPF New-Car-Owner Campaign — Ceramic Pro Elite Positioning</div>
+            <div class="opp-desc">Target Eugene/Springfield residents who recently purchased a vehicle (Facebook's "likely new vehicle buyers" interest + zip-code targeting). Lead with the Ceramic Pro Elite certification as the credibility anchor. Hook: "You just bought a new car. Protect it from day one — certified Ceramic Pro Elite installation." Bundle PPF + ceramic coating for a $2,500–$4,500 package. This is the highest-ticket campaign and speaks to buyers at peak motivation (within 30–90 days of purchase).</div>
+            <div class="opp-impact" style="color:#1a7f3c;">💰 Impact: Highest Ticket · Est. CPA $150–300 · ROAS potential 8×–15×</div>
+          </div>
+        </div>
       </div>
-      <table class="data-table" id="ig-table"></table>
     </div>
   </div>
 
-  <!-- Paid Readiness -->
-  <div class="section-header">
-    <div class="section-icon" style="background:#fdf4ff">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    </div>
-    <span class="section-title">Paid Readiness</span>
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Ready to Activate Blue Rose Auto on Meta?</h2>
+    <p>The Pixel, the campaigns, and the creative strategy are all mapped out. The only thing missing is execution. Let's get you running within 14 days — first campaign live, first leads in the inbox.</p>
+    <a href="mailto:abdul@duckercreative.com?subject=Blue Rose Auto — Pre-Audit Follow Up" class="cta-btn">Book a Strategy Call</a>
+    <a href="#" class="cta-btn secondary">View Full Proposal</a>
   </div>
 
-  <div class="card">
-    <div class="status-list" id="paid-status"></div>
-  </div>
+</div>
 
-  <!-- Website & Tracking -->
-  <div class="section-header">
-    <div class="section-icon" style="background:#f0fdf4">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    </div>
-    <span class="section-title">Website &amp; Tracking</span>
-  </div>
+<!-- FOOTER -->
+<div class="footer">
+  <p>Prepared by <strong>Ducker Creative</strong> · <a href="https://blueroseauto.com" style="color:var(--accent);">blueroseauto.com</a> · Pre-audit date: June 25, 2026</p>
+  <p style="margin-top:6px;">Public data only — Facebook Page, Instagram, Meta Ad Library, website. No client API access used.</p>
+</div>
 
-  <div class="card">
-    <div class="check-grid" id="tracking-checks"></div>
-  </div>
-
-  <!-- Competitive Landscape -->
-  <div class="section-header">
-    <div class="section-icon" style="background:#fff7ed">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-    </div>
-    <span class="section-title">Competitive Landscape</span>
-  </div>
-
-  <div class="comp-verdict" id="comp-card"></div>
-
-  <!-- Score Breakdown -->
-  <div class="section-header">
-    <div class="section-icon" style="background:#eff6ff">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    </div>
-    <span class="section-title">Score Breakdown</span>
-  </div>
-
-  <div class="card">
-    <div class="score-breakdown" id="score-breakdown"></div>
-  </div>
-
-  <!-- Recommendations -->
-  <div class="section-header">
-    <div class="section-icon" style="background:#ecfdf5">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    </div>
-    <span class="section-title">Recommended Next Steps</span>
-  </div>
-
-  <div class="rec-list" id="recommendations"></div>
-
-</main>
-
-<!-- ── FOOTER ── -->
-<footer class="footer">
-  <div class="brand">smOS · Social Media Operating System</div>
-  <div>This report was generated automatically from public data sources and the Meta API.</div>
-  <div>Prepared by <a href="#">duckercreative.com</a> · <span id="footer-date"></span></div>
-</footer>
-
-<script>
-// ── DATA INJECTION POINT ──
-// The skill replaces {"facebook":{"url":"https://www.facebook.com/BlueRoseAuto/","fetch_status":"ok","fetch_method":"m.facebook.com mobile endpoint with iOS Safari UA + en_US locale (desktop URL returned HTTP 400; mbasic also 400)","page_id":"100063679745239","page_name":"Blue Rose Auto Care & Repair Services","city_label":"Springfield","fan_count_likes":1766,"talking_about_count":2,"were_here_checkins":247,"profile_picture_present":true,"cover_or_video_present":true,"latest_post_type_hint":"video (og:type = video.other)","tagline":"Call us today to learn more!","verified_badge_visible":false,"public_rating_visible":false,"ad_library_presence":{"by_username_BlueRoseAuto":"not_found","by_page_id_100063679745239":"Invalid Page ID (code 33, subcode 2334021) — Meta Ad Library only indexes pages that have run ads. Confirmed: never run paid Meta ads."}},"instagram":{"url":"https://www.instagram.com/blueroseauto/","username":"blueroseauto","full_name":"Blue Rose Auto","biography":"Fix it, Clean it, Protect it.\nCeramic Pro Elite Dealer","is_verified":false,"is_business_account":true,"category_name":"Auto Detailing Service","follower_count":417,"following_count":559,"post_count":371,"external_url":"http://www.blueroseauto.com/","bio_links_count":3,"recent_posts_visible":12,"recent_post_burst_pattern":"Cluster of 6 posts within a 3-day window in mid-March 2026, then dormant. Inconsistent cadence.","latest_post_estimate":"~3 months prior to audit (audit date 2026-06-19)"},"cross_channel_signal":"FB is the larger surface (1,766 likes vs 417 IG followers, 4.2x) but 'talking about: 2' indicates near-zero current engagement on FB — same dormant-page pattern observed on IG."} with the JSON object
-const DATA = __REPORT_DATA__;
-
-function fmt(n, fallback = '—') {
-  if (n == null || n === 0 && fallback !== '0') return fallback;
-  return Number(n).toLocaleString();
-}
-function scoreColor(s) {
-  if (s >= 70) return '#10b981';
-  if (s >= 45) return '#f59e0b';
-  return '#ef4444';
-}
-function row(label, value) {
-  return `<tr><td>${label}</td><td>${value}</td></tr>`;
-}
-
-function init() {
-  const d = DATA;
-  const score = d.score?.total ?? 0;
-  const color = scoreColor(score);
-
-  // Hero
-  document.getElementById('client-name').textContent = d.business_name || '—';
-  document.getElementById('hero-location').textContent = d.location || '—';
-  document.getElementById('hero-date').textContent = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const wa = document.getElementById('hero-website');
-  wa.textContent = (d.website || '').replace(/^https?:\/\//, '');
-  wa.href = d.website || '#';
-
-  // Score ring
-  document.getElementById('score-num').textContent = score;
-  document.getElementById('score-num').style.color = color;
-  const arc = document.getElementById('score-arc');
-  arc.style.stroke = color;
-  const offset = 314 - (314 * score / 100);
-  setTimeout(() => arc.style.strokeDashoffset = offset, 200);
-
-  // Metric cards
-  document.getElementById('m-score').textContent = score;
-  document.getElementById('m-score').style.color = color;
-  const fbFollowers = d.facebook?.likes ?? d.facebook?.followers ?? null;
-  document.getElementById('m-fb').textContent = fmt(fbFollowers);
-  document.getElementById('m-ig').textContent = fmt(d.instagram?.followers);
-  const adsEl = document.getElementById('m-ads');
-  if (d.ads?.running) {
-    adsEl.innerHTML = `<span class="badge green">Running</span>`;
-  } else {
-    adsEl.innerHTML = `<span class="badge gray">No Ads</span>`;
-  }
-  document.getElementById('m-ads-sub').textContent = d.ads?.verdict || '—';
-
-  // Facebook table
-  const fbT = document.getElementById('fb-table');
-  const fbHandle = d.facebook?.handle ? `@${d.facebook.handle}` : '—';
-  fbT.innerHTML = [
-    row('Handle', fbHandle),
-    row('Followers', fmt(fbFollowers) || '—'),
-    row('Posts / week', fmt(d.facebook?.posts_per_week, '—')),
-    row('Last post', d.facebook?.days_since_last_post != null ? `${d.facebook.days_since_last_post}d ago` : '—'),
-    row('Page verified', d.facebook?.verified ? '✓ Yes' : '—'),
-  ].join('');
-
-  // Instagram table
-  const igT = document.getElementById('ig-table');
-  igT.innerHTML = [
-    row('Handle', d.instagram?.handle ? `@${d.instagram.handle}` : '—'),
-    row('Followers', fmt(d.instagram?.followers)),
-    row('Posts / week', d.instagram?.posts_per_week ? d.instagram.posts_per_week.toFixed(1) : '—'),
-    row('Last post', d.instagram?.days_since_last_post != null ? `${d.instagram.days_since_last_post}d ago` : '—'),
-    row('Has Reels', d.instagram?.has_reels ? '✓ Yes' : '—'),
-    row('Business acct', d.instagram?.is_business_account ? '✓ Yes' : '—'),
-  ].join('');
-
-  // Paid status
-  const paidEl = document.getElementById('paid-status');
-  const items = [
-    { ok: !!d.ads?.verdict && d.ads.verdict !== 'NEVER_RUN', title: 'Ad History', desc: d.ads?.notes || d.ads?.verdict || '—', forceAmber: d.ads?.verdict === 'NEVER_RUN' },
-    { ok: !!d.tracking?.meta_pixel, title: 'Meta Pixel', desc: d.tracking?.meta_pixel ? 'Pixel installed on website' : 'No Meta Pixel detected on website — conversion tracking unavailable' },
-    { ok: !!d.tracking?.google_tag, title: 'Google Tag Manager', desc: d.tracking?.google_tag ? `GTM present (${d.tracking?.google_tag_id || ''})` : 'Not detected' },
-    { ok: d.tracking?.mobile_responsive, title: 'Mobile Responsive', desc: d.tracking?.mobile_responsive ? 'Website passes mobile responsiveness check' : 'Website may not be mobile-optimized' },
-  ];
-  paidEl.innerHTML = items.map(i => {
-    const cls = i.forceAmber ? 'amber' : (i.ok ? 'green' : 'red');
-    return `<div class="status-item ${cls}"><div class="dot"></div><div class="item-text"><div class="item-title">${i.title}</div><div class="item-desc">${i.desc}</div></div></div>`;
-  }).join('');
-
-  // Tracking checks
-  const checks = [
-    { label: 'Meta Pixel', ok: !!d.tracking?.meta_pixel },
-    { label: 'Pixel Events', ok: !!d.tracking?.conversion_events },
-    { label: 'Google Analytics 4', ok: !!d.tracking?.ga4 },
-    { label: 'Google Tag Manager', ok: !!d.tracking?.google_tag },
-    { label: 'Mobile Responsive', ok: !!d.tracking?.mobile_responsive },
-    { label: 'Ads Running', ok: !!d.ads?.running },
-  ];
-  document.getElementById('tracking-checks').innerHTML = checks.map(c =>
-    `<div class="check-item"><div class="check-icon ${c.ok ? 'yes' : 'no'}">${c.ok ? '✓' : '✗'}</div><span>${c.label}</span></div>`
-  ).join('');
-
-  // Competitor card
-  const isUntapped = d.competitors?.local_market_ads === 'NONE_FOUND' || d.competitors?.outspend_ratio === 0;
-  document.getElementById('comp-card').innerHTML = `
-    <div class="comp-big">${isUntapped ? '0' : d.competitors?.outspend_ratio ?? '?'}</div>
-    <div>
-      <div class="comp-label"><strong>${isUntapped ? 'First-mover opportunity' : 'Competitor ads detected'}</strong></div>
-      <div class="comp-label" style="color:var(--subtext);font-size:13px;margin-top:4px">${d.competitors?.verdict || '—'}</div>
-    </div>
-  `;
-
-  // Score breakdown
-  const breakdown = d.score?.breakdown || {};
-  const labels = {
-    page_completeness: 'Page Completeness',
-    posting_consistency: 'Posting Consistency',
-    ad_maturity: 'Ad Maturity',
-    pixel_health: 'Pixel Health',
-    audience_quality: 'Audience Quality',
-    creative_score: 'Creative Score',
-    website_tracking: 'Website Tracking',
-  };
-  const bEl = document.getElementById('score-breakdown');
-  bEl.innerHTML = Object.entries(breakdown).map(([k, v]) => {
-    const pct = v?.raw ?? 0;
-    const barColor = pct >= 70 ? '#10b981' : pct >= 40 ? '#f59e0b' : '#ef4444';
-    return `<div class="score-row">
-      <span class="sr-label">${labels[k] || k}</span>
-      <div class="sr-bar-wrap"><div class="sr-bar" style="width:${pct}%;background:${barColor}"></div></div>
-      <span class="sr-val" style="color:${barColor}">${pct}</span>
-    </div>`;
-  }).join('');
-
-  // Recommendations — derive from gaps
-  const recs = [];
-  if (!d.tracking?.meta_pixel) recs.push({ title: 'Install & verify the Meta Pixel', desc: 'Deploy base code site-wide, add Lead + PageView events, confirm firing in Test Events.' });
-  if ((d.instagram?.days_since_last_post ?? 0) > 30 || (d.facebook?.days_since_last_post ?? 0) > 30) {
-    recs.push({ title: 'Resume consistent organic posting', desc: 'Restart 2× videos/week to re-warm your existing followers before paid amplification.' });
-  }
-  if (!d.ads?.running) recs.push({ title: 'Launch first Meta campaign', desc: 'With no competitors running ads, first-mover advantage is available. Start with a retargeting warm audience.' });
-  if (recs.length === 0) recs.push({ title: 'Optimize existing campaigns', desc: 'Review current ad performance and apply ROAS scaling rules.' });
-
-  document.getElementById('recommendations').innerHTML = recs.map((r, i) =>
-    `<div class="rec-item"><div class="rec-num">${i+1}</div><div><div class="rec-title">${r.title}</div><div class="rec-desc">${r.desc}</div></div></div>`
-  ).join('');
-
-  // Footer
-  document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-}
-
-init();
-</script>
 </body>
 </html>
