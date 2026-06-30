@@ -30,9 +30,10 @@ TABLE_PROSPECT = "prospect_audits"
 
 def _env() -> tuple[str, str]:
     url = os.environ.get("SUPABASE_URL", "").rstrip("/")
-    key = os.environ.get("SUPABASE_SERVICE_KEY", "")
+    # Supabase renamed service_role keys to "secret keys" — accept either name.
+    key = os.environ.get("SUPABASE_SERVICE_KEY", "") or os.environ.get("SUPABASE_SECRET_KEY", "")
     if not url or not key:
-        print("[ERROR] SUPABASE_URL and SUPABASE_SERVICE_KEY must be set.", file=sys.stderr)
+        print("[ERROR] SUPABASE_URL and SUPABASE_SERVICE_KEY (or SUPABASE_SECRET_KEY) must be set.", file=sys.stderr)
         sys.exit(1)
     return url, key
 

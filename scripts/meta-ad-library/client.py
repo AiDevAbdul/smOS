@@ -40,44 +40,138 @@ def get_token() -> str:
     return token
 
 
-def resolve_page_id_from_url(page_url: str) -> str | None:
-    """
-    Extract numeric page ID from a Facebook page URL by scraping the page HTML.
-    Looks for patterns like "page_id":"<id>" or entity_id in the page source.
-    """
-    slug = page_url.rstrip("/").split("/")[-1]
-    # If it's already numeric, return as-is
-    if slug.isdigit():
-        return slug
+def _scrape_fb_page_meta(slug: str) -> dict:
+    """Scrape m.facebook.com for a page's display name + candidate profile id.
 
-    url = f"https://www.facebook.com/{slug}/"
+    Desktop www.facebook.com returns HTTP 400 to unauthenticated scrapers (dead
+    path). m.facebook.com with an iOS Safari UA + en_US locale cookie works —
+    same recipe as the FB page-audit pass (see
+    skills/pre-audit/references/api-reference.md, Pass 1).
+
+    Returns {"name": <og:title or None>, "profile_id": <fb://profile id or None>}.
+    The fb://profile id is the *profile-backed* id and is NOT necessarily the
+    page id the Ad Library indexes by — it is only a fallback candidate.
+    """
+    out = {"name": None, "profile_id": None}
+    url = f"https://m.facebook.com/{slug}?locale=en_US"
     try:
         resp = requests.get(
             url,
             headers={
                 "User-Agent": (
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                    "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/124.0.0.0 Safari/537.36"
-                )
+                    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) "
+                    "AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1"
+                ),
+                "Accept-Language": "en-US,en;q=0.9",
             },
+            cookies={"locale": "en_US"},
             timeout=15,
         )
     except requests.RequestException as e:
-        print(f"  [WARN] Could not fetch page for '{slug}': {e}")
-        return None
+        print(f"  [WARN] Could not fetch m.facebook page for '{slug}': {e}")
+        return out
+
+    if resp.status_code != 200:
+        print(f"  [WARN] m.facebook.com returned {resp.status_code} for '{slug}'.")
+        return out
 
     html = resp.text
-    patterns = [
-        r'"page_id"\s*:\s*"(\d{10,20})"',
-        r'"pageID"\s*:\s*"(\d{10,20})"',
-        r'entity_id=(\d{10,20})',
-        r'"identifier"\s*:\s*"(\d{10,20})"',
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, html)
-        if m:
-            return m.group(1)
+    m = re.search(r'<meta property="og:title" content="([^"]+)"', html)
+    if not m:
+        m = re.search(r"<title>([^<]+)</title>", html)
+    if m:
+        # og:title is often "<Name> | Facebook" or "<Name> - <tagline>"
+        out["name"] = re.split(r"\s*[|]\s*", m.group(1))[0].strip()
+    for pat in (r"fb://profile/(\d{6,20})", r"fb://page/(\d{6,20})"):
+        pm = re.search(pat, html)
+        if pm:
+            out["profile_id"] = pm.group(1)
+            break
+    return out
+
+
+def _norm(s: str) -> str:
+    """Lowercase, strip everything but alphanumerics — for fuzzy name matching."""
+    return re.sub(r"[^a-z0-9]", "", (s or "").lower())
+
+
+def _resolve_page_id_via_adlibrary(name_or_slug: str, country: str, token: str) -> str | None:
+    """Resolve a page's *Ad Library* page id by searching the archive itself.
+
+    The Ad Library indexes by its own page id, which often differs from the
+    profile-backed id scraped from page HTML. We query `search_terms` (the one
+    path that works without elevated permissions), then name-match the returned
+    candidates. Returns the page id of the best exact/contains name match.
+    """
+    if not name_or_slug:
+        return None
+    since_date = (datetime.now(timezone.utc) - timedelta(days=365)).strftime("%Y-%m-%d")
+    params = {
+        "access_token": token,
+        "ad_reached_countries": json.dumps(_parse_countries(country)),
+        "search_terms": name_or_slug,
+        "ad_active_status": "ALL",
+        "ad_delivery_date_min": since_date,
+        "fields": "page_id,page_name",
+        "limit": 100,
+    }
+    try:
+        resp = requests.get(API_BASE, params=params, timeout=30)
+        data = resp.json()
+    except (requests.RequestException, ValueError) as e:
+        print(f"  [WARN] Ad Library page-resolve failed for '{name_or_slug}': {e}")
+        return None
+    if resp.status_code != 200:
+        print(f"  [WARN] Ad Library page-resolve API error {resp.status_code} for '{name_or_slug}'.")
+        return None
+
+    target = _norm(name_or_slug)
+    if not target:
+        return None
+
+    # Count how many returned ads each (exact-name-matching) page id owns;
+    # search_terms returns lots of unrelated advertisers who merely mention the
+    # brand, so an exact normalized name match is the only safe signal. When
+    # several pages share the name (regional duplicates), prefer the one running
+    # the most ads — almost always the primary brand page.
+    from collections import Counter
+    matches: Counter[str] = Counter()
+    for ad in data.get("data", []):
+        pid, pname = ad.get("page_id"), ad.get("page_name")
+        if pid and pname and _norm(pname) == target:
+            matches[pid] += 1
+
+    if matches:
+        return matches.most_common(1)[0][0]
+    return None
+
+
+def resolve_page_id_from_url(page_url: str, country: str = "US", token: str | None = None) -> str | None:
+    """Resolve a Facebook page URL to its Ad Library numeric page id.
+
+    Strategy (most→least reliable):
+      0. URL already numeric → use as-is.
+      1. Scrape m.facebook for the page's display name, then resolve the real
+         Ad Library page id by name-matching against the archive (needs token).
+      2. Fall back to the slug as a search term against the archive.
+      3. Last resort: the scraped fb://profile id (may be rejected as code 33).
+    """
+    slug = page_url.rstrip("/").split("/")[-1].split("?")[0]
+    if slug.isdigit():
+        return slug
+
+    meta = _scrape_fb_page_meta(slug)
+
+    if token:
+        # Prefer the scraped display name; fall back to the slug.
+        for term in (meta.get("name"), slug):
+            pid = _resolve_page_id_via_adlibrary(term, country, token)
+            if pid:
+                return pid
+
+    if meta.get("profile_id"):
+        print(f"  [WARN] Using scraped profile id for '{slug}' (Ad Library name-match found nothing).")
+        return meta["profile_id"]
 
     return None
 
@@ -261,7 +355,7 @@ def main():
         for url in args.urls:
             slug = url.rstrip("/").split("/")[-1]
             print(f"\nResolving page ID for: {url}")
-            page_id = resolve_page_id_from_url(url)
+            page_id = resolve_page_id_from_url(url, country=args.country, token=token)
             if not page_id:
                 print(f"  [WARN] Could not resolve page ID for '{slug}' — skipping.")
                 continue

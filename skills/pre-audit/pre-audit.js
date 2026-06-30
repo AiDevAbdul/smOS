@@ -13,7 +13,7 @@
  * Usage:
  *   node skills/pre-audit/pre-audit.js <slug> --business "Acme Co" [--niche-html path] [--no-crm]
  */
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -84,10 +84,23 @@ async function main() {
     } catch (e) { crm = { error: e.message }; }
   }
 
-  // 4. Best-effort prospect_audits row.
+  // 4. Best-effort prospect_audits row. Column names follow the live schema
+  //    (prospect_slug / health_score / report_path / summary), not the slug-based
+  //    shorthand — see memory: supabase-schema-vs-code.
   let persisted = { skipped: true };
   if (supabaseConfigured()) {
-    try { await insert("prospect_audits", [{ slug, business_name: business, generated_at: nowIso(), converted: false }]); persisted = { ok: true }; }
+    let synthesis = {};
+    try { synthesis = JSON.parse(readFileSync(resolve(proDir, "synthesis.json"), "utf8")); } catch { /* keep defaults */ }
+    const row = {
+      prospect_slug: slug,
+      business_name: business,
+      generated_at: nowIso(),
+      health_score: typeof synthesis.score === "number" ? synthesis.score : null,
+      report_path: `prospects/${slug}/pre_audit.html`,
+      summary: synthesis.headline || null,
+      converted: false,
+    };
+    try { await insert("prospect_audits", [row]); persisted = { ok: true }; }
     catch (e) { persisted = { error: e.message }; }
   }
 

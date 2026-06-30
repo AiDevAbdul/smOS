@@ -31,9 +31,9 @@ def _load_local(path: str) -> dict:
 
 def _load_supabase(snapshot_id: str, table: str = "competitor_snapshots") -> dict:
     url = os.environ.get("SUPABASE_URL", "").rstrip("/")
-    key = os.environ.get("SUPABASE_SERVICE_KEY", "")
+    key = os.environ.get("SUPABASE_SERVICE_KEY", "") or os.environ.get("SUPABASE_SECRET_KEY", "")
     if not url or not key:
-        print("[ERROR] SUPABASE_URL / SUPABASE_SERVICE_KEY missing", file=sys.stderr)
+        print("[ERROR] SUPABASE_URL / SUPABASE_SERVICE_KEY (or SUPABASE_SECRET_KEY) missing", file=sys.stderr)
         sys.exit(1)
     resp = requests.get(
         f"{url}/rest/v1/{table}",

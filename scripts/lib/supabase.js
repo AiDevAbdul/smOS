@@ -9,7 +9,8 @@
 // and never blocks the deliverable.
 
 const URL = () => process.env.SUPABASE_URL;
-const KEY = () => process.env.SUPABASE_SERVICE_KEY;
+// Supabase renamed service_role keys to "secret keys" — accept either name.
+const KEY = () => process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SECRET_KEY;
 
 export function supabaseConfigured() {
   return !!(URL() && KEY());

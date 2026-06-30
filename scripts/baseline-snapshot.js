@@ -80,9 +80,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
 
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_KEY;
+  const key = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) {
-    console.error("SUPABASE_URL and SUPABASE_SERVICE_KEY required");
+    console.error("SUPABASE_URL and SUPABASE_SERVICE_KEY (or SUPABASE_SECRET_KEY) required");
     process.exit(1);
   }
 
