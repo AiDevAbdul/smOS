@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Content Creation SOPs</title>
+<title>Content Production Guide — Blue Rose Auto</title>
 
 <style>/* ============================================================================
    smOS Design System — "Cupertino"
@@ -282,7 +282,6 @@ table.ds-table, .ds-table-wrap table {
 table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
 /* ---------------------------------------------------------- Charts -------- */
-/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
 .ds-chart {
   background: var(--ds-surface);
   border: 1px solid var(--ds-line);
@@ -329,9 +328,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 
 /* -------------------------------------------------------- Roadmap --------- */
-/* Vertical journey of numbered steps. Each step = a bold circular badge + a
-   card holding a title, description, and one or more action buttons. Used by
-   /bundle to assemble a client's whole engagement into one shareable hub. */
 .ds-roadmap { margin: 28px 0; }
 .ds-step {
   position: relative;
@@ -340,7 +336,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   gap: 18px;
   padding-bottom: 24px;
 }
-/* connector spine — aurora gradient on delivered steps, grey on pending */
 .ds-step:not(:last-child)::before {
   content: "";
   position: absolute;
@@ -404,10 +399,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 
 /* -------------------------------------------------- Hub (OS console) ------ */
-/* The /bundle deliverables hub is a single-tab "operating system" console: a
-   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
-   frames each report as a bright, elevated "window" (the iframe). Dark chrome
-   around a light document = intentional app framing (no double-hero). */
 .ds-hub {
   min-height: 100dvh; display: flex; flex-direction: column;
   background: var(--ds-shell); color: var(--ds-shell-ink);
@@ -420,7 +411,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-skip:focus { top: 12px; text-decoration: none; }
 
-/* Header = the hero. Client name + agency + a live progress meter. */
 .ds-hub__head {
   padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
   align-items: flex-end; justify-content: space-between; gap: 16px 24px;
@@ -438,7 +428,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
 
-/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
 .ds-progress { min-width: 220px; flex: 0 1 320px; }
 .ds-progress__label {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -451,7 +440,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
 
-/* Chip menu (top + bottom) */
 .ds-hubnav {
   display: flex; gap: 8px; align-items: center;
   padding: 12px 24px; background: rgba(11,11,16,.72);
@@ -482,7 +470,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 .ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
 .ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
 
-/* Viewer = a bright elevated "window" floating in the dark shell. */
 .ds-viewer-wrap {
   flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
   overflow: hidden; background: var(--ds-bg);
@@ -502,12 +489,11 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 @keyframes ds-spin { to { transform: rotate(360deg); } }
 
-/* Entrance: chips + spine stagger in on load */
 @keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
 
 @media (max-width: 760px) {
-  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
+  .ds-hubnav--bottom { display: none; }
   .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
   .ds-hub__head { padding: 18px 16px 14px; }
   .ds-progress { flex-basis: 100%; }
@@ -516,8 +502,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   .ds-anim, .ds-spinner { animation: none; }
   .ds-hubnav__btn:hover { transform: none; }
 }
-
-/* --------------------------------------------------------- Footer --------- */
 
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {
@@ -553,205 +537,450 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   h1 { font-size: 26px; }
   .ds-kpi__value { font-size: 26px; }
 }
+
+/* ---- Page-specific styles ---- */
+.platform-card { margin-top: 24px; }
+.platform-card .platform-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.platform-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.platform-icon--fb { background: #1877F2; }
+.platform-icon--ig { background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF); }
+.platform-icon--tk { background: #000000; }
+.platform-icon--li { background: #0A66C2; }
+.platform-icon--yt { background: #FF0000; }
+.platform-card h2 { margin: 0; }
+.platform-card .ds-badge { margin-left: auto; flex-shrink: 0; }
+
+.spec-table { margin: 12px 0 16px; }
+.spec-table table { font-size: 13px; }
+
+.algo-tip {
+  background: var(--ds-ink-tint);
+  border-radius: var(--ds-r-sm);
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--ds-ink-2);
+}
+.algo-tip strong { color: var(--ds-ink); }
+
+.golden-rules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+  counter-reset: rule;
+}
+.golden-rule {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.golden-rule::before {
+  counter-increment: rule;
+  content: counter(rule);
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-image: var(--ds-grad-brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.golden-rule p { margin: 0; font-size: 14px; }
+.golden-rule strong { color: var(--ds-ink); }
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.checklist-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+}
+.check-mark {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ds-green-tint);
+  color: #1c7a3e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 1px;
+}
 </style>
 </head>
 <body><div class="ds-wrap">
+
+<!-- Hero -->
 <header class="ds-hero">
-<div class="ds-eyebrow">Ducker Creative</div>
-<h1>Content Creation SOPs</h1>
-<div class="ds-meta">Blue Rose Auto Care &amp; Repair Services · Per-platform production playbook</div>
+  <div class="ds-eyebrow">Ducker Creative</div>
+  <h1>Content Production Guide</h1>
+  <div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
 </header>
-<h1>content-plan — Per-Platform Content Specs (SOP)</h1>
-<p>The single source of truth for <strong>platform-native</strong> production specs, copy limits,</p>
-<p>algorithm signals, and publish-path status across the five platforms smOS produces</p>
-<p>for. <code>/content-plan</code> reads this when fanning one pillar into platform variants; the</p>
-<p>creative agent (<code>/creative</code>, <code>social</code>, <code>facebook-posts</code>, <code>linkedin-posts</code>,</p>
-<p><code>video-shorts</code>) reads it to shape assets correctly; <code>/publish</code> reads §"Publish path"</p>
-<p>to know what it can dispatch vs hand off to a human.</p>
-<p>&gt; <strong>Freshness:</strong> verified mid-2026. Spec numbers are from official platform/developer</p>
-<p>&gt; docs; algorithm <em>weightings</em> are directional (third-party guides citing platform</p>
-<p>&gt; reps), not contractual. Re-verify §"Publish path" before relying on any API limit —</p>
-<p>&gt; these change without notice. Last research sweep: <strong>2026-06-29</strong>.</p>
-<p>&gt; <strong>Why this lives in <code>references/</code>, not a binder:</strong> an SOP outside the skill system</p>
-<p>&gt; drifts and stops being enforced. Edit this file once → every content deliverable and</p>
-<p>&gt; the routing layer inherit it. See [[project_design_system]] for the same principle</p>
-<p>&gt; applied to visual style.</p>
+
+<!-- Intro callout -->
+<div class="ds-callout">
+  <strong>What this guide is for.</strong> This document gives your team the exact specifications for shooting photos and video, writing captions, and understanding how content gets published on each platform. Follow these specs and every piece of content you capture will be ready for production without re-shoots or reformatting.
+</div>
+
+<!-- Section: Golden Rules -->
+<div class="ds-section">
+  <h2>Cross-Platform Golden Rules</h2>
+  <p class="ds-caption">These apply to every platform, every post, every time.</p>
+
+  <div class="golden-rules">
+    <div class="golden-rule">
+      <p><strong>Shoot vertical first.</strong> Film in 9:16 portrait (1080 x 1920). This is the default for video on every platform. Horizontal footage limits where we can use it.</p>
+    </div>
+    <div class="golden-rule">
+      <p><strong>Hook in the first 1-3 seconds.</strong> If the opening does not grab attention immediately, the algorithms stop showing the content. Lead with the most interesting moment.</p>
+    </div>
+    <div class="golden-rule">
+      <p><strong>Front-load captions.</strong> Every platform truncates text after roughly 125 characters. Put the most compelling line first -- do not bury it after filler.</p>
+    </div>
+    <div class="golden-rule">
+      <p><strong>Keep hashtags targeted.</strong> Use 3-5 relevant hashtags maximum. Stuffing tags is neutral at best and harmful at worst across all platforms in 2026.</p>
+    </div>
+    <div class="golden-rule">
+      <p><strong>Original content always wins.</strong> Every platform rewards original content and penalizes reposts. Shoot fresh footage rather than recycling clips from other channels.</p>
+    </div>
+    <div class="golden-rule">
+      <p><strong>Disclose AI-generated content.</strong> Any content created or substantially modified by AI tools must be labeled. Platforms enforce this, and undisclosed AI content gets removed or suppressed.</p>
+    </div>
+  </div>
+</div>
+
 <hr>
-<h2>0. Cross-platform rules (apply everywhere)</h2>
-<ul>
-<li><strong>Vertical-first.</strong> 9:16 (1080×1920) is the default for video on every platform; the</li>
-</ul>
-<p>  hook must land in the <strong>first 1–3 seconds</strong> or distribution collapses.</p>
-<ul>
-<li><strong>Front-load the hook + primary keyword</strong> before the "…more" / "See more" truncation</li>
-</ul>
-<p>  point — every platform truncates captions, most at ~125 chars or less.</p>
-<ul>
-<li><strong>Hashtags are de-emphasized everywhere in 2026.</strong> 3–5 targeted tags is current best</li>
-</ul>
-<p>  practice on every platform (FB lower, 1–3). Stuffing is neutral-to-negative.</p>
-<ul>
-<li><strong>Search/SEO is now a primary discovery lever</strong> (TikTok, IG, YouTube, LinkedIn all</li>
-</ul>
-<p>  operate as search surfaces) — keyword-first captions, on-screen text, and alt text</p>
-<p>  matter as much as hashtags.</p>
-<ul>
-<li><strong>AI-content disclosure is mandatory</strong> on GenAI-derived media (Meta + YouTube enforce</li>
-</ul>
-<p>  it; undisclosed AI is down-ranked or removed). The <code>ai-disclosure</code> guard in</p>
-<p>  <code>scripts/lib/guards.js</code> already enforces the Meta side — extend the same flag to</p>
-<p>  YouTube uploads.</p>
-<ul>
-<li><strong>Original content wins; reposting is penalized</strong> (explicit on IG; directional on the</li>
-</ul>
-<p>  rest).</p>
+
+<!-- Platform: Facebook -->
+<div class="ds-section">
+  <div class="ds-card platform-card">
+    <div class="platform-header">
+      <div class="platform-icon platform-icon--fb">Fb</div>
+      <h2>Facebook</h2>
+      <span class="ds-badge ds-badge--good">Automated</span>
+    </div>
+
+    <h4>Media Specifications</h4>
+    <div class="ds-table-wrap spec-table">
+      <table>
+        <thead><tr><th>Placement</th><th>Size</th><th>Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>Feed portrait (best mobile reach)</td><td>1080 x 1350</td><td>4:5</td></tr>
+          <tr><td>Feed square</td><td>1080 x 1080</td><td>1:1</td></tr>
+          <tr><td>Feed link / landscape</td><td>1200 x 630</td><td>1.91:1</td></tr>
+          <tr><td>Reels / Stories</td><td>1080 x 1920</td><td>9:16</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Reels:</strong> 9:16, 1080 x 1920, 3-90 seconds, MP4, 24-60 fps. Burn in captions (subtitles baked into the video).</li>
+      <li><strong>Feed video:</strong> Up to 240 min. Accepted ratios: 16:9, 1:1, or 4:5.</li>
+    </ul>
+
+    <h4>Caption Best Practices</h4>
+    <ul>
+      <li>Only the first ~125 characters show before "See more" -- put your hook there.</li>
+      <li>Optimal caption length for reach: 40-80 characters.</li>
+      <li>Use 1-3 hashtags (hashtags are a weak signal on Facebook).</li>
+      <li>Post media natively; if you need a link, put it in the first comment rather than the caption.</li>
+    </ul>
+
+    <div class="algo-tip">
+      <strong>Algorithm tip:</strong> Shares and saves matter far more than likes. Video is shared roughly 12x more than other formats. Best posting days are Tuesday, Wednesday, and Thursday.
+    </div>
+
+    <p class="ds-caption" style="margin-top: 14px;"><strong>Publishing:</strong> Ducker Creative handles all Facebook publishing automatically. You do not need to post anything yourself.</p>
+  </div>
+</div>
+
+<!-- Platform: Instagram -->
+<div class="ds-section">
+  <div class="ds-card platform-card">
+    <div class="platform-header">
+      <div class="platform-icon platform-icon--ig">Ig</div>
+      <h2>Instagram</h2>
+      <span class="ds-badge ds-badge--good">Automated</span>
+    </div>
+
+    <h4>Media Specifications</h4>
+    <div class="ds-table-wrap spec-table">
+      <table>
+        <thead><tr><th>Placement</th><th>Size</th><th>Ratio</th></tr></thead>
+        <tbody>
+          <tr><td>Feed image (default)</td><td>1080 x 1350</td><td>4:5</td></tr>
+          <tr><td>Profile grid preview</td><td>1080 x 1440</td><td>3:4</td></tr>
+          <tr><td>Reels / Stories</td><td>1080 x 1920</td><td>9:16</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Reels:</strong> 9:16, 1080 x 1920, up to 3 minutes. All feed video now publishes as Reels.</li>
+      <li><strong>Stories:</strong> 9:16, 1080 x 1920. Safe zone is approximately 1080 x 1610 (avoid text near edges).</li>
+      <li><strong>Images:</strong> JPEG format preferred.</li>
+    </ul>
+
+    <h4>Caption Best Practices</h4>
+    <ul>
+      <li>Maximum 2,200 characters; only the first ~125 are visible before "...more."</li>
+      <li>Put your hook and keyword in the first 125 characters.</li>
+      <li>Use 3-5 hashtags for topical context and search discovery.</li>
+      <li>Links are not clickable in captions -- use the link in bio or Stories link stickers.</li>
+    </ul>
+
+    <div class="algo-tip">
+      <strong>Algorithm tip:</strong> The top signals are watch time, DM shares (sends), and saves. Design content that people want to send to a friend -- that is what drives reach to new audiences.
+    </div>
+
+    <p class="ds-caption" style="margin-top: 14px;"><strong>Publishing:</strong> Ducker Creative handles all Instagram publishing automatically. You do not need to post anything yourself.</p>
+  </div>
+</div>
+
+<!-- Platform: TikTok -->
+<div class="ds-section">
+  <div class="ds-card platform-card">
+    <div class="platform-header">
+      <div class="platform-icon platform-icon--tk">Tk</div>
+      <h2>TikTok</h2>
+      <span class="ds-badge ds-badge--warn">Manual</span>
+    </div>
+
+    <h4>Media Specifications</h4>
+    <div class="ds-table-wrap spec-table">
+      <table>
+        <thead><tr><th>Format</th><th>Size</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Video</td><td>1080 x 1920 (9:16)</td><td>MP4 or MOV, H.264, up to 60 fps</td></tr>
+          <tr><td>Optimal length</td><td>--</td><td>15-30 seconds (sweet spot for reach)</td></tr>
+          <tr><td>Maximum length</td><td>--</td><td>Up to 10 min (in-app) / 60 min (upload)</td></tr>
+          <tr><td>Photo carousel</td><td>1080 x 1920</td><td>2-10 images</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li>Keep key elements in the center safe zone -- the TikTok interface covers the edges with buttons and text.</li>
+      <li>File size limit: approximately 287 MB.</li>
+    </ul>
+
+    <h4>Caption Best Practices</h4>
+    <ul>
+      <li>Only ~80-150 characters are visible before "...more" -- front-load your hook and primary keyword.</li>
+      <li>Optimal caption length: 150-300 characters.</li>
+      <li>Use 3-5 hashtags. TikTok functions as a search engine, so keyword-rich captions and on-screen text carry significant weight.</li>
+    </ul>
+
+    <div class="algo-tip">
+      <strong>Algorithm tip:</strong> Completion rate is the primary signal. A 70%+ completion rate is the threshold for viral distribution; aim for 80%+. Hook viewers in the first 1-2 seconds and keep videos short enough that people watch the whole thing.
+    </div>
+
+    <div class="ds-callout ds-callout--warn" style="margin-top: 14px;">
+      <strong>How TikTok publishing works.</strong> We prepare your TikTok content -- the finished video, caption, and hashtags -- and deliver it to you ready to post. You upload it from the TikTok app on your phone. This is a platform requirement, not a limitation on our end.
+    </div>
+  </div>
+</div>
+
+<!-- Platform: LinkedIn -->
+<div class="ds-section">
+  <div class="ds-card platform-card">
+    <div class="platform-header">
+      <div class="platform-icon platform-icon--li">Li</div>
+      <h2>LinkedIn</h2>
+      <span class="ds-badge ds-badge--warn">Manual</span>
+    </div>
+
+    <h4>Media Specifications</h4>
+    <div class="ds-table-wrap spec-table">
+      <table>
+        <thead><tr><th>Format</th><th>Size</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Image (best mobile)</td><td>1080 x 1350</td><td>4:5 ratio, JPG or PNG, max 5 MB</td></tr>
+          <tr><td>Image (square)</td><td>1080 x 1080</td><td>1:1 ratio</td></tr>
+          <tr><td>Image (landscape)</td><td>1200 x 627</td><td>1.91:1 ratio</td></tr>
+          <tr><td>Document post (carousel)</td><td>1080 x 1350</td><td>PDF, 5-10 slides optimal</td></tr>
+          <tr><td>Video</td><td>1080 x 1920</td><td>3 sec - 10 min, MP4, up to 5 GB</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Caption Best Practices</h4>
+    <ul>
+      <li>Maximum 3,000 characters. The "See more" cutoff is ~140 characters on mobile -- your hook must land there.</li>
+      <li>Optimal length: 150-250 words.</li>
+      <li>Use 3-5 hashtags for search discoverability.</li>
+      <li>Avoid outbound links in the caption -- they significantly reduce reach. Deliver value in the post itself.</li>
+    </ul>
+
+    <div class="algo-tip">
+      <strong>Algorithm tip:</strong> Dwell time (how long someone spends reading your post) is the primary quality signal. Educational and expertise-driven content is prioritized over promotional content. Replying to comments in the first 60 minutes is critical for distribution.
+    </div>
+
+    <div class="ds-callout ds-callout--warn" style="margin-top: 14px;">
+      <strong>How LinkedIn publishing works.</strong> We prepare your LinkedIn content -- the post copy, images or document slides -- and deliver it to you ready to post. You publish it from your LinkedIn account.
+    </div>
+  </div>
+</div>
+
+<!-- Platform: YouTube -->
+<div class="ds-section">
+  <div class="ds-card platform-card">
+    <div class="platform-header">
+      <div class="platform-icon platform-icon--yt">Yt</div>
+      <h2>YouTube</h2>
+      <span class="ds-badge ds-badge--warn">Manual</span>
+    </div>
+
+    <h4>Media Specifications</h4>
+    <div class="ds-table-wrap spec-table">
+      <table>
+        <thead><tr><th>Format</th><th>Size</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Shorts</td><td>1080 x 1920 (9:16)</td><td>Up to 3 minutes, MP4 H.264</td></tr>
+          <tr><td>Long-form</td><td>1920 x 1080 (16:9)</td><td>Up to 12 hours, up to 8K supported</td></tr>
+          <tr><td>Thumbnail</td><td>1280 x 720 (16:9)</td><td>JPG or PNG, max 2 MB</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Caption Best Practices</h4>
+    <ul>
+      <li><strong>Title:</strong> 100 characters max. Put your keyword in the first 60 characters.</li>
+      <li><strong>Description:</strong> Up to 5,000 characters. Optimal 200-500 words with keywords above the fold.</li>
+    </ul>
+
+    <div class="algo-tip">
+      <strong>Algorithm tip:</strong> Viewer satisfaction now outweighs raw watch time. For Shorts, the first 1-3 seconds determine whether someone swipes away or watches -- replays and shares drive distribution. For long-form, strong thumbnails and titles drive the initial click-through rate.
+    </div>
+
+    <div class="ds-callout ds-callout--warn" style="margin-top: 14px;">
+      <strong>How YouTube publishing works.</strong> We prepare your YouTube content -- the finished video, thumbnail, title, and description -- and deliver it to you ready to upload. You publish it from your YouTube account.
+    </div>
+  </div>
+</div>
+
 <hr>
-<h2>1. Facebook (Meta)</h2>
-<p><strong>Media</strong></p>
-<div class="ds-table-wrap"><table><thead><tr><th>Placement</th><th>Recommended</th><th>Ratio</th></tr></thead><tbody><tr><td>Feed portrait (best mobile reach)</td><td>1080 × 1350</td><td>4:5</td></tr><tr><td>Feed square</td><td>1080 × 1080</td><td>1:1</td></tr><tr><td>Feed link/landscape</td><td>1200 × 630</td><td>1.91:1</td></tr><tr><td>Reels / Stories</td><td>1080 × 1920</td><td>9:16</td></tr></tbody></table></div>
-<ul>
-<li><strong>Reels:</strong> 9:16, 1080×1920, <strong>3–90 s</strong>, MP4 H.264/AAC, 24–60 fps. Burn in captions.</li>
-<li><strong>Feed video:</strong> up to 240 min / 10 GB; 16:9, 1:1, or 4:5.</li>
-</ul>
-<p><strong>Copy:</strong> max 63,206 chars; only first <strong>~125 chars / 3 lines</strong> show before "See more."</p>
-<p>Optimal <strong>40–80 chars</strong> for reach. Hashtags <strong>1–3</strong> (weak signal on FB). Native link</p>
-<p>posts get reduced reach → post media natively, <strong>link in first comment</strong>.</p>
-<p><strong>Algorithm 2026:</strong> Reels-first / video-dominant (video shared ~12× more). Watch time is</p>
-<p>the core Reels signal; <strong>shares &amp; saves outweigh likes</strong>; early engagement velocity</p>
-<p>decisive. Cadence ~4.7 posts/week median — overposting hurts. Best Tue/Wed/Thu.</p>
-<p><strong>Publish path: ✅ AUTOMATED (built).</strong> Graph API v25.0 — <code>/publish</code> already dispatches</p>
-<p>feed/photo/video. <strong>Reels</strong> use the 3-phase <code>/{page-id}/video_reels</code> flow</p>
-<p>(<code>start</code> → upload to <code>rupload.facebook.com</code> → <code>finish</code> + <code>video_state=PUBLISHED</code>); the</p>
-<p>old single-shot path is deprecated. Scopes: <code>pages_manage_posts</code> + <code>pages_read_engagement</code></p>
-<ul>
-<li><code>pages_show_list</code> (Page/System-User token). <strong>Rate cap: 30 Reels/24h per Page.</strong></li>
-</ul>
-<p>Requires App Review + Business Verification (see <code>docs/agency-foundation.md</code>).</p>
+
+<!-- Publishing Workflow Summary -->
+<div class="ds-section">
+  <h2>Publishing Workflow Summary</h2>
+  <p>Here is how content moves from production to each platform.</p>
+
+  <div class="ds-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Who Posts</th>
+          <th>How It Works</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Facebook</strong></td>
+          <td><span class="ds-badge ds-badge--good">Automated</span></td>
+          <td>Ducker Creative publishes directly on your behalf. No action needed from your team.</td>
+        </tr>
+        <tr>
+          <td><strong>Instagram</strong></td>
+          <td><span class="ds-badge ds-badge--good">Automated</span></td>
+          <td>Ducker Creative publishes directly on your behalf. No action needed from your team.</td>
+        </tr>
+        <tr>
+          <td><strong>TikTok</strong></td>
+          <td><span class="ds-badge ds-badge--warn">You Post</span></td>
+          <td>We deliver the finished video and caption. You upload from the TikTok app.</td>
+        </tr>
+        <tr>
+          <td><strong>LinkedIn</strong></td>
+          <td><span class="ds-badge ds-badge--warn">You Post</span></td>
+          <td>We deliver the finished post and visuals. You publish from your LinkedIn page.</td>
+        </tr>
+        <tr>
+          <td><strong>YouTube</strong></td>
+          <td><span class="ds-badge ds-badge--warn">You Post</span></td>
+          <td>We deliver the finished video, thumbnail, and metadata. You upload from YouTube Studio.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <hr>
-<h2>2. Instagram (Meta)</h2>
-<p><strong>Media</strong></p>
-<ul>
-<li><strong>Feed image default is now 4:5 — 1080 × 1350.</strong> New <strong>3:4 (1080×1440)</strong> ratio added in</li>
-</ul>
-<p>  2025; profile grid thumbnails now preview in <strong>3:4</strong> (moved off square). API: <strong>JPEG only.</strong></p>
-<ul>
-<li><strong>Reels / Stories:</strong> 9:16, 1080×1920; safe zone ≈ 1080×1610.</li>
-<li><strong>Reels: up to 3 minutes</strong> (extended). Feed video is now published as Reels.</li>
-</ul>
-<p><strong>Copy:</strong> max 2,200 chars; ~125 visible before "…more." Hook in first 125 chars.</p>
-<p>Hashtags <strong>3–5</strong> (de-emphasized — now topical/search context, not a reach lever).</p>
-<p>Captions not clickable → <strong>link in bio</strong> + Stories link stickers. Set <strong><code>alt_text</code></strong></p>
-<p>on images (field added Mar 2025; also a Social-SEO signal).</p>
-<p><strong>Algorithm 2026 (per Mosseri):</strong> top signals are **watch time (#1), sends-per-reach</p>
-<p>(DM shares), likes-per-reach.<strong> </strong>Sends/shares weighted far above likes** for reaching</p>
-<p>new audiences — design posts to be DM-shared. Separate algos per surface (Reels = watch</p>
-<p>time + sends; Feed = relationship; Stories = recency; Explore = velocity). **Original</p>
-<p>content favored; 10+ reposts/30 days can exclude you from recommendations.** Reels-first</p>
-<p>for reach; carousels strong for saves/dwell.</p>
-<p><strong>Publish path: ✅ AUTOMATED (built).</strong> Two-step container flow:</p>
-<p><code>POST /{ig-id}/media</code> → <code>POST /{ig-id}/media_publish</code>. Reels poll</p>
-<p><code>GET /{container-id}?fields=status_code</code> until <code>FINISHED</code>. Carousels = child containers →</p>
-<p>parent (≤10 items) → publish (1 post). Stories supported (<code>media_type=STORIES</code>).</p>
-<p>⚠️ <strong>Scope rename Jan 27, 2025:</strong> use <strong><code>instagram_business_content_publish</code></strong></p>
-<p>(IG-Login) — legacy <code>instagram_basic</code>/<code>instagram_content_publish</code> deprecated.</p>
-<p><strong>Rate cap: 100 posts/rolling 24h</strong> (carousel = 1) — check via <code>/content_publishing_limit</code>.</p>
-<hr>
-<h2>3. TikTok</h2>
-<p><strong>Media</strong></p>
-<ul>
-<li><strong>9:16, 1080 × 1920</strong>, MP4 (Android) / MOV (iOS), H.264, ≤60 fps.</li>
-<li>Length: <strong>3 s min</strong>; in-app <strong>up to 10 min</strong>, uploaded <strong>up to 60 min</strong>. <strong>Optimal 15–30 s.</strong></li>
-<li>File ≤ ~287 MB. Photo carousels: 2–10 images, 1080×1920.</li>
-<li>Keep key elements in the <strong>center safe zone</strong> (UI overlays cover edges).</li>
-</ul>
-<p><strong>Copy:</strong> native caption max <strong>4,000 chars</strong> (raised 2,200 → 4,000 as an explicit</p>
-<p><strong>SEO play</strong>). ⚠️ But the Content Posting API <code>post_info.title</code> is capped at **~2,200</p>
-<p>runes** — programmatic captions must respect 2,200, not 4,000. Only ~80–150 chars show</p>
-<p>before "…more" → front-load hook + keyword. Hashtags <strong>3–5</strong>. Optimal ~150–300 chars.</p>
-<p><strong>Algorithm 2026:</strong> ranks on <strong>watch time, completion rate, replays/rewatches, shares.</strong></p>
-<p><strong>~70% completion is the viral-push threshold; ≥80% is strong.</strong> Hook in first 1–2 s.</p>
-<p>Cadence <strong>3–5×/week</strong> (daily for ramp). Trending audio still a discovery lever.</p>
-<p><strong>TikTok is now a search engine — 84% of searches are exploratory</strong> → keyword-first</p>
-<p>captions/on-screen text/voiceover carry equal-or-greater weight than hashtags.</p>
-<p><strong>Publish path: ⚙️ NOT BUILT — gated.</strong> Content Posting API has two modes:</p>
-<ul>
-<li><strong>Upload (draft / inbox)</strong> — pushes media into the creator's app as a draft; human</li>
-</ul>
-<p>  finalizes. Scope <strong><code>video.upload</code></strong>. <strong>Works pre-audit</strong> → ship this first.</p>
-<ul>
-<li><strong>Direct Post</strong> — publishes/schedules straight to profile. Scope <strong><code>video.publish</code></strong>.</li>
-</ul>
-<p>  <strong>Requires a content-posting audit (~2–4 weeks)</strong>; unaudited apps force SELF_ONLY</p>
-<p>  visibility, dev mode caps 5 authorizations/24h.</p>
-<ul>
-<li><strong>Caps:</strong> 6 req/min per token; <strong>25 videos/account/day.</strong></li>
-<li><strong>SOP until audit clears:</strong> TikTok ends at <strong>Upload-draft + human-finalize</strong>.</li>
-</ul>
-<hr>
-<h2>4. LinkedIn</h2>
-<p><strong>Media</strong></p>
-<ul>
-<li><strong>Images:</strong> 1:1 (1080×1080), 1.91:1 (1200×627), or <strong>4:5 (1080×1350, best mobile)</strong>.</li>
-</ul>
-<p>  Max 5 MB, JPG/PNG. Multi-image via the MultiImage API.</p>
-<ul>
-<li><strong>Document ("carousel") posts:</strong> PDF/PPTX/DOCX rendered as swipeable slides — slides</li>
-</ul>
-<p>  1080×1080 or 1080×1350, <strong>≤100 MB / 300 pages</strong>, optimal <strong>5–10 slides</strong>. ⚠️ The true</p>
-<p>  API <code>Carousel</code> object is <strong>sponsored-only</strong>; organic "carousels" are <strong>document posts</strong>.</p>
-<ul>
-<li><strong>Video:</strong> 3 s–10 min, ≤5 GB, 1:1 / 16:9 / 9:16, MP4 H.264/AAC.</li>
-</ul>
-<p><strong>Copy:</strong> max 3,000 chars (Pages truncate ~700 on some surfaces). "See more" cutoff</p>
-<p><strong>~140 chars mobile / ~210 desktop</strong> — hook must land there. Optimal ~150–250 words.</p>
-<p>Hashtags <strong>3–5</strong> (roughly reach-neutral in 2026; aid search). Hashtag-following was</p>
-<p>removed (2024).</p>
-<p><strong>Algorithm 2026:</strong> ⚠️ <strong>interest-graph</strong> replaced social-graph. <strong>Dwell time</strong> is the</p>
-<p>primary quality signal (61+ s ≈ 13× the engagement of a 0–3 s view). <strong>Comments ≫ likes.</strong></p>
-<p><strong>Knowledge/expertise relevance prioritized</strong> (educational &gt; promo). ⚠️ **Outbound links</p>
-<p>suppress reach ~60%, AND the "link in first comment" workaround is now ALSO penalized</p>
-<p>(early 2026)** — deliver value natively, link secondarily. Cadence 2–5×/week; first ~60 min</p>
-<ul>
-<li>author replies decisive.</li>
-</ul>
-<p><strong>Publish path: ⚙️ NOT BUILT — gated.</strong> Publish to a Company Page via the <strong>Posts API</strong></p>
-<p>(<code>POST /rest/posts</code>, <code>author=urn:li:organization:{id}</code>, header <code>LinkedIn-Version</code>).</p>
-<p>⚠️ <code>ugcPosts</code>/<code>shares</code> deprecated → Posts API is the path. Supported organic types: Text,</p>
-<p>Image, Video, <strong>Document</strong>, Article, MultiImage, Poll. <strong>Organic Carousel NOT supported</strong></p>
-<p>— use document posts. Scopes: <strong><code>w_organization_social</code></strong> (+ <code>r_organization_social</code>,</p>
-<p><code>rw_organization_admin</code>). <strong>Gate:</strong> runs through the <strong>Community Management API</strong></p>
-<p>(Marketing Developer Platform) — vetted, tiered (Development → Standard via screencast</p>
-<p>demo + Technical Sign-Off). <strong>Not open self-serve.</strong></p>
-<hr>
-<h2>5. YouTube</h2>
-<p><strong>Media</strong></p>
-<ul>
-<li><strong>Shorts:</strong> 9:16, <strong>≤3 minutes</strong> (extended from 60 s, Oct 2024), 1080×1920 (4K vertical</li>
-</ul>
-<p>  ok). Must be ≤180 s + 9:16 to hit the Shorts shelf. <code>#Shorts</code> no longer required.</p>
-<ul>
-<li><strong>Long-form:</strong> 16:9 (1920×1080 native; up to 8K), ≤256 GB / 12 h, MP4 H.264/AAC.</li>
-<li><strong>Thumbnail:</strong> 1280×720, 16:9, ≤2 MB, JPG/PNG.</li>
-</ul>
-<p><strong>Copy:</strong> title <strong>100 chars</strong> (keyword in first ~60); description <strong>5,000 chars</strong>, optimal</p>
-<p>200–500 words with keyword above the "…more" fold. Tags ~10–20 (minimal role now).</p>
-<p><strong>Algorithm 2026:</strong> ⚠️ <strong>viewer satisfaction now outweighs raw watch time</strong> (post-watch</p>
-<p>surveys, returns, session continuation). ⚠️ **Shorts and long-form ranked by two separate</p>
-<p>models** — Shorts = swipe-vs-watch in first 1–3 s + replays + shares; long-form =</p>
-<p><strong>session contribution</strong> ahead of average view duration. CTR (thumbnail+title) + retention</p>
-<p>core. <strong>Disclosed AI is not penalized; undisclosed detected AI is down-ranked/removed.</strong></p>
-<p><strong>Publish path: ⚙️ NOT BUILT — gated.</strong> Data API v3 <code>videos.insert</code> (Shorts use the same</p>
-<p>endpoint, classified by 9:16 + ≤180 s). Scopes: <code>youtube.upload</code> / <code>youtube.force-ssl</code>.</p>
-<p><strong>Quota: 1,600 units/upload; default 10,000/day ≈ 6 uploads/day.</strong> ⚠️ <strong>Hard gate:</strong></p>
-<p>videos uploaded from <strong>unverified projects lock to PRIVATE</strong> until a <strong>compliance audit</strong></p>
-<p>passes (audit also lifts the quota). Set the <strong>AI-content label</strong> on GenAI-derived video.</p>
-<hr>
-<h2>6. Publish-path summary (what <code>/publish</code> can do today)</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Platform</th><th>Automated publish?</th><th>Path</th><th>Pre-req before live</th></tr></thead><tbody><tr><td>Facebook</td><td>✅ built</td><td>Graph API v25.0 (<code>/feed</code>, <code>/photos</code>, <code>/videos</code>, <code>/video_reels</code>)</td><td>App Review + Biz Verification</td></tr><tr><td>Instagram</td><td>✅ built</td><td>Graph API v25.0 (container → publish)</td><td><code>instagram_business_content_publish</code> scope</td></tr><tr><td>TikTok</td><td>⚙️ not built</td><td>Content Posting API — <strong>Upload-draft first</strong>, Direct Post post-audit</td><td>Content-posting audit (~2–4 wk) for Direct Post</td></tr><tr><td>LinkedIn</td><td>⚙️ not built</td><td>Posts API (Company Page)</td><td>Community Management API tiered approval</td></tr><tr><td>YouTube</td><td>⚙️ not built</td><td>Data API v3 <code>videos.insert</code></td><td>Compliance audit (lifts private-lock + quota)</td></tr></tbody></table></div>
-<p><strong>SOP rule for un-built platforms:</strong> the content chain ends at</p>
-<p><strong>finished asset + platform-native caption handed to the human</strong> — <code>/publish</code> must NOT</p>
-<p>fake a dispatch it cannot perform (per the smOS constitution: "Missing client data: halt</p>
-<p>and ask… do not guess"). When the audit/approval for a platform clears, flip its row to</p>
-<p>✅ and wire the dispatcher.</p>
-<footer class="ds-footer">Generated by smOS · 2026-06-30</footer>
+
+<!-- Shooting Checklist -->
+<div class="ds-section">
+  <h2>Shooting Checklist</h2>
+  <p>Quick reference for your team when capturing content at the shop.</p>
+
+  <div class="ds-card">
+    <div class="checklist-grid">
+      <div class="checklist-item">
+        <div class="check-mark">1</div>
+        <div><strong>Shoot vertical (9:16).</strong> Hold your phone upright. All short-form video across every platform requires portrait orientation.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">2</div>
+        <div><strong>Good lighting matters.</strong> Natural light or well-lit shop bays. Avoid shooting into windows or bright doorways that blow out the image.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">3</div>
+        <div><strong>Clean audio.</strong> Reduce background noise when speaking to camera. If the shop is loud, use a clip-on microphone or move to a quieter spot.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">4</div>
+        <div><strong>Show the process.</strong> Before/during/after sequences are compelling. Film the repair in progress, the dirty vs. clean part, the finished result.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">5</div>
+        <div><strong>Keep it short.</strong> Aim for 15-30 seconds for Reels, TikTok, and Shorts. Longer content should have a clear reason to keep watching.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">6</div>
+        <div><strong>Steady your phone.</strong> Use a tripod, lean against something, or brace your elbows. Shaky footage looks unprofessional and is harder to edit.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">7</div>
+        <div><strong>Capture multiple takes.</strong> Shoot 2-3 versions of the same moment. More footage gives us more to work with in editing.</div>
+      </div>
+      <div class="checklist-item">
+        <div class="check-mark">8</div>
+        <div><strong>Get customer permission.</strong> Before filming a customer or their vehicle with identifying details, get verbal or written consent.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="ds-footer">Prepared by Ducker Creative &middot; 2026-06-30</footer>
 </div></body></html>

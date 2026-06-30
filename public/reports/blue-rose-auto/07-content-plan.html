@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Content Plan</title>
+<title>Content Plan — Blue Rose Auto Care &amp; Repair Services</title>
 
 <style>/* ============================================================================
    smOS Design System — "Cupertino"
@@ -92,6 +92,16 @@
   --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
   --ds-dur:        220ms;
   --ds-dur-fast:   140ms;
+
+  /* ---- Content-plan pillar colors ---- */
+  --pillar-educate:  var(--ds-blue);
+  --pillar-proof:    var(--ds-purple);
+  --pillar-behind:   var(--ds-amber);
+  --pillar-book:     var(--ds-green);
+  --pillar-educate-tint: var(--ds-blue-tint);
+  --pillar-proof-tint:   #f5edfb;
+  --pillar-behind-tint:  var(--ds-amber-tint);
+  --pillar-book-tint:    var(--ds-green-tint);
 }
 
 /* ---------------------------------------------------------------- Base ---- */
@@ -281,244 +291,6 @@ table.ds-table, .ds-table-wrap table {
 .ds-table-wrap tbody tr:nth-child(even),
 table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
-/* ---------------------------------------------------------- Charts -------- */
-/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
-.ds-chart {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-line);
-  border-radius: var(--ds-r);
-  padding: 20px;
-  box-shadow: var(--ds-shadow-sm);
-  margin: 18px 0;
-}
-.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
-
-/* --------------------------------------------------------- Buttons -------- */
-.ds-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--ds-font);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  padding: 11px 18px;
-  border-radius: var(--ds-r-pill);
-  border: 1px solid transparent;
-  background: var(--ds-blue);
-  color: #fff;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background var(--ds-dur) var(--ds-ease), transform var(--ds-dur) var(--ds-ease);
-}
-.ds-btn:hover { background: var(--ds-blue-strong); text-decoration: none; }
-.ds-btn:active { transform: translateY(1px); }
-.ds-btn--ghost {
-  background: var(--ds-surface);
-  color: var(--ds-blue-strong);
-  border-color: var(--ds-line-strong);
-}
-.ds-btn--ghost:hover { background: var(--ds-ink-tint); }
-.ds-btn[aria-disabled="true"] {
-  background: transparent;
-  border: 1px dashed var(--ds-line-strong);
-  color: var(--ds-muted);
-  font-weight: 500;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* -------------------------------------------------------- Roadmap --------- */
-/* Vertical journey of numbered steps. Each step = a bold circular badge + a
-   card holding a title, description, and one or more action buttons. Used by
-   /bundle to assemble a client's whole engagement into one shareable hub. */
-.ds-roadmap { margin: 28px 0; }
-.ds-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 18px;
-  padding-bottom: 24px;
-}
-/* connector spine — aurora gradient on delivered steps, grey on pending */
-.ds-step:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 48px;
-  bottom: -4px;
-  width: 2px;
-  background-image: var(--ds-grad-brand);
-}
-.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
-.ds-step-num {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-image: var(--ds-grad-brand);
-  color: #fff;
-  font-weight: 700;
-  font-size: 19px;
-  font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(94,92,230,.32);
-}
-.ds-step.is-pending .ds-step-num {
-  background: var(--ds-surface);
-  color: var(--ds-faint);
-  border: 2px dashed var(--ds-line-strong);
-  box-shadow: none;
-}
-.ds-step-body {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-line);
-  border-radius: var(--ds-r);
-  padding: 18px 20px;
-  box-shadow: var(--ds-shadow-sm);
-  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
-}
-.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
-.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
-.ds-step.is-pending .ds-step-body {
-  background: var(--ds-surface-2);
-  border-style: dashed;
-  box-shadow: none;
-}
-.ds-step-title {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 0 0 4px;
-}
-.ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
-.ds-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-@media (max-width: 640px) {
-  .ds-step { grid-template-columns: 40px 1fr; gap: 14px; }
-  .ds-step-num { width: 40px; height: 40px; font-size: 16px; }
-  .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
-}
-
-/* -------------------------------------------------- Hub (OS console) ------ */
-/* The /bundle deliverables hub is a single-tab "operating system" console: a
-   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
-   frames each report as a bright, elevated "window" (the iframe). Dark chrome
-   around a light document = intentional app framing (no double-hero). */
-.ds-hub {
-  min-height: 100dvh; display: flex; flex-direction: column;
-  background: var(--ds-shell); color: var(--ds-shell-ink);
-}
-.ds-skip {
-  position: absolute; left: 12px; top: -48px; z-index: 100;
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
-  transition: top var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-skip:focus { top: 12px; text-decoration: none; }
-
-/* Header = the hero. Client name + agency + a live progress meter. */
-.ds-hub__head {
-  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
-  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
-  border-bottom: 1px solid var(--ds-shell-line);
-}
-.ds-hub__id { min-width: 0; }
-.ds-hub__eyebrow {
-  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-hub__title {
-  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
-  line-height: 1.02; margin: 0; color: #fff;
-  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
-}
-.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
-
-/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
-.ds-progress { min-width: 220px; flex: 0 1 320px; }
-.ds-progress__label {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
-.ds-progress__track { display: flex; gap: 5px; }
-.ds-progress__seg {
-  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
-}
-.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
-
-/* Chip menu (top + bottom) */
-.ds-hubnav {
-  display: flex; gap: 8px; align-items: center;
-  padding: 12px 24px; background: rgba(11,11,16,.72);
-  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid var(--ds-shell-line);
-  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
-}
-.ds-hubnav::-webkit-scrollbar { display: none; }
-.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
-.ds-hubnav__btn {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
-  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
-  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  border: 1px solid var(--ds-shell-line); cursor: pointer;
-  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
-              transform var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-hubnav__btn .n {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 21px; height: 21px; border-radius: 50%;
-  background: var(--ds-shell-3); color: var(--ds-shell-ink);
-  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
-}
-.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
-.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
-.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
-.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
-.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
-
-/* Viewer = a bright elevated "window" floating in the dark shell. */
-.ds-viewer-wrap {
-  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
-  overflow: hidden; background: var(--ds-bg);
-  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
-}
-.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
-.ds-viewer__loader {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  background: var(--ds-bg); opacity: 0; visibility: hidden;
-  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
-}
-.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
-.ds-spinner {
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
-  animation: ds-spin .8s linear infinite;
-}
-@keyframes ds-spin { to { transform: rotate(360deg); } }
-
-/* Entrance: chips + spine stagger in on load */
-@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
-
-@media (max-width: 760px) {
-  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
-  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
-  .ds-hub__head { padding: 18px 16px 14px; }
-  .ds-progress { flex-basis: 100%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-anim, .ds-spinner { animation: none; }
-  .ds-hubnav__btn:hover { transform: none; }
-}
-
-/* --------------------------------------------------------- Footer --------- */
-
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {
   margin-top: 48px;
@@ -553,20 +325,472 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   h1 { font-size: 26px; }
   .ds-kpi__value { font-size: 26px; }
 }
+
+/* ============================================================ Content Plan custom ---- */
+
+/* Pillar cards grid */
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.pillar-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 20px 22px;
+  box-shadow: var(--ds-shadow-sm);
+  border-top: 4px solid var(--ds-blue);
+}
+.pillar-card--educate  { border-top-color: var(--pillar-educate); }
+.pillar-card--proof    { border-top-color: var(--pillar-proof); }
+.pillar-card--behind   { border-top-color: var(--pillar-behind); }
+.pillar-card--book     { border-top-color: var(--pillar-book); }
+
+.pillar-card__name {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+.pillar-card__intent {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ds-muted);
+  margin-bottom: 8px;
+}
+.pillar-card__cadence {
+  font-size: 13px;
+  color: var(--ds-ink-2);
+  margin-bottom: 12px;
+}
+.pillar-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pillar-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-ink-tint);
+  color: var(--ds-ink-2);
+}
+
+/* Week cards */
+.week-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 0;
+  box-shadow: var(--ds-shadow-sm);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.week-card__header {
+  padding: 14px 22px;
+  background: var(--ds-surface-2);
+  border-bottom: 1px solid var(--ds-line);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.week-card__header span {
+  font-weight: 500;
+  color: var(--ds-muted);
+  font-size: 13px;
+  margin-left: 8px;
+}
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0;
+}
+.post-slot {
+  padding: 18px 22px;
+  border-right: 1px solid var(--ds-line);
+  border-bottom: 1px solid var(--ds-line);
+}
+.post-slot:last-child { border-right: none; }
+@media (max-width: 840px) {
+  .post-grid { grid-template-columns: 1fr; }
+  .post-slot { border-right: none; }
+}
+
+.post-slot__date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ds-ink);
+  margin-bottom: 8px;
+}
+.post-slot__badges {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.badge-pillar {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--ds-r-pill);
+  color: #fff;
+}
+.badge-pillar--educate { background: var(--pillar-educate); }
+.badge-pillar--proof   { background: var(--pillar-proof); }
+.badge-pillar--behind  { background: var(--pillar-behind); }
+.badge-pillar--book    { background: var(--pillar-book); }
+
+.badge-format {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-ink-tint);
+  color: var(--ds-ink-2);
+}
+
+.post-slot__caption {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ds-ink-2);
+  margin: 0;
+}
+
+/* Hashtag bank */
+.hashtag-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.hashtag-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+  border-left: 4px solid var(--ds-blue);
+}
+.hashtag-card--educate { border-left-color: var(--pillar-educate); }
+.hashtag-card--proof   { border-left-color: var(--pillar-proof); }
+.hashtag-card--behind  { border-left-color: var(--pillar-behind); }
+.hashtag-card--book    { border-left-color: var(--pillar-book); }
+
+.hashtag-card__title {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.hashtag-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.hashtag-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-ink-tint);
+  color: var(--ds-ink-2);
+  font-family: var(--ds-font-mono);
+}
 </style>
 </head>
 <body><div class="ds-wrap">
+
+<!-- Hero -->
 <header class="ds-hero">
 <div class="ds-eyebrow">Ducker Creative</div>
 <h1>Content Plan</h1>
 <div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
 </header>
-<h2>Overview</h2>
-<p><strong>Blue Rose Auto Care &amp; Repair Services</strong> — organic content plan for <strong>4 weeks</strong> starting <strong>2026-07-06</strong>. 4 content pillars, 12 scheduled posts (Reels-first, Mon/Wed/Fri). Captions are strategic hooks; the client's in-house team produces final media.</p>
+
+<!-- KPI Strip -->
+<div class="ds-kpi-grid">
+<div class="ds-kpi">
+  <div class="ds-kpi__label">Pillars</div>
+  <div class="ds-kpi__value">4</div>
+</div>
+<div class="ds-kpi">
+  <div class="ds-kpi__label">Posts</div>
+  <div class="ds-kpi__value">12</div>
+</div>
+<div class="ds-kpi">
+  <div class="ds-kpi__label">Weeks</div>
+  <div class="ds-kpi__value">4</div>
+</div>
+<div class="ds-kpi">
+  <div class="ds-kpi__label">Strategy</div>
+  <div class="ds-kpi__value" style="font-size:22px;">Reels-First</div>
+</div>
+</div>
+
+<!-- Overview -->
+<div class="ds-section">
+<p>Organic content plan for <strong>4 weeks</strong> starting <strong>July 6, 2026</strong>. Four content pillars, 12 scheduled posts on a Mon/Wed/Fri cadence. Reels lead for reach; carousels drive engagement on proof content; static images anchor conversion CTAs.</p>
+</div>
+
+<!-- Content Pillars -->
+<div class="ds-section">
 <h2>Content Pillars</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Pillar</th><th>Intent</th><th>Cadence / wk</th><th>Keywords</th></tr></thead><tbody><tr><td>Educate — Know Your Vehicle</td><td>educate</td><td>2</td><td>auto repair tips, Tesla EV care</td></tr><tr><td>Proof — Craftsmanship Results</td><td>convert</td><td>1</td><td>before and after, ceramic coating Eugene</td></tr><tr><td>Behind the Bay — 30+ Years</td><td>community</td><td>1</td><td>ASE certified techs, Springfield auto shop</td></tr><tr><td>Book the Work</td><td>convert</td><td>1</td><td>book auto service Eugene, get a quote</td></tr></tbody></table></div>
+<div class="pillar-grid">
+
+<div class="pillar-card pillar-card--educate">
+  <div class="pillar-card__name">Educate -- Know Your Vehicle</div>
+  <div class="pillar-card__intent">Intent: Educate</div>
+  <div class="pillar-card__cadence">2x per week</div>
+  <div class="pillar-card__tags">
+    <span class="pillar-tag">auto repair tips</span>
+    <span class="pillar-tag">Tesla EV care</span>
+  </div>
+</div>
+
+<div class="pillar-card pillar-card--proof">
+  <div class="pillar-card__name">Proof -- Craftsmanship Results</div>
+  <div class="pillar-card__intent">Intent: Convert</div>
+  <div class="pillar-card__cadence">1x per week</div>
+  <div class="pillar-card__tags">
+    <span class="pillar-tag">before and after</span>
+    <span class="pillar-tag">ceramic coating Eugene</span>
+  </div>
+</div>
+
+<div class="pillar-card pillar-card--behind">
+  <div class="pillar-card__name">Behind the Bay -- 30+ Years</div>
+  <div class="pillar-card__intent">Intent: Community</div>
+  <div class="pillar-card__cadence">1x per week</div>
+  <div class="pillar-card__tags">
+    <span class="pillar-tag">ASE certified techs</span>
+    <span class="pillar-tag">Springfield auto shop</span>
+  </div>
+</div>
+
+<div class="pillar-card pillar-card--book">
+  <div class="pillar-card__name">Book the Work</div>
+  <div class="pillar-card__intent">Intent: Convert</div>
+  <div class="pillar-card__cadence">1x per week</div>
+  <div class="pillar-card__tags">
+    <span class="pillar-tag">book auto service Eugene</span>
+    <span class="pillar-tag">get a quote</span>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- Visual Calendar -->
+<div class="ds-section">
 <h2>Posting Calendar</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Date</th><th>Pillar</th><th>Format</th><th>Caption hook</th><th>Hashtags</th></tr></thead><tbody><tr><td>Mon, Jul 6</td><td>Educate — Know Your Vehicle</td><td>reels</td><td>What that dashboard light actually means — and when it's safe to keep driving. ASE-certified breakdown, no scare tactics.</td><td>#autorepairtips #TeslaService #EugeneOR #ASEcertified</td></tr><tr><td>Wed, Jul 8</td><td>Proof — Craftsmanship Results</td><td>carousel</td><td>Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines.</td><td>#beforeandafter #ceramiccoating #collisionrepair #SpringfieldOR</td></tr><tr><td>Fri, Jul 10</td><td>Behind the Bay — 30+ Years</td><td>reels</td><td>30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team.</td><td>#behindthescenes #mechaniclife #ASEcertified #EugeneAuto</td></tr><tr><td>Mon, Jul 13</td><td>Book the Work</td><td>image</td><td>Due for service or planning a build? Book now or get a quote — we'll tell you straight what your vehicle actually needs.</td><td>#booknow #autoservice #EugeneOR #getaquote</td></tr><tr><td>Wed, Jul 15</td><td>Educate — Know Your Vehicle</td><td>reels</td><td>Tesla-capable doesn't mean guesswork. Here's how EV brake service differs from a gas car — and why it matters for your range.</td><td>#autorepairtips #TeslaService #EugeneOR #ASEcertified</td></tr><tr><td>Fri, Jul 17</td><td>Proof — Craftsmanship Results</td><td>carousel</td><td>Before / after: full ceramic coating + PPF on a daily driver. Same car — protected for the next decade.</td><td>#beforeandafter #ceramiccoating #collisionrepair #SpringfieldOR</td></tr><tr><td>Mon, Jul 20</td><td>Behind the Bay — 30+ Years</td><td>reels</td><td>Meet the techs who treat a Tesla and a '98 pickup with the same standard. This is how precision craftsmanship gets done.</td><td>#behindthescenes #mechaniclife #ASEcertified #EugeneAuto</td></tr><tr><td>Wed, Jul 22</td><td>Book the Work</td><td>image</td><td>Mechanical, collision, or cosmetic — one shop, 30+ years, ASE-certified. Get a quote and we'll map the work with you.</td><td>#booknow #autoservice #EugeneOR #getaquote</td></tr><tr><td>Fri, Jul 24</td><td>Educate — Know Your Vehicle</td><td>reels</td><td>Ceramic coating vs. a good wax: what 30+ years in the bay has taught us about what actually protects your paint.</td><td>#autorepairtips #TeslaService #EugeneOR #ASEcertified</td></tr><tr><td>Mon, Jul 27</td><td>Proof — Craftsmanship Results</td><td>carousel</td><td>Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines.</td><td>#beforeandafter #ceramiccoating #collisionrepair #SpringfieldOR</td></tr><tr><td>Wed, Jul 29</td><td>Behind the Bay — 30+ Years</td><td>reels</td><td>30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team.</td><td>#behindthescenes #mechaniclife #ASEcertified #EugeneAuto</td></tr><tr><td>Fri, Jul 31</td><td>Book the Work</td><td>image</td><td>Due for service or planning a build? Book now or get a quote — we'll tell you straight what your vehicle actually needs.</td><td>#booknow #autoservice #EugeneOR #getaquote</td></tr></tbody></table></div>
-<p>_Generated by smOS <code>/content-plan</code>. Media URLs are produced by the client team before publishing via <code>/publish</code>._</p>
-<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
+
+<!-- Week 1 -->
+<div class="week-card">
+<div class="week-card__header">Week 1 <span>Jul 6 -- Jul 10</span></div>
+<div class="post-grid">
+
+<div class="post-slot">
+  <div class="post-slot__date">Mon, Jul 6</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--educate">Educate</span>
+    <span class="badge-format">Reels</span>
+  </div>
+  <p class="post-slot__caption">What that dashboard light actually means -- and when it's safe to keep driving. ASE-certified breakdown, no scare tactics.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Wed, Jul 8</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--proof">Proof</span>
+    <span class="badge-format">Carousel</span>
+  </div>
+  <p class="post-slot__caption">Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Fri, Jul 10</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--behind">Behind the Bay</span>
+    <span class="badge-format">Reels</span>
+  </div>
+  <p class="post-slot__caption">30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team.</p>
+</div>
+
+</div>
+</div>
+
+<!-- Week 2 -->
+<div class="week-card">
+<div class="week-card__header">Week 2 <span>Jul 13 -- Jul 17</span></div>
+<div class="post-grid">
+
+<div class="post-slot">
+  <div class="post-slot__date">Mon, Jul 13</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--book">Book the Work</span>
+    <span class="badge-format">Image</span>
+  </div>
+  <p class="post-slot__caption">Due for service or planning a build? Book now or get a quote -- we'll tell you straight what your vehicle actually needs.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Wed, Jul 15</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--educate">Educate</span>
+    <span class="badge-format">Reels</span>
+  </div>
+  <p class="post-slot__caption">Tesla-capable doesn't mean guesswork. Here's how EV brake service differs from a gas car -- and why it matters for your range.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Fri, Jul 17</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--proof">Proof</span>
+    <span class="badge-format">Carousel</span>
+  </div>
+  <p class="post-slot__caption">Before / after: full ceramic coating + PPF on a daily driver. Same car -- protected for the next decade.</p>
+</div>
+
+</div>
+</div>
+
+<!-- Week 3 -->
+<div class="week-card">
+<div class="week-card__header">Week 3 <span>Jul 20 -- Jul 24</span></div>
+<div class="post-grid">
+
+<div class="post-slot">
+  <div class="post-slot__date">Mon, Jul 20</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--behind">Behind the Bay</span>
+    <span class="badge-format">Reels</span>
+  </div>
+  <p class="post-slot__caption">Every bay has a story. Meet the techs who've been here since the beginning -- and the ones carrying the standard forward. Three decades of mentorship, one shop floor.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Wed, Jul 22</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--book">Book the Work</span>
+    <span class="badge-format">Image</span>
+  </div>
+  <p class="post-slot__caption">Not sure what your vehicle needs? Start with a conversation. Walk-ins welcome, online quotes available -- no pressure, just a straight answer from ASE-certified techs.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Fri, Jul 24</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--educate">Educate</span>
+    <span class="badge-format">Reels</span>
+  </div>
+  <p class="post-slot__caption">Ceramic coating vs. a good wax: what 30+ years in the bay has taught us about what actually protects your paint -- and what just shines for a week.</p>
+</div>
+
+</div>
+</div>
+
+<!-- Week 4 -->
+<div class="week-card">
+<div class="week-card__header">Week 4 <span>Jul 27 -- Jul 31</span></div>
+<div class="post-grid">
+
+<div class="post-slot">
+  <div class="post-slot__date">Mon, Jul 27</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--proof">Proof</span>
+    <span class="badge-format">Carousel</span>
+  </div>
+  <p class="post-slot__caption">Frame damage to factory alignment -- swipe through a full structural rebuild. This is what "back to spec" looks like when the tools and the training match.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Wed, Jul 29</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--behind">Behind the Bay</span>
+    <span class="badge-format">Reels</span>
+  </div>
+  <p class="post-slot__caption">We opened before most of our customers had driver's licenses. Three decades in Eugene and Springfield -- still family-run, still holding every job to the same line.</p>
+</div>
+
+<div class="post-slot">
+  <div class="post-slot__date">Fri, Jul 31</div>
+  <div class="post-slot__badges">
+    <span class="badge-pillar badge-pillar--book">Book the Work</span>
+    <span class="badge-format">Image</span>
+  </div>
+  <p class="post-slot__caption">Summer miles add up fast. Whether it's a pre-road-trip inspection or that repair you've been putting off, now is the time. Book your service before the season peaks.</p>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- Hashtag Bank -->
+<div class="ds-section">
+<h2>Hashtag Bank</h2>
+<div class="hashtag-grid">
+
+<div class="hashtag-card hashtag-card--educate">
+  <div class="hashtag-card__title">Educate -- Know Your Vehicle</div>
+  <div class="hashtag-card__tags">
+    <span class="hashtag-tag">#autorepairtips</span>
+    <span class="hashtag-tag">#TeslaService</span>
+    <span class="hashtag-tag">#EugeneOR</span>
+    <span class="hashtag-tag">#ASEcertified</span>
+    <span class="hashtag-tag">#EVcare</span>
+    <span class="hashtag-tag">#cartips</span>
+  </div>
+</div>
+
+<div class="hashtag-card hashtag-card--proof">
+  <div class="hashtag-card__title">Proof -- Craftsmanship Results</div>
+  <div class="hashtag-card__tags">
+    <span class="hashtag-tag">#beforeandafter</span>
+    <span class="hashtag-tag">#ceramiccoating</span>
+    <span class="hashtag-tag">#collisionrepair</span>
+    <span class="hashtag-tag">#SpringfieldOR</span>
+    <span class="hashtag-tag">#PPF</span>
+    <span class="hashtag-tag">#autobody</span>
+  </div>
+</div>
+
+<div class="hashtag-card hashtag-card--behind">
+  <div class="hashtag-card__title">Behind the Bay -- 30+ Years</div>
+  <div class="hashtag-card__tags">
+    <span class="hashtag-tag">#behindthescenes</span>
+    <span class="hashtag-tag">#mechaniclife</span>
+    <span class="hashtag-tag">#ASEcertified</span>
+    <span class="hashtag-tag">#EugeneAuto</span>
+    <span class="hashtag-tag">#shoplife</span>
+    <span class="hashtag-tag">#familyowned</span>
+  </div>
+</div>
+
+<div class="hashtag-card hashtag-card--book">
+  <div class="hashtag-card__title">Book the Work</div>
+  <div class="hashtag-card__tags">
+    <span class="hashtag-tag">#booknow</span>
+    <span class="hashtag-tag">#autoservice</span>
+    <span class="hashtag-tag">#EugeneOR</span>
+    <span class="hashtag-tag">#getaquote</span>
+    <span class="hashtag-tag">#carcare</span>
+    <span class="hashtag-tag">#schedulenow</span>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- Footer -->
+<footer class="ds-footer">Prepared by Ducker Creative -- 2026-06-30</footer>
+
 </div></body></html>

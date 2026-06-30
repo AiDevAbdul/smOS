@@ -72,24 +72,24 @@
   /* ---- Gradients ---- */
   --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
   --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
-  /* Signature aurora — blue → indigo → violet. Used ONLY on the progress spine,
+  /* Signature aurora — blue -> indigo -> violet. Used ONLY on the progress spine,
      active states, and hero accent. The one place boldness is spent. */
   --ds-grad-brand: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 52%, #7d3cff 100%);
 
   /* ---- "Operating system" shell (dark hub chrome that frames light reports) ---- */
-  --ds-shell:     #0b0b10;   /* console canvas (cool near-black) */
-  --ds-shell-2:   #16161d;   /* raised shell surface: bars, chips */
-  --ds-shell-3:   #20212a;   /* chip hover / hairline fills */
-  --ds-shell-ink: #f5f5f7;   /* primary text on shell */
-  --ds-shell-mut: #a1a1ab;   /* secondary text on shell */
-  --ds-shell-line:#2a2b35;   /* borders on shell */
+  --ds-shell:     #0b0b10;
+  --ds-shell-2:   #16161d;
+  --ds-shell-3:   #20212a;
+  --ds-shell-ink: #f5f5f7;
+  --ds-shell-mut: #a1a1ab;
+  --ds-shell-line:#2a2b35;
 
   /* ---- Display type scale ---- */
   --ds-fs-display: clamp(30px, 4.2vw, 46px);
 
   /* ---- Motion ---- */
   --ds-ease:       cubic-bezier(.4, 0, .2, 1);
-  --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
+  --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);
   --ds-dur:        220ms;
   --ds-dur-fast:   140ms;
 }
@@ -147,7 +147,7 @@ hr {
 ul, ol { margin: .6em 0 .6em 2px; padding-left: 22px; }
 li { margin: 4px 0; }
 
-/* Tabular numerals everywhere numbers live — prevents column jitter */
+/* Tabular numerals everywhere numbers live */
 .ds-num, td, th, .ds-kpi__value, .ds-metric { font-variant-numeric: tabular-nums; }
 
 /* ------------------------------------------------------------- Layout ---- */
@@ -282,7 +282,6 @@ table.ds-table, .ds-table-wrap table {
 table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
 /* ---------------------------------------------------------- Charts -------- */
-/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
 .ds-chart {
   background: var(--ds-surface);
   border: 1px solid var(--ds-line);
@@ -313,211 +312,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-btn:hover { background: var(--ds-blue-strong); text-decoration: none; }
 .ds-btn:active { transform: translateY(1px); }
-.ds-btn--ghost {
-  background: var(--ds-surface);
-  color: var(--ds-blue-strong);
-  border-color: var(--ds-line-strong);
-}
-.ds-btn--ghost:hover { background: var(--ds-ink-tint); }
-.ds-btn[aria-disabled="true"] {
-  background: transparent;
-  border: 1px dashed var(--ds-line-strong);
-  color: var(--ds-muted);
-  font-weight: 500;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* -------------------------------------------------------- Roadmap --------- */
-/* Vertical journey of numbered steps. Each step = a bold circular badge + a
-   card holding a title, description, and one or more action buttons. Used by
-   /bundle to assemble a client's whole engagement into one shareable hub. */
-.ds-roadmap { margin: 28px 0; }
-.ds-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 18px;
-  padding-bottom: 24px;
-}
-/* connector spine — aurora gradient on delivered steps, grey on pending */
-.ds-step:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 48px;
-  bottom: -4px;
-  width: 2px;
-  background-image: var(--ds-grad-brand);
-}
-.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
-.ds-step-num {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-image: var(--ds-grad-brand);
-  color: #fff;
-  font-weight: 700;
-  font-size: 19px;
-  font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(94,92,230,.32);
-}
-.ds-step.is-pending .ds-step-num {
-  background: var(--ds-surface);
-  color: var(--ds-faint);
-  border: 2px dashed var(--ds-line-strong);
-  box-shadow: none;
-}
-.ds-step-body {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-line);
-  border-radius: var(--ds-r);
-  padding: 18px 20px;
-  box-shadow: var(--ds-shadow-sm);
-  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
-}
-.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
-.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
-.ds-step.is-pending .ds-step-body {
-  background: var(--ds-surface-2);
-  border-style: dashed;
-  box-shadow: none;
-}
-.ds-step-title {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 0 0 4px;
-}
-.ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
-.ds-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-@media (max-width: 640px) {
-  .ds-step { grid-template-columns: 40px 1fr; gap: 14px; }
-  .ds-step-num { width: 40px; height: 40px; font-size: 16px; }
-  .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
-}
-
-/* -------------------------------------------------- Hub (OS console) ------ */
-/* The /bundle deliverables hub is a single-tab "operating system" console: a
-   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
-   frames each report as a bright, elevated "window" (the iframe). Dark chrome
-   around a light document = intentional app framing (no double-hero). */
-.ds-hub {
-  min-height: 100dvh; display: flex; flex-direction: column;
-  background: var(--ds-shell); color: var(--ds-shell-ink);
-}
-.ds-skip {
-  position: absolute; left: 12px; top: -48px; z-index: 100;
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
-  transition: top var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-skip:focus { top: 12px; text-decoration: none; }
-
-/* Header = the hero. Client name + agency + a live progress meter. */
-.ds-hub__head {
-  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
-  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
-  border-bottom: 1px solid var(--ds-shell-line);
-}
-.ds-hub__id { min-width: 0; }
-.ds-hub__eyebrow {
-  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-hub__title {
-  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
-  line-height: 1.02; margin: 0; color: #fff;
-  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
-}
-.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
-
-/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
-.ds-progress { min-width: 220px; flex: 0 1 320px; }
-.ds-progress__label {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
-.ds-progress__track { display: flex; gap: 5px; }
-.ds-progress__seg {
-  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
-}
-.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
-
-/* Chip menu (top + bottom) */
-.ds-hubnav {
-  display: flex; gap: 8px; align-items: center;
-  padding: 12px 24px; background: rgba(11,11,16,.72);
-  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid var(--ds-shell-line);
-  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
-}
-.ds-hubnav::-webkit-scrollbar { display: none; }
-.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
-.ds-hubnav__btn {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
-  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
-  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  border: 1px solid var(--ds-shell-line); cursor: pointer;
-  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
-              transform var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-hubnav__btn .n {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 21px; height: 21px; border-radius: 50%;
-  background: var(--ds-shell-3); color: var(--ds-shell-ink);
-  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
-}
-.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
-.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
-.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
-.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
-.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
-
-/* Viewer = a bright elevated "window" floating in the dark shell. */
-.ds-viewer-wrap {
-  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
-  overflow: hidden; background: var(--ds-bg);
-  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
-}
-.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
-.ds-viewer__loader {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  background: var(--ds-bg); opacity: 0; visibility: hidden;
-  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
-}
-.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
-.ds-spinner {
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
-  animation: ds-spin .8s linear infinite;
-}
-@keyframes ds-spin { to { transform: rotate(360deg); } }
-
-/* Entrance: chips + spine stagger in on load */
-@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
-
-@media (max-width: 760px) {
-  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
-  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
-  .ds-hub__head { padding: 18px 16px 14px; }
-  .ds-progress { flex-basis: 100%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-anim, .ds-spinner { animation: none; }
-  .ds-hubnav__btn:hover { transform: none; }
-}
-
-/* --------------------------------------------------------- Footer --------- */
 
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {
@@ -553,88 +347,625 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   h1 { font-size: 26px; }
   .ds-kpi__value { font-size: 26px; }
 }
+
+/* ============== Report-specific (extends ds-* system) ============== */
+
+/* Phase stepper */
+.phase-stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  margin: 24px 0;
+}
+.phase-step {
+  flex: 1;
+  position: relative;
+  text-align: center;
+}
+.phase-step__connector {
+  position: absolute;
+  top: 24px;
+  left: calc(50% + 28px);
+  right: calc(-50% + 28px);
+  height: 3px;
+  background: var(--ds-line-strong);
+  z-index: 0;
+}
+.phase-step:last-child .phase-step__connector { display: none; }
+.phase-step__circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+.phase-step__circle--a { background: var(--ds-blue); }
+.phase-step__circle--b { background: var(--ds-indigo); }
+.phase-step__circle--c { background: var(--ds-purple); }
+.phase-step__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ds-ink);
+  margin-bottom: 4px;
+}
+.phase-step__timing {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ds-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 6px;
+}
+.phase-step__desc {
+  font-size: 13px;
+  color: var(--ds-ink-2);
+  line-height: 1.4;
+  max-width: 200px;
+  margin: 0 auto;
+}
+@media (max-width: 640px) {
+  .phase-stepper { flex-direction: column; gap: 16px; }
+  .phase-step__connector { display: none; }
+  .phase-step__desc { max-width: none; }
+}
+
+/* Creative angle cards */
+.creative-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.creative-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 22px 24px;
+  box-shadow: var(--ds-shadow-sm);
+  border-left: 4px solid transparent;
+  position: relative;
+}
+.creative-card--pain { border-left-color: var(--ds-red); }
+.creative-card--aspiration { border-left-color: var(--ds-green); }
+.creative-card--proof { border-left-color: var(--ds-blue); }
+.creative-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.creative-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.creative-card__subtitle {
+  font-size: 13px;
+  color: var(--ds-muted);
+  margin-bottom: 10px;
+}
+.creative-card__detail {
+  font-size: 14px;
+  color: var(--ds-ink-2);
+  line-height: 1.5;
+}
+.creative-card__meta {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+/* Donut chart layout */
+.chart-layout {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.chart-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.chart-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.chart-legend__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.chart-legend__label { font-weight: 600; color: var(--ds-ink); }
+.chart-legend__value { color: var(--ds-muted); }
+
+/* Week timeline */
+.week-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+.week-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 20px;
+  box-shadow: var(--ds-shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.week-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.week-card--w1::before { background: var(--ds-blue); }
+.week-card--w2::before { background: var(--ds-amber); }
+.week-card--w3::before { background: var(--ds-indigo); }
+.week-card--w4::before { background: var(--ds-purple); }
+.week-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ds-muted);
+  margin-bottom: 8px;
+}
+.week-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ds-ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.week-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.week-card__list li {
+  font-size: 13px;
+  color: var(--ds-ink-2);
+  padding: 4px 0;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.4;
+}
+.week-card__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ds-line-strong);
+}
+@media (max-width: 760px) {
+  .week-timeline { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .week-timeline { grid-template-columns: 1fr; }
+}
+
+/* Audience list */
+.audience-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+.audience-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  box-shadow: var(--ds-shadow-sm);
+  margin-bottom: 10px;
+}
+.audience-item__num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--ds-grad-brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.audience-item__name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ds-ink);
+}
+.audience-item__detail {
+  font-size: 13px;
+  color: var(--ds-muted);
+  margin-left: auto;
+}
+
+/* Section header */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.section-header h2 { margin-bottom: 0; }
 </style>
 </head>
 <body><div class="ds-wrap">
+
+<!-- Hero -->
 <header class="ds-hero">
-<div class="ds-eyebrow">Ducker Creative</div>
-<h1>Strategy Brief — Blue Rose Auto Care &amp; Repair Services</h1>
-<div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
+  <div class="ds-eyebrow">Ducker Creative</div>
+  <h1>Strategy Brief</h1>
+  <div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
 </header>
-<p><strong>Generated:</strong> 2026-06-20T20:38:46.112Z</p>
-<p><strong>Monthly budget:</strong> 1500</p>
-<p><strong>Daily total:</strong> 50</p>
-<p>&gt; Reply 'approve' in Discord to lock this brief, or 'reject [reason]' to revise.</p>
-<h2>Objective hierarchy</h2>
-<ul>
-<li><strong>Phase A</strong> — Day 0+ — <code>OUTCOME_TRAFFIC</code> · pixel learning — start lighter-funnel, graduate after 200+ events</li>
-<li><strong>Phase B</strong> — Day 14+ — <code>OUTCOME_SALES</code> · promote to conversion objective once pixel has signal</li>
-<li><strong>Phase C</strong> — Day 21+ — <code>OUTCOME_SALES</code> · scale into lookalike + second cluster</li>
-</ul>
-<h2>Budget allocation</h2>
-<p>Cold: 60% · Warm: 25% · LAL: 15%</p>
-<div class="ds-table-wrap"><table><thead><tr><th>Adset</th><th>Role</th><th>Daily</th><th>Approval needed</th></tr></thead><tbody><tr><td>BROAD</td><td>cold</td><td>$10</td><td>no</td></tr><tr><td>Mechanical / Repair — broad</td><td>cold</td><td>$10</td><td>no</td></tr><tr><td>Cosmetic / Luxury Owner</td><td>cold</td><td>$10</td><td>no</td></tr><tr><td>RT_PIX_30D</td><td>warm</td><td>$6.25</td><td>no</td></tr><tr><td>RT_PIX_60D</td><td>warm</td><td>$6.25</td><td>no</td></tr></tbody></table></div>
-<h2>Audience priority (launch order)</h2>
-<ol>
-<li><code>BROAD</code> — broad</li>
-<li><code>INT_MECH_BROAD</code> — Mechanical / Repair — broad (180k-220k)</li>
-<li><code>INT_LUX_COS</code> — Cosmetic / Luxury Owner (55k-80k)</li>
-<li><code>RT_PIX_30D</code> — retargeting</li>
-<li><code>RT_PIX_60D</code> — retargeting</li>
-</ol>
-<h2>Creative angles (3-way test)</h2>
-<h3>PAIN — Education / Myth-Busting</h3>
-<ul>
-<li>Hook: Problem-led question</li>
-<li>Format: <code>reels_15_30s</code></li>
-<li>Direction: Lead with the pain in 'Education / Myth-Busting'. Whitespace — 'is ceramic coating worth it' type educational reels build trust and drive saved/share metrics. Strong long-term flywheel.</li>
-</ul>
-<h3>ASPIRATION — Before/After Transformation</h3>
-<ul>
-<li>Hook: Outcome-led visual</li>
-<li>Format: <code>reels_15_30s</code></li>
-<li>Direction: Show the outcome from 'Before/After Transformation'. Visual proof — cosmetic side's strongest angle. Blue Rose has the work; need photographer/videographer commitment.</li>
-</ul>
-<h3>PROOF — Local Pride / Family-Owned</h3>
-<ul>
-<li>Hook: Authority / social proof</li>
-<li>Format: <code>single_image</code></li>
-<li>Direction: Establish credibility via 'Local Pride / Family-Owned'. Pair with 30+ years legacy framing for brand-awareness layer.</li>
-</ul>
-<h2>Success metrics</h2>
-<p><strong>Cold:</strong> CTR ≥ 1.00% · CPM ≤ $30 · CPA ≤ $50 · ROAS ≥ 1.5</p>
-<p><strong>Warm:</strong> CPA ≤ $30 · ROAS ≥ 3</p>
-<p><strong>Scale gate:</strong> 3 consecutive days ROAS &gt; target before any budget increase</p>
-<h2>30-day calendar</h2>
-<h3>Week 1</h3>
-<ul>
-<li>Launch Phase A — OUTCOME_TRAFFIC</li>
-<li>3 creatives × 2 audiences</li>
-<li>Daily monitoring; no scaling decisions</li>
-</ul>
-<h3>Week 2</h3>
-<ul>
-<li>Kill underperformers per pause thresholds</li>
-<li>Refresh worst-performing creative</li>
-<li>Begin reviewing audience-level signals</li>
-</ul>
-<h3>Week 3</h3>
-<ul>
-<li>Begin Phase B — OUTCOME_SALES</li>
-<li>Continue cold prospecting</li>
-<li>Evaluate scaling gate (3-day ROAS &gt; target)</li>
-</ul>
-<h3>Week 4</h3>
-<ul>
-<li>Begin Phase C — OUTCOME_SALES</li>
-<li>Launch LAL 1% if gate passed</li>
-<li>Plan month-2 budget and creative refresh</li>
-</ul>
-<h2>Assumptions / divergences</h2>
-<ul>
-<li>Re-grounded from $3000/mo planning range to client-confirmed $1,500/mo (paid ads only) on 2026-06-29; daily budgets scaled 0.5x, cold/warm/lal split preserved.</li>
-</ul>
-<hr>
-<p><em>Generated by smOS · brief is deterministic from inputs; Claude appends qualitative reasoning above.</em></p>
-<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
+
+<!-- Budget Overview KPIs -->
+<section class="ds-section">
+  <div class="ds-kpi-grid">
+    <div class="ds-kpi">
+      <div class="ds-kpi__label">Monthly Budget</div>
+      <div class="ds-kpi__value">$1,500</div>
+      <div class="ds-kpi__delta">Paid media spend</div>
+    </div>
+    <div class="ds-kpi">
+      <div class="ds-kpi__label">Daily Budget</div>
+      <div class="ds-kpi__value">$50</div>
+      <div class="ds-kpi__delta">Across all ad sets</div>
+    </div>
+    <div class="ds-kpi">
+      <div class="ds-kpi__label">Objective</div>
+      <div class="ds-kpi__value" style="font-size:24px;">Traffic &rarr; Sales</div>
+      <div class="ds-kpi__delta">Phased escalation</div>
+    </div>
+    <div class="ds-kpi">
+      <div class="ds-kpi__label">Duration</div>
+      <div class="ds-kpi__value">30</div>
+      <div class="ds-kpi__delta">Days (initial phase)</div>
+    </div>
+  </div>
+</section>
+
+<!-- Budget Split Donut Chart -->
+<section class="ds-section">
+  <h2>Budget Allocation</h2>
+  <div class="ds-chart">
+    <div class="chart-layout">
+      <svg width="220" height="220" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Cold 60% = 216deg, Warm 25% = 90deg, LAL 15% = 54deg -->
+        <!-- Cold: 0 to 216deg -->
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#e2e2e7" stroke-width="32"/>
+        <!-- Cold 60% - blue -->
+        <circle cx="110" cy="110" r="85" fill="none"
+                stroke="#0071e3" stroke-width="32"
+                stroke-dasharray="320.44 533.73"
+                stroke-dashoffset="133.43"
+                stroke-linecap="round"/>
+        <!-- Warm 25% - amber -->
+        <circle cx="110" cy="110" r="85" fill="none"
+                stroke="#ff9f0a" stroke-width="32"
+                stroke-dasharray="133.52 533.73"
+                stroke-dashoffset="-187.01"
+                stroke-linecap="round"/>
+        <!-- LAL 15% - purple -->
+        <circle cx="110" cy="110" r="85" fill="none"
+                stroke="#af52de" stroke-width="32"
+                stroke-dasharray="80.11 533.73"
+                stroke-dashoffset="-320.53"
+                stroke-linecap="round"/>
+        <!-- Center text -->
+        <text x="110" y="104" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="700" fill="#1d1d1f">$50</text>
+        <text x="110" y="124" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500" fill="#6e6e73">per day</text>
+      </svg>
+      <div class="chart-legend">
+        <div class="chart-legend__item">
+          <div class="chart-legend__swatch" style="background:#0071e3;"></div>
+          <span class="chart-legend__label">Cold Prospecting</span>
+          <span class="chart-legend__value">60% &mdash; $30/day</span>
+        </div>
+        <div class="chart-legend__item">
+          <div class="chart-legend__swatch" style="background:#ff9f0a;"></div>
+          <span class="chart-legend__label">Warm Retargeting</span>
+          <span class="chart-legend__value">25% &mdash; $12.50/day</span>
+        </div>
+        <div class="chart-legend__item">
+          <div class="chart-legend__swatch" style="background:#af52de;"></div>
+          <span class="chart-legend__label">Lookalike Audiences</span>
+          <span class="chart-legend__value">15% &mdash; $7.50/day</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Phase Timeline -->
+<section class="ds-section">
+  <h2>Objective Hierarchy</h2>
+  <p style="color:var(--ds-muted); font-size:14px; margin-bottom:20px;">Three-phase escalation from pixel learning to full conversion optimization.</p>
+  <div class="phase-stepper">
+    <div class="phase-step">
+      <div class="phase-step__connector" style="background: linear-gradient(90deg, var(--ds-blue), var(--ds-indigo));"></div>
+      <div class="phase-step__circle phase-step__circle--a">A</div>
+      <div class="phase-step__label">Traffic</div>
+      <div class="phase-step__timing">Day 0+</div>
+      <div class="phase-step__desc">Pixel learning phase. Drive traffic to build event data. Graduate after 200+ events.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step__connector" style="background: linear-gradient(90deg, var(--ds-indigo), var(--ds-purple));"></div>
+      <div class="phase-step__circle phase-step__circle--b">B</div>
+      <div class="phase-step__label">Conversions</div>
+      <div class="phase-step__timing">Day 14+</div>
+      <div class="phase-step__desc">Promote to conversion objective once pixel has sufficient signal.</div>
+    </div>
+    <div class="phase-step">
+      <div class="phase-step__circle phase-step__circle--c">C</div>
+      <div class="phase-step__label">Scale</div>
+      <div class="phase-step__timing">Day 21+</div>
+      <div class="phase-step__desc">Scale into lookalike audiences and secondary interest clusters.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Ad Sets Table -->
+<section class="ds-section">
+  <h2>Ad Set Configuration</h2>
+  <div class="ds-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ad Set</th>
+          <th>Role</th>
+          <th>Daily Budget</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Broad Targeting</strong></td>
+          <td><span class="ds-badge ds-badge--info">Cold</span></td>
+          <td>$10.00</td>
+          <td><span class="ds-badge ds-badge--good">Auto-approved</span></td>
+        </tr>
+        <tr>
+          <td><strong>Mechanical / Repair</strong></td>
+          <td><span class="ds-badge ds-badge--info">Cold</span></td>
+          <td>$10.00</td>
+          <td><span class="ds-badge ds-badge--good">Auto-approved</span></td>
+        </tr>
+        <tr>
+          <td><strong>Cosmetic / Luxury Owner</strong></td>
+          <td><span class="ds-badge ds-badge--info">Cold</span></td>
+          <td>$10.00</td>
+          <td><span class="ds-badge ds-badge--good">Auto-approved</span></td>
+        </tr>
+        <tr>
+          <td><strong>Pixel Retargeting (30-Day)</strong></td>
+          <td><span class="ds-badge ds-badge--warn">Warm</span></td>
+          <td>$6.25</td>
+          <td><span class="ds-badge ds-badge--good">Auto-approved</span></td>
+        </tr>
+        <tr>
+          <td><strong>Pixel Retargeting (60-Day)</strong></td>
+          <td><span class="ds-badge ds-badge--warn">Warm</span></td>
+          <td>$6.25</td>
+          <td><span class="ds-badge ds-badge--good">Auto-approved</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Audiences -->
+<section class="ds-section">
+  <h2>Audience Priority</h2>
+  <p style="color:var(--ds-muted); font-size:14px; margin-bottom:16px;">Launch order from broadest reach to warmest retargeting pools.</p>
+  <ol class="audience-list">
+    <li class="audience-item">
+      <div class="audience-item__num">1</div>
+      <div>
+        <div class="audience-item__name">Broad Targeting</div>
+        <div style="font-size:13px; color:var(--ds-muted);">Maximum reach, algorithmic optimization</div>
+      </div>
+      <div class="audience-item__detail"><span class="ds-badge ds-badge--info">Cold</span></div>
+    </li>
+    <li class="audience-item">
+      <div class="audience-item__num">2</div>
+      <div>
+        <div class="audience-item__name">Mechanical / Repair Interest</div>
+        <div style="font-size:13px; color:var(--ds-muted);">Estimated reach: 180k - 220k</div>
+      </div>
+      <div class="audience-item__detail"><span class="ds-badge ds-badge--info">Cold</span></div>
+    </li>
+    <li class="audience-item">
+      <div class="audience-item__num">3</div>
+      <div>
+        <div class="audience-item__name">Cosmetic / Luxury Owner</div>
+        <div style="font-size:13px; color:var(--ds-muted);">Estimated reach: 55k - 80k</div>
+      </div>
+      <div class="audience-item__detail"><span class="ds-badge ds-badge--info">Cold</span></div>
+    </li>
+    <li class="audience-item">
+      <div class="audience-item__num">4</div>
+      <div>
+        <div class="audience-item__name">Pixel Retargeting (30-Day)</div>
+        <div style="font-size:13px; color:var(--ds-muted);">Site visitors within 30 days</div>
+      </div>
+      <div class="audience-item__detail"><span class="ds-badge ds-badge--warn">Warm</span></div>
+    </li>
+    <li class="audience-item">
+      <div class="audience-item__num">5</div>
+      <div>
+        <div class="audience-item__name">Pixel Retargeting (60-Day)</div>
+        <div style="font-size:13px; color:var(--ds-muted);">Site visitors within 60 days</div>
+      </div>
+      <div class="audience-item__detail"><span class="ds-badge ds-badge--warn">Warm</span></div>
+    </li>
+  </ol>
+</section>
+
+<!-- Creative Angles -->
+<section class="ds-section">
+  <h2>Creative Angles</h2>
+  <p style="color:var(--ds-muted); font-size:14px; margin-bottom:16px;">Three-way test across distinct messaging strategies to identify the strongest performer.</p>
+  <div class="creative-grid">
+
+    <div class="creative-card creative-card--pain">
+      <div class="creative-card__header">
+        <span class="creative-card__title">Education / Myth-Busting</span>
+      </div>
+      <div class="creative-card__subtitle">Problem-led question hook</div>
+      <div class="creative-card__detail">
+        Lead with the customer's pain point. "Is ceramic coating worth it?" style educational reels that build trust, drive saves, and generate share metrics. Strong long-term flywheel for awareness.
+      </div>
+      <div class="creative-card__meta">
+        <span class="ds-badge ds-badge--bad">Pain</span>
+        <span class="ds-badge ds-badge--neutral">Reels 15-30s</span>
+      </div>
+    </div>
+
+    <div class="creative-card creative-card--aspiration">
+      <div class="creative-card__header">
+        <span class="creative-card__title">Before / After Transformation</span>
+      </div>
+      <div class="creative-card__subtitle">Outcome-led visual hook</div>
+      <div class="creative-card__detail">
+        Visual proof of results. The cosmetic side's strongest angle. Leverage Blue Rose's existing portfolio of completed work with photographer and videographer commitment.
+      </div>
+      <div class="creative-card__meta">
+        <span class="ds-badge ds-badge--good">Aspiration</span>
+        <span class="ds-badge ds-badge--neutral">Reels 15-30s</span>
+      </div>
+    </div>
+
+    <div class="creative-card creative-card--proof">
+      <div class="creative-card__header">
+        <span class="creative-card__title">Local Pride / Family-Owned</span>
+      </div>
+      <div class="creative-card__subtitle">Authority and social proof hook</div>
+      <div class="creative-card__detail">
+        Establish credibility through local heritage and family legacy. Pair with 30+ years of experience framing for a brand-awareness layer that builds community trust.
+      </div>
+      <div class="creative-card__meta">
+        <span class="ds-badge ds-badge--info">Proof</span>
+        <span class="ds-badge ds-badge--neutral">Single Image</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Success Metrics -->
+<section class="ds-section">
+  <h2>Success Metrics</h2>
+  <div class="ds-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Funnel Stage</th>
+          <th>CTR</th>
+          <th>CPM</th>
+          <th>CPA</th>
+          <th>ROAS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ds-badge ds-badge--info">Cold</span></td>
+          <td><span class="ds-badge ds-badge--good">&ge; 1.00%</span></td>
+          <td><span class="ds-badge ds-badge--good">&le; $30</span></td>
+          <td><span class="ds-badge ds-badge--good">&le; $50</span></td>
+          <td><span class="ds-badge ds-badge--good">&ge; 1.5</span></td>
+        </tr>
+        <tr>
+          <td><span class="ds-badge ds-badge--warn">Warm</span></td>
+          <td><span style="color:var(--ds-muted); font-size:13px;">&mdash;</span></td>
+          <td><span style="color:var(--ds-muted); font-size:13px;">&mdash;</span></td>
+          <td><span class="ds-badge ds-badge--good">&le; $30</span></td>
+          <td><span class="ds-badge ds-badge--good">&ge; 3.0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ds-callout ds-callout--good" style="margin-top:16px;">
+    <strong>Scale Gate:</strong> Budget increases require 3 consecutive days with ROAS exceeding the target threshold for that funnel stage. No exceptions.
+  </div>
+</section>
+
+<!-- 30-Day Calendar -->
+<section class="ds-section">
+  <h2>30-Day Launch Calendar</h2>
+  <div class="week-timeline">
+    <div class="week-card week-card--w1">
+      <div class="week-card__label">Week 1</div>
+      <div class="week-card__title">Launch &amp; Learn</div>
+      <ul class="week-card__list">
+        <li>Launch Phase A with traffic objective</li>
+        <li>Deploy 3 creatives across 2 audiences</li>
+        <li>Daily monitoring; no scaling decisions</li>
+      </ul>
+    </div>
+    <div class="week-card week-card--w2">
+      <div class="week-card__label">Week 2</div>
+      <div class="week-card__title">Optimize &amp; Prune</div>
+      <ul class="week-card__list">
+        <li>Kill underperformers per pause thresholds</li>
+        <li>Refresh worst-performing creative</li>
+        <li>Begin reviewing audience-level signals</li>
+      </ul>
+    </div>
+    <div class="week-card week-card--w3">
+      <div class="week-card__label">Week 3</div>
+      <div class="week-card__title">Convert &amp; Validate</div>
+      <ul class="week-card__list">
+        <li>Begin Phase B with conversion objective</li>
+        <li>Continue cold prospecting</li>
+        <li>Evaluate scaling gate (3-day ROAS check)</li>
+      </ul>
+    </div>
+    <div class="week-card week-card--w4">
+      <div class="week-card__label">Week 4</div>
+      <div class="week-card__title">Scale &amp; Expand</div>
+      <ul class="week-card__list">
+        <li>Begin Phase C with scale objective</li>
+        <li>Launch 1% lookalike if gate passed</li>
+        <li>Plan month-2 budget and creative refresh</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Budget Note -->
+<section class="ds-section">
+  <div class="ds-callout ds-callout--warn">
+    <strong>Budget Note:</strong> Monthly budget was re-grounded from $3,000/mo to $1,500/mo (paid ads only) on June 29, 2026. All daily budgets scaled proportionally; cold/warm/lookalike split preserved.
+  </div>
+</section>
+
+<footer class="ds-footer">Prepared by Ducker Creative &middot; June 30, 2026</footer>
+
 </div></body></html>

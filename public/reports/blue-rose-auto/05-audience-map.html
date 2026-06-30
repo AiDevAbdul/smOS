@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audience Map</title>
+<title>Audience Map — Blue Rose Auto Care &amp; Repair Services</title>
 
 <style>/* ============================================================================
    smOS Design System — "Cupertino"
@@ -282,7 +282,6 @@ table.ds-table, .ds-table-wrap table {
 table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
 /* ---------------------------------------------------------- Charts -------- */
-/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
 .ds-chart {
   background: var(--ds-surface);
   border: 1px solid var(--ds-line);
@@ -319,205 +318,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   border-color: var(--ds-line-strong);
 }
 .ds-btn--ghost:hover { background: var(--ds-ink-tint); }
-.ds-btn[aria-disabled="true"] {
-  background: transparent;
-  border: 1px dashed var(--ds-line-strong);
-  color: var(--ds-muted);
-  font-weight: 500;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* -------------------------------------------------------- Roadmap --------- */
-/* Vertical journey of numbered steps. Each step = a bold circular badge + a
-   card holding a title, description, and one or more action buttons. Used by
-   /bundle to assemble a client's whole engagement into one shareable hub. */
-.ds-roadmap { margin: 28px 0; }
-.ds-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 18px;
-  padding-bottom: 24px;
-}
-/* connector spine — aurora gradient on delivered steps, grey on pending */
-.ds-step:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 48px;
-  bottom: -4px;
-  width: 2px;
-  background-image: var(--ds-grad-brand);
-}
-.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
-.ds-step-num {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-image: var(--ds-grad-brand);
-  color: #fff;
-  font-weight: 700;
-  font-size: 19px;
-  font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(94,92,230,.32);
-}
-.ds-step.is-pending .ds-step-num {
-  background: var(--ds-surface);
-  color: var(--ds-faint);
-  border: 2px dashed var(--ds-line-strong);
-  box-shadow: none;
-}
-.ds-step-body {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-line);
-  border-radius: var(--ds-r);
-  padding: 18px 20px;
-  box-shadow: var(--ds-shadow-sm);
-  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
-}
-.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
-.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
-.ds-step.is-pending .ds-step-body {
-  background: var(--ds-surface-2);
-  border-style: dashed;
-  box-shadow: none;
-}
-.ds-step-title {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 0 0 4px;
-}
-.ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
-.ds-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-@media (max-width: 640px) {
-  .ds-step { grid-template-columns: 40px 1fr; gap: 14px; }
-  .ds-step-num { width: 40px; height: 40px; font-size: 16px; }
-  .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
-}
-
-/* -------------------------------------------------- Hub (OS console) ------ */
-/* The /bundle deliverables hub is a single-tab "operating system" console: a
-   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
-   frames each report as a bright, elevated "window" (the iframe). Dark chrome
-   around a light document = intentional app framing (no double-hero). */
-.ds-hub {
-  min-height: 100dvh; display: flex; flex-direction: column;
-  background: var(--ds-shell); color: var(--ds-shell-ink);
-}
-.ds-skip {
-  position: absolute; left: 12px; top: -48px; z-index: 100;
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
-  transition: top var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-skip:focus { top: 12px; text-decoration: none; }
-
-/* Header = the hero. Client name + agency + a live progress meter. */
-.ds-hub__head {
-  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
-  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
-  border-bottom: 1px solid var(--ds-shell-line);
-}
-.ds-hub__id { min-width: 0; }
-.ds-hub__eyebrow {
-  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-hub__title {
-  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
-  line-height: 1.02; margin: 0; color: #fff;
-  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
-}
-.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
-
-/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
-.ds-progress { min-width: 220px; flex: 0 1 320px; }
-.ds-progress__label {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
-.ds-progress__track { display: flex; gap: 5px; }
-.ds-progress__seg {
-  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
-}
-.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
-
-/* Chip menu (top + bottom) */
-.ds-hubnav {
-  display: flex; gap: 8px; align-items: center;
-  padding: 12px 24px; background: rgba(11,11,16,.72);
-  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid var(--ds-shell-line);
-  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
-}
-.ds-hubnav::-webkit-scrollbar { display: none; }
-.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
-.ds-hubnav__btn {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
-  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
-  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  border: 1px solid var(--ds-shell-line); cursor: pointer;
-  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
-              transform var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-hubnav__btn .n {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 21px; height: 21px; border-radius: 50%;
-  background: var(--ds-shell-3); color: var(--ds-shell-ink);
-  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
-}
-.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
-.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
-.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
-.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
-.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
-
-/* Viewer = a bright elevated "window" floating in the dark shell. */
-.ds-viewer-wrap {
-  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
-  overflow: hidden; background: var(--ds-bg);
-  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
-}
-.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
-.ds-viewer__loader {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  background: var(--ds-bg); opacity: 0; visibility: hidden;
-  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
-}
-.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
-.ds-spinner {
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
-  animation: ds-spin .8s linear infinite;
-}
-@keyframes ds-spin { to { transform: rotate(360deg); } }
-
-/* Entrance: chips + spine stagger in on load */
-@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
-
-@media (max-width: 760px) {
-  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
-  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
-  .ds-hub__head { padding: 18px 16px 14px; }
-  .ds-progress { flex-basis: 100%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-anim, .ds-spinner { animation: none; }
-  .ds-hubnav__btn:hover { transform: none; }
-}
-
-/* --------------------------------------------------------- Footer --------- */
 
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {
@@ -553,36 +353,521 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   h1 { font-size: 26px; }
   .ds-kpi__value { font-size: 26px; }
 }
+
+/* ============================================================================
+   Report-specific styles (audience-map)
+   ============================================================================ */
+
+/* -- Cluster cards --------------------------------------------------------- */
+.cluster-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 22px 24px;
+  box-shadow: var(--ds-shadow-sm);
+  border-left: 5px solid var(--ds-blue);
+  margin-bottom: 16px;
+}
+.cluster-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.cluster-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ds-ink);
+}
+.cluster-card__meta {
+  font-size: 13px;
+  color: var(--ds-muted);
+  margin-top: 2px;
+}
+.cluster-card__badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* -- Size bar -------------------------------------------------------------- */
+.size-bar {
+  margin: 12px 0 16px;
+}
+.size-bar__track {
+  height: 8px;
+  background: var(--ds-ink-tint);
+  border-radius: var(--ds-r-pill);
+  overflow: hidden;
+}
+.size-bar__fill {
+  height: 100%;
+  border-radius: var(--ds-r-pill);
+  transition: width .4s var(--ds-ease-out);
+}
+.size-bar__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ds-muted);
+  margin-top: 5px;
+}
+
+/* -- Interest pills -------------------------------------------------------- */
+.interest-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.interest-pill {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-ink-tint);
+  color: var(--ds-ink-2);
+  line-height: 1.4;
+}
+
+/* -- Retargeting funnel ---------------------------------------------------- */
+.funnel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.funnel-layer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 14px 18px;
+  box-shadow: var(--ds-shadow-sm);
+  border-left: 4px solid var(--ds-red);
+}
+.funnel-layer--warm { border-left-color: var(--ds-amber); }
+.funnel-layer--cool { border-left-color: var(--ds-blue); }
+.funnel-layer__temp {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  min-width: 44px;
+}
+.funnel-layer__temp--hot  { color: var(--ds-red); }
+.funnel-layer__temp--warm { color: var(--ds-amber); }
+.funnel-layer__temp--cool { color: var(--ds-blue); }
+.funnel-layer__name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ds-ink);
+  font-family: var(--ds-font-mono);
+}
+.funnel-layer__desc {
+  font-size: 13px;
+  color: var(--ds-muted);
+  margin-left: auto;
+  text-align: right;
+}
+
+/* -- Geo card -------------------------------------------------------------- */
+.geo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+.geo-item__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+  margin-bottom: 3px;
+}
+.geo-item__value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ds-ink);
+}
+
+/* -- Budget badge in table ------------------------------------------------- */
+.budget-badge {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-green-tint);
+  color: #1c7a3e;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .funnel-layer { flex-wrap: wrap; gap: 6px; }
+  .funnel-layer__desc { margin-left: 0; text-align: left; width: 100%; margin-top: 4px; }
+  .cluster-card__header { flex-direction: column; }
+}
 </style>
 </head>
 <body><div class="ds-wrap">
+
+<!-- ===== HERO ===== -->
 <header class="ds-hero">
-<div class="ds-eyebrow">Ducker Creative</div>
-<h1>Audience Map</h1>
-<div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
+  <div class="ds-eyebrow">Ducker Creative</div>
+  <h1>Audience Map</h1>
+  <div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
 </header>
-<h2>Overview</h2>
-<p>Targeting plan for <strong>Blue Rose Auto Care &amp; Repair Services</strong> — 5 interest clusters, 6 retargeting layers, 4 lookalikes.</p>
-<h2>Geo &amp; Demographics</h2>
-<ul>
-<li><strong>Geo:</strong> 30mi around Springfield, OR 97478</li>
-<li><strong>Age:</strong> 28–60 · <strong>Gender:</strong> all</li>
-<li><strong>Language:</strong> en</li>
-</ul>
-<h2>Interest Clusters</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Cluster</th><th>Objective</th><th>Income layer</th><th>Est. size</th><th>Interests</th></tr></thead><tbody><tr><td>Mechanical / Repair — broad</td><td>LEADS</td><td>mid_broad</td><td>180k-220k</td><td>Auto repair, Car maintenance, Brakes, Engine, Oil change</td></tr><tr><td>Cosmetic / Luxury Owner</td><td>LEADS, OUTCOME_AWARENESS</td><td>higher_income_zips_plus_luxury_interest</td><td>55k-80k</td><td>Ceramic coating, Paint protection film, Car detailing, Auto detailing, Window tinting</td></tr><tr><td>Tesla &amp; EV Owners</td><td>LEADS, OUTCOME_AWARENESS</td><td>—</td><td>8k-15k</td><td>Tesla, Inc., Tesla Model 3, Tesla Model Y, Tesla Model S, Electric vehicle</td></tr><tr><td>Truck / Off-road / Lifted</td><td>LEADS</td><td>—</td><td>35k-55k</td><td>Ford F-150, Ram Trucks, Chevrolet Silverado, Jeep Wrangler, Off-roading</td></tr><tr><td>Local Fleet Managers</td><td>LEADS</td><td>—</td><td>5k-12k</td><td>Fleet management, Small business owner, Contractor (general), Construction</td></tr></tbody></table></div>
-<h2>Retargeting Layers</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Layer</th><th>Source</th><th>Window</th><th>Min-size warning</th></tr></thead><tbody><tr><td>RT_PIX_30D</td><td>pixel</td><td>30d</td><td>1000</td></tr><tr><td>RT_PIX_60D</td><td>pixel</td><td>60d</td><td>1000</td></tr><tr><td>RT_IG_ENG_365D</td><td>instagram_engagement</td><td>365d</td><td>—</td></tr><tr><td>RT_FB_ENG_365D</td><td>facebook_engagement</td><td>365d</td><td>—</td></tr><tr><td>RT_FORM_SUBMIT_180D</td><td>pixel_event:Lead</td><td>180d</td><td>—</td></tr><tr><td>RT_VIDEO_75PCT_30D</td><td>video_view_75pct</td><td>30d</td><td>—</td></tr></tbody></table></div>
-<h2>Lookalikes</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Lookalike</th><th>Seed</th><th>Country</th><th>%</th></tr></thead><tbody><tr><td>LAL_CUSTOMER_LIST_1PCT</td><td>customer_list_email_phone_12mo</td><td>US</td><td>1%</td></tr><tr><td>LAL_CUSTOMER_LIST_3PCT</td><td>customer_list_email_phone_12mo</td><td>US</td><td>3%</td></tr><tr><td>LAL_CUSTOMER_LIST_5PCT</td><td>customer_list_email_phone_12mo</td><td>US</td><td>5%</td></tr><tr><td>LAL_LEAD_180D_1PCT</td><td>RT_FORM_SUBMIT_180D</td><td>US</td><td>1%</td></tr></tbody></table></div>
-<h2>Exclusions</h2>
-<ul>
-<li><strong>EXC_RECENT_LEADS_30D</strong> — exclude from all cold prospecting adsets to avoid double-counting and stale CPL inflation</li>
-<li><strong>EXC_EMPLOYEES</strong> — exclude employees from every adset (vanity engagement risk)</li>
-<li><strong>EXC_PURCHASED_60D</strong> — exclude from acquisition adsets, include in upsell adsets only</li>
-</ul>
-<h2>Recommended Ad Sets</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Ad set</th><th>Cluster</th><th>Objective</th><th>Daily budget</th></tr></thead><tbody><tr><td>FEED_2860_INTLUXCOS</td><td>INT_LUX_COS</td><td>OUTCOME_LEADS</td><td>$25–$50</td></tr><tr><td>REELS_2860_INTTESLAEV</td><td>INT_TESLA_EV</td><td>OUTCOME_LEADS</td><td>$15–$30</td></tr><tr><td>FEED_2860_INTMECHBROAD</td><td>INT_MECH_BROAD</td><td>OUTCOME_LEADS</td><td>$20–$40</td></tr><tr><td>BROAD_2860_AWARE</td><td>broad_geo_only</td><td>OUTCOME_AWARENESS</td><td>$15–$30</td></tr></tbody></table></div>
-<p>_Generated by smOS <code>/audience-map</code>. Overlap analysis is finalized against live API data before launch._</p>
-<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
+
+<!-- ===== KPI STRIP ===== -->
+<div class="ds-kpi-grid">
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Interest Clusters</div>
+    <div class="ds-kpi__value">5</div>
+  </div>
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Retargeting Layers</div>
+    <div class="ds-kpi__value">6</div>
+  </div>
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Lookalikes</div>
+    <div class="ds-kpi__value">4</div>
+  </div>
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Total Est. Reach</div>
+    <div class="ds-kpi__value">283k&ndash;382k</div>
+  </div>
+</div>
+
+<!-- ===== GEO & DEMOGRAPHICS ===== -->
+<div class="ds-section">
+  <h2>Geo &amp; Demographics</h2>
+  <div class="ds-card">
+    <div class="geo-grid">
+      <div class="geo-item">
+        <div class="geo-item__label">Radius</div>
+        <div class="geo-item__value">30 mi around Springfield, OR 97478</div>
+      </div>
+      <div class="geo-item">
+        <div class="geo-item__label">Age</div>
+        <div class="geo-item__value">28&ndash;60</div>
+      </div>
+      <div class="geo-item">
+        <div class="geo-item__label">Gender</div>
+        <div class="geo-item__value">All</div>
+      </div>
+      <div class="geo-item">
+        <div class="geo-item__label">Language</div>
+        <div class="geo-item__value">English</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INTEREST CLUSTERS ===== -->
+<div class="ds-section">
+  <h2>Interest Clusters</h2>
+
+  <!-- 1. Mechanical / Repair — broad -->
+  <div class="cluster-card" style="border-left-color: var(--ds-blue);">
+    <div class="cluster-card__header">
+      <div>
+        <h3 class="cluster-card__title">Mechanical / Repair &mdash; Broad</h3>
+        <div class="cluster-card__meta">Income layer: mid-broad</div>
+      </div>
+      <div class="cluster-card__badges">
+        <span class="ds-badge ds-badge--info">LEADS</span>
+      </div>
+    </div>
+    <div class="size-bar">
+      <div class="size-bar__track">
+        <div class="size-bar__fill" style="width: 100%; background: var(--ds-blue);"></div>
+      </div>
+      <div class="size-bar__label">
+        <span>Estimated size</span>
+        <span>180k&ndash;220k</span>
+      </div>
+    </div>
+    <div class="interest-pills">
+      <span class="interest-pill">Auto repair</span>
+      <span class="interest-pill">Car maintenance</span>
+      <span class="interest-pill">Brakes</span>
+      <span class="interest-pill">Engine</span>
+      <span class="interest-pill">Oil change</span>
+    </div>
+  </div>
+
+  <!-- 2. Cosmetic / Luxury Owner -->
+  <div class="cluster-card" style="border-left-color: var(--ds-purple);">
+    <div class="cluster-card__header">
+      <div>
+        <h3 class="cluster-card__title">Cosmetic / Luxury Owner</h3>
+        <div class="cluster-card__meta">Income layer: higher-income</div>
+      </div>
+      <div class="cluster-card__badges">
+        <span class="ds-badge ds-badge--info">LEADS</span>
+        <span class="ds-badge ds-badge--neutral">AWARENESS</span>
+      </div>
+    </div>
+    <div class="size-bar">
+      <div class="size-bar__track">
+        <div class="size-bar__fill" style="width: 36%; background: var(--ds-purple);"></div>
+      </div>
+      <div class="size-bar__label">
+        <span>Estimated size</span>
+        <span>55k&ndash;80k</span>
+      </div>
+    </div>
+    <div class="interest-pills">
+      <span class="interest-pill">Ceramic coating</span>
+      <span class="interest-pill">Paint protection film</span>
+      <span class="interest-pill">Car detailing</span>
+      <span class="interest-pill">Auto detailing</span>
+      <span class="interest-pill">Window tinting</span>
+    </div>
+  </div>
+
+  <!-- 3. Tesla & EV Owners -->
+  <div class="cluster-card" style="border-left-color: var(--ds-green);">
+    <div class="cluster-card__header">
+      <div>
+        <h3 class="cluster-card__title">Tesla &amp; EV Owners</h3>
+      </div>
+      <div class="cluster-card__badges">
+        <span class="ds-badge ds-badge--info">LEADS</span>
+        <span class="ds-badge ds-badge--neutral">AWARENESS</span>
+      </div>
+    </div>
+    <div class="size-bar">
+      <div class="size-bar__track">
+        <div class="size-bar__fill" style="width: 7%; background: var(--ds-green); min-width: 24px;"></div>
+      </div>
+      <div class="size-bar__label">
+        <span>Estimated size</span>
+        <span>8k&ndash;15k</span>
+      </div>
+    </div>
+    <div class="interest-pills">
+      <span class="interest-pill">Tesla, Inc.</span>
+      <span class="interest-pill">Tesla Model 3</span>
+      <span class="interest-pill">Tesla Model Y</span>
+      <span class="interest-pill">Tesla Model S</span>
+      <span class="interest-pill">Electric vehicle</span>
+    </div>
+  </div>
+
+  <!-- 4. Truck / Off-road / Lifted -->
+  <div class="cluster-card" style="border-left-color: var(--ds-amber);">
+    <div class="cluster-card__header">
+      <div>
+        <h3 class="cluster-card__title">Truck / Off-road / Lifted</h3>
+      </div>
+      <div class="cluster-card__badges">
+        <span class="ds-badge ds-badge--info">LEADS</span>
+      </div>
+    </div>
+    <div class="size-bar">
+      <div class="size-bar__track">
+        <div class="size-bar__fill" style="width: 25%; background: var(--ds-amber);"></div>
+      </div>
+      <div class="size-bar__label">
+        <span>Estimated size</span>
+        <span>35k&ndash;55k</span>
+      </div>
+    </div>
+    <div class="interest-pills">
+      <span class="interest-pill">Ford F-150</span>
+      <span class="interest-pill">Ram Trucks</span>
+      <span class="interest-pill">Chevrolet Silverado</span>
+      <span class="interest-pill">Jeep Wrangler</span>
+      <span class="interest-pill">Off-roading</span>
+    </div>
+  </div>
+
+  <!-- 5. Local Fleet Managers -->
+  <div class="cluster-card" style="border-left-color: var(--ds-teal);">
+    <div class="cluster-card__header">
+      <div>
+        <h3 class="cluster-card__title">Local Fleet Managers</h3>
+      </div>
+      <div class="cluster-card__badges">
+        <span class="ds-badge ds-badge--info">LEADS</span>
+      </div>
+    </div>
+    <div class="size-bar">
+      <div class="size-bar__track">
+        <div class="size-bar__fill" style="width: 5%; background: var(--ds-teal); min-width: 24px;"></div>
+      </div>
+      <div class="size-bar__label">
+        <span>Estimated size</span>
+        <span>5k&ndash;12k</span>
+      </div>
+    </div>
+    <div class="interest-pills">
+      <span class="interest-pill">Fleet management</span>
+      <span class="interest-pill">Small business owner</span>
+      <span class="interest-pill">Contractor</span>
+      <span class="interest-pill">Construction</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RETARGETING LAYERS ===== -->
+<div class="ds-section">
+  <h2>Retargeting Layers</h2>
+  <p class="ds-caption" style="margin-bottom: 14px;">Ordered from hottest (recent converters) to coolest (broad engagement). Audiences with shorter windows indicate higher intent.</p>
+
+  <div class="funnel-stack">
+    <!-- Hot -->
+    <div class="funnel-layer" style="border-left-color: var(--ds-red);">
+      <div class="funnel-layer__temp funnel-layer__temp--hot">Hot</div>
+      <div class="funnel-layer__name">RT_FORM_SUBMIT_180D</div>
+      <div class="funnel-layer__desc">Pixel Lead event &middot; 180 days</div>
+    </div>
+    <div class="funnel-layer" style="border-left-color: var(--ds-red);">
+      <div class="funnel-layer__temp funnel-layer__temp--hot">Hot</div>
+      <div class="funnel-layer__name">RT_PIX_30D</div>
+      <div class="funnel-layer__desc">All pixel visitors &middot; 30 days</div>
+    </div>
+
+    <!-- Warm -->
+    <div class="funnel-layer funnel-layer--warm">
+      <div class="funnel-layer__temp funnel-layer__temp--warm">Warm</div>
+      <div class="funnel-layer__name">RT_PIX_60D</div>
+      <div class="funnel-layer__desc">All pixel visitors &middot; 60 days</div>
+    </div>
+    <div class="funnel-layer funnel-layer--warm">
+      <div class="funnel-layer__temp funnel-layer__temp--warm">Warm</div>
+      <div class="funnel-layer__name">RT_VIDEO_75PCT_30D</div>
+      <div class="funnel-layer__desc">Video view 75% &middot; 30 days</div>
+    </div>
+
+    <!-- Cool -->
+    <div class="funnel-layer funnel-layer--cool">
+      <div class="funnel-layer__temp funnel-layer__temp--cool">Cool</div>
+      <div class="funnel-layer__name">RT_IG_ENG_365D</div>
+      <div class="funnel-layer__desc">Instagram engagement &middot; 365 days</div>
+    </div>
+    <div class="funnel-layer funnel-layer--cool">
+      <div class="funnel-layer__temp funnel-layer__temp--cool">Cool</div>
+      <div class="funnel-layer__name">RT_FB_ENG_365D</div>
+      <div class="funnel-layer__desc">Facebook engagement &middot; 365 days</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOOKALIKES ===== -->
+<div class="ds-section">
+  <h2>Lookalike Audiences</h2>
+  <div class="ds-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Audience</th>
+          <th>Seed Source</th>
+          <th>Country</th>
+          <th>Expansion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>LAL_CUSTOMER_LIST_1PCT</strong></td>
+          <td>Customer list (email + phone, 12 mo)</td>
+          <td>US</td>
+          <td><span class="ds-badge ds-badge--good">1%</span></td>
+        </tr>
+        <tr>
+          <td><strong>LAL_CUSTOMER_LIST_3PCT</strong></td>
+          <td>Customer list (email + phone, 12 mo)</td>
+          <td>US</td>
+          <td><span class="ds-badge ds-badge--info">3%</span></td>
+        </tr>
+        <tr>
+          <td><strong>LAL_CUSTOMER_LIST_5PCT</strong></td>
+          <td>Customer list (email + phone, 12 mo)</td>
+          <td>US</td>
+          <td><span class="ds-badge ds-badge--neutral">5%</span></td>
+        </tr>
+        <tr>
+          <td><strong>LAL_LEAD_180D_1PCT</strong></td>
+          <td>Form submit (180 days)</td>
+          <td>US</td>
+          <td><span class="ds-badge ds-badge--good">1%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== EXCLUSIONS ===== -->
+<div class="ds-section">
+  <h2>Exclusions</h2>
+
+  <div class="ds-callout ds-callout--warn">
+    <h4 style="margin: 0 0 4px; color: #9a5b00;">Recent Leads &mdash; 30 days</h4>
+    <p style="margin: 0; font-size: 14px; color: var(--ds-ink-2);">Exclude from all cold prospecting ad sets to avoid double-counting and stale CPL inflation.</p>
+  </div>
+
+  <div class="ds-callout ds-callout--warn">
+    <h4 style="margin: 0 0 4px; color: #9a5b00;">Employees</h4>
+    <p style="margin: 0; font-size: 14px; color: var(--ds-ink-2);">Exclude from every ad set to prevent vanity engagement and wasted spend.</p>
+  </div>
+
+  <div class="ds-callout ds-callout--warn">
+    <h4 style="margin: 0 0 4px; color: #9a5b00;">Purchased &mdash; 60 days</h4>
+    <p style="margin: 0; font-size: 14px; color: var(--ds-ink-2);">Exclude from acquisition ad sets only. Keep in upsell ad sets for repeat business.</p>
+  </div>
+</div>
+
+<!-- ===== RECOMMENDED AD SETS ===== -->
+<div class="ds-section">
+  <h2>Recommended Ad Sets</h2>
+  <div class="ds-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ad Set</th>
+          <th>Cluster</th>
+          <th>Objective</th>
+          <th>Daily Budget</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>FEED_2860_INTLUXCOS</strong></td>
+          <td>Cosmetic / Luxury Owner</td>
+          <td><span class="ds-badge ds-badge--info">LEADS</span></td>
+          <td><span class="budget-badge">$25&ndash;$50/day</span></td>
+        </tr>
+        <tr>
+          <td><strong>REELS_2860_INTTESLAEV</strong></td>
+          <td>Tesla &amp; EV Owners</td>
+          <td><span class="ds-badge ds-badge--info">LEADS</span></td>
+          <td><span class="budget-badge">$15&ndash;$30/day</span></td>
+        </tr>
+        <tr>
+          <td><strong>FEED_2860_INTMECHBROAD</strong></td>
+          <td>Mechanical / Repair &mdash; Broad</td>
+          <td><span class="ds-badge ds-badge--info">LEADS</span></td>
+          <td><span class="budget-badge">$20&ndash;$40/day</span></td>
+        </tr>
+        <tr>
+          <td><strong>BROAD_2860_AWARE</strong></td>
+          <td>Broad geo only</td>
+          <td><span class="ds-badge ds-badge--neutral">AWARENESS</span></td>
+          <td><span class="budget-badge">$15&ndash;$30/day</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="ds-footer">Prepared by Ducker Creative &middot; 2026-06-30</footer>
+
 </div></body></html>

@@ -1,0 +1,48 @@
+[
+  {
+    "slug": "3star-kitchen-equipment",
+    "company_name": "3 Star Kitchen Equipment",
+    "created_at": "2026-06-30T06:54:34.847Z",
+    "source": "pre-audit",
+    "stage": "audited",
+    "links": {
+      "pre_audit": "prospects/3star-kitchen-equipment/pre_audit.html",
+      "proposal": null,
+      "contract": null,
+      "client_profile": null
+    },
+    "activities": [
+      {
+        "at": "2026-06-30T06:54:34.844Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-06-30T06:55:22.234Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      }
+    ],
+    "deal": {
+      "monthly_retainer": 0,
+      "setup_fee": 0,
+      "currency": "USD"
+    },
+    "updated_at": "2026-06-30T06:55:22.236Z",
+    "id": "3star-kitchen-equipment",
+    "contact": {
+      "name": null,
+      "email": null,
+      "phone": null
+    },
+    "services": [],
+    "probability": 35,
+    "expected_close": null,
+    "owner": null,
+    "next_action": null,
+    "next_action_due": null,
+    "won_at": null,
+    "lost_at": null,
+    "lost_reason": null
+  }
+]

@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ad Copy Package</title>
+<title>Ad Creative Package — Blue Rose Auto</title>
 
 <style>/* ============================================================================
    smOS Design System — "Cupertino"
@@ -281,18 +281,6 @@ table.ds-table, .ds-table-wrap table {
 .ds-table-wrap tbody tr:nth-child(even),
 table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
-/* ---------------------------------------------------------- Charts -------- */
-/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
-.ds-chart {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-line);
-  border-radius: var(--ds-r);
-  padding: 20px;
-  box-shadow: var(--ds-shadow-sm);
-  margin: 18px 0;
-}
-.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
-
 /* --------------------------------------------------------- Buttons -------- */
 .ds-btn {
   display: inline-flex;
@@ -319,205 +307,6 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   border-color: var(--ds-line-strong);
 }
 .ds-btn--ghost:hover { background: var(--ds-ink-tint); }
-.ds-btn[aria-disabled="true"] {
-  background: transparent;
-  border: 1px dashed var(--ds-line-strong);
-  color: var(--ds-muted);
-  font-weight: 500;
-  cursor: default;
-  pointer-events: none;
-}
-
-/* -------------------------------------------------------- Roadmap --------- */
-/* Vertical journey of numbered steps. Each step = a bold circular badge + a
-   card holding a title, description, and one or more action buttons. Used by
-   /bundle to assemble a client's whole engagement into one shareable hub. */
-.ds-roadmap { margin: 28px 0; }
-.ds-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  gap: 18px;
-  padding-bottom: 24px;
-}
-/* connector spine — aurora gradient on delivered steps, grey on pending */
-.ds-step:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 23px;
-  top: 48px;
-  bottom: -4px;
-  width: 2px;
-  background-image: var(--ds-grad-brand);
-}
-.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
-.ds-step-num {
-  position: relative;
-  z-index: 1;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-image: var(--ds-grad-brand);
-  color: #fff;
-  font-weight: 700;
-  font-size: 19px;
-  font-variant-numeric: tabular-nums;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(94,92,230,.32);
-}
-.ds-step.is-pending .ds-step-num {
-  background: var(--ds-surface);
-  color: var(--ds-faint);
-  border: 2px dashed var(--ds-line-strong);
-  box-shadow: none;
-}
-.ds-step-body {
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-line);
-  border-radius: var(--ds-r);
-  padding: 18px 20px;
-  box-shadow: var(--ds-shadow-sm);
-  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
-}
-.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
-.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
-.ds-step.is-pending .ds-step-body {
-  background: var(--ds-surface-2);
-  border-style: dashed;
-  box-shadow: none;
-}
-.ds-step-title {
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  margin: 0 0 4px;
-}
-.ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
-.ds-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-
-@media (max-width: 640px) {
-  .ds-step { grid-template-columns: 40px 1fr; gap: 14px; }
-  .ds-step-num { width: 40px; height: 40px; font-size: 16px; }
-  .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
-}
-
-/* -------------------------------------------------- Hub (OS console) ------ */
-/* The /bundle deliverables hub is a single-tab "operating system" console: a
-   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
-   frames each report as a bright, elevated "window" (the iframe). Dark chrome
-   around a light document = intentional app framing (no double-hero). */
-.ds-hub {
-  min-height: 100dvh; display: flex; flex-direction: column;
-  background: var(--ds-shell); color: var(--ds-shell-ink);
-}
-.ds-skip {
-  position: absolute; left: 12px; top: -48px; z-index: 100;
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
-  transition: top var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-skip:focus { top: 12px; text-decoration: none; }
-
-/* Header = the hero. Client name + agency + a live progress meter. */
-.ds-hub__head {
-  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
-  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
-  border-bottom: 1px solid var(--ds-shell-line);
-}
-.ds-hub__id { min-width: 0; }
-.ds-hub__eyebrow {
-  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-hub__title {
-  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
-  line-height: 1.02; margin: 0; color: #fff;
-  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
-}
-.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
-
-/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
-.ds-progress { min-width: 220px; flex: 0 1 320px; }
-.ds-progress__label {
-  display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
-}
-.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
-.ds-progress__track { display: flex; gap: 5px; }
-.ds-progress__seg {
-  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
-}
-.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
-
-/* Chip menu (top + bottom) */
-.ds-hubnav {
-  display: flex; gap: 8px; align-items: center;
-  padding: 12px 24px; background: rgba(11,11,16,.72);
-  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid var(--ds-shell-line);
-  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
-}
-.ds-hubnav::-webkit-scrollbar { display: none; }
-.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
-.ds-hubnav__btn {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
-  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
-  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
-  background: var(--ds-shell-2); color: var(--ds-shell-ink);
-  border: 1px solid var(--ds-shell-line); cursor: pointer;
-  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
-              transform var(--ds-dur-fast) var(--ds-ease);
-}
-.ds-hubnav__btn .n {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 21px; height: 21px; border-radius: 50%;
-  background: var(--ds-shell-3); color: var(--ds-shell-ink);
-  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
-}
-.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
-.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
-.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
-.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
-.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
-
-/* Viewer = a bright elevated "window" floating in the dark shell. */
-.ds-viewer-wrap {
-  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
-  overflow: hidden; background: var(--ds-bg);
-  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
-}
-.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
-.ds-viewer__loader {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  background: var(--ds-bg); opacity: 0; visibility: hidden;
-  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
-}
-.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
-.ds-spinner {
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
-  animation: ds-spin .8s linear infinite;
-}
-@keyframes ds-spin { to { transform: rotate(360deg); } }
-
-/* Entrance: chips + spine stagger in on load */
-@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
-
-@media (max-width: 760px) {
-  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
-  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
-  .ds-hub__head { padding: 18px 16px 14px; }
-  .ds-progress { flex-basis: 100%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ds-anim, .ds-spinner { animation: none; }
-  .ds-hubnav__btn:hover { transform: none; }
-}
-
-/* --------------------------------------------------------- Footer --------- */
 
 /* --------------------------------------------------------- Footer --------- */
 .ds-footer {
@@ -540,10 +329,11 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 @page { size: Letter; margin: 14mm; }
 @media print {
   body { background: #fff; }
-  .ds-card, .ds-kpi, .ds-table-wrap, .ds-chart { box-shadow: none; }
+  .ds-card, .ds-kpi, .ds-table-wrap { box-shadow: none; }
   .ds-hero { box-shadow: none; }
-  .ds-section, .ds-card, .ds-kpi, .ds-chart, .ds-table-wrap { break-inside: avoid; }
+  .ds-section, .ds-card, .ds-kpi, .ds-table-wrap { break-inside: avoid; }
   h2, h3 { break-after: avoid; }
+  .angle-card { break-inside: avoid; }
 }
 
 /* --------------------------------------------------------- Responsive ----- */
@@ -553,76 +343,556 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   h1 { font-size: 26px; }
   .ds-kpi__value { font-size: 26px; }
 }
+
+/* ============================================================
+   Ad Creative Report — page-specific styles
+   ============================================================ */
+
+/* Angle cards */
+.angle-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r-lg);
+  overflow: hidden;
+  box-shadow: var(--ds-shadow);
+  margin-bottom: 28px;
+}
+.angle-card__accent {
+  height: 5px;
+}
+.angle-card__accent--blue   { background: linear-gradient(90deg, #0a84ff, #0066cc); }
+.angle-card__accent--purple { background: linear-gradient(90deg, #af52de, #8944ab); }
+.angle-card__accent--green  { background: linear-gradient(90deg, #34c759, #248a3d); }
+.angle-card__accent--amber  { background: linear-gradient(90deg, #ff9f0a, #c77c08); }
+
+.angle-card__body {
+  padding: 28px 28px 32px;
+}
+
+.angle-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.angle-card__title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  margin: 0;
+}
+
+/* Hook list */
+.hook-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  counter-reset: hook;
+}
+.hook-list__item {
+  counter-increment: hook;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--ds-r-sm);
+  margin: 0;
+  transition: background var(--ds-dur-fast) var(--ds-ease);
+}
+.hook-list__item:nth-child(odd) {
+  background: var(--ds-surface-2);
+}
+.hook-list__item::before {
+  content: counter(hook);
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ds-ink-tint);
+  color: var(--ds-muted);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.hook-list__text {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ds-ink);
+}
+
+/* Recommended ad + FB preview layout */
+.recommended-wrap {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .recommended-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recommended-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+  margin-bottom: 12px;
+}
+
+.recommended-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.rec-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.rec-field__label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--ds-muted);
+}
+.rec-field__value {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ds-ink);
+}
+.rec-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+/* Facebook ad preview mockup (CSS only) */
+.fb-preview {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  overflow: hidden;
+  box-shadow: var(--ds-shadow-sm);
+  font-size: 14px;
+}
+.fb-preview__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 8px;
+}
+.fb-preview__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ds-grad-brand);
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+}
+.fb-preview__page-info {
+  display: flex;
+  flex-direction: column;
+}
+.fb-preview__page-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ds-ink);
+}
+.fb-preview__sponsored {
+  font-size: 11px;
+  color: var(--ds-faint);
+}
+.fb-preview__primary {
+  padding: 4px 14px 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ds-ink-2);
+}
+.fb-preview__image {
+  width: 100%;
+  aspect-ratio: 1.91 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.7);
+  letter-spacing: .02em;
+}
+.fb-preview__image--blue   { background: linear-gradient(135deg, #0a84ff 0%, #004a99 100%); }
+.fb-preview__image--purple { background: linear-gradient(135deg, #af52de 0%, #6a2d8a 100%); }
+.fb-preview__image--green  { background: linear-gradient(135deg, #34c759 0%, #1a6b30 100%); }
+.fb-preview__image--amber  { background: linear-gradient(135deg, #ff9f0a 0%, #a86600 100%); }
+
+.fb-preview__bottom {
+  padding: 10px 14px;
+  border-top: 1px solid var(--ds-line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.fb-preview__headline {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ds-ink);
+  line-height: 1.3;
+}
+.fb-preview__desc {
+  font-size: 12px;
+  color: var(--ds-muted);
+  margin-top: 1px;
+}
+.fb-preview__cta {
+  flex: none;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--ds-ink-tint);
+  color: var(--ds-ink);
+  border: none;
+  white-space: nowrap;
+}
 </style>
 </head>
 <body><div class="ds-wrap">
+
+<!-- Hero -->
 <header class="ds-hero">
-<div class="ds-eyebrow">Ducker Creative</div>
-<h1>Ad Copy Package</h1>
-<div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
+  <div class="ds-eyebrow">Ducker Creative</div>
+  <h1>Ad Creative Package</h1>
+  <div class="ds-meta">Blue Rose Auto Care &amp; Repair Services</div>
 </header>
-<h2>Overview</h2>
-<p>Ad copy for <strong>Blue Rose Auto Care &amp; Repair Services</strong> — 4 creative angles. 20 hooks, 0 compliance violations.</p>
-<h2>AWARE_LEGACY — _Trust / Legacy_</h2>
-<p><strong>Hooks</strong></p>
-<ul>
-<li>30 years in one shop. Same hands. Same standard.</li>
-<li>Most local shops send their hard jobs here. Here's why.</li>
-<li>Springfield's been bringing us their cars since 1995.</li>
-<li>ASE-certified. Tesla-capable. Old-school discipline.</li>
-<li>Watch what 30 years of practice looks like.</li>
-</ul>
-<p><strong>Recommended combo</strong></p>
-<ul>
-<li><strong>Headline:</strong> 30+ Years. One Shop.</li>
-<li><strong>Primary text:</strong> Three decades in the same Springfield shop. ASE-certified technicians, Tesla-capable, and the only place around Eugene where the work outlives the paint job. Precision craftsmanship — every car, every time.</li>
-<li><strong>CTA:</strong> LEARN_MORE</li>
-</ul>
-<h2>LEADS_LUXCOS_TRANSFORM — _Before/After Transformation_</h2>
-<p><strong>Hooks</strong></p>
-<ul>
-<li>This Porsche came in dull. Watch the gloss.</li>
-<li>14 hours of ceramic. One angle, two cars.</li>
-<li>Before. After. The same Tesla.</li>
-<li>Eugene's nicest cars get their finish here.</li>
-<li>PPF that stays invisible. Until the rock hits.</li>
-</ul>
-<p><strong>Recommended combo</strong></p>
-<ul>
-<li><strong>Headline:</strong> Send Photos. Get a Quote.</li>
-<li><strong>Primary text:</strong> Swipe to see what 14 hours of ceramic looks like on a Porsche 911 — taken in by Blue Rose last week. ASE-certified detailing crew, premium-tier ceramic, a finish that comes from hand-applied work, not assembly-line speed. Send us your vehicle photos for a free quote.</li>
-<li><strong>CTA:</strong> GET_QUOTE</li>
-</ul>
-<h2>LEADS_TESLAEV_WHITESPACE — _Specialist / Whitespace_</h2>
-<p><strong>Hooks</strong></p>
-<ul>
-<li>Your Tesla deserves better than the dealer wait.</li>
-<li>Tesla paint is thinner than you think. Here's how we protect it.</li>
-<li>We've serviced more Teslas in Springfield than anyone.</li>
-<li>Diagnostics, ceramic, PPF — one Tesla-capable shop in Eugene.</li>
-<li>Stop driving to Portland for Tesla service.</li>
-</ul>
-<p><strong>Recommended combo</strong></p>
-<ul>
-<li><strong>Headline:</strong> Tesla-Capable. Springfield.</li>
-<li><strong>Primary text:</strong> Tesla service shouldn't mean a 2-week dealer wait. Blue Rose has been Tesla-capable since the Model S launched — diagnostics, paint protection film, ceramic coating, suspension. ASE-certified, Springfield-based, 30+ years on every kind of vehicle. Book a slot below.</li>
-<li><strong>CTA:</strong> GET_QUOTE</li>
-</ul>
-<h2>LEADS_MECH_TRUST — _Trust / Practical_</h2>
-<p><strong>Hooks</strong></p>
-<ul>
-<li>Brakes. Engine. Diagnostics. 30+ years.</li>
-<li>ASE-certified. No upsell games.</li>
-<li>Most local shops send the hard jobs here.</li>
-<li>Same shop. Same hands. Since '95.</li>
-<li>Book your inspection. We'll show you the issue, not invent one.</li>
-</ul>
-<p><strong>Recommended combo</strong></p>
-<ul>
-<li><strong>Headline:</strong> Book a Free Inspection</li>
-<li><strong>Primary text:</strong> ASE-certified mechanics. 30+ years in Springfield. We'll show you exactly what your car needs — and what it doesn't. Book an inspection below.</li>
-<li><strong>CTA:</strong> BOOK_NOW</li>
-</ul>
-<p>_Generated by smOS <code>/creative</code>. Screened against the client's restricted-word list; final selection confirmed before <code>/launch</code>._</p>
-<footer class="ds-footer">Generated by smOS · 2026-06-29</footer>
+
+<!-- KPI Strip -->
+<div class="ds-kpi-grid">
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Creative Angles</div>
+    <div class="ds-kpi__value">4</div>
+  </div>
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Total Hooks</div>
+    <div class="ds-kpi__value">20</div>
+  </div>
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Ad Formats</div>
+    <div class="ds-kpi__value">4</div>
+  </div>
+  <div class="ds-kpi">
+    <div class="ds-kpi__label">Compliance Violations</div>
+    <div class="ds-kpi__value" style="color: var(--ds-green);">0</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Angle 1: Trust / Legacy
+     ============================================================ -->
+<div class="angle-card">
+  <div class="angle-card__accent angle-card__accent--blue"></div>
+  <div class="angle-card__body">
+    <div class="angle-card__header">
+      <h2 class="angle-card__title">Trust / Legacy</h2>
+      <span class="ds-badge ds-badge--info">Awareness</span>
+      <span class="ds-badge ds-badge--neutral">Image</span>
+    </div>
+
+    <h4 style="margin-bottom: 10px;">Hooks</h4>
+    <ol class="hook-list">
+      <li class="hook-list__item"><span class="hook-list__text">30 years in one shop. Same hands. Same standard.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Most local shops send their hard jobs here. Here's why.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Springfield's been bringing us their cars since 1995.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">ASE-certified. Tesla-capable. Old-school discipline.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Watch what 30 years of practice looks like.</span></li>
+    </ol>
+
+    <div class="recommended-label">Recommended Ad Combination</div>
+    <div class="recommended-wrap">
+      <div class="recommended-details">
+        <div class="rec-field">
+          <div class="rec-field__label">Headline</div>
+          <div class="rec-field__value" style="font-weight: 600;">30+ Years. One Shop.</div>
+        </div>
+        <div class="rec-field">
+          <div class="rec-field__label">Primary Text</div>
+          <div class="rec-field__value">Three decades in the same Springfield shop. ASE-certified technicians, Tesla-capable, and the only place around Eugene where the work outlives the paint job. Precision craftsmanship -- every car, every time.</div>
+        </div>
+        <div class="rec-badges">
+          <span class="ds-badge ds-badge--info">Image</span>
+          <span class="ds-badge ds-badge--neutral">Learn More</span>
+        </div>
+      </div>
+
+      <!-- Facebook Ad Preview -->
+      <div class="fb-preview">
+        <div class="fb-preview__header">
+          <div class="fb-preview__avatar">BR</div>
+          <div class="fb-preview__page-info">
+            <span class="fb-preview__page-name">Blue Rose Auto Care</span>
+            <span class="fb-preview__sponsored">Sponsored</span>
+          </div>
+        </div>
+        <div class="fb-preview__primary">Three decades in the same Springfield shop. ASE-certified technicians, Tesla-capable, and the only place around Eugene where the work outlives the paint job.</div>
+        <div class="fb-preview__image fb-preview__image--blue">Ad Creative Placeholder</div>
+        <div class="fb-preview__bottom">
+          <div>
+            <div class="fb-preview__headline">30+ Years. One Shop.</div>
+            <div class="fb-preview__desc">blueroseauto.com</div>
+          </div>
+          <button class="fb-preview__cta">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Angle 2: Before/After Transformation
+     ============================================================ -->
+<div class="angle-card">
+  <div class="angle-card__accent angle-card__accent--purple"></div>
+  <div class="angle-card__body">
+    <div class="angle-card__header">
+      <h2 class="angle-card__title">Before/After Transformation</h2>
+      <span class="ds-badge ds-badge--info">Lead Generation</span>
+      <span class="ds-badge ds-badge--neutral">Carousel</span>
+    </div>
+
+    <h4 style="margin-bottom: 10px;">Hooks</h4>
+    <ol class="hook-list">
+      <li class="hook-list__item"><span class="hook-list__text">This Porsche came in dull. Watch the gloss.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">14 hours of ceramic. One angle, two cars.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Before. After. The same Tesla.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Eugene's nicest cars get their finish here.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">PPF that stays invisible. Until the rock hits.</span></li>
+    </ol>
+
+    <div class="recommended-label">Recommended Ad Combination</div>
+    <div class="recommended-wrap">
+      <div class="recommended-details">
+        <div class="rec-field">
+          <div class="rec-field__label">Headline</div>
+          <div class="rec-field__value" style="font-weight: 600;">Send Photos. Get a Quote.</div>
+        </div>
+        <div class="rec-field">
+          <div class="rec-field__label">Primary Text</div>
+          <div class="rec-field__value">Swipe to see what 14 hours of ceramic looks like on a Porsche 911 -- taken in by Blue Rose last week. ASE-certified detailing crew, premium-tier ceramic, a finish that comes from hand-applied work, not assembly-line speed. Send us your vehicle photos for a free quote.</div>
+        </div>
+        <div class="rec-badges">
+          <span class="ds-badge ds-badge--info">Carousel</span>
+          <span class="ds-badge ds-badge--neutral">Get Quote</span>
+        </div>
+      </div>
+
+      <!-- Facebook Ad Preview -->
+      <div class="fb-preview">
+        <div class="fb-preview__header">
+          <div class="fb-preview__avatar">BR</div>
+          <div class="fb-preview__page-info">
+            <span class="fb-preview__page-name">Blue Rose Auto Care</span>
+            <span class="fb-preview__sponsored">Sponsored</span>
+          </div>
+        </div>
+        <div class="fb-preview__primary">Swipe to see what 14 hours of ceramic looks like on a Porsche 911 -- taken in by Blue Rose last week. ASE-certified detailing crew, premium-tier ceramic, a finish that comes from hand-applied work, not assembly-line speed.</div>
+        <div class="fb-preview__image fb-preview__image--purple">Ad Creative Placeholder</div>
+        <div class="fb-preview__bottom">
+          <div>
+            <div class="fb-preview__headline">Send Photos. Get a Quote.</div>
+            <div class="fb-preview__desc">blueroseauto.com</div>
+          </div>
+          <button class="fb-preview__cta">Get Quote</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Angle 3: Specialist / Whitespace
+     ============================================================ -->
+<div class="angle-card">
+  <div class="angle-card__accent angle-card__accent--green"></div>
+  <div class="angle-card__body">
+    <div class="angle-card__header">
+      <h2 class="angle-card__title">Specialist / Whitespace</h2>
+      <span class="ds-badge ds-badge--info">Lead Generation</span>
+      <span class="ds-badge ds-badge--neutral">Video</span>
+    </div>
+
+    <h4 style="margin-bottom: 10px;">Hooks</h4>
+    <ol class="hook-list">
+      <li class="hook-list__item"><span class="hook-list__text">Your Tesla deserves better than the dealer wait.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Tesla paint is thinner than you think. Here's how we protect it.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">We've serviced more Teslas in Springfield than anyone.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Diagnostics, ceramic, PPF -- one Tesla-capable shop in Eugene.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Stop driving to Portland for Tesla service.</span></li>
+    </ol>
+
+    <div class="recommended-label">Recommended Ad Combination</div>
+    <div class="recommended-wrap">
+      <div class="recommended-details">
+        <div class="rec-field">
+          <div class="rec-field__label">Headline</div>
+          <div class="rec-field__value" style="font-weight: 600;">Tesla-Capable. Springfield.</div>
+        </div>
+        <div class="rec-field">
+          <div class="rec-field__label">Primary Text</div>
+          <div class="rec-field__value">Tesla service shouldn't mean a 2-week dealer wait. Blue Rose has been Tesla-capable since the Model S launched -- diagnostics, paint protection film, ceramic coating, suspension. ASE-certified, Springfield-based, 30+ years on every kind of vehicle. Book a slot below.</div>
+        </div>
+        <div class="rec-badges">
+          <span class="ds-badge ds-badge--info">Video</span>
+          <span class="ds-badge ds-badge--neutral">Get Quote</span>
+        </div>
+      </div>
+
+      <!-- Facebook Ad Preview -->
+      <div class="fb-preview">
+        <div class="fb-preview__header">
+          <div class="fb-preview__avatar">BR</div>
+          <div class="fb-preview__page-info">
+            <span class="fb-preview__page-name">Blue Rose Auto Care</span>
+            <span class="fb-preview__sponsored">Sponsored</span>
+          </div>
+        </div>
+        <div class="fb-preview__primary">Tesla service shouldn't mean a 2-week dealer wait. Blue Rose has been Tesla-capable since the Model S launched -- diagnostics, paint protection film, ceramic coating, suspension.</div>
+        <div class="fb-preview__image fb-preview__image--green">Ad Creative Placeholder</div>
+        <div class="fb-preview__bottom">
+          <div>
+            <div class="fb-preview__headline">Tesla-Capable. Springfield.</div>
+            <div class="fb-preview__desc">blueroseauto.com</div>
+          </div>
+          <button class="fb-preview__cta">Get Quote</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Angle 4: Trust / Practical
+     ============================================================ -->
+<div class="angle-card">
+  <div class="angle-card__accent angle-card__accent--amber"></div>
+  <div class="angle-card__body">
+    <div class="angle-card__header">
+      <h2 class="angle-card__title">Trust / Practical</h2>
+      <span class="ds-badge ds-badge--info">Lead Generation</span>
+      <span class="ds-badge ds-badge--neutral">Image</span>
+    </div>
+
+    <h4 style="margin-bottom: 10px;">Hooks</h4>
+    <ol class="hook-list">
+      <li class="hook-list__item"><span class="hook-list__text">Brakes. Engine. Diagnostics. 30+ years.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">ASE-certified. No upsell games.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Most local shops send the hard jobs here.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Same shop. Same hands. Since '95.</span></li>
+      <li class="hook-list__item"><span class="hook-list__text">Book your inspection. We'll show you the issue, not invent one.</span></li>
+    </ol>
+
+    <div class="recommended-label">Recommended Ad Combination</div>
+    <div class="recommended-wrap">
+      <div class="recommended-details">
+        <div class="rec-field">
+          <div class="rec-field__label">Headline</div>
+          <div class="rec-field__value" style="font-weight: 600;">Book a Free Inspection</div>
+        </div>
+        <div class="rec-field">
+          <div class="rec-field__label">Primary Text</div>
+          <div class="rec-field__value">ASE-certified mechanics. 30+ years in Springfield. We'll show you exactly what your car needs -- and what it doesn't. Book an inspection below.</div>
+        </div>
+        <div class="rec-badges">
+          <span class="ds-badge ds-badge--info">Image</span>
+          <span class="ds-badge ds-badge--neutral">Book Now</span>
+        </div>
+      </div>
+
+      <!-- Facebook Ad Preview -->
+      <div class="fb-preview">
+        <div class="fb-preview__header">
+          <div class="fb-preview__avatar">BR</div>
+          <div class="fb-preview__page-info">
+            <span class="fb-preview__page-name">Blue Rose Auto Care</span>
+            <span class="fb-preview__sponsored">Sponsored</span>
+          </div>
+        </div>
+        <div class="fb-preview__primary">ASE-certified mechanics. 30+ years in Springfield. We'll show you exactly what your car needs -- and what it doesn't. Book an inspection below.</div>
+        <div class="fb-preview__image fb-preview__image--amber">Ad Creative Placeholder</div>
+        <div class="fb-preview__bottom">
+          <div>
+            <div class="fb-preview__headline">Book a Free Inspection</div>
+            <div class="fb-preview__desc">blueroseauto.com</div>
+          </div>
+          <button class="fb-preview__cta">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Summary Comparison Table
+     ============================================================ -->
+<div class="ds-section">
+  <h2>Creative Angle Comparison</h2>
+  <div class="ds-table-wrap">
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th>Angle</th>
+          <th>Hooks</th>
+          <th>Format</th>
+          <th>CTA</th>
+          <th>Target Audience</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Trust / Legacy</strong></td>
+          <td>5</td>
+          <td>Image</td>
+          <td>Learn More</td>
+          <td>Broad local awareness -- Springfield/Eugene residents</td>
+        </tr>
+        <tr>
+          <td><strong>Before/After Transformation</strong></td>
+          <td>5</td>
+          <td>Carousel</td>
+          <td>Get Quote</td>
+          <td>Luxury / cosmetic vehicle owners -- ceramic, PPF, detailing</td>
+        </tr>
+        <tr>
+          <td><strong>Specialist / Whitespace</strong></td>
+          <td>5</td>
+          <td>Video</td>
+          <td>Get Quote</td>
+          <td>Tesla and EV owners in the Eugene/Springfield corridor</td>
+        </tr>
+        <tr>
+          <td><strong>Trust / Practical</strong></td>
+          <td>5</td>
+          <td>Image</td>
+          <td>Book Now</td>
+          <td>General mechanical service -- brakes, diagnostics, maintenance</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="ds-footer">Prepared by Ducker Creative &middot; 2026-06-30</footer>
+
 </div></body></html>
