@@ -365,6 +365,180 @@ new Chart(document.getElementById('radarChart'), {{
 </html>"""
 
 
+def build_synthesis_html(data: dict) -> str:
+    """Render the `generic_keyword_synthesis` intel shape.
+
+    When the client opts out of a live, named-competitor Ad Library pull, /research
+    produces a synthesized *category* intel (angles, hooks, CTAs, offers, visual
+    patterns, whitespace gaps) instead of a ranked competitor table. This branch
+    renders that shape into the same design system so the deliverable still lands in
+    the client hub. Any future synthesis-mode client inherits this automatically.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+    from design_system import report_head, hero_header, _esc  # noqa: E402
+
+    slug = data.get("client_slug", "")
+    client = slug.replace("-", " ").title() if slug else "Client"
+    gen = data.get("generated_at", "")
+    # Agency eyebrow — keep every report heading consistent with the rest of the hub.
+    agency = "smOS"
+    try:
+        import json as _json
+        cfg = _json.loads((Path(__file__).resolve().parents[2] / "config" / "services.json").read_text())
+        agency = (cfg.get("agency") or {}).get("name") or agency
+    except Exception:
+        pass
+    note = data.get("note", "")
+    timestamp = datetime.utcnow().strftime("%B %d, %Y at %H:%M UTC")
+
+    landscape = data.get("category_landscape", {})
+    fmt = data.get("format_mix", {})
+    angles = data.get("angles", [])
+    hooks = data.get("hooks_seen", [])
+    ctas = data.get("ctas_seen", [])
+    offers = data.get("offers_seen", [])
+    visuals = data.get("visual_patterns", {})
+    gaps = data.get("gaps_for_blue_rose_to_exploit") or data.get("gaps") or []
+    recipe = data.get("winning_recipe_recommendation", {})
+    refresh = data.get("refresh_recommended_after", "")
+
+    e = _esc
+
+    # ── KPI overview ──────────────────────────────────────────────────────────
+    fmt_pairs = [(k, v) for k, v in fmt.items() if isinstance(v, (int, float))]
+    dominant_fmt = max(fmt_pairs, key=lambda x: x[1])[0] if fmt_pairs else "—"
+    high_fit = sum(1 for a in angles if a.get("fit_for_client") in ("high", "very_high"))
+    kpis = [
+        ("Category Saturation", str(landscape.get("saturation", "—")).title(), "Local-service competition"),
+        ("Typical Shop Spend", landscape.get("typical_local_shop_spend", "—"), "Estimated monthly"),
+        ("Dominant Format", dominant_fmt.replace("_", " ").title(), f"{int(dominant_fmt and fmt.get(dominant_fmt, 0)*100)}% of category ads" if fmt_pairs else ""),
+        ("High-Fit Angles", str(high_fit), f"of {len(angles)} angles screened"),
+    ]
+    kpi_html = "\n".join(
+        f'<div class="ds-kpi"><div class="ds-caption">{e(lbl)}</div>'
+        f'<div class="ds-num">{e(val)}</div>'
+        f'<div class="ds-caption">{e(sub)}</div></div>'
+        for lbl, val, sub in kpis
+    )
+
+    # ── Format mix bars ───────────────────────────────────────────────────────
+    fmt_rows = "\n".join(
+        f'<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;'
+        f'font-size:13px;margin-bottom:4px"><span>{e(k.replace("_"," ").title())}</span>'
+        f'<span style="font-variant-numeric:tabular-nums;color:var(--ds-muted)">{int(v*100)}%</span></div>'
+        f'<div style="height:8px;border-radius:4px;background:var(--ds-grad-brand);width:{int(v*100)}%"></div></div>'
+        for k, v in sorted(fmt_pairs, key=lambda x: -x[1])
+    )
+    fmt_signal = fmt.get("winning_format_signal", "")
+
+    # ── Angles table ──────────────────────────────────────────────────────────
+    fit_badge = {"very_high": "ds-badge--good", "high": "ds-badge--good",
+                 "medium": "ds-badge--warn", "low": "ds-badge--bad"}
+    angle_rows = ""
+    for a in angles:
+        fit = a.get("fit_for_client", "")
+        badge = fit_badge.get(fit, "ds-badge--neutral")
+        use = ", ".join(a.get("use_for", [])) or "—"
+        angle_rows += f"""
+        <tr>
+            <td style="font-weight:600">{e(a.get('angle',''))}</td>
+            <td><span class="ds-badge ds-badge--neutral">{e(str(a.get('frequency','')).replace('_',' '))}</span></td>
+            <td><span class="ds-badge {badge}">{e(str(fit).replace('_',' '))}</span></td>
+            <td class="ds-caption">{e(use)}</td>
+            <td class="ds-caption">{e(a.get('notes',''))}</td>
+        </tr>"""
+
+    def chip_list(items):
+        return "".join(f'<span class="ds-badge ds-badge--info" style="margin:0 6px 8px 0;display:inline-block">{e(s)}</span>' for s in items)
+
+    gaps_html = "\n".join(f"<li>{e(g)}</li>" for g in gaps)
+    visual_html = "\n".join(
+        f'<div style="margin-bottom:14px"><div class="ds-caption" style="text-transform:uppercase;'
+        f'letter-spacing:.5px">{e(k.replace("_"," "))}</div><div style="margin-top:2px">{e(v)}</div></div>'
+        for k, v in visuals.items()
+    )
+    recipe_html = "\n".join(
+        f'<div class="ds-callout ds-callout--good" style="margin-bottom:12px">'
+        f'<strong>{e(k.replace("_"," ").replace("for ","").title())}</strong><br>{e(v)}</div>'
+        for k, v in recipe.items()
+    )
+
+    implication = landscape.get("implication", "")
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+{report_head(f"Market Research — {client}")}
+<body>
+{hero_header(f"Market Research — {client}", subtitle=f"{client} · Category intelligence · {gen}", eyebrow=agency)}
+<main class="ds-wrap ds-wrap--wide">
+
+  <div class="ds-callout ds-callout--warn">
+    <strong>Synthesized category intel</strong> — {e(note)}
+  </div>
+
+  <section class="ds-section">
+    <h2>Category Overview</h2>
+    <div class="ds-kpi-grid">
+      {kpi_html}
+    </div>
+    {f'<div class="ds-callout ds-callout--good" style="margin-top:16px"><strong>Strategic implication:</strong> {e(implication)}</div>' if implication else ''}
+  </section>
+
+  <section class="ds-section">
+    <h2>Creative Format Mix</h2>
+    <div class="ds-card">
+      {fmt_rows}
+      {f'<div class="ds-callout ds-callout--info" style="margin-top:8px"><strong>Winning signal:</strong> {e(fmt_signal)}</div>' if fmt_signal else ''}
+    </div>
+  </section>
+
+  <section class="ds-section">
+    <h2>Messaging Angles — Fit Screen</h2>
+    <div class="ds-table-wrap">
+      <table class="ds-table">
+        <thead><tr><th>Angle</th><th>Frequency</th><th>Fit</th><th>Use For</th><th>Notes</th></tr></thead>
+        <tbody>{angle_rows}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="ds-section">
+    <h2>Whitespace — Gaps to Exploit</h2>
+    <div class="ds-card">
+      <ul style="margin:0;padding-left:20px;line-height:1.9">{gaps_html}</ul>
+    </div>
+  </section>
+
+  <section class="ds-section">
+    <h2>Swipe File</h2>
+    <div class="ds-card">
+      <div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Hooks Seen</div>
+      <div style="margin-bottom:18px">{chip_list(hooks)}</div>
+      <div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">CTAs Seen</div>
+      <div style="margin-bottom:18px">{chip_list(ctas)}</div>
+      <div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Offers Seen</div>
+      <div>{chip_list(offers)}</div>
+    </div>
+  </section>
+
+  <section class="ds-section">
+    <h2>Visual Patterns</h2>
+    <div class="ds-card">{visual_html}</div>
+  </section>
+
+  <section class="ds-section">
+    <h2>Winning Recipe Recommendations</h2>
+    {recipe_html}
+  </section>
+
+  {f'<div class="ds-callout ds-callout--neutral"><strong>Refresh recommended:</strong> {e(refresh)}</div>' if refresh else ''}
+
+</main>
+<footer class="ds-footer">Generated {timestamp} · smOS Market Research · Synthesized category intel — re-run with named competitors for a live benchmark</footer>
+</body>
+</html>"""
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate HTML competitor analysis report")
     parser.add_argument("--input", required=True, help="Analyzed JSON from analyzer.py")
@@ -376,7 +550,12 @@ def main():
         data = json.load(f)
 
     output_path = args.output or args.input.replace("analyzed_", "report_").replace(".json", ".html")
-    html = build_html(data)
+    # Synthesis mode (no live named-competitor pull) has a different shape — render it
+    # with the category-intel layout rather than the ranked-benchmark table.
+    if data.get("mode") == "generic_keyword_synthesis" or "category_landscape" in data:
+        html = build_synthesis_html(data)
+    else:
+        html = build_html(data)
 
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)

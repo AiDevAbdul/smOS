@@ -54,7 +54,9 @@ Gather context before acting (do not ask the user for what is discoverable):
 3. It normalizes the analyzed output through `competitorSchema.normalize(...)` and writes `clients/{slug}/competitor_intel.json`.
 4. Review the printed summary + the ranked HTML, then proceed to `/strategy-brief`.
 
-A failing `classifier.py`, `render_pdf.py`, or `differ.py` is non-fatal — the script logs and continues. Only a missing profile, `<2` competitors, zero resolved page IDs, or a `client.py`/`analyzer.py`/`report.py` failure halts the run.
+A failing `classifier.py`, `render_pdf.py`, or `differ.py` is non-fatal — the script logs and continues. Only a missing profile, zero resolved page IDs, or a `client.py`/`analyzer.py`/`report.py` failure halts the run.
+
+**No named competitors? Use synthesis mode.** When the client opts out of a live pull, don't leave research empty — author `clients/{slug}/competitor_intel.json` with `"mode": "generic_keyword_synthesis"` (synthesized category intel), then run `node skills/research/research.js {slug} --synthesis`. It renders `competitor_report_<ts>.html` + `.pdf` (via `report.py`'s synthesis layout) so `/bundle` finds the research phase instead of showing it "In progress". Details: `references/io-contract.md` → *Synthesis mode*.
 
 ## Input / Output Specification
 

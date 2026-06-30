@@ -88,9 +88,59 @@ async function main() {
   if (!existsSync(profilePath)) throw new Error(`Profile not found: ${profilePath}`);
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));
 
+  const reportsDirEarly = resolve(ROOT, "clients", slug, "reports");
+  const intelPathEarly = resolve(ROOT, "clients", slug, "competitor_intel.json");
+
+  // ── Synthesis mode ──────────────────────────────────────────────────────────
+  // When the client opts out of a live named-competitor Ad Library pull, /research
+  // ships a synthesized *category* intel instead of a ranked benchmark. We still
+  // owe a rendered deliverable so the client hub (/bundle) finds the research phase.
+  // Trigger explicitly with --synthesis, or implicitly when competitors are absent
+  // but a synthesis-mode competitor_intel.json already exists.
+  const existingIntel = existsSync(intelPathEarly)
+    ? (() => { try { return JSON.parse(readFileSync(intelPathEarly, "utf8")); } catch { return null; } })()
+    : null;
+  const isSynthesisIntel = existingIntel
+    && (existingIntel.mode === "generic_keyword_synthesis" || existingIntel.category_landscape);
+  const wantsSynthesis = argHas(argv, "--synthesis")
+    || ((profile.competitors || []).length < 2 && isSynthesisIntel);
+
+  if (wantsSynthesis) {
+    if (!isSynthesisIntel) {
+      throw new Error(
+        "--synthesis requires an existing synthesis-mode competitor_intel.json " +
+        "(mode:'generic_keyword_synthesis' or a category_landscape block). " +
+        "Create the synthesized intel first, then rerun with --synthesis.");
+    }
+    mkdirSync(reportsDirEarly, { recursive: true });
+    const stampS = ts();
+    const htmlS = resolve(reportsDirEarly, `competitor_report_${stampS}.html`);
+    console.error(`[research] synthesis mode — rendering HTML from ${intelPathEarly}…`);
+    runPy(["scripts/meta-ad-library/report.py", "--input", intelPathEarly, "--output", htmlS]);
+    const pdfS = htmlS.replace(/\.html$/, ".pdf");
+    try {
+      runPy(["scripts/render_pdf.py", htmlS, "--output", pdfS]);
+      console.error(`[research] PDF rendered: ${pdfS}`);
+    } catch (e) {
+      console.error(`[research] PDF render skipped: ${e.message.split("\n")[0]}`);
+    }
+    console.log(JSON.stringify({
+      slug,
+      mode: "synthesis",
+      html_report: htmlS,
+      pdf_report: existsSync(pdfS) ? pdfS : null,
+      intel_path: intelPathEarly,
+      next: "review the report, run /bundle to include it, then /strategy-brief",
+    }, null, 2));
+    return;
+  }
+
   const competitors = profile.competitors || [];
   if (competitors.length < 2) {
-    throw new Error(`profile.competitors must have ≥ 2 entries — found ${competitors.length}. Add competitor names or page IDs and rerun.`);
+    throw new Error(
+      `profile.competitors must have ≥ 2 entries — found ${competitors.length}. ` +
+      "Add competitor names/Page IDs and rerun, OR ship a synthesized category intel: " +
+      "author competitor_intel.json (mode:'generic_keyword_synthesis') then rerun with --synthesis.");
   }
 
   const geoTargets = profile.audience?.geo_targets || (profile.location?.country ? [profile.location.country] : ["US"]);

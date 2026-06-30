@@ -21,6 +21,7 @@ import { resolve, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { reportHead, reportFooter } from "../../scripts/lib/design_system.js";
+import { mdToHtml } from "../../scripts/lib/md_to_html.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -59,6 +60,27 @@ function matchIn(dir, re, labeller) {
 /** First non-empty resolver result. */
 function firstOf(...lists) { for (const l of lists) if (l.length) return l.slice(0, 1); return []; }
 
+/**
+ * Render the shared content-creation SOP (platform-specs.md) into a design-system HTML
+ * inside the client's reports dir, so the hub can include it like any other deliverable.
+ * Returns the rendered path, or null if the source SOP is missing. Rendered once per
+ * bundle run — keeps the canonical markdown as the single source of truth.
+ */
+function renderContentSops() {
+  const mdPath = resolve(ROOT, "skills", "content-plan", "references", "platform-specs.md");
+  if (!existsSync(mdPath)) return null;
+  const md = readFileSync(mdPath, "utf8");
+  const html = mdToHtml(md, {
+    title: "Content Creation SOPs",
+    subtitle: `${clientName} · Per-platform production playbook`,
+    eyebrow: agencyName,
+  });
+  if (!existsSync(reportsDir)) mkdirSync(reportsDir, { recursive: true });
+  const out = resolve(reportsDir, "content_sops.html");
+  writeFileSync(out, html);
+  return out;
+}
+
 const REPORT_TYPE = { weekly: "Weekly Report", monthly_review: "Monthly Review", before_after: "Before / After" };
 function reportLabel(f) {
   const m = f.match(/^(\d{4}-\d{2}-\d{2}|\d{4}-\d{2})_(.+)\.html$/);
@@ -92,6 +114,9 @@ const PHASES = [
   { key: "content-plan", title: "Content Plan",
     desc: "Your organic content pillars and the Reels-first calendar.",
     resolve: () => exact(resolve(clientDir, "content_plan.html"), "Open Content Plan") },
+  { key: "content-sops", title: "Content Creation SOPs",
+    desc: "The per-platform production playbook — media specs, copy limits, algorithm signals, and publish paths for every channel.",
+    resolve: () => { const p = renderContentSops(); return p ? [{ srcPath: p, label: "Open SOPs" }] : []; } },
   { key: "reports", title: "Performance Reports", group: true,
     desc: "Ongoing results — weekly, monthly, and before/after reviews.",
     resolve: () => matchIn(reportsDir, /_(weekly|monthly_review|before_after)\.html$/, reportLabel) },

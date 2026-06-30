@@ -357,9 +357,14 @@ body {{
 
 /* ── Hero ─────────────────────────────────────────────────────── */
 .hero {{
-  background: var(--ink); color: var(--ground);
+  background: var(--ds-grad-brand); color: #fff;
   padding: 56px 40px 48px;
 }}
+/* Recolor hero text for white-on-aurora readability (design-system hero). */
+.hero .hero-eyebrow, .hero .hero-date,
+.hero .score-band-label, .hero .outspend-eyebrow,
+.hero .outspend-caption {{ color: rgba(255,255,255,.72); }}
+.hero .outspend-ratio {{ color: #fff; }}
 .hero-inner {{
   max-width: 940px; margin: 0 auto;
   display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center;

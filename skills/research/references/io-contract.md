@@ -8,6 +8,7 @@ shape. Self-contained.
 
 ```
 node skills/research/research.js <slug> [--days N] [--country CC] [--skip-classify]
+node skills/research/research.js <slug> --synthesis      # render from existing synthesis intel
 ```
 
 | Arg / flag | Required | Default | Meaning |
@@ -16,9 +17,28 @@ node skills/research/research.js <slug> [--days N] [--country CC] [--skip-classi
 | `--days N` | no | `90` | Ad Library lookback window |
 | `--country CC` | no | first `geo_targets`, else profile country, else `US` | ISO-3166-1 alpha-2 |
 | `--skip-classify` | no | off | Skip the LLM angle taxonomy pass (`classifier.py`) |
+| `--synthesis` | no | off | Skip the live Ad Library pull; render HTML+PDF from an existing **synthesis-mode** `competitor_intel.json` (see below) |
 
-Exit non-zero on: missing profile, `competitors.length < 2`, zero resolved page IDs, or a
-fatal failure in `client.py` / `analyzer.py` / `report.py`.
+Exit non-zero on: missing profile, zero resolved page IDs, or a fatal failure in
+`client.py` / `analyzer.py` / `report.py`.
+
+### Synthesis mode (no named competitors)
+
+When the client opts out of a live named-competitor pull, `/research` still owes a rendered
+deliverable so the client hub (`/bundle`) finds the **research** phase. Otherwise the live
+pull halts (`competitors.length < 2`) and **no `competitor_report_*.html` is ever written** —
+the bundle then shows research as "In progress".
+
+1. Author `clients/{slug}/competitor_intel.json` with `"mode": "generic_keyword_synthesis"`
+   (or a `category_landscape` block) — synthesized category intel: angles, hooks, CTAs,
+   offers, visual patterns, whitespace gaps, winning-recipe recommendations.
+2. Run `node skills/research/research.js {slug} --synthesis`.
+   - It is also triggered **implicitly** when `profile.competitors` has < 2 entries but a
+     synthesis-mode intel already exists.
+   - Renders via `report.py`'s `build_synthesis_html()` branch (auto-selected on
+     `mode == "generic_keyword_synthesis"` / presence of `category_landscape`) → writes
+     `reports/competitor_report_<ts>.html` + `.pdf` using the shared design system.
+3. Run `/bundle {slug}` — the research phase now resolves.
 
 ## Inputs
 
