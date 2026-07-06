@@ -2,9 +2,15 @@
 /**
  * /leads companion script — pull Meta lead-gen leads, score, export.
  *
+ * Lead delivery is WEBHOOK-FIRST (B4): real-time `leadgen` notifications are the
+ * primary path; `sync` is the backfill/reconciliation poller. Both write to the
+ * same per-form JSONL store and dedupe on lead id.
+ *
  * Usage:
+ *   node skills/leads/leads.js <slug> webhook --payload <file>   # PRIMARY (real-time)
+ *   cat payload.json | node skills/leads/leads.js <slug> webhook
+ *   node skills/leads/leads.js <slug> sync                       # backfill poller
  *   node skills/leads/leads.js <slug> list
- *   node skills/leads/leads.js <slug> sync
  *   node skills/leads/leads.js <slug> pull <form_id> [--since ISO_DATE]
  */
 
@@ -174,7 +180,7 @@ function saveState(slug, state) {
 }
 
 function appendLeadsJsonl(slug, formId, leads) {
-  const dir = resolve(ROOT, "clients", slug, "leads");
+  const dir = resolve(P.clientRoot(slug), "leads");
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
   const p = resolve(dir, `${formId}.jsonl`);
   const seen = new Set();
@@ -189,7 +195,7 @@ function appendLeadsJsonl(slug, formId, leads) {
 }
 
 function readAllLeadsForCsv(slug) {
-  const dir = resolve(ROOT, "clients", slug, "leads");
+  const dir = resolve(P.clientRoot(slug), "leads");
   if (!existsSync(dir)) return [];
   const out = [];
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".jsonl"))) {
@@ -199,6 +205,78 @@ function readAllLeadsForCsv(slug) {
     }
   }
   return out;
+}
+
+// ── Webhook-first ingestion (B4) ─────────────────────────────────────────────
+// Real-time is the PRIMARY path: Meta POSTs a `leadgen` change the instant a lead
+// is submitted; we fetch the full lead by id, score it, and append to the SAME
+// per-form JSONL store the poller writes — so webhook + backfill converge and
+// dedupe on lead id. `sync` is now the reconciliation/backfill path that catches
+// anything a missed/duplicated webhook left behind.
+
+/** Pure: pull every leadgen id out of a Meta page webhook payload. Testable. */
+export function extractLeadgenIds(payload) {
+  const out = [];
+  if (!payload || !Array.isArray(payload.entry)) return out;
+  for (const entry of payload.entry) {
+    for (const change of entry.changes || []) {
+      if (change.field !== "leadgen") continue;
+      const v = change.value || {};
+      const leadId = v.leadgen_id || v.lead_id;
+      if (leadId) {
+        out.push({
+          lead_id: String(leadId),
+          form_id: v.form_id != null ? String(v.form_id) : null,
+          page_id: v.page_id != null ? String(v.page_id) : null,
+          ad_id: v.ad_id != null ? String(v.ad_id) : null,
+          created_time: v.created_time || null,
+        });
+      }
+    }
+  }
+  return out;
+}
+
+async function fetchLeadById(graph, leadId, token) {
+  return graph.get(`/${leadId}`, {
+    fields: "id,created_time,ad_id,adset_id,campaign_id,form_id,field_data,is_organic,platform",
+    access_token: token,
+  });
+}
+
+/** Enrich a raw Meta lead the same way the poller does, so scores match exactly. */
+export function enrichLead(raw) {
+  const normalized = normalizeFieldData(raw.field_data);
+  const { score, tier, reasons } = scoreLead({ ...raw, normalized });
+  return { ...raw, normalized, score, tier, score_reasons: reasons };
+}
+
+async function ingestWebhook(graph, slug, payload, token) {
+  const refs = extractLeadgenIds(payload);
+  const state = loadState(slug);
+  const byForm = {};
+  const errors = [];
+  for (const ref of refs) {
+    try {
+      const raw = await fetchLeadById(graph, ref.lead_id, token);
+      const enriched = enrichLead(raw);
+      const formId = enriched.form_id || ref.form_id || "unknown_form";
+      (byForm[formId] ||= []).push(enriched);
+    } catch (e) {
+      errors.push({ lead_id: ref.lead_id, error: e.message });
+    }
+  }
+  let newCount = 0;
+  for (const [formId, leads] of Object.entries(byForm)) {
+    const fresh = appendLeadsJsonl(slug, formId, leads); // dedupes on lead id
+    newCount += fresh;
+    state.forms[formId] = {
+      last_webhook: new Date().toISOString(),
+      total_pulled: (state.forms[formId]?.total_pulled || 0) + fresh,
+    };
+  }
+  saveState(slug, state);
+  return { received: refs.length, new: newCount, forms: Object.keys(byForm), errors };
 }
 
 async function syncForm(graph, slug, form, token, sinceOverride) {
@@ -223,7 +301,7 @@ async function syncForm(graph, slug, form, token, sinceOverride) {
 async function main() {
   const [slug, mode, ...rest] = process.argv.slice(2);
   if (!slug || !mode) {
-    console.error("Usage: node skills/leads/leads.js <slug> <list|sync|pull> [args]");
+    console.error("Usage: node skills/leads/leads.js <slug> <webhook|sync|list|pull> [args]");
     process.exit(1);
   }
 
@@ -250,6 +328,31 @@ async function main() {
   if (mode === "list") {
     const res = await listForms(graph, pageId, token);
     console.log(JSON.stringify(res, null, 2));
+    return;
+  }
+
+  // Webhook-first (B4): ingest a Meta leadgen webhook payload (the PRIMARY path).
+  //   node skills/leads/leads.js <slug> webhook --payload <file>
+  //   cat payload.json | node skills/leads/leads.js <slug> webhook
+  if (mode === "webhook") {
+    const pIdx = rest.indexOf("--payload");
+    let payloadStr;
+    if (pIdx >= 0 && rest[pIdx + 1]) {
+      payloadStr = readFileSync(rest[pIdx + 1], "utf8");
+    } else {
+      payloadStr = readFileSync(0, "utf8"); // stdin
+    }
+    let payload;
+    try { payload = JSON.parse(payloadStr); }
+    catch { console.error("[leads] webhook payload is not valid JSON"); process.exit(5); }
+
+    const res = await ingestWebhook(graph, slug, payload, token);
+    // Keep the flat CSV in sync, exactly like the poller does.
+    const allLeads = readAllLeadsForCsv(slug);
+    const csvPath = P.clientFile(slug, "leads_export.csv", { forWrite: true });
+    writeLeadsCsv(allLeads, csvPath);
+    console.error(`[leads] webhook ingested ${res.new} new lead(s); ${allLeads.length} total`);
+    console.log(JSON.stringify({ slug, mode, ...res, total_stored: allLeads.length, csv: csvPath }, null, 2));
     return;
   }
 
@@ -299,7 +402,10 @@ async function main() {
   process.exit(1);
 }
 
-main().catch((e) => {
-  console.error("[leads] FATAL:", e.message);
-  process.exit(1);
-});
+// Only run as a CLI — guard so importing the pure helpers doesn't trigger main().
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("[leads] FATAL:", e.message);
+    process.exit(1);
+  });
+}

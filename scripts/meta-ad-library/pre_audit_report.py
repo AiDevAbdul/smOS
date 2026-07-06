@@ -25,7 +25,7 @@ from pathlib import Path
 
 # Shared smOS design system (Apple/Cupertino) — single source of truth.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
-from design_system import design_system_css  # noqa: E402
+from design_system import design_system_css, hero_header, hero_aside  # noqa: E402
 
 
 # ── Design tokens ───────────────────────────────────────────────────────────
@@ -125,7 +125,24 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
         snapshot.append(f"IG · {fmt_int(ig['followers'])} followers")
     if ig.get("posts_per_week") is not None:
         snapshot.append(f"{ig['posts_per_week']}/wk posts")
-    pills_html = "".join(f'<span class="pill">{e(s)}</span>' for s in snapshot)
+    # ── Canonical design-system hero (.ds-hero) ──
+    hero_aside_html = hero_aside(
+        body=(
+            '<canvas id="scoreGauge" width="160" height="160"></canvas>\n'
+            f'<div class="ds-hero__band">{e(band)}</div>'
+        ),
+        stat_label="Competitor outspend",
+        stat_value=ratio_display,
+        stat_caption=ratio_caption,
+    )
+    hero_html = hero_header(
+        title=business,
+        eyebrow="Pre-Audit Report · Prepared by Ducker Creative",
+        subtitle=timestamp,
+        headline=headline or "",
+        pills=snapshot,
+        aside=hero_aside_html,
+    )
 
     # ── Score dimension rows (5 equal weights) ──
     dim_meta = [
@@ -356,65 +373,11 @@ body {{
 }}
 
 /* ── Hero ─────────────────────────────────────────────────────── */
-.hero {{
-  background: var(--ds-grad-brand); color: #fff;
-  padding: 56px 40px 48px;
-}}
-/* Recolor hero text for white-on-aurora readability (design-system hero). */
-.hero .hero-eyebrow, .hero .hero-date,
-.hero .score-band-label, .hero .outspend-eyebrow,
-.hero .outspend-caption {{ color: rgba(255,255,255,.72); }}
-.hero .outspend-ratio {{ color: #fff; }}
-.hero-inner {{
-  max-width: 940px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr auto; gap: 56px; align-items: center;
-}}
-.hero-eyebrow {{
-  font-family: var(--ds-font-mono);
-  font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 10px;
-}}
-.hero h1 {{
-  font-family: var(--ds-font);
-  font-size: 40px; line-height: 1.1; font-weight: 400;
-  margin-bottom: 8px;
-}}
-.hero-headline {{
-  font-size: 15px; color: rgba(247,246,242,.7);
-  line-height: 1.55; max-width: 540px; margin-bottom: 20px;
-}}
-.hero-date {{
-  font-family: var(--ds-font-mono);
-  font-size: 10px; color: var(--muted); margin-bottom: 16px;
-}}
-.pills {{ display: flex; flex-wrap: wrap; gap: 8px; }}
-.pill {{
-  background: rgba(247,246,242,.1); border: 1px solid rgba(247,246,242,.14);
-  border-radius: 20px; padding: 4px 12px;
-  font-size: 12px; font-weight: 500;
-}}
-
-/* Score block */
-.score-block {{ text-align: center; flex-shrink: 0; }}
-.score-band-label {{
-  font-family: var(--ds-font-mono);
-  font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--muted); margin-top: 8px;
-}}
-.outspend-block {{ margin-top: 20px; }}
-.outspend-eyebrow {{
-  font-family: var(--ds-font-mono);
-  font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 4px;
-}}
-.outspend-ratio {{
-  font-family: var(--ds-font-mono);
-  font-size: 32px; font-weight: 700; color: var(--signal); line-height: 1;
-}}
-.outspend-caption {{
-  font-size: 11px; color: var(--muted);
-  max-width: 180px; margin: 4px auto 0; line-height: 1.4;
-}}
+/* The hero is the ONE canonical design-system hero (.ds-hero, supplied by
+   design_system_css() and rendered via hero_header()). No bespoke hero CSS
+   here — the score gauge canvas lives inside .ds-hero__aside. The wrapper
+   only centers the rounded hero card to match the .layout width below. */
+.hero-wrap {{ max-width: 940px; margin: 0 auto; padding: 40px 24px 0; }}
 
 /* ── Layout ───────────────────────────────────────────────────── */
 .layout {{
@@ -636,13 +599,10 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 720px) {{
-  .hero-inner {{ grid-template-columns: 1fr; }}
-  .score-block {{ margin-top: 28px; text-align: left; }}
   .layout {{ grid-template-columns: 1fr; padding: 28px 16px 60px; }}
   .rail {{ display: none; }}
   .wins-gaps-grid, .card-grid {{ grid-template-columns: 1fr; }}
   .rec-card {{ grid-template-columns: 1fr; }}
-  .hero h1 {{ font-size: 28px; }}
   .cta-heading {{ font-size: 24px; }}
 }}
 </style>
@@ -650,26 +610,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 <body>
 
 <!-- ═══ HERO ═══════════════════════════════════════════════════════ -->
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-meta">
-      <div class="hero-eyebrow">Pre-Audit Report · Prepared by Ducker Creative</div>
-      <h1>{e(business)}</h1>
-      <div class="hero-date">{timestamp}</div>
-      {f'<div class="hero-headline">{e(headline)}</div>' if headline else ''}
-      <div class="pills">{pills_html}</div>
-    </div>
-    <div class="score-block">
-      <canvas id="scoreGauge" width="160" height="160"></canvas>
-      <div class="score-band-label">{band}</div>
-      <div class="outspend-block">
-        <div class="outspend-eyebrow">Competitor outspend</div>
-        <div class="outspend-ratio">{e(ratio_display)}</div>
-        <div class="outspend-caption">{e(ratio_caption)}</div>
-      </div>
-    </div>
-  </div>
-</div>
+<div class="hero-wrap">{hero_html}</div>
 
 <!-- ═══ LAYOUT ══════════════════════════════════════════════════════ -->
 <div class="layout">

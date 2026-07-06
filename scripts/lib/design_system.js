@@ -37,13 +37,49 @@ ${extraHead}
 </head>`;
 }
 
-/** The standard blue gradient hero used at the top of every report. */
-export function heroHeader({ title, subtitle = "", eyebrow = "" } = {}) {
+/**
+ * The ONE canonical report hero. Every client-facing report renders this exact
+ * markup — never hand-roll a <header class="ds-hero"> or a bespoke .hero.
+ *
+ *  title    — required headline
+ *  subtitle — `·`-separated meta line
+ *  eyebrow  — badge pill text (e.g. agency name / report type)
+ *  headline — optional one-line summary under the title
+ *  pills    — optional array of short snapshot strings
+ *  aside    — optional pre-rendered HTML for the right-hand executive column
+ *             (e.g. a score ring + hero stat); pass via heroAside().
+ */
+export function heroHeader({ title, subtitle = "", subtitleHtml = "", eyebrow = "", headline = "", pills = [], aside = "" } = {}) {
+  const pillsHtml = pills.length
+    ? `<div class="ds-hero__pills">${pills.map((p) => `<span class="ds-hero__pill">${esc(p)}</span>`).join("")}</div>`
+    : "";
+  // subtitleHtml is trusted HTML (caller escapes dynamic parts); subtitle is escaped.
+  const metaInner = subtitleHtml || (subtitle ? esc(subtitle) : "");
   return `<header class="ds-hero">
-${eyebrow ? `<div class="ds-eyebrow">${esc(eyebrow)}</div>` : ""}
+<div class="ds-hero__inner${aside ? " has-aside" : ""}">
+<div class="ds-hero__main">
+${eyebrow ? `<div class="ds-hero__badge">${esc(eyebrow)}</div>` : ""}
 <h1>${esc(title)}</h1>
-${subtitle ? `<div class="ds-meta">${esc(subtitle)}</div>` : ""}
+${metaInner ? `<div class="ds-meta">${metaInner}</div>` : ""}
+${headline ? `<div class="ds-hero__headline">${esc(headline)}</div>` : ""}
+${pillsHtml}
+</div>
+${aside ? `<div class="ds-hero__aside">${aside}</div>` : ""}
+</div>
 </header>`;
+}
+
+/** Build the optional right-hand hero column: an HTML body (e.g. a score ring)
+ *  plus an optional single hero stat (label / value / caption). */
+export function heroAside({ body = "", statLabel = "", statValue = "", statCaption = "" } = {}) {
+  const stat = statValue
+    ? `<div class="ds-hero__stat">
+${statLabel ? `<div class="ds-hero__stat-label">${esc(statLabel)}</div>` : ""}
+<div class="ds-hero__stat-value">${esc(statValue)}</div>
+${statCaption ? `<div class="ds-hero__stat-caption">${esc(statCaption)}</div>` : ""}
+</div>`
+    : "";
+  return `${body}${stat}`;
 }
 
 /** Standard footer. Pass an ISO date string (callers avoid new Date() in workflows). */

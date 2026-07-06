@@ -19,6 +19,12 @@ import * as P from "../../scripts/lib/paths.js";
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
+// Keep fixture clients/prospects out of the real data dirs: route all fixture
+// writes under test/.tmp via SMOS_DATA_ROOT (honored by paths.js at call time
+// and inherited by spawned skills through runSkill's env). See A3.
+export const TEST_DATA_ROOT = resolve(ROOT, "test", ".tmp");
+if (!process.env.SMOS_DATA_ROOT) process.env.SMOS_DATA_ROOT = TEST_DATA_ROOT;
+
 /**
  * Absolute path to a fixture client's file, RESOLVED for reading: prefers the
  * canonical bucket (where rewired skills now write their output) and falls back
@@ -35,7 +41,7 @@ export function clientPath(slug, file) {
  * clientPath() above. Keeping inputs flat avoids pre-creating every data/ subdir.
  */
 export function makeClient(slug, files = {}) {
-  const dir = resolve(ROOT, "clients", slug);
+  const dir = P.clientRoot(slug);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   for (const [name, value] of Object.entries(files)) {
@@ -46,7 +52,7 @@ export function makeClient(slug, files = {}) {
 
 /** Remove a fixture client dir. Always call in a finally{}. */
 export function cleanup(slug) {
-  rmSync(resolve(ROOT, "clients", slug), { recursive: true, force: true });
+  rmSync(P.clientRoot(slug), { recursive: true, force: true });
 }
 
 /** Read a JSON artifact a skill wrote into the fixture client dir. */

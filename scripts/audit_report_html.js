@@ -17,7 +17,8 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { designSystemCss } from "./lib/design_system.js";
+import { designSystemCss, heroHeader } from "./lib/design_system.js";
+import * as P from "./lib/paths.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const esc = (s) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
@@ -46,8 +47,8 @@ function bullets(items, cls) {
 }
 
 function render(slug) {
-  const raw = JSON.parse(readFileSync(resolve(ROOT, "clients", slug, "audit_raw.json"), "utf8"));
-  const mdPath = resolve(ROOT, "clients", slug, "audit_report.md");
+  const raw = JSON.parse(readFileSync(resolve(P.clientRoot(slug), "audit_raw.json"), "utf8"));
+  const mdPath = resolve(P.clientRoot(slug), "audit_report.md");
   const md = existsSync(mdPath) ? readFileSync(mdPath, "utf8") : "";
 
   const fb = raw.organic?.facebook || {};
@@ -81,7 +82,6 @@ ${designSystemCss()}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font:15px/1.55 var(--ds-font);color:var(--ink);background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .wrap{max-width:860px;margin:0 auto;padding:40px 28px}
-header:not(.ds-hero){border-bottom:3px solid var(--blue);padding-bottom:18px;margin-bottom:28px}
 .ds-hero code{background:rgba(255,255,255,.18);color:#fff}
 .brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);font-weight:700}
 h1{font-size:27px;margin:6px 0 4px}.meta{color:var(--mut);font-size:13px}
@@ -110,9 +110,11 @@ th{background:#eef1f7;font-size:12px;text-transform:uppercase;letter-spacing:.04
 footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:12px}
 @media(max-width:640px){.cards{grid-template-columns:1fr}.score{flex-direction:column;text-align:center}}
 </style></head><body><div class="wrap">
-<header class="ds-hero"><div class="ds-eyebrow">${esc(agency)}</div>
-<h1>Meta Account &amp; Page Audit</h1>
-<div class="ds-meta">${esc(name)} · ${date} · Page <code>${esc(fb.page_id || "—")}</code> · Ad acct <code>${esc(paid.account_id || "none")}</code>${raw.pre_audit_source ? ` · pre-audit reused from <code>${esc(raw.pre_audit_source)}</code>` : ""}</div></header>
+${heroHeader({
+  eyebrow: agency,
+  title: "Meta Account & Page Audit",
+  subtitleHtml: `${esc(name)} · ${date} · Page <code>${esc(fb.page_id || "—")}</code> · Ad acct <code>${esc(paid.account_id || "none")}</code>${raw.pre_audit_source ? ` · pre-audit reused from <code>${esc(raw.pre_audit_source)}</code>` : ""}`,
+})}
 
 <div class="score"><div class="ring"><b>${score}<small>/100</small></b></div>
 <div><h2 style="border:0;margin:0 0 4px;padding:0">Overall health</h2>
@@ -164,7 +166,7 @@ function main() {
   const slug = args[0];
   if (!slug) { console.error("Usage: node scripts/audit_report_html.js <slug> [--out <path>]"); process.exit(1); }
   const outIdx = args.indexOf("--out");
-  const out = outIdx >= 0 ? args[outIdx + 1] : resolve(ROOT, "clients", slug, "reports", `${new Date().toISOString().slice(0, 10)}_audit.html`);
+  const out = outIdx >= 0 ? args[outIdx + 1] : resolve(P.clientRoot(slug), "reports", `${new Date().toISOString().slice(0, 10)}_audit.html`);
   const html = render(slug);
   writeFileSync(out, html);
   console.log(out);

@@ -155,7 +155,12 @@ li { margin: 4px 0; }
 .ds-section { margin: 36px 0; }
 
 /* -------------------------------------------------------------- Hero ------ */
+/* ONE canonical report hero. Every client-facing report MUST render this exact
+   structure via heroHeader() (JS) / hero_header() (Py) — never fork it.
+   Structure: .ds-hero > .ds-hero__inner > (.ds-hero__main + optional .ds-hero__aside) */
 .ds-hero {
+  position: relative;
+  overflow: hidden;
   background: var(--ds-grad-brand);
   color: #fff;
   border-radius: var(--ds-r-lg);
@@ -163,9 +168,76 @@ li { margin: 4px 0; }
   margin-bottom: 28px;
   box-shadow: 0 12px 32px rgba(94,92,230,.28);
 }
-.ds-hero h1 { color: #fff; margin: 0; font-size: var(--ds-fs-display); letter-spacing: -0.026em; }
-.ds-hero .ds-eyebrow { color: rgba(255,255,255,.82); }
+/* Subtle radial glow for depth (Stripe-style). Behind content, non-interactive. */
+.ds-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 78% 30%, rgba(255,255,255,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ds-hero > * { position: relative; z-index: 1; }
+.ds-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.ds-hero__inner.has-aside { grid-template-columns: 1fr auto; }
+.ds-hero h1 { color: #fff; margin: 0; font-size: var(--ds-fs-display); letter-spacing: -0.026em; line-height: 1.08; }
 .ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
+.ds-hero__headline { margin-top: 12px; font-size: 15px; line-height: 1.55; max-width: 560px; color: rgba(255,255,255,.78); }
+
+/* Eyebrow promoted to a badge pill with a status dot. */
+.ds-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.26);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.ds-hero__badge::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,.8);
+}
+
+/* Optional pill row (snapshot stats). */
+.ds-hero__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ds-hero__pill {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Optional right-hand executive column: score ring + a single hero stat. */
+.ds-hero__aside { text-align: center; flex-shrink: 0; }
+.ds-hero__stat { margin-top: 18px; }
+.ds-hero__stat-label,
+.ds-hero__aside .ds-hero__band {
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.72); margin-top: 8px;
+}
+.ds-hero__stat-value { font-size: 32px; font-weight: 700; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.ds-hero__stat-caption { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; max-width: 200px; }
+@media (max-width: 720px) {
+  .ds-hero__inner.has-aside { grid-template-columns: 1fr; }
+  .ds-hero__aside { text-align: left; }
+}
 
 .ds-eyebrow {
   text-transform: uppercase;

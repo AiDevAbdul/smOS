@@ -44,15 +44,65 @@ def report_head(title: str = "smOS Report", extra_head: str = "") -> str:
     )
 
 
-def hero_header(title: str, subtitle: str = "", eyebrow: str = "") -> str:
-    """Standard blue-gradient hero."""
-    eb = f'<div class="ds-eyebrow">{_esc(eyebrow)}</div>\n' if eyebrow else ""
-    sub = f'<div class="ds-meta">{_esc(subtitle)}</div>\n' if subtitle else ""
+def hero_header(
+    title: str,
+    subtitle: str = "",
+    eyebrow: str = "",
+    headline: str = "",
+    pills=None,
+    aside: str = "",
+    subtitle_html: str = "",
+) -> str:
+    """The ONE canonical report hero — never fork it.
+
+    title    : required headline
+    subtitle : `·`-separated meta line
+    eyebrow  : badge pill text (agency name / report type)
+    headline : optional one-line summary under the title
+    pills    : optional list of short snapshot strings
+    aside    : optional pre-rendered HTML for the right executive column
+               (e.g. a score ring + hero stat); build it with hero_aside().
+    """
+    eb = f'<div class="ds-hero__badge">{_esc(eyebrow)}</div>\n' if eyebrow else ""
+    meta_inner = subtitle_html or (_esc(subtitle) if subtitle else "")
+    sub = f'<div class="ds-meta">{meta_inner}</div>\n' if meta_inner else ""
+    hl = f'<div class="ds-hero__headline">{_esc(headline)}</div>\n' if headline else ""
+    pills_html = ""
+    if pills:
+        items = "".join(f'<span class="ds-hero__pill">{_esc(p)}</span>' for p in pills)
+        pills_html = f'<div class="ds-hero__pills">{items}</div>\n'
+    has_aside = " has-aside" if aside else ""
+    aside_html = f'<div class="ds-hero__aside">{aside}</div>\n' if aside else ""
     return (
         '<header class="ds-hero">\n'
-        f"{eb}<h1>{_esc(title)}</h1>\n{sub}"
+        f'<div class="ds-hero__inner{has_aside}">\n'
+        '<div class="ds-hero__main">\n'
+        f"{eb}<h1>{_esc(title)}</h1>\n{sub}{hl}{pills_html}"
+        "</div>\n"
+        f"{aside_html}"
+        "</div>\n"
         "</header>"
     )
+
+
+def hero_aside(
+    body: str = "",
+    stat_label: str = "",
+    stat_value: str = "",
+    stat_caption: str = "",
+) -> str:
+    """Build the optional right-hand hero column: an HTML body (e.g. a score
+    ring) plus an optional single hero stat (label / value / caption)."""
+    stat = ""
+    if stat_value:
+        lbl = f'<div class="ds-hero__stat-label">{_esc(stat_label)}</div>\n' if stat_label else ""
+        cap = f'<div class="ds-hero__stat-caption">{_esc(stat_caption)}</div>\n' if stat_caption else ""
+        stat = (
+            '<div class="ds-hero__stat">\n'
+            f'{lbl}<div class="ds-hero__stat-value">{_esc(stat_value)}</div>\n{cap}'
+            "</div>"
+        )
+    return f"{body}{stat}"
 
 
 # Apple system-color palette for Chart.js datasets (use in order).

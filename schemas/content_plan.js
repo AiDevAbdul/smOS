@@ -41,6 +41,8 @@ export function normalizeItem(raw) {
     keywords: asArray(pick(r, "keywords", "seo_keywords")),
     alt_text: pick(r, "alt_text") ?? null,
     hashtags: asArray(pick(r, "hashtags")),
+    // who writes the copy: "smos_ai" (AI-drafted) or "client_team" (opt-out)
+    produced_by: pick(r, "produced_by") ?? "smos_ai",
     // publish runtime fields (kept so a round-trip through /publish is lossless)
     status: (pick(r, "status") || "pending").toLowerCase(),
     published_id: pick(r, "published_id") ?? null,

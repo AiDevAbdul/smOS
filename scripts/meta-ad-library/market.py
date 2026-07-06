@@ -954,12 +954,15 @@ def main():
     )
     ap.add_argument(
         "--output", default=None,
-        help="Output HTML path (default: reports/blue_rose_auto_market_research.html)",
+        help="Output HTML path (default: data/research-cache/blue_rose_auto_market_research.html)",
     )
     args = ap.parse_args()
 
-    reports_dir = Path("reports")
-    reports_dir.mkdir(exist_ok=True)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+    from paths import research_cache_dir  # noqa: E402
+
+    reports_dir = research_cache_dir()  # data/research-cache (global market cache)
+    reports_dir.mkdir(parents=True, exist_ok=True)
 
     # ── Load category definitions from niche config ───────────────────────────
     niche_cats = load_niche_categories(args.niche)

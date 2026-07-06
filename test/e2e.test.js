@@ -17,8 +17,19 @@ import * as P from "../scripts/lib/paths.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SLUG = "__e2e_fixture";
-const FIX = resolve(ROOT, "clients", SLUG);
+
+// Keep the fixture out of the real data dirs (see A3). The SOURCE client
+// (blue-rose-auto) is real and lives at the repo root, so reads of it must
+// resolve against the real root — done by clearing SMOS_DATA_ROOT briefly.
+if (!process.env.SMOS_DATA_ROOT) process.env.SMOS_DATA_ROOT = resolve(ROOT, "test", ".tmp");
+const FIX = P.clientRoot(SLUG);
 const SRC = resolve(ROOT, "clients", "blue-rose-auto");
+
+function atRealRoot(fn) {
+  const saved = process.env.SMOS_DATA_ROOT;
+  delete process.env.SMOS_DATA_ROOT;
+  try { return fn(); } finally { if (saved !== undefined) process.env.SMOS_DATA_ROOT = saved; }
+}
 
 function run(scriptRelPath, ...args) {
   const r = spawnSync("node", [resolve(ROOT, scriptRelPath), SLUG, ...args], {
@@ -32,7 +43,8 @@ function setup() {
   mkdirSync(FIX, { recursive: true });
   for (const f of ["client_profile.json", "competitor_intel.json", "audience_map.json"]) {
     const dest = P.clientFile(SLUG, f, { forWrite: true });
-    copyFileSync(P.clientFile("blue-rose-auto", f), dest);
+    const src = atRealRoot(() => P.clientFile("blue-rose-auto", f));
+    copyFileSync(src, dest);
   }
   // Pre-resolve custom audiences (simulates a prior `--create-audiences` pass) so
   // the plan has real IDs — lets the gate also assert ZERO <TBD_> audiences.

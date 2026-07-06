@@ -44,9 +44,16 @@ export function resolveExisting(preferred, legacy) {
   return preferred;
 }
 
+// Data root for clients/ and prospects/. Defaults to the repo root, but tests
+// set SMOS_DATA_ROOT to a throwaway dir (test/.tmp) so fixture clients/prospects
+// never land in the real data dirs. Read at CALL TIME (not module load) so the
+// override can be set after this module is imported.
+const dataRoot = () =>
+  process.env.SMOS_DATA_ROOT ? resolve(process.env.SMOS_DATA_ROOT) : ROOT;
+
 // ──────────────────────────── client ────────────────────────────
 
-export const clientRoot = (slug) => resolve(ROOT, "clients", slug);
+export const clientRoot = (slug) => resolve(dataRoot(), "clients", slug);
 export const clientProfile = (slug) => resolve(clientRoot(slug), "profile.json");
 export const clientClaude = (slug) => resolve(clientRoot(slug), "CLAUDE.md");
 
@@ -67,13 +74,18 @@ export const clientState = (slug, file) => resolve(clientRoot(slug), "state", fi
 
 // ──────────────────────────── prospect ──────────────────────────
 
-export const prospectRoot = (slug) => resolve(ROOT, "prospects", slug);
+export const prospectRoot = (slug) => resolve(dataRoot(), "prospects", slug);
 export const prospectData = (slug, file) => resolve(prospectRoot(slug), "data", file);
 export const prospectRaw = (slug, file) => resolve(prospectRoot(slug), "data", "raw", file);
 export const prospectDeliverable = (slug, artifact, ext) =>
   resolve(prospectRoot(slug), "deliverables", artifact, `${artifact}.${ext}`);
 
 // ──────────────────────────── global ────────────────────────────
+
+// Per-client invoice ledgers live under the data root (so test fixtures land in
+// test/.tmp/billing, not the real billing/ tree).
+export const billingDir = (slug) => resolve(dataRoot(), "billing", slug);
+export const billingLedger = (slug) => resolve(billingDir(slug), "ledger.json");
 
 export const researchCacheDir = () => resolve(ROOT, "data", "research-cache");
 export const researchCache = (file) => resolve(researchCacheDir(), file);

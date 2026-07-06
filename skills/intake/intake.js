@@ -116,7 +116,7 @@ function blankAnswers(slug) {
 }
 
 function hydrateFromProspect(slug, answers) {
-  const prospectPath = resolve(ROOT, "prospects", slug, "page_audit.json");
+  const prospectPath = resolve(P.prospectRoot(slug), "page_audit.json");
   const prospect = readJsonIfExists(prospectPath);
   if (!prospect) return { hydrated: false, fields: [] };
 
@@ -291,9 +291,9 @@ function buildProfile(answers, accountMeta, { zeroStart = false } = {}) {
 }
 
 function archiveProspect(slug) {
-  const src = resolve(ROOT, "prospects", slug, "pre_audit.html");
+  const src = resolve(P.prospectRoot(slug), "pre_audit.html");
   if (!existsSync(src)) return null;
-  const destDir = resolve(ROOT, "clients", slug, "baseline");
+  const destDir = resolve(P.clientRoot(slug), "baseline");
   mkdirSync(destDir, { recursive: true });
   const dest = resolve(destDir, "pre_audit.html");
   copyFileSync(src, dest);
@@ -310,7 +310,7 @@ async function main() {
   if (mode === "init") {
     const slug = slugify(slugArg || "");
     if (!slug) throw new Error("init requires a slug arg");
-    const clientDir = resolve(ROOT, "clients", slug);
+    const clientDir = resolve(P.clientRoot(slug));
     mkdirSync(clientDir, { recursive: true });
     const answersPath = resolve(clientDir, "intake_answers.json");
     if (existsSync(answersPath)) {
@@ -329,7 +329,7 @@ async function main() {
   const slug = slugify(slugArg || "");
   if (!slug) throw new Error("build requires a slug arg");
 
-  const answersPath = argVal(rest, "--answers") || resolve(ROOT, "clients", slug, "intake_answers.json");
+  const answersPath = argVal(rest, "--answers") || resolve(P.clientRoot(slug), "intake_answers.json");
   if (!existsSync(answersPath)) throw new Error(`Answers file not found: ${answersPath}`);
   const answers = JSON.parse(readFileSync(answersPath, "utf8"));
 
@@ -362,7 +362,7 @@ async function main() {
   // legacy aliases are both populated from whatever the operator supplied.
   const profile = profileSchema.normalize(buildProfile(answers, accountMeta, { zeroStart }));
 
-  const clientDir = resolve(ROOT, "clients", slug);
+  const clientDir = resolve(P.clientRoot(slug));
   mkdirSync(clientDir, { recursive: true });
 
   const profilePath = P.clientFile(slug, "client_profile.json", { forWrite: true });

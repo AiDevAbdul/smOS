@@ -5,14 +5,20 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import * as P from "../scripts/lib/paths.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SCRIPT = resolve(ROOT, "skills/portal/portal.js");
 
+// Keep fixtures out of the real data dirs (see A3).
+const TEST_DATA_ROOT = resolve(ROOT, "test", ".tmp");
+if (!process.env.SMOS_DATA_ROOT) process.env.SMOS_DATA_ROOT = TEST_DATA_ROOT;
+
 // Build a throwaway client: profile + invoice ledger (+ optional content plan).
 function setup(slug, { invoices = [], content = null } = {}) {
-  const dir = resolve(ROOT, "clients", slug);
-  const billingDir = resolve(ROOT, "billing", slug);
+  const dir = P.clientRoot(slug);
+  const billingDir = P.billingDir(slug);
   mkdirSync(dir, { recursive: true });
   mkdirSync(billingDir, { recursive: true });
   writeFileSync(resolve(dir, "client_profile.json"),
@@ -23,7 +29,7 @@ function setup(slug, { invoices = [], content = null } = {}) {
 }
 
 function run(slug) {
-  return spawnSync("node", [SCRIPT, slug], { cwd: ROOT, encoding: "utf8" });
+  return spawnSync("node", [SCRIPT, slug], { cwd: ROOT, encoding: "utf8", env: process.env });
 }
 
 function cleanup(dir, billingDir) {

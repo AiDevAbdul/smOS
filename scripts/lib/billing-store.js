@@ -9,11 +9,12 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { invoice as invoiceSchema } from "../../schemas/index.js";
 import { upsert, supabaseConfigured } from "./supabase.js";
+import { billingLedger } from "./paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
 
-function ledgerPath(slug) { return resolve(ROOT, "billing", slug, "ledger.json"); }
+function ledgerPath(slug) { return billingLedger(slug); }
 
 export function listInvoices(slug) {
   const p = ledgerPath(slug);

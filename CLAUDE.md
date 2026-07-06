@@ -98,6 +98,13 @@ before a big push.
 | Script + produce short-form video (TikTok / Reels / Shorts) | `video-shorts`, `remotion` |
 | Time content to trends before producing | `social-media-trends-research` |
 
+**AI content is opt-in (per client):** some clients have their own content team or don't
+want AI-generated posts. `profile.content_preferences.mode` controls it — `ai_assisted`
+(default, smOS drafts captions), `client_team` (smOS plans the calendar + SEO targets, the
+client writes copy), or `ai_off`. `/content-plan` honors this: when AI is off it still
+builds the calendar but flags each item `produced_by:"client_team"` and writes a handoff
+caption instead of AI copy. Never auto-generate content for a `client_team`/`ai_off` client.
+
 **Publish-path reality (per `platform-specs.md` §6):** `/publish` automates **Facebook +
 Instagram only** today. **TikTok, LinkedIn, YouTube are gated** (audit/partner approval) —
 for those the content SOP ends at *finished asset + platform-native caption handed to the

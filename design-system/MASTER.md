@@ -27,10 +27,22 @@ scripts/lib/design_system.js   (Node)   scripts/lib/design_system.py  (Python)
 Every renderer **inlines** the CSS string (self-contained HTML, no external host —
 works offline and survives PDF conversion). The loaders expose:
 
-- **JS** (`scripts/lib/design_system.js`): `designSystemCss()`, `reportHead({title, extraHead})`, `heroHeader({title, subtitle, eyebrow})`, `reportFooter(date)`.
-- **Python** (`scripts/lib/design_system.py`): `design_system_css()`, `report_head()`, `hero_header()`, `CHART_PALETTE`, `CHART_THEME` (Chart.js global theming).
+- **JS** (`scripts/lib/design_system.js`): `designSystemCss()`, `reportHead({title, extraHead})`, `heroHeader({title, subtitle, subtitleHtml, eyebrow, headline, pills, aside})`, `heroAside({body, statLabel, statValue, statCaption})`, `reportFooter(date)`.
+- **Python** (`scripts/lib/design_system.py`): `design_system_css()`, `report_head()`, `hero_header(title, subtitle, eyebrow, headline, pills, aside, subtitle_html)`, `hero_aside(body, stat_label, stat_value, stat_caption)`, `CHART_PALETTE`, `CHART_THEME` (Chart.js global theming).
 
 New report? Import a loader and reuse the `ds-*` component classes. Never paste raw hex.
+
+### The hero is MANDATORY and uniform
+
+Every client-facing report renders **one** hero — the canonical `.ds-hero` — via
+`heroHeader()` / `hero_header()`. **Never** hand-roll a `<header class="ds-hero">`,
+fork a bespoke `.hero`, or override hero colors per report. The hero supports an
+optional right-hand executive column (`aside`) for a score ring + single hero stat
+(build it with `heroAside()` / `hero_aside()`); pass `eyebrow` for the badge pill,
+`headline` for a one-line summary, `pills` for a snapshot row. The `hero-uniform`
+test (`test/hero-uniform.test.js`) fails the build if a renderer hand-rolls a hero
+instead of calling the loader. The two standalone `templates/*.html` mirror the
+same aurora aesthetic (they are filled client-side and inline their own CSS).
 
 ---
 

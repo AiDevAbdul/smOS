@@ -49,6 +49,11 @@ export function nextMonday(from = new Date()) {
  * directly unit-testable and the validation gate can be exercised in isolation.
  */
 export function buildPlan({ profile, slug, weeks = 4, from = new Date() }) {
+  // AI content is opt-in (per the client's content_preferences). When the client
+  // produces their own copy, we still plan the calendar (dates, pillars, formats)
+  // but hand each slot to their team instead of drafting an AI caption.
+  const contentPrefs = profile?.content_preferences || {};
+  const aiCaptions = contentPrefs.ai_captions !== false && contentPrefs.mode !== "client_team" && contentPrefs.mode !== "ai_off";
   // --- pillars: derive from profile, fall back to a sensible default set ---
   const niche =
     profile?.business?.niche ||
@@ -94,10 +99,15 @@ export function buildPlan({ profile, slug, weeks = 4, from = new Date() }) {
         publish_at: when.toISOString(),
         // Social-SEO: lead the caption with the target keyword (search-as-discovery
         // signal) and hand a keyword-first scaffold to /creative to finish in voice.
-        message: keywordFirstCaption(
-          `${pillar.name}: ${kw}. _(creative agent to finish in brand voice — keep the keyword in the first line)_`,
-          kw
-        ),
+        // When AI captions are off, leave the slot for the client's team and keep
+        // only the keyword guidance (so SEO intent survives without AI-written copy).
+        message: aiCaptions
+          ? keywordFirstCaption(
+              `${pillar.name}: ${kw}. _(creative agent to finish in brand voice — keep the keyword in the first line)_`,
+              kw
+            )
+          : `${pillar.name}: ${kw}. _(client team to write — suggested keyword: "${kw}")_`,
+        produced_by: aiCaptions ? "smos_ai" : "client_team",
         keywords: pillar.keywords,
         // Cap to 3–5 targeted tags (per platform-specs.md) instead of dumping every keyword.
         hashtags: pillar.keywords
@@ -138,6 +148,11 @@ export function renderMarkdown(plan, profile = {}) {
   md += `**${name}** — organic content plan for **${plan.period.weeks} weeks** starting **${plan.period.start}**. `;
   md += `${plan.pillars.length} content pillars, ${plan.items.length} scheduled posts (Reels-first, Mon/Wed/Fri). `;
   md += `Captions are strategic hooks; the client's in-house team produces final media.\n\n`;
+  const mode = profile?.content_preferences?.mode;
+  if (mode === "client_team" || mode === "ai_off") {
+    md += `> **Copy production: client team.** smOS plans the calendar and SEO keyword targets; ` +
+      `your team writes the captions. (Set \`content_preferences.mode = "ai_assisted"\` to have smOS draft them.)\n\n`;
+  }
 
   md += `## Content Pillars\n\n`;
   md += `| Pillar | Intent | Cadence / wk | Keywords |\n|---|---|---|---|\n`;
@@ -164,7 +179,7 @@ async function main() {
   const weeks = Number((process.argv.find((a) => a.startsWith("--weeks="))?.split("=")[1]) || 4);
   const draft = process.argv.includes("--draft");
 
-  const dir = resolve(ROOT, "clients", slug);
+  const dir = resolve(P.clientRoot(slug));
   const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found — run /intake first.`); process.exit(3); }
   const profile = JSON.parse(readFileSync(profilePath, "utf8"));

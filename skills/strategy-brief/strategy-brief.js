@@ -59,6 +59,64 @@ function decideObjectiveHierarchy(profile, audit) {
   ];
 }
 
+// ── Advantage+ Shopping (ASC) decision (B1) ──────────────────────────────────
+// ASC is the modern default for e-commerce with a healthy conversion pixel: Meta
+// auto-manages audience + placement and only needs creative + an existing-customer
+// budget cap. We make it the DEFAULT when both conditions hold, and fall back to
+// the manual ABO/CBO audience tree otherwise.
+
+function isEcommerce(profile) {
+  const b = profile.business || {};
+  const model = String(b.business_model || b.type || "").toLowerCase();
+  if (["ecommerce", "e-commerce", "online_store", "online store", "dtc", "d2c", "retail", "shopify"].some((m) => model.includes(m))) {
+    return true;
+  }
+  const events = (b.conversion_events || []).map((e) => String(e).toLowerCase());
+  if (events.includes("purchase")) return true;
+  if (profile.accounts?.catalog_id) return true;
+  return false;
+}
+
+function pixelHealthy(profile, audit) {
+  const h = audit?.paid?.pixel_health;
+  if (h === "full") return true;
+  if (h && h !== "full" && h !== "unknown") return false; // audit explicitly says unhealthy
+  const a = profile.accounts || {};
+  const id = a.pixel_id;
+  const tbd = !id || /^<?TBD/i.test(String(id).trim());
+  return a.pixel_installed === true && !tbd;
+}
+
+function decideCampaignType(profile, audit) {
+  const ecommerce = isEcommerce(profile);
+  const healthy = pixelHealthy(profile, audit);
+  if (ecommerce && healthy) {
+    const ec = profile.unit_economics || {};
+    // Cap budget spent re-acquiring existing customers (default 20%); when LTV is
+    // known and high we let Meta spend a touch more on retention.
+    const existingPct =
+      Number.isFinite(Number(ec.existing_customer_budget_percentage))
+        ? Number(ec.existing_customer_budget_percentage)
+        : 20;
+    return {
+      campaign_type: "asc",
+      asc: {
+        existing_customer_budget_percentage: existingPct,
+        catalog_id: profile.accounts?.catalog_id || null,
+        conversion_event: (profile.business?.conversion_events?.find((e) => /purchase/i.test(e)) || "Purchase"),
+        reason: "e-commerce + healthy conversion pixel → Advantage+ Shopping as the default structure",
+      },
+    };
+  }
+  return {
+    campaign_type: "manual",
+    asc: null,
+    reason: ecommerce
+      ? "pixel not healthy/confirmed — ASC needs a conversion signal; using manual ABO/CBO tree until it learns"
+      : "not an e-commerce business — manual audience-tree campaign structure",
+  };
+}
+
 function rankAudiences(audienceMap) {
   const clusters = audienceMap?.clusters || [];
   const ranked = [];
@@ -301,6 +359,17 @@ export function renderMarkdown(brief, profile) {
   lines.push(`> Reply 'approve' in Discord to lock this brief, or 'reject [reason]' to revise.`);
   lines.push(``);
 
+  lines.push(`## Campaign structure`);
+  if (brief.campaign_type === "asc") {
+    lines.push(`**Advantage+ Shopping (ASC)** — ${brief.campaign_type_reason}`);
+    lines.push(`- Existing-customer budget cap: **${brief.asc.existing_customer_budget_percentage}%**`);
+    lines.push(`- Conversion event: \`${brief.asc.conversion_event}\`${brief.asc.catalog_id ? ` · catalog \`${brief.asc.catalog_id}\`` : " · no catalog (creative-only)"}`);
+    lines.push(`- Meta auto-manages audience + placement; the manual audience tree below is a fallback if ASC underperforms.`);
+  } else {
+    lines.push(`**Manual (ABO/CBO) audience tree** — ${brief.campaign_type_reason}`);
+  }
+  lines.push(``);
+
   lines.push(`## Objective hierarchy`);
   for (const p of brief.objective_hierarchy) {
     lines.push(`- **Phase ${p.phase}** — Day ${p.start_day}+ — \`${p.objective}\` · ${p.reason}`);
@@ -367,7 +436,7 @@ async function main() {
     console.error("Usage: node skills/strategy-brief/strategy-brief.js <slug>");
     process.exit(1);
   }
-  const dir = resolve(ROOT, "clients", slug);
+  const dir = resolve(P.clientRoot(slug));
   const profilePath = P.clientFile(slug, "client_profile.json");
   const profile = loadJsonIfExists(profilePath);
   if (!profile) {
@@ -389,6 +458,7 @@ async function main() {
   }
 
   console.error(`[strategy-brief] ${slug} — synthesizing…`);
+  const campaignType = decideCampaignType(profile, audit);
   const objectiveHierarchy = decideObjectiveHierarchy(profile, audit);
   const audiencePriority = rankAudiences(audienceMap);
   const budgetAllocation = allocateBudgets(profile, audiencePriority);
@@ -407,6 +477,9 @@ async function main() {
       competitor_intel: true,
       audience_map: true,
     },
+    campaign_type: campaignType.campaign_type,
+    asc: campaignType.asc,
+    campaign_type_reason: campaignType.reason,
     objective_hierarchy: objectiveHierarchy,
     budget_allocation: budgetAllocation,
     audience_priority: audiencePriority,
@@ -440,6 +513,7 @@ async function main() {
 
   console.log(JSON.stringify({
     slug,
+    campaign_type: brief.campaign_type,
     daily_total: brief.budget_allocation.daily_total,
     phases: brief.objective_hierarchy.length,
     audiences: brief.audience_priority.length,

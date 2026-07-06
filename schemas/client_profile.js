@@ -64,9 +64,54 @@ export function normalizeSetup(raw) {
   };
 }
 
+// Unit economics — what /analyze + /report need to turn raw platform ROAS into
+// margin-aware, business-level numbers (blended MER, breakeven/target ROAS,
+// new-customer CAC). All fields optional; null when the client hasn't supplied
+// them, and the economics layer degrades gracefully (omits what it can't derive).
+export function normalizeUnitEconomics(raw) {
+  const u = raw || {};
+  const num = (...keys) => {
+    const v = pick(u, ...keys);
+    return v == null || v === "" || Number.isNaN(Number(v)) ? null : Number(v);
+  };
+  // gross_margin accepts either a fraction (0.6) or a percent (60).
+  let gm = num("gross_margin", "margin");
+  if (gm != null && gm > 1) gm = gm / 100;
+  return {
+    gross_margin: gm,                                   // 0..1
+    average_order_value: num("average_order_value", "aov"),
+    customer_ltv: num("customer_ltv", "ltv"),
+    target_cac: num("target_cac", "nCAC_target"),
+    // MER = total revenue / total ad spend; this is the client's GOAL for it.
+    target_mer: num("target_mer", "mer_target"),
+  };
+}
+
+// Content-production preference. AI content generation is OPT-IN per client:
+// some clients have their own content team or don't want AI-generated posts.
+//   mode "ai_assisted" (default) — smOS drafts keyword-first captions for review
+//   mode "client_team"           — smOS plans the calendar but the client produces copy
+//   mode "ai_off"                — no AI content at all (calendar structure only)
+const CONTENT_MODES = new Set(["ai_assisted", "client_team", "ai_off"]);
+export function normalizeContentPreferences(raw) {
+  const c = raw || {};
+  const mode = CONTENT_MODES.has(c.mode) ? c.mode : "ai_assisted";
+  return {
+    mode,
+    // explicit override; otherwise AI captions only when mode is ai_assisted
+    ai_captions: typeof c.ai_captions === "boolean" ? c.ai_captions : mode === "ai_assisted",
+  };
+}
+
 export function normalize(raw) {
   const r = raw || {};
-  return { ...r, accounts: normalizeAccounts(r.accounts), setup: normalizeSetup(r.setup) };
+  return {
+    ...r,
+    accounts: normalizeAccounts(r.accounts),
+    setup: normalizeSetup(r.setup),
+    unit_economics: normalizeUnitEconomics(r.unit_economics),
+    content_preferences: normalizeContentPreferences(r.content_preferences),
+  };
 }
 
 /** Validate the accounts needed for a LIVE launch. Pre-launch skills (intake) may

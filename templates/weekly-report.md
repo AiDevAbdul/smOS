@@ -33,6 +33,17 @@
 | ROAS | {{roas_target}}x | {{roas}}x | {{roas_status}} |
 | CTR (link) | {{ctr_target}}% | {{ctr}}% | {{ctr_status}} |
 
+## Account Economics
+
+| Metric | Value |
+|---|---|
+| Blended MER | {{blended_mer}}x |
+| Breakeven ROAS | {{breakeven_roas}}x |
+| Target ROAS | {{econ_target_roas}}x |
+| Gross profit (ad-driven) | {{gross_profit}} |
+| Profit after ad spend | {{profit_after_ads}} |
+| New-customer CAC | {{ncac}} |
+
 ### CTR by Placement
 
 | Placement | CTR | Spend share |

@@ -27,7 +27,7 @@ const slug = process.argv[2];
 if (!slug) { console.error("usage: listening.js <slug>"); process.exit(2); }
 const OFFLINE = process.env.SMOS_OFFLINE === "1";
 
-const dir = resolve(ROOT, "clients", slug);
+const dir = resolve(P.clientRoot(slug));
 const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));

@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "Autonomous Social Media Operating System — Meta ads management, organic social, reporting, and daily optimization via Claude Code",
   "author": {
-    "name": "smOS"
+    "name": "Ducker Creative",
+    "email": "abdul@duckercreative.com"
   },
-  "homepage": "https://github.com/smOS",
+  "homepage": "https://github.com/duckercreative/smOS",
+  "repository": "https://github.com/duckercreative/smOS",
+  "license": "UNLICENSED",
   "keywords": ["meta-ads", "facebook-ads", "instagram-ads", "social-media", "marketing", "agency", "automation"],
 
   "agents": [

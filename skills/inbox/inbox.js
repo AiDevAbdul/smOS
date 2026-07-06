@@ -32,7 +32,7 @@ if (!slug) { console.error("usage: inbox.js <slug> [--sla-minutes N]"); process.
 const slaMinutes = Number((process.argv.find((a) => a.startsWith("--sla-minutes="))?.split("=")[1]) || 60);
 const OFFLINE = process.env.SMOS_OFFLINE === "1";
 
-const dir = resolve(ROOT, "clients", slug);
+const dir = resolve(P.clientRoot(slug));
 const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found — run /intake first.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));

@@ -25,6 +25,8 @@ import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { deriveMetrics, findAction, round, normalizeKpis } from "../../scripts/lib/metrics.js";
 import { twoProportionZ, scaleSignificance } from "../../scripts/lib/stats.js";
 import { opportunityScore } from "../../scripts/lib/opportunity.js";
+import { computeEconomics } from "../../scripts/lib/economics.js";
+import { normalizeUnitEconomics } from "../../schemas/client_profile.js";
 import { insert as sbInsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 import * as P from "../../scripts/lib/paths.js";
@@ -312,6 +314,34 @@ function summarizeWindow(rows) {
   return totals;
 }
 
+// Render the account-economics block as markdown rows. Returns [] (skips the
+// whole section) when no economics input was usable, so a client with no
+// unit_economics doesn't get an empty table.
+export function economicsSection(e, currency) {
+  if (!e) return [];
+  const cur = currency || "$";
+  const money = (v) => (v == null ? "—" : `${cur === "$" ? "$" : cur + " "}${v}`);
+  const pct = (v) => (v == null ? "—" : `${Math.round(v * 100)}%`);
+  const x = (v) => (v == null ? "—" : `${v}×`);
+  const hasAny = [e.blended_mer, e.breakeven_roas, e.nCAC, e.profit_after_ads].some((v) => v != null);
+  if (!hasAny) return [];
+  const rows = [
+    `## Account economics`,
+    ``,
+    `| Metric | Value |`,
+    `|---|---|`,
+    `| Blended MER | ${x(e.blended_mer)}${e.mer_verdict ? ` (${e.mer_verdict.replace("_", " ")})` : ""} |`,
+    `| Breakeven ROAS | ${x(e.breakeven_roas)} |`,
+    `| Target ROAS | ${x(e.target_roas)} |`,
+    `| Gross margin | ${pct(e.gross_margin)} |`,
+    `| Gross profit (ad-driven) | ${money(e.gross_profit)} |`,
+    `| Profit after ad spend | ${money(e.profit_after_ads)} |`,
+    `| New-customer CAC | ${money(e.nCAC)}${e.cac_basis === "all_conversions" ? " _(all conversions)_" : ""}${e.cac_verdict ? ` (${e.cac_verdict.replace("_", " ")})` : ""} |`,
+    ``,
+  ];
+  return rows;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
@@ -444,6 +474,10 @@ async function main() {
   // Opportunity Score — one explainable number for unrealized upside in the account.
   const opportunity = opportunityScore({ adsets: adsetRows, ads: adRows, flags, kpis });
 
+  // Account-level economics (B2): blended MER, margin-aware target ROAS, nCAC.
+  const accountTotals = summarizeWindow(campaignRows);
+  const economics = computeEconomics(accountTotals, normalizeUnitEconomics(profile.unit_economics));
+
   const out = {
     slug,
     generated_at: new Date().toISOString(),
@@ -458,6 +492,7 @@ async function main() {
     by_ad: adRows,
     flags,
     opportunity,
+    economics,
     winners: { top_roas: ranking.top_roas, lowest_cpa: ranking.lowest_cpa },
     losers: { bottom_roas: ranking.bottom_roas },
     segment_highlights: segmentHighlights,
@@ -490,6 +525,7 @@ async function main() {
       `| Link CTR | ${ws.link_ctr ?? "—"}% |`,
       `| Conversions | ${ws.conversions ?? "—"} |`,
       ``,
+      ...economicsSection(economics, profile.accounts?.currency),
       `## Flags (${flags.length})`,
       ``,
       Object.keys(fc).length ? Object.entries(fc).map(([k, v]) => `- **${k}**: ${v}`).join("\n") : "_No threshold breaches._",
@@ -555,7 +591,10 @@ async function main() {
   );
 }
 
-main().catch((e) => {
-  console.error("[analyze] FATAL:", e.message);
-  process.exit(1);
-});
+// Only run as a CLI — guard so importing economicsSection() doesn't trigger main().
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("[analyze] FATAL:", e.message);
+    process.exit(1);
+  });
+}

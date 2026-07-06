@@ -20,6 +20,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { computeVideoScore } from "../../scripts/lib/video_scoring.js";
 import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -85,6 +86,53 @@ async function fetchAdCreatives(graph, adAccountId) {
   }
 }
 
+// Sum a Meta "actions"-style array ([{action_type, value}, …]) to a number.
+function sumActions(arr) {
+  if (!Array.isArray(arr)) return null;
+  return arr.reduce((s, a) => s + (Number(a.value) || 0), 0);
+}
+
+// B3: pull ad-level video-play metrics and key them by creative id, so video
+// assets are scored on hook + retention (not their thumbnail). Best-effort — any
+// failure returns an empty map and the skill falls back to thumbnail scoring.
+async function fetchVideoInsights(graph, adAccountId) {
+  if (!adAccountId || isTbd(adAccountId)) return {};
+  const id = adAccountId.startsWith("act_") ? adAccountId : `act_${adAccountId}`;
+  try {
+    const res = await graph.get(`/${id}/ads`, {
+      fields:
+        "id,creative{id},insights.date_preset(last_30d){impressions,video_play_actions,video_thruplay_watched_actions,video_p75_watched_actions,video_p100_watched_actions,video_avg_time_watched_actions,video_30_sec_watched_actions}",
+      limit: 100,
+    });
+    const byCreative = {};
+    for (const ad of res.data || []) {
+      const cid = ad.creative?.id;
+      const ins = ad.insights?.data?.[0];
+      if (!cid || !ins) continue;
+      const m = {
+        impressions: Number(ins.impressions) || null,
+        video_plays: sumActions(ins.video_play_actions),
+        thruplays: sumActions(ins.video_thruplay_watched_actions),
+        // 3s views aren't a first-class field; thruplay is the closest hook proxy
+        // Meta still returns, so use it as the 3s base when present.
+        video_3s_views: sumActions(ins.video_play_actions),
+        p75: sumActions(ins.video_p75_watched_actions),
+        p100: sumActions(ins.video_p100_watched_actions),
+        avg_time_watched_sec: sumActions(ins.video_avg_time_watched_actions),
+      };
+      // Accumulate across ads sharing a creative.
+      const prev = byCreative[cid] || {};
+      byCreative[cid] = Object.fromEntries(
+        Object.keys(m).map((k) => [k, (prev[k] || 0) + (m[k] || 0)]),
+      );
+    }
+    return byCreative;
+  } catch (e) {
+    console.error(`[audit-creative] video insights fetch failed: ${e.message}`);
+    return {};
+  }
+}
+
 function checkRestricted(copy, restricted) {
   const t = String(copy || "").toLowerCase();
   return restricted.filter((w) => {
@@ -112,13 +160,16 @@ async function collect(slug) {
   const pageId = acct.page_id || acct.facebook_page_id;
   const adAccountId = acct.ad_account_id;
 
-  const [organic, ads] = await Promise.all([
+  const [organic, ads, videoInsights] = await Promise.all([
     fetchOrganicPosts(graph, pageId),
     fetchAdCreatives(graph, adAccountId),
+    fetchVideoInsights(graph, adAccountId),
   ]);
 
   const all = [...organic, ...ads]
-    .filter((a) => a.image_url) // status posts excluded
+    // Keep videos even without a thumbnail (image_url) — they're scored on
+    // retention, not the still. Other formats still require an image.
+    .filter((a) => a.image_url || a.format === "video")
     .filter((a) => !a.created_at || daysAgo(a.created_at) <= MAX_AGE_DAYS);
 
   const restricted = [...(profile.voice?.restricted_words || []), ...(profile.voice?.avoid || [])].map((w) => String(w).toLowerCase());
@@ -127,6 +178,11 @@ async function collect(slug) {
     ...a,
     copy_length: (a.copy || "").length,
     restricted_word_hits: checkRestricted(a.copy, restricted),
+    // B3: videos carry a hook+retention score from play metrics (null until
+    // metrics exist); images/carousels stay on the thumbnail vision-scorer.
+    video_score: a.format === "video" && videoInsights[a.asset_id]
+      ? computeVideoScore(videoInsights[a.asset_id])
+      : null,
     vision_scores: {
       visual_quality: null,
       brand_consistency: null,
@@ -205,6 +261,10 @@ function pctUnder(arr, key, threshold) {
 }
 
 function weightedScore(a) {
+  // B3: rank videos by their hook+retention score (1–10), NOT their thumbnail.
+  if (a.format === "video" && a.video_score?.score != null) {
+    return a.video_score.score;
+  }
   const s = a.vision_scores || {};
   if (s.visual_quality == null) return -1;
   let score = (s.visual_quality + s.brand_consistency + s.messaging_clarity) / 3;
@@ -213,36 +273,59 @@ function weightedScore(a) {
   return score;
 }
 
+function avgVideoMetric(items, key) {
+  const vals = items.map((a) => a.video_score?.[key]).filter((v) => typeof v === "number");
+  if (!vals.length) return null;
+  return Math.round((vals.reduce((s, v) => s + v, 0) / vals.length) * 10) / 10;
+}
+
 function aggregate(slug) {
   const assetsPath = P.clientFile(slug, "creative_assets.json");
   if (!existsSync(assetsPath)) throw new Error(`Run collect first: ${assetsPath} not found`);
   const data = JSON.parse(readFileSync(assetsPath, "utf8"));
   const assets = data.assets || [];
-  const scored = assets.filter((a) => a.vision_scores?.visual_quality != null);
+  // An asset counts as "scored" if Claude filled its vision_scores OR (for video)
+  // it carries a hook+retention score from play metrics.
+  const scored = assets.filter(
+    (a) => a.vision_scores?.visual_quality != null || a.video_score?.score != null,
+  );
 
   if (!scored.length) {
-    throw new Error("No assets have vision_scores filled — have Claude run the batch prompts first");
+    throw new Error("No assets scored — fill vision_scores (images) or supply video metrics (collect)");
   }
 
   const byFormat = (fmt) => scored.filter((a) => a.format === fmt);
   const formats = ["image", "video", "carousel"];
   const formatStats = Object.fromEntries(formats.map((f) => {
     const items = byFormat(f);
-    return [f, {
+    const base = {
       count: items.length,
       visual_quality: average(items, "visual_quality"),
       brand_consistency: average(items, "brand_consistency"),
       cta_present_pct: pctTrue(items, "cta_present"),
       text_density_compliant_pct: pctUnder(items, "text_density_pct", TEXT_DENSITY_BEST),
       messaging_clarity: average(items, "messaging_clarity"),
-    }];
+    };
+    // B3: videos get hook + retention rollups instead of thumbnail-only stats.
+    if (f === "video") {
+      base.avg_retention_score = avgVideoMetric(items, "score");
+      base.avg_hook_rate_pct = avgVideoMetric(items, "hook_rate");
+      base.avg_hold_rate_pct = avgVideoMetric(items, "hold_rate");
+      base.avg_completion_pct = avgVideoMetric(items, "completion_rate");
+    }
+    return [f, base];
   }));
 
   const ranked = scored.map((a) => ({ ...a, _w: weightedScore(a) })).sort((a, b) => b._w - a._w);
   const top3 = ranked.slice(0, 3).map((a) => ({ asset_id: a.asset_id, permalink: a.permalink, weighted: Math.round(a._w * 10) / 10, notes: a.vision_scores.notes }));
   const bottom3 = ranked.slice(-3).reverse().map((a) => ({ asset_id: a.asset_id, permalink: a.permalink, weighted: Math.round(a._w * 10) / 10, notes: a.vision_scores.notes }));
 
-  const overall = Math.round((average(scored, "visual_quality") + average(scored, "brand_consistency") + average(scored, "messaging_clarity")) / 3 * 10) / 10;
+  // Overall health: average the three vision metrics across thumbnail-scored
+  // assets; if the account is video-only, fall back to the avg retention score.
+  const visionScored = scored.filter((a) => a.vision_scores?.visual_quality != null);
+  const overall = visionScored.length
+    ? Math.round((average(visionScored, "visual_quality") + average(visionScored, "brand_consistency") + average(visionScored, "messaging_clarity")) / 3 * 10) / 10
+    : (avgVideoMetric(scored, "score") ?? 0);
   const violations = scored.filter((a) => a.restricted_word_hits?.length).map((a) => ({ asset_id: a.asset_id, hits: a.restricted_word_hits }));
 
   const md = renderSection({
@@ -297,6 +380,16 @@ function aggregate(slug) {
   }, null, 2));
 }
 
+// B3: video hook+retention rollup (only when we have video metrics).
+function videoRetentionBlock(v) {
+  if (!v || v.avg_retention_score == null) return "";
+  return `
+**Video hook & retention** (scored on play metrics, not thumbnail):
+- Avg retention score: ${v.avg_retention_score}/10
+- Avg hook rate (3s): ${v.avg_hook_rate_pct ?? "—"}% · hold rate (p75): ${v.avg_hold_rate_pct ?? "—"}% · completion: ${v.avg_completion_pct ?? "—"}%
+`;
+}
+
 function renderSection({ n, organic_n, ad_n, overall, formatStats, top3, bottom3, violations }) {
   const row = (f) => `| ${f} | ${formatStats[f.toLowerCase()].visual_quality ?? "—"} | ${formatStats[f.toLowerCase()].brand_consistency ?? "—"} | ${formatStats[f.toLowerCase()].cta_present_pct ?? "—"}% | ${formatStats[f.toLowerCase()].text_density_compliant_pct ?? "—"}% | ${formatStats[f.toLowerCase()].messaging_clarity ?? "—"} |`;
   return `### Creative Audit
@@ -309,7 +402,7 @@ function renderSection({ n, organic_n, ad_n, overall, formatStats, top3, bottom3
 ${row("Image")}
 ${row("Video")}
 ${row("Carousel")}
-
+${videoRetentionBlock(formatStats.video)}
 **Top 3 best performers:**
 ${top3.map((a, i) => `${i + 1}. ${a.permalink || a.asset_id} — ${a.notes || ""} (weighted ${a.weighted})`).join("\n")}
 

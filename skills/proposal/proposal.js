@@ -18,6 +18,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 import { getDeal, upsertDeal } from "../../scripts/lib/crm-store.js";
 import { deal as dealSchema } from "../../schemas/index.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -49,7 +50,7 @@ export function pickPackage(catalog, { packageId = null, retainer = 0 } = {}) {
 function loadFindings(slug) {
   // Pull the prospect's situation from /pre-audit output if it ran.
   for (const f of ["synthesis.json", "page_audit.json"]) {
-    const p = resolve(ROOT, "prospects", slug, f);
+    const p = resolve(P.prospectRoot(slug), f);
     if (existsSync(p)) { try { return JSON.parse(readFileSync(p, "utf8")); } catch { /* ignore */ } }
   }
   return null;

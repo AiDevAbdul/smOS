@@ -25,7 +25,7 @@ loadEnv({ silent: true });
 
 const slug = process.argv[2];
 if (!slug) { console.error("usage: portal.js <slug>"); process.exit(2); }
-const dir = resolve(ROOT, "clients", slug);
+const dir = resolve(P.clientRoot(slug));
 const profilePath = P.clientFile(slug, "client_profile.json"); // canonical profile.json, legacy fallback
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));

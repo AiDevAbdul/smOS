@@ -361,7 +361,7 @@ function main() {
   if (mode === "skeleton") {
     const brief = loadBrief(slug);
     const skel = buildSkeleton(profile, brief);
-    const outPath = resolve(ROOT, "clients", slug, "ad_copy_draft.json");
+    const outPath = resolve(P.clientRoot(slug), "ad_copy_draft.json");
     if (existsSync(outPath)) {
       console.error(`[creative] draft already exists: ${outPath} — refusing to overwrite`);
       process.exit(2);
@@ -384,7 +384,7 @@ function main() {
     console.error(`[creative] WARN: strategy brief status="${approval}" — linting anyway, but block /launch until approved`);
   }
 
-  const draftPath = argVal(rest, "--draft") || resolve(ROOT, "clients", slug, "ad_copy_draft.json");
+  const draftPath = argVal(rest, "--draft") || resolve(P.clientRoot(slug), "ad_copy_draft.json");
   if (!existsSync(draftPath)) throw new Error(`Draft not found: ${draftPath} — run skeleton mode first`);
   const draft = JSON.parse(readFileSync(draftPath, "utf8"));
 

@@ -5,9 +5,14 @@ import { writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import * as P from "../scripts/lib/paths.js";
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SCRIPT = resolve(ROOT, "skills/brand-visual/brand-visual.js");
+
+// Keep fixtures out of the real data dirs (see A3).
+if (!process.env.SMOS_DATA_ROOT) process.env.SMOS_DATA_ROOT = resolve(ROOT, "test", ".tmp");
 
 // A minimal-but-valid visual layer matching schemas/brand_profile.js → visual,
 // enough for the saveBrand("visual") stage to validate once the gate is cleared.
@@ -20,7 +25,7 @@ const VISUAL_INPUT = {
 
 // Build a brand_profile.json for a throwaway slug. `nameApproved` toggles GATE 2.
 function setupBrand(slug, { nameApproved }) {
-  const dir = resolve(ROOT, "clients", slug);
+  const dir = P.clientRoot(slug);
   mkdirSync(dir, { recursive: true });
   const profile = {
     client_slug: slug,
@@ -41,7 +46,7 @@ function setupBrand(slug, { nameApproved }) {
 }
 
 function run(slug, inPath) {
-  return spawnSync("node", [SCRIPT, slug, "--in", inPath], { cwd: ROOT, encoding: "utf8" });
+  return spawnSync("node", [SCRIPT, slug, "--in", inPath], { cwd: ROOT, encoding: "utf8", env: process.env });
 }
 
 function cleanup(dir) {

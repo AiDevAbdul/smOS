@@ -31,7 +31,7 @@ if (!slug) { console.error("usage: attribution.js <slug> [--method M] [--study-i
 const method = (process.argv.find((a) => a.startsWith("--method="))?.split("=")[1]) || "meta_lift_study";
 const OFFLINE = process.env.SMOS_OFFLINE === "1";
 
-const dir = resolve(ROOT, "clients", slug);
+const dir = resolve(P.clientRoot(slug));
 const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));

@@ -32,7 +32,7 @@ const slug = process.argv[2];
 const onlyReady = process.argv.includes("--only-ready");
 if (!slug || slug.startsWith("--")) { console.error("usage: bundle.js <slug> [--only-ready]"); process.exit(2); }
 
-const clientDir = resolve(ROOT, "clients", slug);
+const clientDir = resolve(P.clientRoot(slug));
 const profilePath = P.clientFile(slug, "client_profile.json"); // canonical profile.json, legacy fallback
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found. Run /intake first.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
@@ -122,7 +122,7 @@ const PHASES = [
     desc: "Where you started — market & account snapshot before we engaged.",
     resolve: () => firstOf(
       exact(P.prospectDeliverable(slug, "pre-audit", "html"), "Pre-Audit"),
-      exact(resolve(ROOT, "prospects", slug, "pre_audit.html"), "Pre-Audit"),
+      exact(resolve(P.prospectRoot(slug), "pre_audit.html"), "Pre-Audit"),
       matchIn(publicDir, /-pre-audit\.html$/, () => "Pre-Audit")) },
   { key: "audit", title: "Account Audit",
     desc: "Full Facebook, Instagram & pixel health audit with a scored breakdown.",

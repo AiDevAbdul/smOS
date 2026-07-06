@@ -10,16 +10,17 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as brandProfile from "../../schemas/brand_profile.js";
+import { clientRoot } from "./paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
 
 export function brandPath(slug) {
-  return resolve(ROOT, "clients", slug, "brand_profile.json");
+  return resolve(clientRoot(slug), "brand_profile.json");
 }
 
 export function clientDir(slug) {
-  return resolve(ROOT, "clients", slug);
+  return clientRoot(slug);
 }
 
 /** Load the existing brand profile (normalized) or a fresh draft skeleton. */

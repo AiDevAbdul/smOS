@@ -281,7 +281,105 @@ function selectTopCopy(angle, adCopy) {
   return adCopySchema.selectTopCopy(angle, adCopy);
 }
 
+// ── Advantage+ Shopping (ASC) plan (B1) ──────────────────────────────────────
+// ASC is a single, Meta-managed campaign: one campaign carrying the budget + an
+// existing-customer cap, one auto-targeted ad set bound to the purchase pixel
+// (and catalog when present), and the creative variants as ads. No per-audience
+// fan-out — Meta does the audience work.
+
+function buildAscCampaignPayload({ profile, brief, dailyBudget }) {
+  const asc = brief.asc || {};
+  const name = `CONV_ASC_${yyyymm()}`;
+  const payload = {
+    ad_account_id: profile.accounts?.ad_account_id,
+    name,
+    objective: "OUTCOME_SALES",
+    status: "PAUSED",
+    smart_promotion_type: "AUTOMATED_SHOPPING_ADS", // marks this as Advantage+ Shopping
+    daily_budget: String(Math.round(dailyBudget * 100)), // budget always on the ASC campaign
+    bid_strategy: "LOWEST_COST_WITHOUT_CAP",
+    special_ad_categories: Array.isArray(profile.special_ad_categories) ? profile.special_ad_categories : [],
+  };
+  // Existing-customer budget cap (0..100). Meta expects an integer percentage.
+  const pct = Number(asc.existing_customer_budget_percentage);
+  if (Number.isFinite(pct) && pct >= 0 && pct <= 100) {
+    payload.existing_customer_budget_percentage = Math.round(pct);
+  }
+  return payload;
+}
+
+function buildAscAdsetPayload({ profile, brief }) {
+  const acct = profile.accounts || {};
+  const asc = brief.asc || {};
+  const ageMin = profile.audience?.age_range?.[0] || 18;
+  const ageMax = profile.audience?.age_range?.[1] || 65;
+  const countries = Array.isArray(profile.audience?.geo_targets) && profile.audience.geo_targets.length
+    ? profile.audience.geo_targets
+    : [profile.location?.country || "US"];
+
+  // ASC ad sets are Meta-managed; targeting is a light constraint only (geo + age).
+  const name = `BROAD_${String(ageMin).padStart(2, "0")}${String(ageMax).padStart(2, "0")}_ASC`;
+  const payload = {
+    campaign_id: "<pending>",
+    name,
+    status: "PAUSED",
+    billing_event: "IMPRESSIONS",
+    optimization_goal: "OFFSITE_CONVERSIONS",
+    // no daily_budget — the ASC campaign carries it
+    targeting: { age_min: ageMin, age_max: ageMax, geo_locations: { countries } },
+    attribution_spec: [
+      { event_type: "CLICK_THROUGH", window_days: 7 },
+      { event_type: "VIEW_THROUGH", window_days: 1 },
+    ],
+  };
+  if (!isTbd(acct.pixel_id)) {
+    payload.promoted_object = {
+      pixel_id: acct.pixel_id,
+      custom_event_type: String(asc.conversion_event || "Purchase").toUpperCase(),
+      ...(asc.catalog_id ? { product_catalog_id: asc.catalog_id } : {}),
+    };
+  }
+  return payload;
+}
+
+function buildAscPlan({ profile, brief, adCopy }) {
+  const angles = brief.creative_angles || [];
+  const dailyBudget = brief.budget_allocation?.daily_total || 0;
+  const campaignPayload = buildAscCampaignPayload({ profile, brief, dailyBudget });
+  const adsetPayload = buildAscAdsetPayload({ profile, brief });
+
+  const ads = angles.map((angle) => {
+    const { copy_used, reason } = selectTopCopy(angle, adCopy);
+    return {
+      name: buildAdName(angle.format, angle.name, 1),
+      angle: angle.name,
+      format: angle.format,
+      creative_payload: buildCreativePayload({ profile, angle, copyVariant: copy_used, adset: adsetPayload }),
+      asset: readAssetRef(angle),
+      copy_used,
+      warnings: copy_used ? [] : [reason || `no matching ad_copy entry for angle '${angle.name}'`],
+    };
+  });
+
+  return {
+    campaign_type: "asc",
+    live_phase: { phase: "A", objective: "OUTCOME_SALES" },
+    deferred_phases: [],
+    campaigns: [{
+      audience_id: "asc",
+      phase: "A",
+      payload: campaignPayload,
+      adsets: [{ payload: adsetPayload, ads, audience_id: "asc" }],
+    }],
+  };
+}
+
 function buildPlan({ profile, brief, audienceMap, adCopy, phaseFilter }) {
+  // B1: Advantage+ Shopping is the default for e-commerce + healthy pixel. The
+  // manual ABO/CBO audience tree below is the fallback.
+  if (brief.campaign_type === "asc" && brief.asc) {
+    return buildAscPlan({ profile, brief, adCopy });
+  }
   const phases = phaseFilter ? brief.objective_hierarchy.filter((p) => p.phase === phaseFilter) : brief.objective_hierarchy;
   // Only Phase A is launched on day 0; B/C are scheduled documents, not live entities yet.
   // For deterministic build, we still construct one campaign per audience for the current phase only.
@@ -551,7 +649,10 @@ async function main() {
   console.log(JSON.stringify(summary, null, 2));
 }
 
-main().catch((e) => {
-  console.error("[launch] FATAL:", e.message);
-  process.exit(1);
-});
+// Only run as a CLI — guard so importing the builders doesn't trigger main().
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("[launch] FATAL:", e.message);
+    process.exit(1);
+  });
+}

@@ -21,6 +21,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { getDeal, upsertDeal } from "../../scripts/lib/crm-store.js";
 import { deal as dealSchema } from "../../schemas/index.js";
 import { insert, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -36,7 +37,7 @@ async function main() {
   const flag = (n) => { const i = args.indexOf(`--${n}`); return i >= 0 ? (args[i + 1] && !args[i + 1].startsWith("--") ? args[i + 1] : true) : undefined; };
   const business = flag("business") || slug;
 
-  const proDir = resolve(ROOT, "prospects", slug);
+  const proDir = P.prospectRoot(slug);
   const missing = REQUIRED_INPUTS.filter((f) => !existsSync(resolve(proDir, f)));
   if (missing.length) {
     console.error(`Missing pre-audit inputs in prospects/${slug}/: ${missing.join(", ")}.\n` +

@@ -29,3 +29,6 @@ clients/__*/
 clients/_gatetest/
 clients/it-intake-audit-fixture/
 billing/__*/
+
+# Test fixture scratch (A3)
+test/.tmp/

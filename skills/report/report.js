@@ -22,6 +22,8 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { normalizeKpis } from "../../scripts/lib/metrics.js";
+import { computeEconomics } from "../../scripts/lib/economics.js";
+import { normalizeUnitEconomics } from "../../schemas/client_profile.js";
 import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
 import * as P from "../../scripts/lib/paths.js";
 
@@ -289,7 +291,23 @@ async function main() {
 
   const optimizerActions = loadOptimizerActions(slug, window.week_start, window.week_end);
 
+  // Account-level economics (B2). conversion_value = revenue from the rollup.
+  const econ = computeEconomics(
+    { spend: now.spend, conversions: now.conversions, conversion_value: now.revenue },
+    normalizeUnitEconomics(profile.unit_economics),
+  );
+  const cur = profile.accounts?.currency;
+  const curPrefix = !cur || cur === "USD" ? "$" : `${cur} `;
+  const money = (v) => (v == null ? "—" : `${curPrefix}${v}`);
+  const xVal = (v) => (v == null ? "—" : v);
+
   const vars = {
+    blended_mer: xVal(econ.blended_mer),
+    breakeven_roas: xVal(econ.breakeven_roas),
+    econ_target_roas: xVal(econ.target_roas),
+    gross_profit: money(econ.gross_profit),
+    profit_after_ads: money(econ.profit_after_ads),
+    ncac: money(econ.nCAC),
     client_name: profile.name,
     week_start: window.week_start,
     week_end: window.week_end,
@@ -368,6 +386,7 @@ async function main() {
   writeFileSync(rawPath, JSON.stringify({
     slug, window, vars,
     metrics: { now, prior },
+    economics: econ,
     placement_breakdown: placement,
     top_ad: topAd,
     optimizer_actions: optimizerActions,
