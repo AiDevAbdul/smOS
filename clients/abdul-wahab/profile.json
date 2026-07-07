@@ -1,0 +1,117 @@
+{
+  "slug": "abdul-wahab",
+  "name": "Abdul Wahab",
+  "business": {
+    "product_description": "Agentic AI solutions and consultation on the effective use of AI",
+    "price_low": 100,
+    "price_high": 5000,
+    "business_model": "one-time projects, consultations, services",
+    "usp": "Agentic AI developer with 5+ years of digital marketing experience and strong teaching/communication skills, always current with the latest AI technologies",
+    "conversion_event": "consultation call booked, lead form fill, or DM inquiry"
+  },
+  "audience": {
+    "age_low": 20,
+    "age_high": 45,
+    "gender": "all",
+    "geo_targets": [
+      "Pakistan",
+      "India",
+      "United States",
+      "United Kingdom",
+      "Australia"
+    ],
+    "pain_points": [
+      "manual/repetitive workflows costing time and money that AI automation (cron jobs) can eliminate",
+      "not knowing what's possible to build with AI-driven development",
+      "SMBs, marketing agencies, and solo founders lacking in-house AI expertise"
+    ]
+  },
+  "voice": {
+    "tone": "professional, educational, bold",
+    "restricted_words": [
+      "cheap",
+      "guaranteed",
+      "competitor names"
+    ],
+    "cta_style": "direct action (Book a Consultation) and curiosity (See how)"
+  },
+  "accounts": {
+    "ad_account_id": null,
+    "pixel_id": null,
+    "facebook_page_id": "232207453290718",
+    "instagram_business_id": null,
+    "page_id": "232207453290718",
+    "ig_account_id": null,
+    "bm_id": "1327679688042612",
+    "currency": null,
+    "timezone": null,
+    "business_id": "1327679688042612",
+    "system_user_id": null,
+    "pixel_installed": false,
+    "website_url": null,
+    "domain": null
+  },
+  "kpis": {
+    "target_cpa": null,
+    "target_roas": null,
+    "monthly_budget_low": null,
+    "monthly_budget_high": null
+  },
+  "history": {
+    "previous_spend": null,
+    "what_worked": null,
+    "what_failed": null
+  },
+  "competitors": [],
+  "assets": {
+    "formats_available": [],
+    "brand_guidelines_url": null,
+    "brand_colors": []
+  },
+  "approvals": {
+    "channel": "discord",
+    "daily_cap": 500,
+    "extra_rules": []
+  },
+  "notes": {
+    "paid_ads": "Not interested in paid ads — organic-only focus for now",
+    "facebook_page_url": "facebook.com/abdulwahabai",
+    "facebook_page_url_alt": "facebook.com/aidevabdul",
+    "instagram_url": "instagram.com/aidevabdul",
+    "first_campaign": true
+  },
+  "status": "planning",
+  "onboarded_at": "2026-07-06",
+  "blockers_before_live": [
+    "facebook_page_id",
+    "instagram_business_id",
+    "ad_account_id",
+    "pixel_id"
+  ],
+  "setup": {
+    "business_verified_at": "2026-07-07T04:30:02.010Z",
+    "page_created_at": "2026-07-07T04:32:59.053Z",
+    "instagram_created_at": null,
+    "instagram_professional_at": null,
+    "ig_page_linked_at": null,
+    "payment_method_added_at": null,
+    "asset_access_granted_at": null,
+    "ad_account_created_at": null,
+    "pixel_created_at": null,
+    "system_user_token_at": null,
+    "assets_assigned_at": null,
+    "domain_verified_at": null,
+    "landing_deployed_at": null
+  },
+  "unit_economics": {
+    "gross_margin": null,
+    "average_order_value": null,
+    "customer_ltv": null,
+    "target_cac": null,
+    "target_mer": null
+  },
+  "content_preferences": {
+    "mode": "ai_assisted",
+    "ai_captions": true
+  }
+}

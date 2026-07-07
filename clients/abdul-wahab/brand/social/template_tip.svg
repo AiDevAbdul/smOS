@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350">
+  <rect width="1080" height="1350" fill="#F5F7FA"/>
+  <rect x="0" y="0" width="1080" height="180" fill="#0B1B2B"/>
+  <text x="90" y="115" font-family="Space Grotesk, Helvetica, sans-serif" font-size="46" font-weight="600" fill="#F5F7FA">3 workflows to automate first</text>
+  <text x="90" y="320" font-family="Inter, Helvetica, sans-serif" font-size="40" font-weight="600" fill="#0B1B2B">01 — Lead follow-up</text>
+  <text x="90" y="420" font-family="Inter, Helvetica, sans-serif" font-size="40" font-weight="600" fill="#0B1B2B">02 — Reporting</text>
+  <text x="90" y="520" font-family="Inter, Helvetica, sans-serif" font-size="40" font-weight="600" fill="#0B1B2B">03 — Scheduling</text>
+  <text x="90" y="1280" font-family="Inter, Helvetica, sans-serif" font-size="26" fill="#2F6FED">Swipe → full breakdown</text>
+</svg>

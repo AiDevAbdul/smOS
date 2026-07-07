@@ -1,0 +1,182 @@
+{
+  "client_slug": "abdul-wahab",
+  "status": "complete",
+  "strategy": {
+    "purpose": "To make agentic AI capability accessible and understandable to operators who feel locked out of it by hype and jargon.",
+    "mission": "Abdul Wahab builds and teaches agentic AI systems that eliminate manual, repetitive work for SMBs, marketing agencies, and solo founders.",
+    "vision": "A world where every small operator has a working AI teammate handling the repetitive load, freeing them to spend their time on what only a human can do.",
+    "values": [
+      "Clarity over jargon",
+      "Practicality over hype",
+      "Currency — always working with this week's tools, not last year's",
+      "Craftsmanship in every build",
+      "Honesty — no guarantees, no overselling"
+    ],
+    "persona": {
+      "demographics": "SMB owners, marketing agency operators, and solo founders, 20–45, primarily in Pakistan, India, the US, UK, and Australia.",
+      "psychographics": {
+        "motivation": "Reclaim time lost to manual workflows and gain a competitive edge before competitors automate first",
+        "fear": "Paying for AI consulting that's all buzzwords and no working system",
+        "trigger": "Seeing a competitor automate something, or hearing about AI agents and not knowing where to start",
+        "job_to_be_hired": "Translate AI hype into one working, revenue-generating automation or consultation they actually understand"
+      }
+    },
+    "archetype": {
+      "primary": "sage",
+      "secondary": "magician"
+    },
+    "value_proposition": "I build the agentic AI automations that take your repetitive workflows off your plate — and teach you exactly how they work, so you're never dependent on someone else to run your business.",
+    "differentiation": "Most AI consultants are marketers with no engineering depth, or engineers who can't explain what they built. Abdul pairs 5+ years of digital marketing experience with hands-on agentic AI development and a teaching-first communication style — clients get a working system and the understanding of why it works.",
+    "positioning_statement": "For SMB owners, marketing agencies, and solo founders who are drowning in repetitive manual work but don't know what's actually possible with AI, Abdul Wahab is the agentic AI developer and educator who builds and explains working automation, not just theory, because he pairs 5+ years of digital marketing experience with hands-on agentic AI development and stays current with the fastest-moving technology in the industry.",
+    "messaging_pillars": [
+      "Proof over hype — real automations and real results, not AI buzzwords",
+      "Teach as you build — every project comes with a clear explanation, not a black box",
+      "Always current — reflects this week's best tools, not last year's",
+      "Built for the operator — sized for SMBs, agencies, and solo founders, not enterprise bloat"
+    ],
+    "essence": "Clarity through mastery",
+    "promise": "Every engagement leaves you with a working automation and a clear understanding of how and why it works.",
+    "positioning_approved_at": "2026-07-06T20:57:50.389Z"
+  },
+  "verbal": {
+    "name": "Abdul Wahab",
+    "name_candidates": [
+      "Abdul Wahab",
+      "AI Dev Abdul"
+    ],
+    "name_screening": {
+      "domain_com_available": false,
+      "trademark_knockout_clear": null,
+      "handles_available": {
+        "tiktok": null,
+        "facebook": null,
+        "instagram": null,
+        "linkedin": null,
+        "x": null
+      },
+      "attorney_clearance_flagged": true
+    },
+    "name_approved_at": "2026-07-06T21:00:57.243Z",
+    "tagline": "AI you actually understand",
+    "voice": {
+      "traits": [
+        "Clear",
+        "Confident",
+        "Educational",
+        "Bold",
+        "Approachable"
+      ],
+      "spectrums": {
+        "formal_casual": "Slightly casual — professional but plainspoken, no corporate hedging",
+        "serious_funny": "Mostly serious — occasional dry, confident humor",
+        "respectful_irreverent": "Respectful — challenges hype, not people",
+        "matter_of_fact_enthusiastic": "Enthusiastic — genuine excitement about what's newly possible"
+      },
+      "do": [
+        "Show a real automation or result before making a claim",
+        "Explain the 'why' behind every recommendation, not just the 'what'",
+        "Use direct CTAs (Book a Consultation) and curiosity CTAs (See how)",
+        "Reference current tools/techniques — this week's AI landscape, not last year's"
+      ],
+      "dont": [
+        "Never use 'cheap'",
+        "Never use 'guaranteed'",
+        "Never name competitors",
+        "Never lean on AI buzzwords without a concrete example behind them"
+      ]
+    },
+    "messaging_house": {
+      "roof": "Real AI automation, explained — not sold.",
+      "walls": [
+        "Proof over hype — real automations, real results",
+        "Teach as you build — every project comes with a clear explanation",
+        "Always current — this week's best tools, not last year's"
+      ],
+      "foundation": [
+        "5+ years of digital marketing experience translating technical capability into business results",
+        "Hands-on agentic AI development, not just advisory slides",
+        "Active, continuous tracking of the fastest-moving part of the tech industry",
+        "Teaching-first communication style — clients leave understanding their own system"
+      ]
+    },
+    "elevator_pitch": "SMBs, agencies, and solo founders lose hours to manual work because they don't know what AI can actually automate for them — Abdul Wahab builds agentic AI systems that eliminate that work and teaches you exactly how they run, so you're never dependent on a black box.",
+    "boilerplate": "Abdul Wahab is an agentic AI developer and educator who builds automation systems for SMBs, marketing agencies, and solo founders. Pairing 5+ years of digital marketing experience with hands-on AI development, he designs working systems and explains exactly how they run — no black boxes, no hype. His work stays current with the fastest-moving corner of technology, so clients always get this week's best approach, not last year's."
+  },
+  "visual": {
+    "moodboard_url": "clients/abdul-wahab/brand/ (Technical Minimalism direction: navy/blue geometric, circuit-node motif)",
+    "logo": {
+      "primary_url": "clients/abdul-wahab/brand/primary.svg",
+      "mark_url": "clients/abdul-wahab/brand/mark.svg",
+      "wordmark_url": "clients/abdul-wahab/brand/wordmark.svg",
+      "mono_url": "clients/abdul-wahab/brand/mono.svg",
+      "reverse_url": "clients/abdul-wahab/brand/reverse.svg",
+      "svg_url": "clients/abdul-wahab/brand/primary.svg",
+      "clear_space": "0.5x mark height on all sides",
+      "min_size": "24px digital / 12mm print"
+    },
+    "logo_approved_at": "2026-07-06T21:04:29.591Z",
+    "colors": {
+      "primary": "#0B1B2B",
+      "secondary": "#8A94A6",
+      "accent": "#2F6FED",
+      "neutrals": [
+        "#F5F7FA",
+        "#E1E5EB",
+        "#8A94A6",
+        "#0B1B2B"
+      ]
+    },
+    "typography": {
+      "heading": "Space Grotesk",
+      "body": "Inter",
+      "scale": "16 / 20 / 25 / 31 / 39 (1.25 major-third ratio)"
+    },
+    "imagery_style": "Clean dark-mode UI screenshots and workflow diagrams, minimal geometric line-art overlays echoing the circuit-node mark, sparing pops of electric blue against navy/neutral backgrounds. No stock-photo people; favor real product/automation visuals.",
+    "iconography": "2px-stroke line icons, rounded joins, monochrome navy or electric blue, built from the mark's node/hexagon vocabulary.",
+    "ai_generated": false
+  },
+  "guidelines": {
+    "doc_url": "/Users/apple/abdul/smOS/clients/abdul-wahab/brand_book.html",
+    "pdf_url": "/Users/apple/abdul/smOS/clients/abdul-wahab/brand_book.pdf",
+    "version": "2026-07-07",
+    "generated_at": "2026-07-07T04:24:03.476Z"
+  },
+  "social": {
+    "profile_picture_url": "clients/abdul-wahab/brand/social/profile_picture.svg",
+    "fb_cover_url": "clients/abdul-wahab/brand/social/fb_cover.svg",
+    "ig_highlight_covers": [
+      "clients/abdul-wahab/brand/social/highlight_build.svg",
+      "clients/abdul-wahab/brand/social/highlight_learn.svg",
+      "clients/abdul-wahab/brand/social/highlight_wins.svg",
+      "clients/abdul-wahab/brand/social/highlight_book.svg"
+    ],
+    "templates": [
+      {
+        "type": "quote",
+        "url": "clients/abdul-wahab/brand/social/template_quote.svg"
+      },
+      {
+        "type": "tip",
+        "url": "clients/abdul-wahab/brand/social/template_tip.svg"
+      },
+      {
+        "type": "promo",
+        "url": "clients/abdul-wahab/brand/social/template_promo.svg"
+      },
+      {
+        "type": "testimonial",
+        "url": "clients/abdul-wahab/brand/social/template_testimonial.svg"
+      },
+      {
+        "type": "story-CTA",
+        "url": "clients/abdul-wahab/brand/social/template_story_cta.svg"
+      }
+    ],
+    "link_in_bio": "linktree/abdulwahab: 1) Book a Consultation 2) See automations (portfolio) 3) DM on Instagram 4) About",
+    "bios": {
+      "instagram": "Agentic AI developer & educator\nI build automations that kill the busywork — and explain how\n👇 Book a consultation",
+      "facebook": "Drowning in manual work and not sure what AI can actually automate? I build agentic AI systems that eliminate the busywork and teach you exactly how they run. Book a consultation →"
+    },
+    "branded_hashtag": "#AgenticWithAbdul"
+  }
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <rect width="1080" height="1920" fill="#0B1B2B"/>
+  <text x="90" y="900" font-family="Space Grotesk, Helvetica, sans-serif" font-size="56" font-weight="600" fill="#F5F7FA">Not sure what</text>
+  <text x="90" y="970" font-family="Space Grotesk, Helvetica, sans-serif" font-size="56" font-weight="600" fill="#F5F7FA">AI can automate?</text>
+  <rect x="90" y="1450" width="380" height="100" rx="50" fill="#2F6FED"/>
+  <text x="140" y="1515" font-family="Inter, Helvetica, sans-serif" font-size="34" font-weight="600" fill="#F5F7FA">Ask me →</text>
+</svg>

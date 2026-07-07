@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1350" width="1080" height="1350">
+  <rect width="1080" height="1350" fill="#0B1B2B"/>
+  <text x="90" y="560" font-family="Space Grotesk, Helvetica, sans-serif" font-size="58" font-weight="600" fill="#F5F7FA">Book a</text>
+  <text x="90" y="640" font-family="Space Grotesk, Helvetica, sans-serif" font-size="58" font-weight="600" fill="#F5F7FA">Consultation</text>
+  <rect x="90" y="740" width="340" height="90" rx="45" fill="#2F6FED"/>
+  <text x="130" y="798" font-family="Inter, Helvetica, sans-serif" font-size="32" font-weight="600" fill="#F5F7FA">See how →</text>
+</svg>

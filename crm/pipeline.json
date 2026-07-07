@@ -44,5 +44,46 @@
     "won_at": null,
     "lost_at": null,
     "lost_reason": null
+  },
+  {
+    "slug": "abdulwahab",
+    "company_name": "Abdul Wahab",
+    "created_at": "2026-07-06T20:14:24.210Z",
+    "source": "pre-audit",
+    "stage": "audited",
+    "links": {
+      "pre_audit": "prospects/abdulwahab/pre_audit.html",
+      "proposal": null,
+      "contract": null,
+      "client_profile": null
+    },
+    "activities": [
+      {
+        "at": "2026-07-06T20:14:24.209Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      }
+    ],
+    "deal": {
+      "monthly_retainer": 0,
+      "setup_fee": 0,
+      "currency": "USD"
+    },
+    "updated_at": "2026-07-06T20:14:24.210Z",
+    "id": "abdulwahab",
+    "contact": {
+      "name": null,
+      "email": null,
+      "phone": null
+    },
+    "services": [],
+    "probability": 35,
+    "expected_close": null,
+    "owner": null,
+    "next_action": null,
+    "next_action_due": null,
+    "won_at": null,
+    "lost_at": null,
+    "lost_reason": null
   }
 ]

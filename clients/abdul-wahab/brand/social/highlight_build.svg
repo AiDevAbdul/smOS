@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <rect width="1080" height="1920" fill="#0B1B2B"/>
+  <g transform="translate(360,600)">
+    <circle cx="180" cy="180" r="180" fill="none" stroke="#2F6FED" stroke-width="10"/>
+    <circle cx="180" cy="180" r="60" fill="none" stroke="#F5F7FA" stroke-width="10"/>
+    <g stroke="#F5F7FA" stroke-width="10">
+      <line x1="180" y1="60" x2="180" y2="10"/>
+      <line x1="180" y1="300" x2="180" y2="350"/>
+      <line x1="60" y1="180" x2="10" y2="180"/>
+      <line x1="300" y1="180" x2="350" y2="180"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,68 @@
+{
+  "slug": "abdul-wahab",
+  "name": "Abdul Wahab",
+  "business": {
+    "product_description": "Agentic AI solutions and consultation on the effective use of AI",
+    "price_low": 100,
+    "price_high": 5000,
+    "business_model": "one-time projects, consultations, services",
+    "usp": "Agentic AI developer with 5+ years of digital marketing experience and strong teaching/communication skills, always current with the latest AI technologies",
+    "conversion_event": "consultation call booked, lead form fill, or DM inquiry"
+  },
+  "audience": {
+    "age_low": 20,
+    "age_high": 45,
+    "gender": "all",
+    "geo_targets": ["Pakistan", "India", "United States", "United Kingdom", "Australia"],
+    "pain_points": [
+      "manual/repetitive workflows costing time and money that AI automation (cron jobs) can eliminate",
+      "not knowing what's possible to build with AI-driven development",
+      "SMBs, marketing agencies, and solo founders lacking in-house AI expertise"
+    ]
+  },
+  "voice": {
+    "tone": "professional, educational, bold",
+    "restricted_words": ["cheap", "guaranteed", "competitor names"],
+    "cta_style": "direct action (Book a Consultation) and curiosity (See how)"
+  },
+  "accounts": {
+    "ad_account_id": null,
+    "pixel_id": null,
+    "facebook_page_id": null,
+    "instagram_business_id": null,
+    "page_id": null,
+    "ig_account_id": null,
+    "bm_id": "1327679688042612",
+    "currency": null,
+    "timezone": null
+  },
+  "kpis": {
+    "target_cpa": null,
+    "target_roas": null,
+    "monthly_budget_low": null,
+    "monthly_budget_high": null
+  },
+  "history": {
+    "previous_spend": null,
+    "what_worked": null,
+    "what_failed": null
+  },
+  "competitors": [],
+  "assets": {
+    "formats_available": [],
+    "brand_guidelines_url": null,
+    "brand_colors": []
+  },
+  "approvals": {
+    "channel": "discord",
+    "daily_cap": 500,
+    "extra_rules": []
+  },
+  "notes": {
+    "paid_ads": "Not interested in paid ads — organic-only focus for now",
+    "facebook_page_url": "facebook.com/abdulwahabai",
+    "facebook_page_url_alt": "facebook.com/aidevabdul",
+    "instagram_url": "instagram.com/aidevabdul",
+    "first_campaign": true
+  }
+}

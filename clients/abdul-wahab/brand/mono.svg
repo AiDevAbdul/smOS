@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <g transform="translate(0,0)">
+    <polygon points="60,8 106,34 106,86 60,112 14,86 14,34" fill="none" stroke="#0B1B2B" stroke-width="5"/>
+    <circle cx="60" cy="38" r="7" fill="#0B1B2B"/>
+    <circle cx="38" cy="78" r="7" fill="#0B1B2B"/>
+    <circle cx="82" cy="78" r="7" fill="#0B1B2B"/>
+    <line x1="60" y1="38" x2="38" y2="78" stroke="#0B1B2B" stroke-width="4"/>
+    <line x1="60" y1="38" x2="82" y2="78" stroke="#0B1B2B" stroke-width="4"/>
+    <line x1="38" y1="78" x2="82" y2="78" stroke="#0B1B2B" stroke-width="4"/>
+  </g>
+  <text x="132" y="70" font-family="Helvetica, Arial, sans-serif" font-size="40" font-weight="600" letter-spacing="0.5" fill="#0B1B2B">Abdul Wahab</text>
+</svg>

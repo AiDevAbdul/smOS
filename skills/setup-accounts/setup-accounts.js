@@ -11,7 +11,12 @@
  * Usage:
  *   node skills/setup-accounts/setup-accounts.js <slug> --status
  *   node skills/setup-accounts/setup-accounts.js <slug> --done page_created_at --set facebook_page_id=123
+ *   node skills/setup-accounts/setup-accounts.js <slug> --done page_created_at --from-intake
  *   node skills/setup-accounts/setup-accounts.js <slug> --bootstrap
+ *
+ * --from-intake: resolves the real numeric id from a handle/URL already captured
+ * during /intake (profile.notes.facebook_page_url / instagram_url) via a live
+ * Graph API GET lookup — never fabricates an id, just saves re-typing a known handle.
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -45,6 +50,43 @@ function saveProfile(slug, profile) {
 }
 
 function nowIso() { return new Date().toISOString(); }
+
+// Manual gates whose id can be resolved from a handle/URL already captured at /intake,
+// via a live Graph API lookup (never guessed, never fabricated).
+const INTAKE_RESOLVABLE = {
+  page_created_at: { accountKey: "facebook_page_id", noteKey: "facebook_page_url" },
+  instagram_created_at: { accountKey: "instagram_business_id", noteKey: "instagram_url" },
+};
+
+function handleFromUrl(url) {
+  if (!url) return null;
+  const m = String(url).match(/(?:facebook|instagram)\.com\/([^/?#]+)/i);
+  return m ? m[1] : String(url).replace(/^@/, "");
+}
+
+async function resolveFromIntake(step, profile) {
+  const rule = INTAKE_RESOLVABLE[step];
+  if (!rule) return { ok: false, reason: `--from-intake has no known source field for step "${step}"` };
+  const graph = createGraph(); // throws clearly if META_ACCESS_TOKEN missing
+
+  // Instagram business accounts aren't fetchable by username directly — Graph exposes
+  // them only via the linked Page's instagram_business_account edge.
+  if (step === "instagram_created_at") {
+    const pageId = profile.accounts?.facebook_page_id;
+    if (isTbd(pageId)) return { ok: false, reason: "No facebook_page_id on record yet — run --done page_created_at --from-intake first (IG must be linked to the Page to resolve this way)" };
+    const res = await graph.get(`/${pageId}`, { fields: "instagram_business_account{id,username}" });
+    const ig = res?.instagram_business_account;
+    if (!ig?.id) return { ok: false, reason: `Page ${pageId} has no linked instagram_business_account yet — link IG to the Page in Meta Business Suite first, or pass --set ${rule.accountKey}=<id>` };
+    return { ok: true, key: rule.accountKey, value: ig.id, source: `page ${pageId} instagram_business_account`, resolvedName: ig.username };
+  }
+
+  const url = profile.notes?.[rule.noteKey];
+  const handle = handleFromUrl(url);
+  if (!handle) return { ok: false, reason: `No profile.notes.${rule.noteKey} captured at /intake — pass --set ${rule.accountKey}=<id> instead` };
+  const res = await graph.get(`/${handle}`, { fields: "id,name" });
+  if (!res?.id) return { ok: false, reason: `Graph API lookup for "${handle}" returned no id` };
+  return { ok: true, key: rule.accountKey, value: res.id, source: url, resolvedName: res.name };
+}
 
 function printStatus(slug, profile) {
   const setup = profile.setup || {};
@@ -137,12 +179,18 @@ async function main() {
     if (!MANUAL_STEPS.includes(step)) { console.error(`Unknown step "${step}". One of: ${MANUAL_STEPS.join(", ")}`); process.exit(1); }
     profile.setup[step] = nowIso();
     const setIdx = args.indexOf("--set");
+    let resolvedFromIntake = null;
     if (setIdx >= 0) {
       const [k, v] = (args[setIdx + 1] || "").split("=");
       if (k && v) profile.accounts[k] = v;
+    } else if (args.includes("--from-intake")) {
+      const result = await resolveFromIntake(step, profile);
+      if (!result.ok) { console.error(`[setup-accounts] ${result.reason}`); process.exit(1); }
+      profile.accounts[result.key] = result.value;
+      resolvedFromIntake = result;
     }
     saveProfile(slug, profile);
-    console.log(JSON.stringify({ slug, recorded: step, at: profile.setup[step], accounts: profile.accounts }, null, 2));
+    console.log(JSON.stringify({ slug, recorded: step, at: profile.setup[step], resolved_from_intake: resolvedFromIntake, accounts: profile.accounts }, null, 2));
     return;
   }
 
