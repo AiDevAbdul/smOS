@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { buildContractMarkdown, sendForSignature } from "../skills/contract/contract.js";
 
-const agency = { name: "Ducker Creative", email: "abdul@duckercreative.com" };
+const agency = { name: "Abdul", email: "abdul@duckercreative.com" };
 const terms = { contract_length_months: 3, ad_spend: "billed separately", payment: "Net 7", cancellation: "30 days notice" };
 const pkg = { id: "growth", name: "Growth", monthly_retainer: 3000, setup_fee: 750, currency: "USD", includes: ["Meta ads", "Retargeting"] };
 
@@ -11,7 +11,7 @@ test("contract markdown names both parties and the package scope", () => {
     agency, client: { company: "Acme Co", contact_name: "Ann Lee", contact_email: "ann@acme.co" },
     pkg, retainer: 0, terms, date: "2026-06-22",
   });
-  assert.match(md, /Ducker Creative/);
+  assert.match(md, /Abdul/);
   assert.match(md, /Acme Co/);
   assert.match(md, /Ann Lee/);
   assert.match(md, /\*\*Growth\*\* package/);

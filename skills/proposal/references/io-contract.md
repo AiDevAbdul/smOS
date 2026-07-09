@@ -25,8 +25,8 @@ node skills/proposal/proposal.js <slug> [--package <id>] [--no-crm]
 
 ```json
 {
-  "agency":   { "name": "Ducker Creative", "tagline": "…", "email": "abdul@duckercreative.com",
-                "website": "https://duckercreative.com", "logo_url": null },
+  "agency":   { "name": "Abdul", "tagline": "…", "email": "abdul@duckercreative.com",
+                "website": null, "logo_url": null },
   "packages": [
     { "id": "growth", "name": "Growth", "monthly_retainer": 3000, "currency": "USD",
       "setup_fee": 750, "best_for": "…", "includes": ["…", "…"] }

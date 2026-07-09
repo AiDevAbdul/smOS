@@ -137,7 +137,7 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
     )
     hero_html = hero_header(
         title=business,
-        eyebrow="Pre-Audit Report · Prepared by Ducker Creative",
+        eyebrow="Pre-Audit Report · Prepared by Abdul",
         subtitle=timestamp,
         headline=headline or "",
         pills=snapshot,
@@ -821,7 +821,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 </div>
 
 <div class="footer">
-  {e(business)} &nbsp;·&nbsp; Pre-Audit &nbsp;·&nbsp; {timestamp} &nbsp;·&nbsp; Public-data analysis &nbsp;·&nbsp; Ducker Creative
+  {e(business)} &nbsp;·&nbsp; Pre-Audit &nbsp;·&nbsp; {timestamp} &nbsp;·&nbsp; Public-data analysis &nbsp;·&nbsp; Abdul
 </div>
 
 <script>

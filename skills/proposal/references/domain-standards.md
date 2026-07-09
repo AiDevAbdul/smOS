@@ -21,7 +21,7 @@ Catalog shape (see `io-contract.md` for the full schema):
 }
 ```
 
-### Standard package taxonomy (Ducker Creative default catalog)
+### Standard package taxonomy (default catalog)
 
 | id | Name | Monthly | Setup | Best for |
 |----|------|--------:|------:|----------|

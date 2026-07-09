@@ -43,7 +43,7 @@ Note: code reads `d.deal.monthly_retainer`, `d.company_name`, `d.contact.name`, 
 ### `config/services.json` (via `loadCatalog()`)
 ```jsonc
 {
-  "agency": { "name": "Ducker Creative", "email": "abdul@duckercreative.com", ... },
+  "agency": { "name": "Abdul", "email": "abdul@duckercreative.com", ... },
   "packages": [ { "id": "growth", "name": "Growth", "monthly_retainer": 3000,
                   "currency": "USD", "setup_fee": 750, "includes": [ "...", "..." ] } ],
   "terms": { "contract_length_months": 3, "ad_spend": "...", "payment": "...", "cancellation": "..." }
