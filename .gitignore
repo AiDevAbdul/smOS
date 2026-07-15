@@ -1,5 +1,6 @@
 .env
 .env.local
+.env-meta
 *.local
 node_modules/
 __pycache__/
