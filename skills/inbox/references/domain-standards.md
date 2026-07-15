@@ -29,7 +29,7 @@ pass `--sla-minutes`.
 | `platform` | `facebook`, `instagram`, `threads` | This skill pulls only `facebook` + `instagram`; Threads is `/listening`/`/publish` territory |
 | `type` | `comment`, `dm`, `mention`, `story_reply`, `ad_comment` | This skill produces `comment`, `dm`, `mention` |
 | `state` | `unread`, `open`, `snoozed`, `replied`, `closed`, `spam` | Default `unread`; only `replied`/`closed` exit the SLA-breach set |
-| `sentiment` | `positive`, `neutral`, `negative`, or null | Optional; not auto-computed by the puller |
+| `sentiment` | `positive`, `neutral`, `negative`, or null | Optional; not auto-computed by the puller. To classify (G8): after a run reports pending items, read each one's text, decide a verdict, and write `{ "<inbox_id>": "<verdict>", ... }` to `clients/{slug}/sentiment_judgments.json`. Re-run — `scripts/lib/sentiment.js` merges it fail-closed (invalid values collapse to `null`, existing verdicts are never overwritten). |
 
 **Dedupe key (CONSTANT):**
 ```

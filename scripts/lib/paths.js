@@ -110,6 +110,8 @@ export const DATA_FILES = [
   "launch_artifacts.json",
   "creative_test_plan.json",
   "inbox.json",
+  "refresh_briefs.json",
+  "monthly_health_report.json",
 ];
 
 /** Rendered deliverables: legacy flat basename (no ext) → kebab artifact folder. */

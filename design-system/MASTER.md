@@ -104,3 +104,31 @@ Charts use `CHART_PALETTE` order + `CHART_THEME` (SF font, gray grid, point-styl
 - [ ] HTML is self-contained (CSS inlined, no external font/CSS host)
 
 Per-page deviations go in `design-system/pages/<name>.md` and override this Master.
+
+---
+
+## Light / dark mode
+
+Every HTML report supports auto (OS `prefers-color-scheme`) **and** a manual
+override, via `[data-theme="light"|"dark"]` on `<html>`. Both directions win over
+the media query. Wired automatically — no per-renderer work needed:
+
+- `reportHead()`/`report_head()` inject a pre-paint bootstrap `<script>` that reads
+  a saved preference from `localStorage` (`smos-theme`) before first paint (no
+  flash-of-wrong-theme).
+- `heroHeader()`/`hero_header()` render the `.ds-theme-toggle` sun/moon button by
+  default (top-right of the hero) and its click-wiring script. Pass
+  `themeToggle: false` / `theme_toggle=False` to suppress it (used by the
+  permanently-dark `/bundle` shell chrome, not its light report windows).
+- All `--ds-*` tokens (surfaces, ink, lines, semantic colors, tints) have dark
+  variants in `smos-design-system.css`; renderers must reference tokens, never
+  literal hex, or they silently opt out of theming (see the pre-delivery
+  checklist item above — this is why it exists).
+- **Print/PDF is always light**, regardless of any saved preference — `@media
+  print` force-overrides every token back to the light values with `!important`,
+  since `scripts/render_pdf.py` (headless Chromium) has no "OS setting" to honor
+  and printed/scanned deliverables should stay light.
+- Chart.js theming (`CHART_THEME` in `design_system.py`) and any canvas-drawn
+  elements (e.g. the pre-audit score gauge) must resolve colors via
+  `getComputedStyle(document.documentElement).getPropertyValue('--ds-*')` at draw
+  time — never bake in a literal hex — and re-draw on `.ds-theme-toggle` click.

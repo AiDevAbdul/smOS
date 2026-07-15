@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import * as P from "../../scripts/lib/paths.js";
+import { spawnRefreshQueue, collectApprovedRefreshes } from "../../scripts/lib/refresh-loop.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -133,9 +134,22 @@ async function main() {
   const slug = args[0];
   const windowIdx = args.indexOf("--window");
   const windowDays = windowIdx >= 0 ? parseInt(args[windowIdx + 1], 10) : DEFAULT_WINDOW;
+  const spawnRefresh = args.includes("--spawn-refresh");
+  const collectOnly = args.includes("--collect-approved");
   if (!slug) {
-    console.error("Usage: node skills/creative-intel/creative-intel.js <slug> [--window 30]");
+    console.error("Usage: node skills/creative-intel/creative-intel.js <slug> [--window 30] [--spawn-refresh] [--collect-approved]");
     process.exit(1);
+  }
+
+  // --collect-approved: no Meta pull, just promote any refresh briefs whose
+  // approval has since been granted (G5 human gate) to ready_for_creative.
+  if (collectOnly) {
+    const ready = collectApprovedRefreshes(slug);
+    console.log(JSON.stringify({
+      slug, ready_for_creative: ready.map((b) => ({ ad_id: b.ad_id, ad_name: b.ad_name, angle: b.angle })),
+      next: ready.length ? "feed these ad_ids + angles into /creative" : "nothing newly approved",
+    }, null, 2));
+    return;
   }
 
   const profilePath = P.clientFile(slug, "client_profile.json");
@@ -244,6 +258,12 @@ async function main() {
   writeFileSync(outPath, JSON.stringify(out, null, 2));
   console.error(`[creative-intel] wrote ${outPath}`);
 
+  let refreshSpawn = null;
+  if (spawnRefresh && refreshQueue.length) {
+    refreshSpawn = await spawnRefreshQueue(slug, out);
+    console.error(`[creative-intel] filed ${refreshSpawn.spawned.length} refresh brief(s) for approval → ${refreshSpawn.path}`);
+  }
+
   console.log(JSON.stringify({
     slug,
     ads_analyzed: enriched.length,
@@ -251,7 +271,12 @@ async function main() {
     flag_counts: flagCounts,
     top_refresh: refreshQueue[0] ? { id: refreshQueue[0].id, name: refreshQueue[0].name, score: refreshQueue[0].refresh_priority_score } : null,
     path: outPath,
-    next: refreshQueue.length ? "feed refresh_queue into /creative" : "no fatigue detected",
+    refresh_briefs_filed: refreshSpawn ? refreshSpawn.spawned.length : 0,
+    next: refreshQueue.length
+      ? (spawnRefresh
+          ? "get each refresh brief approved, then run --collect-approved and feed into /creative"
+          : "feed refresh_queue into /creative, or re-run with --spawn-refresh to file approval requests")
+      : "no fatigue detected",
   }, null, 2));
 }
 

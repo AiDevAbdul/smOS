@@ -25,18 +25,21 @@ from pathlib import Path
 
 # Shared smOS design system (Apple/Cupertino) — single source of truth.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
-from design_system import design_system_css, hero_header, hero_aside  # noqa: E402
+from design_system import design_system_css, THEME_BOOTSTRAP_SCRIPT, theme_toggle_button, THEME_TOGGLE_SCRIPT  # noqa: E402
 
 
 # ── Design tokens ───────────────────────────────────────────────────────────
-# Apple/Cupertino palette (aligned with design-system/smos-design-system.css)
-INK     = "#1d1d1f"
-GROUND  = "#f5f5f7"
-SIGNAL  = "#ff3b30"
-RESOLVE = "#34c759"
-RULE    = "#e2e2e7"
-MUTED   = "#6e6e73"
-AMBER   = "#ff9f0a"
+# Aliased to the shared --ds-* custom properties (not literal hex) so this
+# renderer follows dark mode like every other report. Canvas draw calls below
+# can't use var() directly, so they re-resolve these off getComputedStyle at
+# draw time instead.
+INK     = "var(--ds-ink)"
+GROUND  = "var(--ds-bg)"
+SIGNAL  = "var(--ds-red)"
+RESOLVE = "var(--ds-green)"
+RULE    = "var(--ds-line)"
+MUTED   = "var(--ds-muted)"
+AMBER   = "var(--ds-amber)"
 
 
 def score_color(v: float) -> str:
@@ -125,23 +128,32 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
         snapshot.append(f"IG · {fmt_int(ig['followers'])} followers")
     if ig.get("posts_per_week") is not None:
         snapshot.append(f"{ig['posts_per_week']}/wk posts")
-    # ── Canonical design-system hero (.ds-hero) ──
-    hero_aside_html = hero_aside(
-        body=(
-            '<canvas id="scoreGauge" width="160" height="160"></canvas>\n'
-            f'<div class="ds-hero__band">{e(band)}</div>'
-        ),
-        stat_label="Competitor outspend",
-        stat_value=ratio_display,
-        stat_caption=ratio_caption,
-    )
-    hero_html = hero_header(
-        title=business,
-        eyebrow="Pre-Audit Report · Prepared by Abdul",
-        subtitle=timestamp,
-        headline=headline or "",
-        pills=snapshot,
-        aside=hero_aside_html,
+    snapshot.append(f"Competitor outspend · {ratio_display}")
+    verdict_sub = " &nbsp;·&nbsp; ".join(e(p) for p in snapshot)
+
+    # ── Canonical scored hero (.ds-hero--scored): centered identity block
+    # on top, big gauge + verdict headline side-by-side below. The one score
+    # hero every pre-audit report inherits — never fork it per prospect.
+    hero_html = (
+        '<header class="ds-hero ds-hero--scored">\n'
+        f"{theme_toggle_button()}\n"
+        '<div class="ds-hero__center">\n'
+        '<div class="ds-hero__badge">Pre-Audit Report · Prepared by Abdul</div>\n'
+        f"<h1>{e(business)}</h1>\n"
+        f'<div class="ds-meta">{e(timestamp)}</div>\n'
+        "</div>\n"
+        '<div class="ds-hero__score-row">\n'
+        '<div class="ds-hero__gauge">\n'
+        '<canvas id="scoreGauge" width="220" height="220"></canvas>\n'
+        f'<div class="ds-hero__band">{e(band)}</div>\n'
+        "</div>\n"
+        '<div class="ds-hero__verdict">\n'
+        f'<div class="ds-hero__verdict-headline">{e(headline or "")}</div>\n'
+        f'<div class="ds-hero__verdict-sub">{verdict_sub}</div>\n'
+        "</div>\n"
+        "</div>\n"
+        "</header>\n"
+        f"{THEME_TOGGLE_SCRIPT}"
     )
 
     # ── Score dimension rows (5 equal weights) ──
@@ -348,6 +360,7 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pre-Audit · {e(business)}</title>
+{THEME_BOOTSTRAP_SCRIPT}
 <style>
 {ds_css}
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -421,7 +434,7 @@ body {{
 
 /* ── Cards ────────────────────────────────────────────────────── */
 .card {{
-  background: #fff; border-radius: var(--radius); padding: 22px 26px;
+  background: var(--ds-surface); border-radius: var(--radius); padding: 22px 26px;
   box-shadow: var(--shadow); border: 1px solid var(--rule);
 }}
 .card + .card {{ margin-top: 10px; }}
@@ -439,12 +452,14 @@ body {{
 
 /* ── Tables ───────────────────────────────────────────────────── */
 .table-wrap {{
-  background: #fff; border-radius: var(--radius); overflow: hidden;
+  background: var(--ds-surface); border-radius: var(--radius); overflow: hidden;
   box-shadow: var(--shadow); border: 1px solid var(--rule);
 }}
 table {{ width: 100%; border-collapse: collapse; font-size: 13px; }}
 thead th {{
-  background: var(--ink); color: var(--ground);
+  /* Always-dark banner (matches .ds-table-wrap thead th in the shared system) —
+     pinned, not theme-reactive, so it doesn't invert against the body text below it. */
+  background: var(--ds-shell); color: var(--ds-shell-ink);
   padding: 11px 14px; text-align: left;
   font-family: var(--ds-font-mono);
   font-size: 9px; font-weight: 700; letter-spacing: .9px;
@@ -520,7 +535,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 
 /* ── Recommendations ──────────────────────────────────────────── */
 .rec-card {{
-  background: #fff; border-radius: var(--radius); padding: 20px 24px;
+  background: var(--ds-surface); border-radius: var(--radius); padding: 20px 24px;
   box-shadow: var(--shadow); border: 1px solid var(--rule);
   display: grid; grid-template-columns: 44px 1fr; gap: 18px;
   margin-bottom: 10px;
@@ -539,13 +554,20 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 }}
 
 /* ── CTA ──────────────────────────────────────────────────────── */
+/* Deliberately an always-dark closing section (dramatic contrast against the
+   rest of the page) — pinned to the non-reactive --ds-shell* tokens, not the
+   theme-reactive --ink/--ground pair, so it doesn't invert (and lose contrast
+   against the rgba(247,246,242,*) whites below) when dark mode flips ink/ground. */
 .cta-section {{
-  background: var(--ink); color: var(--ground);
+  background: var(--ds-shell); color: var(--ds-shell-ink);
   padding: 72px 40px; text-align: center;
 }}
 .cta-inner {{ max-width: 520px; margin: 0 auto; }}
 .cta-heading {{
-  font-family: var(--ds-font);
+  /* The base system's global h2 color:var(--ds-ink) rule otherwise wins over
+     inheritance here, making this heading invisible against the always-dark
+     .cta-section background (pre-existing bug, not specific to dark-mode work). */
+  font-family: var(--ds-font); color: var(--ds-shell-ink);
   font-size: 32px; font-weight: 400; margin-bottom: 10px;
 }}
 .cta-sub {{
@@ -827,18 +849,29 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
 <script>
 (function () {{
   var SCORE = {score};
-  var SIGNAL  = '{SIGNAL}';
-  var RESOLVE = '{RESOLVE}';
-  var AMBER   = '{AMBER}';
-  var RULE    = '{RULE}';
-  var MUTED   = '{MUTED}';
+  // The gauge always sits on the fixed-dark aurora hero gradient (.ds-hero__aside),
+  // same as every other hero element (h1, pills, band label) — it never inverts
+  // with the page's light/dark toggle. So its colors are pinned bright/white-on-dark
+  // constants, NOT the page-body --ds-* tokens (which are theme-reactive and tuned
+  // for text on --ds-surface cards — using them here caused unreadable dark-red-on
+  // -gradient / near-invisible gray-on-gradient text).
+  function gaugeColors() {{
+    return {{
+      SIGNAL:  '#ff6961',
+      RESOLVE: '#30d158',
+      AMBER:   '#ffb340',
+      RULE:    'rgba(255,255,255,.28)',
+      MUTED:   'rgba(255,255,255,.72)',
+    }};
+  }}
 
   // ── Canvas gauge ──────────────────────────────────────────────
   function drawGauge(id, score) {{
+    var {{ SIGNAL, RESOLVE, AMBER, RULE, MUTED }} = gaugeColors();
     var canvas = document.getElementById(id);
     if (!canvas || !canvas.getContext) return;
     var ctx = canvas.getContext('2d');
-    var cx = 80, cy = 80, r = 62, lw = 13;
+    var cx = 110, cy = 110, r = 88, lw = 18;
     var start  = Math.PI * 0.75;
     var finish = Math.PI * 2.25;
     var color  = score >= 65 ? RESOLVE : score >= 40 ? AMBER : SIGNAL;
@@ -847,7 +880,7 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
     var step = (target - start) / 45;
 
     function frame() {{
-      ctx.clearRect(0, 0, 160, 160);
+      ctx.clearRect(0, 0, 220, 220);
       ctx.beginPath();
       ctx.arc(cx, cy, r, start, finish);
       ctx.strokeStyle = RULE; ctx.lineWidth = lw; ctx.lineCap = 'round';
@@ -868,17 +901,19 @@ tbody td {{ padding: 11px 14px; vertical-align: middle; }}
       }}
 
       ctx.fillStyle = color;
-      ctx.font = 'bold 28px var(--ds-font-mono)';
+      ctx.font = 'bold 52px var(--ds-font-mono)';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(score, cx, cy - 6);
+      ctx.fillText(score, cx, cy - 8);
       ctx.fillStyle = MUTED;
-      ctx.font = '11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
-      ctx.fillText('/100', cx, cy + 13);
+      ctx.font = '700 15px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+      ctx.fillText('/ 100', cx, cy + 26);
     }}
     frame();
   }}
 
   drawGauge('scoreGauge', SCORE);
+  var themeToggle = document.querySelector('.ds-theme-toggle');
+  if (themeToggle) themeToggle.addEventListener('click', function () {{ drawGauge('scoreGauge', SCORE); }});
 
   // ── Bar animation on scroll ───────────────────────────────────
   function animateBars() {{

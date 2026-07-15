@@ -17,13 +17,15 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { designSystemCss, heroHeader } from "./lib/design_system.js";
+import { designSystemCss, heroHeader, heroAside, themeBootstrapScript } from "./lib/design_system.js";
 import * as P from "./lib/paths.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const esc = (s) => String(s ?? "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 const yn = (v) => (v == null ? '<span class="pill wn">unknown</span>' : v ? '<span class="pill ok">yes</span>' : '<span class="pill bd">no</span>');
-const ringColor = (s) => (s >= 67 ? "var(--good)" : s >= 34 ? "var(--warn)" : "var(--bad)");
+// Pinned bright constants (not theme-reactive --ds-* tokens) — the ring always
+// sits on the fixed-dark aurora hero gradient, same rule as pre-audit's gauge.
+const ringColor = (s) => (s >= 67 ? "#30d158" : s >= 34 ? "#ffb340" : "#ff6961");
 
 // Pull numbered bullet text out of the filled markdown report. Matches either a bold
 // inline label ("**Top 3 wins…:**") or a section heading ("## Recommended Next Steps").
@@ -44,6 +46,47 @@ function mdInline(t) {
 function bullets(items, cls) {
   if (!items.length) return `<li class="${cls}"><em>(pending qualitative analysis)</em></li>`;
   return items.map((t) => `<li class="${cls}">${mdInline(t)}</li>`).join("\n");
+}
+
+// /audit-creative writes a "### Creative Audit" block into audit_report.md (via
+// {{CREATIVE_AUDIT_SECTION}}). Extract + render it here so the client-facing
+// HTML/PDF actually includes it — the .md alone is never the deliverable.
+function creativeAuditSection(md) {
+  const m = md.match(/###\s*Creative Audit\n([\s\S]*?)(?:\n##(?!#)|$)/i);
+  if (!m) return "";
+  const body = m[1];
+
+  const tableRows = [...body.matchAll(/^\|([^\n]+)\|\s*$/gm)]
+    .map((r) => r[1].split("|").map((c) => c.trim()))
+    .filter((cells) => !cells.every((c) => /^:?-+:?$/.test(c)));
+  const [headerRow, ...dataRows] = tableRows;
+  const tableHtml = headerRow
+    ? `<table><tr>${headerRow.map((c) => `<th>${mdInline(c)}</th>`).join("")}</tr>${dataRows
+        .map((r) => `<tr>${r.map((c) => `<td>${mdInline(c)}</td>`).join("")}</tr>`)
+        .join("")}</table>`
+    : "";
+
+  const scoreLine = body.match(/\*\*Overall creative health score:\*\*\s*([^\n]+)/i)?.[1] || "";
+  const assetsLine = body.match(/\*\*Assets scored:\*\*\s*([^\n]+)/i)?.[1] || "";
+  const violationsLine = body.match(/\*\*Brand voice violations:\*\*\s*([^\n]+)/i)?.[1] || "";
+
+  const listBlock = (header) => {
+    const re = new RegExp(`\\*\\*${header}[^\\n]*\\n([\\s\\S]*?)(?:\\n\\s*\\n\\*\\*|\\n\\s*\\n$|$)`, "i");
+    const block = body.match(re)?.[1] || "";
+    return [...block.matchAll(/^\s*\d+\.\s+(.*)$/gm)].map((r) => r[1].trim());
+  };
+  const top3 = listBlock("Top 3 best performers");
+  const bottom3 = listBlock("Top 3 worst performers");
+
+  return `<h2>Creative audit</h2>
+<div class="cards">
+<div class="card"><div class="k">Assets scored</div><div class="v">${mdInline(assetsLine) || "—"}</div></div>
+<div class="card"><div class="k">Overall health</div><div class="v">${mdInline(scoreLine) || "—"}</div></div>
+<div class="card"><div class="k">Brand voice violations</div><div class="v">${mdInline(violationsLine) || "none"}</div></div>
+</div>
+${tableHtml}
+${top3.length ? `<h3 style="font-size:15px;margin:18px 0 8px">Top performers</h3><ul>${bullets(top3, "win")}</ul>` : ""}
+${bottom3.length ? `<h3 style="font-size:15px;margin:18px 0 8px">Replace next</h3><ul>${bullets(bottom3, "iss")}</ul>` : ""}`;
 }
 
 function render(slug) {
@@ -75,50 +118,50 @@ function render(slug) {
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(name)} — Account Audit (${date})</title>
+${themeBootstrapScript()}
 <style>
 ${designSystemCss()}
-/* /audit local tokens aliased to the smOS design system (Apple palette) */
-:root{--ink:var(--ds-ink);--mut:var(--ds-muted);--line:var(--ds-line);--blue:var(--ds-blue);--bg:var(--ds-bg);--good:#1c7a3e;--warn:#9a5b00;--bad:#b3261e}
+/* /audit local layout on top of the shared system — surfaces/ink/lines all
+   reference --ds-* tokens directly so this renderer follows dark mode too. */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font:15px/1.55 var(--ds-font);color:var(--ink);background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font:15px/1.55 var(--ds-font);color:var(--ds-ink);background:var(--ds-bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .wrap{max-width:860px;margin:0 auto;padding:40px 28px}
 .ds-hero code{background:rgba(255,255,255,.18);color:#fff}
-.brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);font-weight:700}
-h1{font-size:27px;margin:6px 0 4px}.meta{color:var(--mut);font-size:13px}
-.meta code{background:#eef1f7;padding:1px 6px;border-radius:4px;font-size:12px}
-h2{font-size:19px;margin:34px 0 14px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-.score{display:flex;align-items:center;gap:22px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 26px}
-.ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:conic-gradient(${ringColor(score)} 0 ${Math.round(score * 3.6)}deg,#eceef4 ${Math.round(score * 3.6)}deg 360deg)}
-.ring b{width:74px;height:74px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:26px;font-weight:800}
-.ring small{display:block;font-size:11px;color:var(--mut);font-weight:600;text-align:center}
+.brand{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-blue);font-weight:700}
+h1{font-size:27px;margin:6px 0 4px}.meta{color:var(--ds-muted);font-size:13px}
+.meta code{background:var(--ds-ink-tint);padding:1px 6px;border-radius:4px;font-size:12px}
+h2{font-size:19px;margin:34px 0 14px;padding-bottom:6px;border-bottom:1px solid var(--ds-line)}
+.ring{width:168px;height:168px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:conic-gradient(${ringColor(score)} 0 ${Math.round(score * 3.6)}deg,rgba(255,255,255,.22) ${Math.round(score * 3.6)}deg 360deg)}
+.ring b{width:132px;height:132px;border-radius:50%;background:rgba(6,20,15,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:48px;font-weight:800;color:#fff;line-height:1}
+.ring small{display:block;font-size:13px;color:rgba(255,255,255,.78);font-weight:700;margin-top:2px}
+.score-caption{max-width:220px;font-size:12px;color:rgba(255,255,255,.8);margin-top:10px;text-align:center}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
-.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
-.card .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:700}
-.card .v{font-size:22px;font-weight:800;margin-top:4px}.card .s{font-size:12px;color:var(--mut)}
+.card{background:var(--ds-surface);border:1px solid var(--ds-line);border-radius:12px;padding:14px}
+.card .k{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ds-muted);font-weight:700}
+.card .v{font-size:22px;font-weight:800;margin-top:4px;color:var(--ds-ink)}.card .s{font-size:12px;color:var(--ds-muted)}
 ul{margin:8px 0 8px 4px;list-style:none}
-li{padding:6px 0 6px 26px;position:relative;border-bottom:1px solid #f0f2f7}li:last-child{border-bottom:0}
-li.win::before{content:"✓";color:var(--good);font-weight:800;position:absolute;left:4px}
-li.iss::before{content:"!";color:var(--bad);font-weight:800;position:absolute;left:7px}
+li{padding:6px 0 6px 26px;position:relative;border-bottom:1px solid var(--ds-line)}li:last-child{border-bottom:0}
+li.win::before{content:"✓";color:var(--ds-green);font-weight:800;position:absolute;left:4px}
+li.iss::before{content:"!";color:var(--ds-red);font-weight:800;position:absolute;left:7px}
 ol.steps{counter-reset:s;list-style:none}
-li.step::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:6px;width:18px;height:18px;background:var(--blue);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:grid;place-items:center}
+li.step::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:6px;width:18px;height:18px;background:var(--ds-blue);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:grid;place-items:center}
 table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13.5px}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
-th{background:#eef1f7;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--ds-line)}
+th{background:var(--ds-ink-tint);font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ds-muted)}
 .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
-.ok{background:#e6f4ea;color:var(--good)}.wn{background:#fdf3da;color:#9a6b00}.bd{background:#fce8e6;color:var(--bad)}
-.callout{background:#fff5f5;border:1px solid #f3c9c5;border-left:4px solid var(--bad);border-radius:8px;padding:14px 16px;margin:14px 0}
-footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--mut);font-size:12px}
-@media(max-width:640px){.cards{grid-template-columns:1fr}.score{flex-direction:column;text-align:center}}
+.ok{background:var(--ds-green-tint);color:var(--ds-green-ink)}.wn{background:var(--ds-amber-tint);color:var(--ds-amber-ink)}.bd{background:var(--ds-red-tint);color:var(--ds-red-ink)}
+.callout{background:var(--ds-red-tint);border:1px solid var(--ds-red);border-left:4px solid var(--ds-red);border-radius:8px;padding:14px 16px;margin:14px 0}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--ds-line);color:var(--ds-muted);font-size:12px}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
 </style></head><body><div class="wrap">
 ${heroHeader({
   eyebrow: agency,
   title: "Meta Account & Page Audit",
   subtitleHtml: `${esc(name)} · ${date} · Page <code>${esc(fb.page_id || "—")}</code> · Ad acct <code>${esc(paid.account_id || "none")}</code>${raw.pre_audit_source ? ` · pre-audit reused from <code>${esc(raw.pre_audit_source)}</code>` : ""}`,
+  aside: heroAside({
+    body: `<div class="ring"><b>${score}<small>/100</small></b></div><div class="score-caption">Overall health — weighted across page completeness, pixel health, audiences, naming, posting consistency, engagement, and account financials.</div>`,
+  }),
 })}
-
-<div class="score"><div class="ring"><b>${score}<small>/100</small></b></div>
-<div><h2 style="border:0;margin:0 0 4px;padding:0">Overall health</h2>
-<p style="color:var(--mut)">Weighted across page completeness, pixel health, audiences, naming, posting consistency, engagement, and account financials. Components blocked by permissions are dropped and the rest renormalized — not scored as zero.</p></div></div>
 
 <div class="cards">
 <div class="card"><div class="k">FB followers</div><div class="v">${fmt(fb.followers)}</div><div class="s">${fb.new_follows_90d != null ? `+${fmt(fb.new_follows_90d)} new (90d)` : "organic"}</div></div>
@@ -153,9 +196,11 @@ ${xref.corroborated_finding ? `<h2>Pixel / tracking</h2><div class="callout"><b>
 <tr><td>Ad account</td><td>${paid.skipped ? '<span class="pill bd">none</span>' : paid.account_status === 1 ? '<span class="pill ok">active</span>' : '<span class="pill wn">status ' + (paid.account_status ?? "?") + "</span>"}</td></tr>
 <tr><td>Pixel firing</td><td>${paid.pixel_health === "full" ? '<span class="pill ok">full</span>' : paid.pixel_health === "partial" ? '<span class="pill wn">partial</span>' : '<span class="pill bd">none</span>'}</td></tr>
 </table>
-${fb.engagement_available === false ? `<p style="font-size:12.5px;color:var(--mut);margin-top:8px">Per-post engagement unavailable — ${esc(fb.engagement_blocked_reason || "permission gap")}. Cadence &amp; format mix are live; consider Meta App Review for <code>pages_read_user_content</code>.</p>` : ""}
+${fb.engagement_available === false ? `<p style="font-size:12.5px;color:var(--ds-muted);margin-top:8px">Per-post engagement unavailable — ${esc(fb.engagement_blocked_reason || "permission gap")}. Cadence &amp; format mix are live; consider Meta App Review for <code>pages_read_user_content</code>.</p>` : ""}
 
 <h2>Recommended next steps</h2><ol class="steps">${bullets(steps, "step")}</ol>
+
+${creativeAuditSection(md)}
 
 <footer>Generated by smOS /audit on ${date}. Baseline scope: ${paid.skipped || (paid.total_spend_lifetime ?? 0) === 0 ? "organic + account-readiness (no paid spend history)" : "full organic + paid"}. Immutable baseline for future before/after comparisons.</footer>
 </div></body></html>`;

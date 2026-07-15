@@ -22,6 +22,7 @@ import { resolveToken } from "../../scripts/lib/tokens.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { upsert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import * as P from "../../scripts/lib/paths.js";
+import { applySentiment, pendingSentiment } from "../../scripts/lib/sentiment.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -135,10 +136,28 @@ async function pullLive(token) {
     }
   }
 
+  // Sentiment (G8): this script never classifies text itself — the agent running
+  // /inbox reads each new item's text and drops its verdicts into
+  // sentiment_judgments.json (keyed by inbox_id). Merge is fail-closed: anything
+  // not exactly positive/neutral/negative collapses to null, and an existing
+  // verdict is never overwritten.
+  const sentimentPath = P.clientFile(slug, "sentiment_judgments.json");
+  if (existsSync(sentimentPath)) {
+    try {
+      const judgments = JSON.parse(readFileSync(sentimentPath, "utf8"));
+      normalized.items = applySentiment(normalized.items, judgments, { idField: "inbox_id" });
+    } catch (e) { console.error("sentiment_judgments.json unreadable, skipping merge:", e.message); }
+  }
+
   const v = schema.validate(normalized);
   if (!v.ok) console.error("inbox validation warnings:\n  - " + v.errors.join("\n  - "));
 
   writeFileSync(inboxPath, JSON.stringify(normalized, null, 2));
+
+  const needsSentiment = pendingSentiment(normalized.items, { idField: "inbox_id" });
+  if (needsSentiment.length) {
+    console.error(`[inbox] ${needsSentiment.length} item(s) still need a sentiment judgment — write id→sentiment to clients/${slug}/sentiment_judgments.json and re-run.`);
+  }
 
   const breaches = normalized.items.filter(
     (i) => i.state !== "replied" && i.state !== "closed" && i.first_reply_due_at && Date.parse(i.first_reply_due_at) < now

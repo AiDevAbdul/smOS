@@ -58,13 +58,23 @@ Gather context before acting (do not ask the user for what is discoverable):
 6. Classify each ad against the fatigue rule table, then score refresh priority.
 7. Rank flagged ads; take the top 10 as the refresh queue.
 8. Write `clients/{slug}/creative_intel.json`; print the one-line summary.
+9. **Optional refresh loop (`--spawn-refresh`):** for each queued ad, build a refresh
+   brief (angle inferred from the fatigue flag + the account's best historical hooks
+   from the DAM via `scripts/lib/dam.js`) and file a fail-closed approval request via
+   `scripts/lib/approvals.js` (action `creative_refresh`). Nothing is drafted or
+   launched automatically — a human must approve each brief. Written to
+   `clients/{slug}/refresh_briefs.json`, idempotent per ad (`scripts/lib/refresh-loop.js`).
+10. **`--collect-approved`:** re-checks `refresh_briefs.json` against approval
+    decisions and promotes any newly-approved brief to `ready_for_creative`, so the
+    operator can hand its `ad_id` + `angle` to `/creative` and then `/launch` for a
+    PAUSED replacement ad. Does not pull from Meta.
 
-Invocation: `node skills/creative-intel/creative-intel.js <slug> [--window 30]`
+Invocation: `node skills/creative-intel/creative-intel.js <slug> [--window 30] [--spawn-refresh] [--collect-approved]`
 
 ## Input / Output Specification
 
-**Inputs:** arg `<slug>` (required), flag `--window <int>` (optional, default 30); env `META_ACCESS_TOKEN` (required, via `load-env.js`), `META_APP_SECRET` (optional, enables `appsecret_proof`); file `clients/{slug}/client_profile.json`.
-**Outputs:** file `clients/{slug}/creative_intel.json`; stdout one-line JSON summary (`slug`, `ads_analyzed`, `ads_flagged`, `flag_counts`, `top_refresh`, `path`, `next`). Progress + halt messages go to stderr. No Supabase write in this skill.
+**Inputs:** arg `<slug>` (required), flag `--window <int>` (optional, default 30), flags `--spawn-refresh` / `--collect-approved` (optional, mutually exclusive with the main pull); env `META_ACCESS_TOKEN` (required, via `load-env.js`), `META_APP_SECRET` (optional, enables `appsecret_proof`); file `clients/{slug}/client_profile.json`.
+**Outputs:** file `clients/{slug}/creative_intel.json`; with `--spawn-refresh` also `clients/{slug}/refresh_briefs.json` + one approval record per queued ad; stdout one-line JSON summary (`slug`, `ads_analyzed`, `ads_flagged`, `flag_counts`, `top_refresh`, `path`, `refresh_briefs_filed`, `next`). Progress + halt messages go to stderr. No Supabase write in this skill.
 (Full schemas, example payloads, and exit codes: `references/io-contract.md`.)
 
 ## Variability Analysis

@@ -23,6 +23,8 @@ loadEnv();
 
 const IG_CONTAINER_TIMEOUT_MS = 60_000;
 const IG_CONTAINER_POLL_MS = 3000;
+const FB_REEL_TIMEOUT_MS = 120_000;
+const FB_REEL_POLL_MS = 5000;
 
 function pageTokenFor(slug) {
   const envKey = `META_PAGE_TOKEN_${slug.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;
@@ -42,8 +44,59 @@ async function pollContainer(graph, containerId) {
   throw new Error(`IG container ${containerId} did not finish within ${IG_CONTAINER_TIMEOUT_MS}ms`);
 }
 
+// Facebook Page video/reels: the three-phase Video Reels API (start → transfer →
+// finish). We always transfer via a hosted file_url (Meta fetches the bytes) —
+// matching the hosted-URL convention already used for IG video/reels and for ad
+// video uploads in scripts/lib/media_upload.js — so no local/binary upload path
+// is needed here.
+async function pollFacebookReel(graph, videoId) {
+  const deadline = Date.now() + FB_REEL_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    const res = await graph.get(`/${videoId}`, { fields: "status" });
+    const state = res.status?.video_status;
+    if (state === "ready") return res;
+    if (state === "error") throw new Error(`FB reel ${videoId} failed to process: ${JSON.stringify(res.status)}`);
+    await new Promise((r) => setTimeout(r, FB_REEL_POLL_MS));
+  }
+  throw new Error(`FB reel ${videoId} did not finish processing within ${FB_REEL_TIMEOUT_MS}ms`);
+}
+
+async function publishFacebookReel(graph, item, pageId, pageToken) {
+  if (!item.video_url) throw new Error("facebook reels requires video_url");
+
+  const start = await graph.post(`/${pageId}/video_reels`, {
+    access_token: pageToken,
+    upload_phase: "start",
+  });
+  const videoId = start.video_id;
+  if (!videoId) throw new Error(`FB video_reels start phase returned no video_id: ${JSON.stringify(start)}`);
+
+  await graph.post(`/${pageId}/video_reels`, {
+    access_token: pageToken,
+    upload_phase: "transfer",
+    video_id: videoId,
+    file_url: item.video_url,
+  });
+
+  await pollFacebookReel(graph, videoId);
+
+  const finish = await graph.post(`/${pageId}/video_reels`, {
+    access_token: pageToken,
+    upload_phase: "finish",
+    video_id: videoId,
+    video_state: "PUBLISHED",
+    description: item.message || "",
+  });
+
+  return { id: videoId, ...finish };
+}
+
 async function publishFacebook(graph, item, pageId, pageToken) {
   if (!pageToken) throw new Error("No page access token — set META_PAGE_TOKEN or META_PAGE_TOKEN_<SLUG>");
+
+  if (item.format === "reels" || item.format === "video") {
+    return publishFacebookReel(graph, item, pageId, pageToken);
+  }
 
   const body = { access_token: pageToken };
   if (item.message) body.message = item.message;
@@ -247,7 +300,12 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((e) => {
-  console.error("[publish] FATAL:", e.message);
-  process.exit(1);
-});
+const isEntry = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isEntry) {
+  main().catch((e) => {
+    console.error("[publish] FATAL:", e.message);
+    process.exit(1);
+  });
+}
+
+export { publishFacebook, publishFacebookReel, pollFacebookReel, publishInstagramSingle, publishInstagramCarousel, isDue, isIgLimitError };

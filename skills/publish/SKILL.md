@@ -1,6 +1,6 @@
 ---
 name: publish
-description: Use this skill when the user asks to publish, schedule, or run the content calendar for a client (typically via `/publish {slug}`). It reads `clients/{slug}/content_calendar.json`, publishes or natively-schedules every item whose `publish_at` is now-or-past and whose status is `pending` (Facebook feed/photo posts and Instagram image/video/reels/carousel via the two-step container flow), writes the resulting media IDs back into the calendar atomically, and appends one row per attempt to `publish_log.json`.
+description: Use this skill when the user asks to publish, schedule, or run the content calendar for a client (typically via `/publish {slug}`). It reads `clients/{slug}/content_calendar.json`, publishes or natively-schedules every item whose `publish_at` is now-or-past and whose status is `pending` (Facebook feed/photo/video/reels and Instagram image/video/reels/carousel), writes the resulting media IDs back into the calendar atomically, and appends one row per attempt to `publish_log.json`.
 ---
 
 # /publish — Organic Content Calendar Runner (Phase 2 · Organic OS)
@@ -16,6 +16,7 @@ dispatcher — no copywriting, no LLM calls — so it is safe to run on a schedu
 - Select calendar items where `status == "pending"` and (`publish_at` absent or `<= now`).
 - Publish Facebook `post`/`image` via `POST /{page_id}/feed` or `/{page_id}/photos` with a Page token.
 - Publish Instagram `image`/`video`/`reels` via the two-step `/media` container → `/media_publish` flow.
+- Publish Facebook `video`/`reels` via the three-phase `/video_reels` (start → transfer → finish) flow, polling `status.video_status` before finishing.
 - Publish Instagram `carousel`: 2–10 child containers → parent `CAROUSEL` container → publish.
 - Natively schedule Facebook items flagged `schedule_native: true` (`published=false` + `scheduled_publish_time`).
 - Mutate each item in place (`status`, `published_id`, `published_at`, `error`) and rewrite the calendar atomically.

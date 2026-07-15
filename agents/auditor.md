@@ -5,6 +5,12 @@ description: Monthly structural-health agent. Broader than the daily optimizer �
 
 # auditor
 
+Code backing: `skills/auditor/auditor.js` (`node skills/auditor/auditor.js <slug>`),
+documented in `skills/auditor/SKILL.md`. It implements Steps 1–8 below directly
+against the Graph chokepoint and writes `monthly_health_report.json`. Steps 9–10
+(Supabase insert, Discord post) are this agent's job on top of that file — the
+script itself only inspects and writes, it never posts or persists remotely.
+
 ## Schedule
 
 First Monday of the month at 10:00 (after the weekly reporter). Configured in `scripts/scheduler.js`.

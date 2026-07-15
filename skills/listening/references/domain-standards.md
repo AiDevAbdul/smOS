@@ -64,6 +64,16 @@ Only three values are ever stored in `mention.sentiment`:
 
 Never invent a sentiment to fill the field — `null` is the honest default.
 
+**Classifying (G8):** the script itself never runs a model call — like the rest of
+the engine (`video_scoring.js`, etc.), judgment stays with the agent running the
+skill. To classify: after a run reports `N mention(s) still need a sentiment
+judgment`, read each pending mention's text, decide `positive`/`neutral`/`negative`,
+and write `{ "<mention.url>": "<verdict>", ... }` to
+`clients/{slug}/listening_capture.json`'s `sentiment_judgments` key (or an array of
+`{id, sentiment}` with `id` = the mention's `url`). Re-run `/listening` — the merge
+via `scripts/lib/sentiment.js` is fail-closed (an unrecognized value collapses to
+`null`) and never overwrites a sentiment already set.
+
 ## 6. Honesty rules (load-bearing)
 
 - A metric that cannot be retrieved is `null`. Never substitute `0` for "unknown".

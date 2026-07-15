@@ -11,6 +11,7 @@ taxonomies, timing, and formulas live here so the runtime never has to discover 
 |----------|--------|----------|-------|
 | facebook | `post` | `POST /{page_id}/feed` | text + optional `link` |
 | facebook | `image` | `POST /{page_id}/photos` | needs `image_url`; falls back to `/feed` if none |
+| facebook | `video` / `reels` | `/{page_id}/video_reels` — `start` → `transfer` (hosted `file_url`) → poll `status.video_status` → `finish` (`video_state=PUBLISHED`) | needs `video_url`; no local/binary upload — Meta fetches the hosted URL, same convention as IG video/reels and `scripts/lib/media_upload.js` |
 | instagram | `image` | `/media` → `/media_publish` | needs `image_url`; no container poll required |
 | instagram | `video` | `/media` (`media_type=VIDEO`) → poll → publish | needs `video_url` |
 | instagram | `reels` | `/media` (`media_type=REELS`) → poll → publish | `share_to_feed` default true; optional `cover_url` |

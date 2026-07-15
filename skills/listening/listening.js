@@ -16,6 +16,7 @@ import { listeningSnapshot as schema } from "../../schemas/index.js";
 import { resolveToken } from "../../scripts/lib/tokens.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { benchmarkFromMedia } from "../../scripts/lib/organic_bench.js";
+import { applySentiment, pendingSentiment } from "../../scripts/lib/sentiment.js";
 import { insert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import * as P from "../../scripts/lib/paths.js";
 
@@ -88,6 +89,16 @@ if (!OFFLINE && tok.token && igId && !capture.competitors && handles.length) {
   console.error(`note: no page token for ${slug} — emitting competitor stubs (no live benchmark).`);
 }
 
+// Sentiment (G8): this script never classifies text itself — the agent running
+// /listening reads each new mention's text and drops its verdicts into
+// listening_capture.json's `sentiment_judgments` (keyed by mention `url`, since
+// mentions have no stable id). Merge is fail-closed: anything not exactly
+// positive/neutral/negative collapses to null, and an existing verdict is never
+// overwritten.
+if (capture.sentiment_judgments) {
+  mentions = applySentiment(mentions, capture.sentiment_judgments, { idField: "url" });
+}
+
 const snapshot = schema.normalize({
   client_slug: slug,
   captured_at: new Date().toISOString(),
@@ -95,6 +106,11 @@ const snapshot = schema.normalize({
   mentions,
   competitors,
 });
+
+const needsSentiment = pendingSentiment(snapshot.mentions, { idField: "url" });
+if (needsSentiment.length) {
+  console.error(`[listening] ${needsSentiment.length} mention(s) still need a sentiment judgment — see snapshot.mentions or re-run with sentiment_judgments in listening_capture.json`);
+}
 
 const v = schema.validate(snapshot);
 if (!v.ok) { console.error("listening_snapshot INVALID:\n  - " + v.errors.join("\n  - ")); process.exit(4); }

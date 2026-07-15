@@ -291,7 +291,4 @@ components). Spec & component reference: **`design-system/MASTER.md`**.
 
 ## Active Clients
 
-<!-- Updated by /intake for each new client -->
-<!-- Format: - [Client Name](clients/[slug]/CLAUDE.md) · Status: active -->
-
-- [Blue Rose Auto](clients/blue-rose-auto/CLAUDE.md) · Status: Planning mode (no live Meta accounts yet) · Engagement start: 2026-06-18
+- [Blue Rose Auto Care & Repair Services](clients/blue-rose-auto/CLAUDE.md) · Status: Planning mode (no live Meta accounts yet) · Engagement start: 2026-06-18

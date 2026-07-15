@@ -31,3 +31,6 @@ jobs:
 
       - name: Run test suite
         run: node --test test/*.test.js
+
+      - name: Check CLAUDE.md Active Clients is in sync with crm/pipeline.json
+        run: node scripts/generate-active-clients.js --check

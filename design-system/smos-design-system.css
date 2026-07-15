@@ -46,6 +46,13 @@
   --ds-red-tint:   #ffece9;
   --ds-ink-tint:   #f2f2f7;
 
+  /* ---- On-tint text (badges/callouts) — darker than the base semantic color
+     for AA contrast on the light pastel tint; swap to a lighter shade in dark
+     mode where the tint itself is a low-opacity dark fill. ---- */
+  --ds-green-ink: #1c7a3e;
+  --ds-amber-ink: #9a5b00;
+  --ds-red-ink:   #b3261e;
+
   /* ---- Type ---- */
   --ds-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
              "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -68,7 +75,7 @@
   --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
   /* Signature aurora — blue → indigo → violet. Used ONLY on the progress spine,
      active states, and hero accent. The one place boldness is spent. */
-  --ds-grad-brand: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 52%, #7d3cff 100%);
+  --ds-grad-brand: linear-gradient(135deg, #06251c 0%, #0e5c3f 55%, #16a973 100%);
 
   /* ---- "Operating system" shell (dark hub chrome that frames light reports) ---- */
   --ds-shell:     #0b0b10;   /* console canvas (cool near-black) */
@@ -86,6 +93,158 @@
   --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
   --ds-dur:        220ms;
   --ds-dur-fast:   140ms;
+}
+
+/* ------------------------------------------------------ Dark mode tokens ---
+   Auto (prefers-color-scheme) is the default; [data-theme] is a manual
+   override written by the bootstrap script in reportHead()/report_head() and
+   flipped by .ds-theme-toggle. [data-theme] always wins over the media query
+   in both directions (a light override on a dark OS, and vice versa).
+   Print/PDF always forces light regardless of any theme left on the page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root:not([data-theme="light"]) {
+    --ds-bg:        #000000;
+    --ds-surface:   #1c1c1e;
+    --ds-surface-2: #232326;
+    --ds-glass:     rgba(28,28,30,.72);
+
+    --ds-ink:    #f5f5f7;
+    --ds-ink-2:  #e5e5e7;
+    --ds-muted:  #98989d;
+    --ds-faint:  #6e6e73;
+
+    --ds-line:        #38383a;
+    --ds-line-strong: #48484a;
+
+    --ds-blue:   #0a84ff;
+    --ds-indigo: #7d7aff;
+    --ds-green:  #30d158;
+    --ds-amber:  #ff9f0a;
+    --ds-red:    #ff453a;
+    --ds-purple: #bf5af2;
+    --ds-teal:   #64d2ff;
+    --ds-pink:   #ff375f;
+
+    --ds-blue-tint:  rgba(10,132,255,.16);
+    --ds-green-tint: rgba(48,209,88,.16);
+    --ds-amber-tint: rgba(255,159,10,.16);
+    --ds-red-tint:   rgba(255,69,58,.16);
+    --ds-ink-tint:   #2c2c2e;
+    --ds-green-ink: #63d986;
+    --ds-amber-ink: #ffc46b;
+    --ds-red-ink:   #ff8a80;
+
+    --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+    --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+    --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ds-bg:        #000000;
+  --ds-surface:   #1c1c1e;
+  --ds-surface-2: #232326;
+  --ds-glass:     rgba(28,28,30,.72);
+
+  --ds-ink:    #f5f5f7;
+  --ds-ink-2:  #e5e5e7;
+  --ds-muted:  #98989d;
+  --ds-faint:  #6e6e73;
+
+  --ds-line:        #38383a;
+  --ds-line-strong: #48484a;
+
+  --ds-blue:   #0a84ff;
+  --ds-indigo: #7d7aff;
+  --ds-green:  #30d158;
+  --ds-amber:  #ff9f0a;
+  --ds-red:    #ff453a;
+  --ds-purple: #bf5af2;
+  --ds-teal:   #64d2ff;
+  --ds-pink:   #ff375f;
+
+  --ds-blue-tint:  rgba(10,132,255,.16);
+  --ds-green-tint: rgba(48,209,88,.16);
+  --ds-amber-tint: rgba(255,159,10,.16);
+  --ds-red-tint:   rgba(255,69,58,.16);
+  --ds-ink-tint:   #2c2c2e;
+  --ds-green-ink: #63d986;
+  --ds-amber-ink: #ffc46b;
+  --ds-red-ink:   #ff8a80;
+
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ds-green-ink: #1c7a3e;
+  --ds-amber-ink: #9a5b00;
+  --ds-red-ink:   #b3261e;
+}
+
+@media print {
+  :root, :root[data-theme="dark"] {
+    color-scheme: light !important;
+    --ds-bg:        #f5f5f7 !important;
+    --ds-surface:   #ffffff !important;
+    --ds-surface-2: #fbfbfd !important;
+    --ds-ink:       #1d1d1f !important;
+    --ds-ink-2:     #3a3a3c !important;
+    --ds-muted:     #6e6e73 !important;
+    --ds-faint:     #8e8e93 !important;
+    --ds-line:        #e2e2e7 !important;
+    --ds-line-strong: #d2d2d7 !important;
+    --ds-blue:   #0071e3 !important;
+    --ds-indigo: #5e5ce6 !important;
+    --ds-green:  #34c759 !important;
+    --ds-amber:  #ff9f0a !important;
+    --ds-red:    #ff3b30 !important;
+    --ds-purple: #af52de !important;
+    --ds-teal:   #5ac8fa !important;
+    --ds-pink:   #ff375f !important;
+    --ds-blue-tint:  #eef5ff !important;
+    --ds-green-tint: #e7f9ed !important;
+    --ds-amber-tint: #fff5e6 !important;
+    --ds-red-tint:   #ffece9 !important;
+    --ds-ink-tint:   #f2f2f7 !important;
+    --ds-green-ink: #1c7a3e !important;
+    --ds-amber-ink: #9a5b00 !important;
+    --ds-red-ink:   #b3261e !important;
+  }
+  .ds-theme-toggle { display: none !important; }
+}
+
+/* ---- Theme toggle (sun/moon icon button, top-right of the hero) ---- */
+.ds-theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--ds-dur) var(--ds-ease);
+}
+.ds-theme-toggle:hover { background: rgba(255,255,255,.24); }
+.ds-theme-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.ds-theme-toggle svg { width: 18px; height: 18px; fill: currentColor; }
+.ds-theme-toggle .ds-theme-toggle__moon { display: none; }
+:root[data-theme="dark"] .ds-theme-toggle .ds-theme-toggle__sun { display: none; }
+:root[data-theme="dark"] .ds-theme-toggle .ds-theme-toggle__moon { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ds-theme-toggle .ds-theme-toggle__sun { display: none; }
+  :root:not([data-theme="light"]) .ds-theme-toggle .ds-theme-toggle__moon { display: block; }
 }
 
 /* ---------------------------------------------------------------- Base ---- */
@@ -166,7 +325,7 @@ li { margin: 4px 0; }
   border-radius: var(--ds-r-lg);
   padding: 44px 40px;
   margin-bottom: 28px;
-  box-shadow: 0 12px 32px rgba(94,92,230,.28);
+  box-shadow: 0 12px 32px rgba(14,92,63,.35);
 }
 /* Subtle radial glow for depth (Stripe-style). Behind content, non-interactive. */
 .ds-hero::before {
@@ -227,16 +386,56 @@ li { margin: 4px 0; }
 /* Optional right-hand executive column: score ring + a single hero stat. */
 .ds-hero__aside { text-align: center; flex-shrink: 0; }
 .ds-hero__stat { margin-top: 18px; }
-.ds-hero__stat-label,
-.ds-hero__aside .ds-hero__band {
+.ds-hero__stat-label {
   font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
   color: rgba(255,255,255,.72); margin-top: 8px;
+}
+.ds-hero__aside .ds-hero__band {
+  display: inline-block;
+  font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; margin-top: 12px; padding: 6px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
 }
 .ds-hero__stat-value { font-size: 32px; font-weight: 700; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
 .ds-hero__stat-caption { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; max-width: 200px; }
 @media (max-width: 720px) {
   .ds-hero__inner.has-aside { grid-template-columns: 1fr; }
   .ds-hero__aside { text-align: left; }
+}
+
+/* Scored hero variant — pre-audit's one true header: centered identity block
+   on top, then a big score gauge + verdict headline side-by-side below.
+   Scoped under .ds-hero--scored so it never affects the default .ds-hero
+   used by /audit, /report, /analyze, /before-after, /monthly-review. */
+.ds-hero--scored .ds-hero__center { text-align: center; }
+.ds-hero--scored .ds-hero__center h1 { font-size: var(--ds-fs-display); }
+.ds-hero--scored .ds-hero__center .ds-meta { margin: 10px 0 0; }
+.ds-hero__score-row {
+  margin-top: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+  flex-wrap: wrap;
+}
+.ds-hero__gauge { flex-shrink: 0; text-align: center; }
+.ds-hero__gauge .ds-hero__band {
+  display: inline-block;
+  font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; margin-top: 14px; padding: 6px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+}
+.ds-hero__verdict { max-width: 420px; text-align: left; }
+.ds-hero__verdict-headline {
+  font-size: 22px; font-weight: 650; line-height: 1.32; color: #fff;
+  letter-spacing: -0.01em;
+}
+.ds-hero__verdict-sub {
+  margin-top: 14px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.78);
+}
+@media (max-width: 720px) {
+  .ds-hero__score-row { flex-direction: column; text-align: center; }
+  .ds-hero__verdict { text-align: center; }
 }
 
 .ds-eyebrow {
@@ -300,9 +499,9 @@ li { margin: 4px 0; }
   border-radius: var(--ds-r-pill);
   line-height: 1.3;
 }
-.ds-badge--good { background: var(--ds-green-tint); color: #1c7a3e; }
-.ds-badge--warn { background: var(--ds-amber-tint); color: #9a5b00; }
-.ds-badge--bad  { background: var(--ds-red-tint);   color: #b3261e; }
+.ds-badge--good { background: var(--ds-green-tint); color: var(--ds-green-ink); }
+.ds-badge--warn { background: var(--ds-amber-tint); color: var(--ds-amber-ink); }
+.ds-badge--bad  { background: var(--ds-red-tint);   color: var(--ds-red-ink); }
 .ds-badge--info { background: var(--ds-blue-tint);  color: var(--ds-blue-strong); }
 .ds-badge--neutral { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
 
@@ -431,7 +630,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(94,92,230,.32);
+  box-shadow: 0 4px 12px rgba(14,92,63,.4);
 }
 .ds-step.is-pending .ds-step-num {
   background: var(--ds-surface);

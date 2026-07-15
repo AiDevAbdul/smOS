@@ -10,7 +10,7 @@ from pathlib import Path
 
 # Shared smOS design system (Apple/Cupertino) — single source of truth.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
-from design_system import design_system_css, CHART_THEME  # noqa: E402
+from design_system import design_system_css, CHART_THEME, THEME_BOOTSTRAP_SCRIPT  # noqa: E402
 
 
 def score_color(score: float) -> str:
@@ -152,6 +152,7 @@ def build_html(data: dict) -> str:
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Meta Ads Competitor Analysis</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{THEME_BOOTSTRAP_SCRIPT}
 <style>
 {ds_css}
 *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -163,7 +164,10 @@ body {{
     background: var(--ds-grad-blue);
     padding: 48px 40px 40px; color: #fff;
 }}
-.header h1 {{ font-size: 36px; font-weight: 700; letter-spacing: -0.5px; }}
+/* Explicit color: the base system's global h1 color:var(--ds-ink) rule
+   otherwise wins over inheritance, making this heading invisible on the
+   always-blue .header background (pre-existing bug, not dark-mode-specific). */
+.header h1 {{ font-size: 36px; font-weight: 700; letter-spacing: -0.5px; color: #fff; }}
 .header .subtitle {{ font-size: 16px; opacity: 0.85; margin-top: 6px; }}
 .pills {{ margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }}
 .pill {{
@@ -172,45 +176,45 @@ body {{
 }}
 .container {{ max-width: 1200px; margin: 0 auto; padding: 40px 24px; }}
 .section-title {{
-    font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #1d1d1f;
+    font-size: 22px; font-weight: 600; margin-bottom: 20px; color: var(--ds-ink);
 }}
 .kpi-row {{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }}
 .kpi-card {{
-    background: #fff; border-radius: 16px; padding: 24px 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07); border-top: 3px solid;
+    background: var(--ds-surface); border-radius: 16px; padding: 24px 20px;
+    box-shadow: var(--ds-shadow-sm); border-top: 3px solid;
 }}
-.kpi-card:nth-child(1) {{ border-color: #ff375f; }}
-.kpi-card:nth-child(2) {{ border-color: #0071e3; }}
-.kpi-card:nth-child(3) {{ border-color: #34c759; }}
-.kpi-card:nth-child(4) {{ border-color: #ff9f0a; }}
-.kpi-label {{ font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: #6e6e73; }}
-.kpi-value {{ font-size: 28px; font-weight: 700; margin-top: 8px; color: #1d1d1f; }}
-.kpi-sub {{ font-size: 13px; color: #6e6e73; margin-top: 4px; }}
+.kpi-card:nth-child(1) {{ border-color: var(--ds-pink); }}
+.kpi-card:nth-child(2) {{ border-color: var(--ds-blue); }}
+.kpi-card:nth-child(3) {{ border-color: var(--ds-green); }}
+.kpi-card:nth-child(4) {{ border-color: var(--ds-amber); }}
+.kpi-label {{ font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ds-muted); }}
+.kpi-value {{ font-size: 28px; font-weight: 700; margin-top: 8px; color: var(--ds-ink); }}
+.kpi-sub {{ font-size: 13px; color: var(--ds-muted); margin-top: 4px; }}
 .charts-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }}
 .chart-card {{
-    background: #fff; border-radius: 16px; padding: 28px 24px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    background: var(--ds-surface); border-radius: 16px; padding: 28px 24px;
+    box-shadow: var(--ds-shadow-sm);
 }}
 .chart-card.full {{ grid-column: 1 / -1; }}
-.chart-title {{ font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #1d1d1f; }}
+.chart-title {{ font-size: 15px; font-weight: 600; margin-bottom: 20px; color: var(--ds-ink); }}
 canvas {{ max-height: 280px; }}
 .table-wrap {{
-    background: #fff; border-radius: 16px; overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07); margin-bottom: 40px;
+    background: var(--ds-surface); border-radius: 16px; overflow: hidden;
+    box-shadow: var(--ds-shadow-sm); margin-bottom: 40px;
 }}
 table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
 thead th {{
-    background: #1d1d1f; color: #fff; padding: 14px 16px;
+    background: var(--ds-grad-ink); color: #fff; padding: 14px 16px;
     text-align: left; font-size: 12px; font-weight: 600;
     letter-spacing: 0.4px; text-transform: uppercase; white-space: nowrap;
 }}
-tbody tr {{ border-bottom: 1px solid #f2f2f2; }}
-tbody tr:hover {{ background: #fafafa; }}
+tbody tr {{ border-bottom: 1px solid var(--ds-line); }}
+tbody tr:hover {{ background: var(--ds-surface-2); }}
 tbody td {{ padding: 14px 16px; vertical-align: middle; }}
-.rank {{ font-weight: 700; font-size: 16px; color: #0071e3; }}
+.rank {{ font-weight: 700; font-size: 16px; color: var(--ds-blue); }}
 .page-name {{ font-weight: 600; }}
-.sub {{ font-size: 12px; color: #8e8e93; }}
-.small {{ font-size: 12px; color: #6e6e73; }}
+.sub {{ font-size: 12px; color: var(--ds-faint); }}
+.small {{ font-size: 12px; color: var(--ds-muted); }}
 .tier-badge {{
     display: inline-block; border-radius: 6px; padding: 3px 10px;
     font-size: 12px; font-weight: 600;
@@ -219,8 +223,8 @@ tbody td {{ padding: 14px 16px; vertical-align: middle; }}
 .score-bar {{ height: 8px; border-radius: 4px; min-width: 4px; }}
 .score-label {{ font-weight: 700; font-size: 14px; min-width: 36px; }}
 .footer {{
-    text-align: center; padding: 32px; font-size: 12px; color: #8e8e93;
-    border-top: 1px solid #e5e5ea;
+    text-align: center; padding: 32px; font-size: 12px; color: var(--ds-faint);
+    border-top: 1px solid var(--ds-line);
 }}
 @media (max-width: 768px) {{
     .kpi-row {{ grid-template-columns: 1fr 1fr; }}
