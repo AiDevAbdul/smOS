@@ -9,6 +9,14 @@ Turn a `won` deal into recurring revenue. This skill reads the deal's retainer t
 service catalog, issues a per-period invoice (HTML+PDF), and tracks it in a ledger the client
 portal can read. It runs the deterministic companion `skills/billing/billing.js`.
 
+**Rendering (revised 2026-07-16):** the invoice is built as a **proper structured invoice
+layout on the shared design system** (`buildInvoiceHtml` → header with invoice #/period/
+issue+due dates, from/bill-to cards, a right-aligned line-item table with an emphasized
+total row, a status badge and pay-online button) via `scripts/lib/client_doc.js`, then PDF.
+Do **not** route it through the generic `mdToHtml` path (duplicate `<h1>`, unstyled dump).
+The Markdown twin (`invoiceMarkdown`) is kept for portability only. Template exemplar:
+`templates/invoice.html`. The pure, tested `buildInvoice` model is unchanged.
+
 ## What This Skill Does
 
 - Build a monthly retainer invoice for a period (`YYYY-MM`): retainer line, one-time setup fee on the first invoice, optional ad-spend pass-through line.

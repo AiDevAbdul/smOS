@@ -7,6 +7,8 @@ description: Use this skill to onboard a new smOS client — run new-client inta
 
 Onboarding turns a raw conversation into the two artifacts every downstream smOS skill reads: a normalized `client_profile.json` and a per-client `CLAUDE.md` constitution. The Q&A is conversational (Claude runs it); the deterministic materialization (slug, schema validation, currency detection, template fill, zero-start routing) is done by the companion `intake.js`. Get this right and the whole pipeline inherits correct IDs, KPIs, voice rules, and approval gates.
 
+**Client-facing welcome doc (added 2026-07-16):** on `build`, intake also writes `clients/{slug}/welcome.html` (+ PDF) — a polished onboarding/kickoff document on the shared design system (`buildWelcomeHtml` via `scripts/lib/client_doc.js`). It is the Phase-3 sibling of the `/pre-audit` and `/proposal`: it carries their numbers forward (pulls the pre-audit score/upside snapshot and the CRM deal's package/retainer) so the engagement reads as one continuous story — what you agreed, where you're starting, your first 90 days, and what we need from you. The internal `client_profile.json` + `CLAUDE.md` are unchanged; welcome-doc failure is non-fatal (they still write). Template exemplar: `templates/welcome.html`.
+
 ## What This Skill Does
 
 - Runs a 9-group conversational Q&A from `templates/intake-questions.md` (one question at a time).

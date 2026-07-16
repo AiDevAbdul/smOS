@@ -28,6 +28,10 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { clientProfile as profileSchema } from "../../schemas/index.js";
 import { checkZeroStartPrereqs } from "../../scripts/lib/guards.js";
+import { heroHeader } from "../../scripts/lib/design_system.js";
+import { docShell, writeDocHtmlAndPdf, docSection, escHtml } from "../../scripts/lib/client_doc.js";
+import { getDeal } from "../../scripts/lib/crm-store.js";
+import { loadCatalog, pickPackage, extractSnapshot } from "../proposal/proposal.js";
 import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -300,6 +304,138 @@ function archiveProspect(slug) {
   return dest;
 }
 
+/* ─────────────────── Client-facing welcome / kickoff doc ─────────────────── */
+/* The internal deliverables (client_profile.json + CLAUDE.md) stay as-is. This
+   ADDS a polished onboarding document the client actually receives — the Phase-3
+   sibling of the /pre-audit and /proposal, carrying their numbers forward so the
+   engagement reads as one continuous story from first pitch to kickoff. */
+
+function loadIntakeContext(slug) {
+  // Agency identity + package pricing from the catalog; the CRM deal (package,
+  // retainer) if the client came through the pipeline; the pre-audit snapshot for
+  // continuity. All optional — the doc degrades gracefully when any is missing.
+  let catalog = null, deal = null, snap = null, pkg = null;
+  try { catalog = loadCatalog(); } catch { /* no catalog — use fallback identity */ }
+  try { deal = getDeal(slug); } catch { /* no CRM */ }
+  try {
+    const syn = readJsonIfExists(P.prospectData(slug, "synthesis.json")) || readJsonIfExists(resolve(P.prospectRoot(slug), "synthesis.json"));
+    snap = extractSnapshot(syn);
+  } catch { /* no pre-audit */ }
+  if (catalog && deal) { try { pkg = pickPackage(catalog, { retainer: deal.deal?.monthly_retainer || 0 }); } catch { /* ignore */ } }
+  const agency = catalog?.agency || { name: process.env.SMOS_AGENCY_NAME || "Ducker Creative", email: process.env.SMOS_AGENCY_EMAIL || "hello@duckercreative.com", tagline: "Performance social, run like an operating system." };
+  return { agency, deal, snap, pkg, terms: catalog?.terms || null };
+}
+
+function welcomeCss() {
+  return `
+.wl-recall{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;background:var(--ds-surface);
+  border:1px solid var(--ds-line);border-left:4px solid var(--ds-green);border-radius:var(--ds-r);padding:22px 26px;box-shadow:var(--ds-shadow-sm);}
+.wl-recall__num{font-size:44px;font-weight:800;color:var(--ds-green-ink);line-height:1;font-variant-numeric:tabular-nums;text-align:center;}
+.wl-recall__num span{display:block;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-faint);margin-top:6px;}
+.wl-recall__txt{font-size:14.5px;line-height:1.6;color:var(--ds-ink-2);}
+.wl-checklist{list-style:none;margin:0;padding:0;}
+.wl-checklist li{position:relative;padding:11px 0 11px 30px;border-bottom:1px solid var(--ds-line);font-size:14px;}
+.wl-checklist li:last-child{border-bottom:none;}
+.wl-checklist li::before{content:"";position:absolute;left:2px;top:14px;width:16px;height:16px;border-radius:5px;border:2px solid var(--ds-line-strong);}
+.wl-hww{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+.wl-hww__ic{width:38px;height:38px;border-radius:10px;background:var(--ds-green-tint);color:var(--ds-green-ink);display:grid;place-items:center;font-size:18px;font-weight:800;margin-bottom:12px;}
+.wl-hww__t{font-size:14.5px;font-weight:700;margin-bottom:5px;}
+.wl-hww__d{font-size:12.5px;color:var(--ds-muted);line-height:1.5;}
+@media (max-width:640px){.wl-recall{grid-template-columns:1fr;text-align:center;}}
+`;
+}
+
+export function buildWelcomeHtml(profile, ctx, { zeroStart = false, date = TODAY() } = {}) {
+  const { agency, deal, snap, pkg, terms } = ctx;
+  const company = profile.name || profile.slug;
+  const cur = profile.accounts?.currency || pkg?.currency || "USD";
+  const kpis = profile.kpis || {};
+  const money = (n) => `${cur} ${Number(n).toLocaleString()}`;
+
+  const pills = [`Status · ${profile.status}`];
+  if (pkg) pills.push(`Plan · ${pkg.name}`);
+  if (kpis.monthly_budget_low) pills.push(`Budget · ${money(kpis.monthly_budget_low)}+/mo`);
+  if (kpis.target_roas) pills.push(`Target ROAS · ${kpis.target_roas}×`);
+
+  const hero = heroHeader({
+    title: `Welcome aboard, ${company}`,
+    eyebrow: `Onboarding · ${agency.name}`,
+    subtitleHtml: `Kickoff &nbsp;·&nbsp; ${escHtml(date)} &nbsp;·&nbsp; your engagement starts here`,
+    headline: "Everything we agreed, where you're starting, and exactly what happens next.",
+    pills,
+  });
+
+  // What we agreed (from the CRM deal / package), if present.
+  const agreed = pkg ? docSection({
+    eyebrow: "What we agreed", title: "Your plan",
+    body: `<div class="ds-kpi-grid">
+<div class="ds-kpi"><div class="ds-kpi__label">Package</div><div class="ds-kpi__value" style="font-size:22px">${escHtml(pkg.name)}</div></div>
+<div class="ds-kpi"><div class="ds-kpi__label">Monthly retainer</div><div class="ds-kpi__value" style="font-size:22px">${escHtml(money(deal?.deal?.monthly_retainer > 0 ? deal.deal.monthly_retainer : pkg.monthly_retainer))}</div></div>
+${terms ? `<div class="ds-kpi"><div class="ds-kpi__label">Initial term</div><div class="ds-kpi__value" style="font-size:22px">${terms.contract_length_months} months</div></div>` : ""}
+</div>`,
+  }) : "";
+
+  // Where you're starting (continuity from the pre-audit), if present.
+  const recall = snap && snap.score != null ? docSection({
+    eyebrow: "Where you're starting", title: "Your baseline",
+    body: `<div class="wl-recall"><div class="wl-recall__num">${snap.upside}<span>pts upside</span></div>
+<div class="wl-recall__txt">Your pre-audit scored <strong>${escHtml(company)}</strong> <strong>${snap.score}/100</strong>. ${escHtml(snap.headline || "")} We'll turn that upside into measured, booked results.</div></div>`,
+  }) : docSection({
+    eyebrow: "Where you're starting", title: "Your baseline",
+    body: `<div class="ds-card">${escHtml(profile.business?.product_description || `${company} — ${profile.business?.usp || "premium offer"}`)}</div>`,
+  });
+
+  // First 90 days — zero-start vs established.
+  const steps = zeroStart
+    ? [["Build the foundation", "Stand up your brand, Page, Instagram, ad account and pixel — the identity and tracking a paid engine needs."],
+       ["Launch & measure", "First campaigns built and launched with every lead measured; organic cadence running."],
+       ["Prove & scale", "Review cost-per-booked-job and scale what works into a next-quarter plan."]]
+    : [["Baseline & measure", "Confirm tracking (Pixel/GA4) and pull a baseline of your accounts so every result is attributable."],
+       ["Launch & capture", "First structured test live; retargeting built from your existing audience."],
+       ["Prove & scale", "Scale winning creatives and review cost-per-booked-job for a next-quarter plan."]];
+  const roadmap = docSection({
+    eyebrow: "Your first 90 days", title: "From kickoff to scaling",
+    body: `<div class="ds-roadmap">${["30", "60", "90"].map((d, i) => `<div class="ds-step"><div class="ds-step-num">${d}</div><div class="ds-step-body"><div class="ds-step-title">Day ${d} — ${escHtml(steps[i][0])}</div><div class="ds-step-desc">${escHtml(steps[i][1])}</div></div></div>`).join("")}</div>`,
+  });
+
+  // What we need from you.
+  const needs = [];
+  if (zeroStart) {
+    const map = { facebook_page_id: "Confirm or create your Facebook Page", instagram_business_id: "Set up an Instagram Business account", ad_account_id: "Approve creation of your Meta ad account", pixel_id: "Approve the website tracking pixel" };
+    for (const b of profile.blockers_before_live || []) if (map[b]) needs.push(map[b]);
+  } else {
+    needs.push("Grant us access to your ad account, Page and pixel");
+  }
+  if (!profile.business?.conversion_event) needs.push("Confirm your primary conversion event (lead / WhatsApp click / purchase)");
+  if (!profile.assets?.brand_guidelines_url) needs.push("Share brand assets — logo, colors, existing video/photos");
+  needs.push("A 30-minute kickoff call to align on the first campaign");
+  const checklist = docSection({
+    eyebrow: "What we need from you", title: "To get started",
+    body: `<div class="ds-card"><ul class="wl-checklist">${needs.map((n) => `<li>${escHtml(n)}</li>`).join("")}</ul></div>`,
+  });
+
+  const hww = docSection({
+    eyebrow: "How we work", title: "You stay in control",
+    body: `<div class="wl-hww">
+<div class="ds-card"><div class="wl-hww__ic">✓</div><div class="wl-hww__t">You approve before spend</div><div class="wl-hww__d">Every campaign is shown to you first and only goes live once you sign off.</div></div>
+<div class="ds-card"><div class="wl-hww__ic">◷</div><div class="wl-hww__t">Every change is logged</div><div class="wl-hww__d">Each optimization is recorded with its reasoning, so you always know what changed and why.</div></div>
+<div class="ds-card"><div class="wl-hww__ic">▤</div><div class="wl-hww__t">Reporting on a fixed cadence</div><div class="wl-hww__d">Clean HTML + PDF reports on schedule — the same standard as your pre-audit.</div></div>
+</div>`,
+  });
+
+  const next = docSection({
+    eyebrow: "Next step", title: "Let's begin",
+    body: `<div class="ds-card" style="text-align:center">
+<p class="ds-caption" style="max-width:480px;margin:0 auto 18px">Reply to book your kickoff call and we'll send the onboarding checklist. We can have your first campaigns built within a week.</p>
+<a class="ds-btn" href="mailto:${escHtml(agency.email)}?subject=${encodeURIComponent(`Kickoff — ${company}`)}">Book the kickoff call →</a>
+<div class="ds-caption" style="margin-top:14px">${escHtml(agency.name)} · ${escHtml(agency.email)}</div>
+</div>`,
+  });
+
+  const body = [hero, agreed, recall, roadmap, checklist, hww, next].filter(Boolean).join("\n");
+  return docShell({ title: `Welcome — ${company}`, extraCss: welcomeCss(), body, date });
+}
+
 async function main() {
   const [mode, slugArg, ...rest] = process.argv.slice(2);
   if (!mode) {
@@ -384,6 +520,19 @@ async function main() {
   // Archive prospect pre-audit if present
   const archivedPath = archiveProspect(slug);
 
+  // Client-facing welcome / kickoff doc (Phase-3 sibling of pre-audit + proposal).
+  // Internal deliverables above are untouched; this is what the client receives.
+  let welcomePath = null, welcomePdf = false;
+  try {
+    const ctx = loadIntakeContext(slug);
+    const html = buildWelcomeHtml(profile, ctx, { zeroStart, date: TODAY() });
+    welcomePath = resolve(clientDir, "welcome.html");
+    const r = writeDocHtmlAndPdf(welcomePath, html);
+    welcomePdf = r.pdfOk;
+  } catch (e) {
+    console.error(`[intake] WARN: welcome doc generation failed (${e.message}) — profile + CLAUDE.md still written`);
+  }
+
   // Surface skipped/null fields for user awareness
   const skipped = [];
   const walk = (obj, prefix = "") => {
@@ -409,6 +558,7 @@ async function main() {
     blockers_before_live: profile.blockers_before_live || [],
     profile_path: profilePath,
     claude_md_path: claudePath,
+    welcome_doc: welcomePath ? { html: welcomePath, pdf: welcomePdf ? welcomePath.replace(/\.html$/, ".pdf") : "(PDF skipped — install playwright)" } : null,
     prospect_archived: archivedPath,
     prospect_hydrated_fields: hyd.fields,
     account_meta_detected: accountMeta ? { currency: accountMeta.currency, timezone: accountMeta.timezone_name } : null,
@@ -417,7 +567,10 @@ async function main() {
   }, null, 2));
 }
 
-main().catch((e) => {
-  console.error("[intake] FATAL:", e.message);
-  process.exit(1);
-});
+// Only run when invoked directly (so tests/other skills can import the builders).
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("[intake] FATAL:", e.message);
+    process.exit(1);
+  });
+}

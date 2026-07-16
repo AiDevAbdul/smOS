@@ -18,7 +18,8 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
-import { writeHtmlAndPdf } from "../../scripts/lib/md_to_html.js";
+import { heroHeader } from "../../scripts/lib/design_system.js";
+import { docShell, writeDocHtmlAndPdf, escHtml } from "../../scripts/lib/client_doc.js";
 import { getDeal, upsertDeal } from "../../scripts/lib/crm-store.js";
 import { listInvoices, getInvoice, saveInvoice } from "../../scripts/lib/billing-store.js";
 import { loadCatalog, pickPackage } from "../proposal/proposal.js";
@@ -61,6 +62,63 @@ function invoiceMarkdown(inv, agency) {
   md += `| **Total** | **${inv.currency} ${inv.total.toLocaleString()}** |\n\n`;
   if (inv.stripe?.hosted_url) md += `[Pay online](${inv.stripe.hosted_url})\n`;
   return md;
+}
+
+/* ─────────────────────────── HTML (primary) ──────────────────────────── */
+
+const STATUS_BADGE = { draft: "ds-badge--neutral", sent: "ds-badge--info", paid: "ds-badge--good", overdue: "ds-badge--bad" };
+
+/** Invoice-specific components, all on --ds-* tokens (no raw hex). */
+function invoiceCss() {
+  return `
+.inv-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.inv-party__lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-muted);margin-bottom:6px;}
+.inv-party__name{font-size:15px;font-weight:700;}
+.inv-party__meta{font-size:13px;color:var(--ds-muted);margin-top:2px;}
+.inv-table td.amt,.inv-table th.amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.inv-table tfoot td{border-top:2px solid var(--ds-line-strong);font-weight:800;font-size:15px;}
+.inv-table tfoot td.amt{color:var(--ds-ink);}
+.inv-pay{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  background:var(--ds-surface);border:1px solid var(--ds-line);border-radius:var(--ds-r);padding:18px 22px;box-shadow:var(--ds-shadow-sm);}
+.inv-pay__terms{font-size:13px;color:var(--ds-muted);max-width:520px;}
+@media (max-width:640px){.inv-parties{grid-template-columns:1fr;}}
+`;
+}
+
+export function buildInvoiceHtml(inv, agency, { paymentTerms = "" } = {}) {
+  const money = (n) => `${inv.currency} ${Number(n).toLocaleString()}`;
+  const badgeClass = STATUS_BADGE[inv.status] || "ds-badge--neutral";
+
+  const hero = heroHeader({
+    title: `Invoice ${inv.id}`,
+    eyebrow: `Invoice · ${agency.name}`,
+    subtitleHtml: `Period <strong>${escHtml(inv.period)}</strong> &nbsp;·&nbsp; Issued ${escHtml(inv.issued_at.slice(0, 10))} &nbsp;·&nbsp; Due ${escHtml(inv.due_date.slice(0, 10))}`,
+    pills: [`Total · ${money(inv.total)}`, `Status · ${inv.status}`],
+  });
+
+  const parties = `<div class="inv-parties">
+<div class="ds-card"><div class="inv-party__lbl">From</div><div class="inv-party__name">${escHtml(agency.name)}</div><div class="inv-party__meta">${escHtml(agency.email)}</div></div>
+<div class="ds-card"><div class="inv-party__lbl">Billed to</div><div class="inv-party__name">${escHtml(inv.company)}</div><div class="inv-party__meta">Billing period ${escHtml(inv.period)}</div></div>
+</div>`;
+
+  const rows = inv.line_items.map((l) => `<tr><td>${escHtml(l.description)}</td><td class="amt">${money(l.amount)}</td></tr>`).join("");
+  const table = `<div class="ds-table-wrap"><table class="ds-table inv-table">
+<thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead>
+<tbody>${rows}</tbody>
+<tfoot><tr><td>Total due</td><td class="amt">${money(inv.total)}</td></tr></tfoot>
+</table></div>`;
+
+  const payBtn = inv.stripe?.hosted_url ? `<a class="ds-btn" href="${escHtml(inv.stripe.hosted_url)}">Pay online →</a>` : `<span class="ds-badge ${badgeClass}">${escHtml(inv.status)}</span>`;
+  const pay = `<div class="inv-pay"><div class="inv-pay__terms">${escHtml(paymentTerms || "Payment due within 7 days of the issue date.")}</div>${payBtn}</div>`;
+
+  const body = [
+    hero,
+    `<div class="ds-section">${parties}</div>`,
+    `<div class="ds-section">${table}</div>`,
+    `<div class="ds-section">${pay}</div>`,
+  ].join("\n");
+
+  return docShell({ title: `Invoice ${inv.id}`, extraCss: invoiceCss(), body, date: inv.issued_at.slice(0, 10) });
 }
 
 // Stripe (best-effort). form-encoded; cents at the boundary. Unverified against live —
@@ -145,7 +203,10 @@ async function main() {
     const mdPath = resolve(outDir, `invoice-${period}.md`);
     const md = invoiceMarkdown(saved, catalog.agency);
     writeFileSync(mdPath, md);
-    const { htmlPath, pdfPath, pdfOk } = writeHtmlAndPdf(mdPath, md, { title: `Invoice ${saved.id}` });
+    // Primary deliverable: structured invoice HTML on the design system (+ PDF).
+    const html = buildInvoiceHtml(saved, catalog.agency, { paymentTerms: catalog.terms?.payment });
+    const htmlPath = resolve(outDir, `invoice-${period}.html`);
+    const { pdfPath, pdfOk } = writeDocHtmlAndPdf(htmlPath, html);
 
     await upsertDeal(slug, { activities: [...(deal.activities || []), { at: issuedAt, type: "note", note: `invoice ${saved.id} issued (${saved.currency} ${saved.total})` }] });
 

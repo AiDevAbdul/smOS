@@ -45,10 +45,15 @@ test("design system defines the canonical hero (single source of truth)", () => 
 });
 
 // Live renderers must call the loader, never hand-roll a hero literal.
+//
+// NOTE: pre_audit_report.py is intentionally NOT in this list. The pre-audit is a
+// client-facing SALES artifact and deliberately uses its own distinct "Aperture"
+// console hero (CSS signal-ring gauge, navy-console bracket) rather than the shared
+// internal-report .ds-hero. It must still never hand-roll a `.ds-hero` literal —
+// that is asserted separately below.
 const LIVE_RENDERERS = [
   "scripts/audit_report_html.js",
   "scripts/lib/md_to_html.js",
-  "scripts/meta-ad-library/pre_audit_report.py",
   "scripts/meta-ad-library/report.py",
 ];
 
@@ -64,4 +69,14 @@ test("no live renderer hand-rolls a <header class=\"ds-hero\"> literal", () => {
       `${f} must render its hero via heroHeader()/hero_header()`,
     );
   }
+});
+
+// The pre-audit uses its own "Aperture" hero, but must still not fork the shared
+// .ds-hero component (that is the specific drift this suite guards against).
+test("pre-audit does not hand-roll a .ds-hero literal", () => {
+  const src = read("scripts/meta-ad-library/pre_audit_report.py");
+  assert.ok(
+    !/<header class="ds-hero/.test(src),
+    "pre_audit_report.py must not hand-roll a .ds-hero hero — it uses its own .hero console",
+  );
 });

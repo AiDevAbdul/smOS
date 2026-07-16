@@ -5,6 +5,13 @@ client Meta token. Self-contained: every endpoint, header, version, and failure 
 here. URLs cited from `skills/references-shared.md` (verified 2026-06-22, Meta Graph API
 **v25.0**).
 
+> **These recipes are implemented as code**, not run by hand. `scripts/meta-ad-library/collectors.py`
+> holds the FB/IG/website scrapers (each pass returns a dict with an explicit `status`);
+> `collect.py` orchestrates all four passes into `data/raw/*.json`; `normalize.py` flattens
+> them into `data/signals.csv`; `build.py` derives the render JSONs + score. The wrapper
+> `pre-audit.js --collect` runs the chain. The recipes below document *what the code does*
+> — edit `collectors.py` if a surface's markup changes, not a per-prospect script.
+
 ## Pass 1 — Facebook Page (public, no token)
 
 Desktop `www.facebook.com/<handle>` and `mbasic.facebook.com` both return **HTTP 400** to
@@ -83,6 +90,16 @@ user-level, code **613** custom limit; HTTP **429** = throttled. `client.py` han
 three — 429 AND 400 with error code 4/17/613 — with exponential backoff (30s × 2^retry,
 up to 3 retries) before giving up on that term. Log full error (code/type/`fbtrace_id`).
 
+**Creative-matrix scoring (competitors).** After the competitor ad pull, `collect.py` calls
+`classifier.score_creative_matrix(name, ads, cache_dir, stats)` (in `classifier.py`) when
+`ANTHROPIC_API_KEY` is set. It sends the ad bodies + CTAs + format mix + longevity stats to
+Claude and gets back the five 0–10 dimensions (`hook_strength`, `visual_strategy`,
+`cta_match`, `psychological_trigger`, `run_duration_score`) the report table renders. Scores
+are **content-addressed cached** (`.cache/meta-ad-library/matrix_<hash>.json`) so identical
+ad copy always returns identical scores — the pipeline stays reproducible. No key ⇒ skipped
+(fail-soft), report shows "—". This is the ONLY LLM/non-deterministic step, and it is
+confined to the collect stage; `normalize.py`/`build.py` remain pure functions of the CSV.
+
 ## Pass 4 — Niche playbook (optional)
 
 `market.py` reads category definitions from `data/niches/<niche>.json` (via
@@ -125,10 +142,35 @@ playbook on file"). Never block. Pass the resulting HTML to the wrapper via `--n
 
 On timeout/non-200: continue, mark the tracking section `unverified` in the report.
 
+## Tavily fallback (soft-block recovery)
+
+The FB (`m.facebook.com`) and IG (`web_profile_info`) passes soft-block
+unpredictably. When a **primary** pass returns non-`ok`, the collector re-fetches
+the *same public page* through Tavily's REST API (`scripts/meta-ad-library/tavily.py`:
+`extract` → `search`) and re-parses it (`parse_facebook_text` / `parse_instagram_text`).
+
+- **Key-gated** on `TAVILY_API_KEY` (resolved via `load_env`, i.e. `~/.config/smos/.env`
+  then repo `.env`). No key ⇒ fallback is a no-op and the pass stays honestly blocked.
+- On success the pass returns `status: "ok"` plus provenance fields `collected_via:"tavily"`
+  and `primary_status:"<the block>"` (both flow into `signals.csv`). Data flows and the
+  data-quality gate stays confident — the signal *was* recovered, just from a sanctioned
+  source.
+- **Partial by design:** Tavily recovers counts (likes / talking-about; followers /
+  following / posts) and IG bio when present; per-post timestamps are unavailable, so IG
+  `posts_per_week` / `recency_days` stay `null` — never fabricated.
+- Website pass has **no** Tavily fallback (tracking pixels live in `<script>` tags that
+  content-extraction strips; the prospect's own site is also the least-blocked surface).
+
+**Scraper-health canary** — `scripts/meta-ad-library/scraper_health.py` probes the primary
+collectors against stable public targets (default NASA) and reports per-pass whether the
+*primary* path still parses (vs. Tavily saving it). Exit `0` healthy · `1` a primary FB/IG
+path rotted (fallback covering) · `2` a pass returned no data at all. Run weekly via cron to
+catch silent scraper rot before a prospect run does.
+
 ## Render & PDF (no external API)
 
 `scripts/meta-ad-library/pre_audit_report.py` (standardized template) → HTML;
 `scripts/render_pdf.py` (headless Chromium via Playwright) → PDF. The wrapper invokes both.
 First-time: `pip install playwright && python -m playwright install chromium`.
 
-**Last verified:** 2026-06-22
+**Last verified:** 2026-07-15 (added Tavily fallback + scraper-health canary)

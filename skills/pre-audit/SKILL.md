@@ -16,9 +16,20 @@ believing the agency can fix it.
 
 ## What This Skill Does
 
-- Gathers public-data inputs (one clarification at a time): Facebook Page, Instagram profile, Meta Ad Library self-check, competitor outspend + creative matrix scan, website tracking surface, optional niche playbook.
-- Writes three input JSON files to `prospects/{slug}/`: `page_audit.json`, `competitor_summary.json`, `synthesis.json` (tiered wins/gaps, recommendations, opportunity sizing, 0–100 score, outspend ratio).
-- Runs `node skills/pre-audit/pre-audit.js <slug> --business "Name"` to render the standardized HTML via `scripts/meta-ad-library/pre_audit_report.py`, convert to PDF via `scripts/render_pdf.py`, advance the CRM deal to `audited`, and best-effort insert a `prospect_audits` row.
+The whole audit is a **four-stage deterministic pipeline**, driven by one Node command —
+the agent supplies URLs, the scripts do the scraping, scoring, and rendering:
+
+```
+collect.py   → data/raw/*.json   (FB, IG, website, Ad Library — each fail-soft)
+normalize.py → data/signals.csv  (one row per signal — the SOURCE OF TRUTH, human-editable)
+build.py     → data/{page_audit,competitor_summary,synthesis}.json  (+ deterministic 0–100 score)
+pre_audit_report.py + render_pdf.py → deliverables/pre-audit/pre-audit.{html,pdf}
+```
+
+- **One command:** `node skills/pre-audit/pre-audit.js <slug> --collect --fb <url> [--ig <h>] [--site <url>] [--competitor <url> …] --business "Name"` runs all four stages, advances the CRM deal to `audited`, and best-effort inserts a `prospect_audits` row.
+- **`signals.csv` is the source of truth.** To correct a scraped value, edit that CSV and re-run with `--rebuild` — the JSONs and HTML re-derive from it. Same CSV → byte-identical output. No hand-writing JSON, no per-run HTML.
+- **Scoring lives in `build.py`**, not the agent's head: five equal-weight 0–100 dimensions (rubric in `references/domain-standards.md`). The agent's only qualitative input is optional prose polish via `data/narrative.json`.
+- Anything a scraper can't reach is recorded with its `status` (`blocked_<code>`/`timeout`/`no_token`/`not_found`) — **never fabricated**.
 
 ## What This Skill Does NOT Do
 
@@ -34,7 +45,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 | Source | Gather |
 |--------|--------|
-| **Codebase** | `scripts/meta-ad-library/{client,analyzer,classifier,report,market,pre_audit_report,persist}.py`; `scripts/render_pdf.py`; `skills/pre-audit/pre-audit.js`; `scripts/lib/crm-store.js`; `schemas/deal.js` |
+| **Codebase** | Pipeline: `scripts/meta-ad-library/{collectors,collect,normalize,build,pre_audit_report}.py`; also `{client,analyzer,classifier,report,market,persist}.py`; `scripts/render_pdf.py`; `skills/pre-audit/pre-audit.js`; `scripts/lib/{crm-store,paths}.js`; `schemas/deal.js` |
 | **Conversation** | Business name, page/IG/website URLs, named competitors, country already stated |
 | **Skill References** | Scraping tactics + scoring rubric in `references/` (see table below) |
 | **Existing deal** | `crm/pipeline.json` via `getDeal(slug)` — reuse `source`/`activities` instead of re-creating |
@@ -58,18 +69,34 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ## Workflow
 
-1. Resolve the required clarifications (one question at a time).
-2. Run the public-data passes (details in `references/domain-standards.md` and `references/api-reference.md`):
-   - FB+IG page audit (profile completeness, posting frequency, format mix, ER)
-   - Ad Library self-check (active ads, run duration, survival past 60d)
-   - Competitor scan: outspend + creative matrix (hook, visual, CTA, trigger, duration)
-   - Website tracking surface (Pixel, GTM, GA4, conversion events, viewport)
-   - Optional niche sweep
-   Mark any blocked fetch `unverified` — never fabricate from absence.
-3. Compute the 0–100 score (five equal 20% dimensions), three-tier wins/gaps, max-3 recommendations, opportunity sizing (bottom-up + top-down), and 30/60/90 next steps.
-4. Write `page_audit.json`, `competitor_summary.json`, `synthesis.json` to `prospects/{slug}/` (schemas in `references/io-contract.md`).
-5. Run the wrapper: `node skills/pre-audit/pre-audit.js {slug} --business "<Name>" [--niche-html prospects/{slug}/reports/market_<ts>.html] [--no-crm]`.
-6. Send the prospect the HTML/PDF. Print the wrapper's JSON summary; next step is `/proposal {slug}`.
+1. Resolve the required clarifications (one question at a time): business name + slug, FB URL, website URL, ≥2 competitors (or a niche file), optional IG handle / country.
+2. Run the full pipeline in one command:
+   ```
+   node skills/pre-audit/pre-audit.js {slug} --collect \
+     --fb <fb_url> [--ig <handle>] [--site <site_url>] \
+     [--competitor <url> …] [--country US] [--days 90] \
+     --business "<Name>" [--niche-html <path>]
+   ```
+   This scrapes → writes `signals.csv` → derives the JSONs (with the 0–100 score) →
+   renders HTML+PDF → advances the CRM deal. `collect.py` needs `META_ACCESS_TOKEN` for
+   the Ad Library passes; without it those passes record `no_token` and the rest continues.
+   When `ANTHROPIC_API_KEY` is set, `collect.py` also calls `classifier.score_creative_matrix`
+   to score each competitor's creatives on the five 0–10 matrix dimensions (content-cached,
+   so re-runs are free and reproducible); without the key it skips them and the report shows
+   "—" for the matrix.
+3. **Review `data/signals.csv`.** It is the source of truth and is human-readable. Correct
+   any mis-scraped value (or add competitor `creative_matrix.*` rows the classifier scored),
+   then re-derive + re-render: `node skills/pre-audit/pre-audit.js {slug} --rebuild --business "<Name>"`.
+4. *(Optional)* Polish the prose — write `data/narrative.json` with any of `headline`,
+   `wins`, `gaps`, `recommendations`, `next_steps`, `wins_tiers`, `gaps_tiers`,
+   `opportunity_sizing`; `--rebuild` merges it over the template defaults. The **score and
+   dimensions are never overridable** — they come only from the CSV.
+5. Send the prospect the HTML/PDF (`deliverables/pre-audit/`). Print the wrapper's JSON
+   summary; next step is `/proposal {slug}`.
+
+**Fully manual fallback:** if a surface can't be scraped at all, you may still hand-write
+rows into `signals.csv` (or `data/raw/*.json` then `--rebuild`) — the pipeline treats
+hand-entered rows identically. Never fabricate: mark unreachable signals with a `status`.
 
 ## Input / Output Specification
 

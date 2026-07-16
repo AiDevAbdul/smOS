@@ -111,6 +111,97 @@ def classify_competitor(name: str, ad_bodies: list[str], cache_dir: Path) -> dic
     return result
 
 
+# ── Creative-matrix scoring (feeds the /pre-audit competitor table) ─────────
+# Five 0–10 dimensions the standardized pre-audit report renders per competitor.
+MATRIX_DIMS = [
+    "hook_strength", "visual_strategy", "cta_match",
+    "psychological_trigger", "run_duration_score",
+]
+MATRIX_SYSTEM = (
+    "You are a senior Meta performance creative strategist scoring a competitor's ad "
+    "approach for a sales audit. Score each dimension 0–10 (10 = best-in-class). "
+    "Base scores on the evidence given; be discerning, not generous. Return JSON only."
+)
+
+
+def _clamp10(v) -> float:
+    try:
+        return round(max(0.0, min(10.0, float(v))), 1)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def score_creative_matrix(name: str, ads: list[dict], cache_dir: Path,
+                          stats: dict | None = None) -> dict:
+    """LLM-score a competitor's creative approach on the 5 report dimensions.
+
+    Content-addressed cache (same ads + stats ⇒ same file ⇒ reproducible re-runs).
+    Returns {} when there is nothing to score or the API key is absent, so the
+    caller can degrade gracefully — the report renders "—" for a missing matrix.
+    """
+    stats = stats or {}
+    bodies = [b for ad in ads for b in (ad.get("ad_creative_bodies") or []) if b and b.strip()]
+    ctas = sorted({ad.get("call_to_action_type") for ad in ads if ad.get("call_to_action_type")})
+    formats = stats.get("format_mix", {})
+    if not bodies or not os.environ.get("ANTHROPIC_API_KEY"):
+        return {}
+
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    fingerprint = json.dumps(
+        {"n": name, "b": bodies, "c": ctas, "f": formats,
+         "age": stats.get("avg_creative_age_days"), "surv": stats.get("survival_past_60d_pct")},
+        sort_keys=True,
+    )
+    cache_path = cache_dir / f"matrix_{_hash(fingerprint)}.json"
+    if cache_path.exists():
+        return json.loads(cache_path.read_text())
+
+    numbered = "\n".join(f"[{i}] {b[:400]}" for i, b in enumerate(bodies[:25]))
+    prompt = (
+        f"Competitor: {name}\n"
+        f"Active ad copy samples ({len(bodies)} total):\n{numbered}\n\n"
+        f"CTAs used: {', '.join(ctas) or 'unknown'}\n"
+        f"Format mix: {json.dumps(formats) or 'unknown'}\n"
+        f"Avg creative age (days): {stats.get('avg_creative_age_days', 'unknown')}\n"
+        f"% ads surviving past 60d: {stats.get('survival_past_60d_pct', 'unknown')} "
+        f"(11.3% is the industry benchmark; higher = winning creatives kept alive)\n\n"
+        "Score these 0–10:\n"
+        "- hook_strength: how arresting the opening lines are\n"
+        "- visual_strategy: sophistication implied by format mix + copy (video/carousel variety)\n"
+        "- cta_match: how well CTAs fit the funnel intent\n"
+        "- psychological_trigger: use of persuasion (proof, urgency, authority, loss aversion)\n"
+        "- run_duration_score: creative longevity — score from the survival % vs the 11.3% benchmark\n\n"
+        'Return JSON only: {"hook_strength":n,"visual_strategy":n,"cta_match":n,'
+        '"psychological_trigger":n,"run_duration_score":n,"rationale":"12 words max"}'
+    )
+
+    try:
+        resp = requests.post(
+            ANTHROPIC_URL,
+            headers={"x-api-key": _key(), "anthropic-version": "2023-06-01",
+                     "content-type": "application/json"},
+            json={"model": MODEL, "max_tokens": 500, "system": MATRIX_SYSTEM,
+                  "messages": [{"role": "user", "content": prompt}]},
+            timeout=60,
+        )
+        if resp.status_code >= 300:
+            print(f"  [WARN] creative-matrix API {resp.status_code}: {resp.text[:160]}", file=sys.stderr)
+            return {}
+        text = resp.json()["content"][0]["text"].strip()
+        if text.startswith("```"):
+            text = text.split("```", 2)[1].lstrip("json").strip()
+        parsed = json.loads(text)
+    except (requests.RequestException, KeyError, ValueError, IndexError) as exc:
+        print(f"  [WARN] creative-matrix scoring failed for {name}: {exc}", file=sys.stderr)
+        return {}
+
+    result = {d: _clamp10(parsed.get(d)) for d in MATRIX_DIMS}
+    if parsed.get("rationale"):
+        result["rationale"] = str(parsed["rationale"])[:120]
+    cache_path.write_text(json.dumps(result, indent=2))
+    return result
+
+
 def enrich_analyzed(analyzed_path: str, raw_path: str, cache_dir: str | None = None) -> dict:
     """Take an analyzed JSON, add `angle_analysis` to each competitor from their raw ad bodies."""
     analyzed = json.loads(Path(analyzed_path).read_text())

@@ -1,4 +1,5 @@
 {
+  "hooks": {
   "PreToolUse": [
     {
       "matcher": "mcp__.*meta.*(create_campaign|update_campaign|update_adset)",
@@ -73,4 +74,5 @@
       ]
     }
   ]
+  }
 }

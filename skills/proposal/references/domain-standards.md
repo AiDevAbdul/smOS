@@ -89,28 +89,39 @@ Every CRM write appends an activity:
 
 ## 4. Proposal document anatomy (CONSTANT structure)
 
-The Markdown template (`buildProposalMarkdown`) always emits these sections, in order:
+The proposal is the **opportunity-led Phase-2 sibling of the `/pre-audit` report**, built
+as structured HTML (`buildProposalHtml`) on the shared design system — never the generic
+`mdToHtml` path. A Markdown twin (`buildProposalMarkdown`) is emitted only for portability.
+Both keep the same section order:
 
-1. **Title** — `Proposal — <Company>`, agency name + email + tagline.
-2. **The opportunity** — from `/pre-audit`: `wins` under "What's working", `gaps` under
-   "Where we see upside". If neither present, a single grounded sentence. If no audit
-   at all, generic paid+organic framing.
-3. **Recommended package** — name, `best_for`, headline `CUR price/month · one-time setup`,
-   the `includes[]` list.
-4. **How we work** — the smOS narrative: campaigns launch PAUSED, sign-off gated,
-   every optimization logged, HTML+PDF reporting on cadence.
-5. **Terms** — contract length, ad-spend handling, payment, cancellation (all from `terms`).
-6. **Next step** — reply-to-approve CTA pointing at e-sign + onboarding.
+1. **Hero** (canonical `ds-hero` via `heroHeader`) — addressed to the CLIENT
+   (`A growth engine for <Company>`), eyebrow `Growth Proposal · <Agency>`, "Prepared for
+   <Company> · by <Agency> · <date>", and — when `/pre-audit` ran — snapshot pills:
+   audit score, upside, follower count, competitor outspend.
+2. **Continuity recall band** (`.prop-recall`) — quotes the Phase-1 score + upside + the
+   audit headline verbatim. Omitted if no audit snapshot is available.
+3. **The opportunity** — two columns (`.prop-col--win` / `--gap`) from the audit's
+   `wins_tiers`/`gaps_tiers` (falls back to flat `wins`/`gaps`, then a grounded sentence).
+4. **Recommended package** — a **"start here → step up" tier pair** (`pickTierPair`): the
+   recommended tier featured, paired with the tier below (entry) when one exists. Each tier
+   shows name, price/mo, setup, `best_for`, and `includes[]`.
+5. **ROI band** (`.prop-roi`, dark) — the audit's top `opportunities` framed as what the
+   retainer works toward, with an "targets locked at onboarding" disclaimer. Omitted if the
+   audit produced no opportunities.
+6. **How we work** — three translated cards (approve-before-spend / changes logged /
+   fixed-cadence reporting). Client-facing language only — no `smOS`/`PAUSED`/API jargon.
+7. **Your first 90 days** — a `ds-roadmap` 30/60/90 (from the audit `recommendations`,
+   else a generic arc).
+8. **Terms** — contract length, ad-spend handling, payment, cancellation (all from `terms`).
+9. **Next step** — accept CTA (`mailto` approve) + a signature/date block + a validity date.
+
+Exemplar rendering: `templates/proposal-report.html` (regenerate by running the skill).
 
 ### Hardcoded prose is an intentional CONSTANT (with an escape hatch)
 
-Unlike pricing (catalog-driven), two prose blocks are **hardcoded English copy** inside
-`buildProposalMarkdown` (`proposal.js` §"How we work" and the generic-opportunity
-fallback sentences):
-
-- the **"How we work"** paragraph (the smOS operating-system pitch), and
-- the **generic-opportunity fallback** sentences used when `/pre-audit` produced no
-  `wins`/`gaps`.
+Unlike pricing (catalog-driven), a few prose blocks are **hardcoded English copy** inside
+`proposal.js` — the **"How we work"** cards, the **generic-opportunity fallback** sentence,
+and the generic 30/60/90 roadmap used when `/pre-audit` produced no findings.
 
 This is deliberate: it is fixed agency boilerplate, identical across every prospect, and
 not a per-client variable — so it lives in code as a CONSTANT rather than as a value the
@@ -118,8 +129,8 @@ model improvises (the skill's own "does NOT invent prose" principle still holds,
 the copy is committed and reviewed, never generated at runtime). **If an agency needs this
 copy to vary** (white-label, different methodology), externalize it into
 `config/services.json` (e.g. an `agency.how_we_work` / `agency.generic_opportunity`
-string) and have `buildProposalMarkdown` read it — the same catalog-driven pattern used
-for pricing. Do **not** let the model free-write replacement prose at generation time.
+string) and have the builders read it — the same catalog-driven pattern used for pricing.
+Do **not** let the model free-write replacement prose at generation time.
 
 ---
 

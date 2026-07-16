@@ -52,7 +52,7 @@ def _scrape_fb_page_meta(slug: str) -> dict:
     The fb://profile id is the *profile-backed* id and is NOT necessarily the
     page id the Ad Library indexes by — it is only a fallback candidate.
     """
-    out = {"name": None, "profile_id": None}
+    out = {"name": None, "profile_id": None, "page_hint_id": None}
     url = f"https://m.facebook.com/{slug}?locale=en_US"
     try:
         resp = requests.get(
@@ -87,6 +87,11 @@ def _scrape_fb_page_meta(slug: str) -> dict:
         if pm:
             out["profile_id"] = pm.group(1)
             break
+    # New-Pages-Experience pages also embed a "pageID":"<id>" blob distinct from
+    # the fb://profile id; capture it as a second candidate (also validated later).
+    hm = re.search(r'"pageID":"(\d{6,20})"', html)
+    if hm:
+        out["page_hint_id"] = hm.group(1)
     return out
 
 
@@ -146,33 +151,79 @@ def _resolve_page_id_via_adlibrary(name_or_slug: str, country: str, token: str) 
     return None
 
 
+def _page_id_is_valid(page_id: str, country: str, token: str) -> bool:
+    """Return True iff `page_id` is a page id the Ad Library actually indexes.
+
+    Facebook "New Pages Experience" pages expose obfuscated ids in their HTML
+    (fb://profile/<id>, "pageID":"<id>") that ads_archive rejects with
+    OAuthException code 33 (error_subcode 2334021, "not a valid page id"). There
+    is no public Graph API to convert a page URL to its Ad Library page id, so we
+    verify a candidate by asking ads_archive for it: a valid id returns HTTP 200
+    (possibly with zero ads); an invalid id returns 400/code 33.
+    """
+    try:
+        resp = requests.get(API_BASE, params={
+            "access_token": token,
+            "ad_reached_countries": json.dumps(_parse_countries(country)),
+            "search_page_ids": page_id,
+            "ad_active_status": "ALL",
+            "fields": "page_id",
+            "limit": 1,
+        }, timeout=20)
+    except requests.RequestException:
+        return False
+    if resp.status_code == 200:
+        return True
+    try:
+        return resp.json().get("error", {}).get("code") != 33
+    except ValueError:
+        return False
+
+
 def resolve_page_id_from_url(page_url: str, country: str = "US", token: str | None = None) -> str | None:
     """Resolve a Facebook page URL to its Ad Library numeric page id.
 
-    Strategy (most→least reliable):
-      0. URL already numeric → use as-is.
+    Strategy (most→least reliable). Every candidate is validated against
+    ads_archive before it is returned, so this never hands back an id that will
+    later fail with code 33:
+      0. URL already numeric → use as-is (validated).
       1. Scrape m.facebook for the page's display name, then resolve the real
          Ad Library page id by name-matching against the archive (needs token).
       2. Fall back to the slug as a search term against the archive.
-      3. Last resort: the scraped fb://profile id (may be rejected as code 33).
+      3. Scraped fb://profile / "pageID" ids — only if they actually validate.
+
+    Returns None when no valid id can be found. For pages that never resolve
+    (common for New-Pages-Experience local businesses), discover the competitor
+    set the reverse way with discover_pk.py — sweep the category by service terms
+    and keep the page_ids that come back on real ad rows.
     """
     slug = page_url.rstrip("/").split("/")[-1].split("?")[0]
     if slug.isdigit():
-        return slug
+        if not token or _page_id_is_valid(slug, country, token):
+            return slug
+        print(f"  [WARN] Numeric id '{slug}' is not a valid Ad Library page id (code 33).")
+        return None
 
     meta = _scrape_fb_page_meta(slug)
 
     if token:
-        # Prefer the scraped display name; fall back to the slug.
+        # Prefer the scraped display name; fall back to the slug. Name-matched
+        # ids come from real ad rows, so they are valid by construction.
         for term in (meta.get("name"), slug):
             pid = _resolve_page_id_via_adlibrary(term, country, token)
             if pid:
                 return pid
 
-    if meta.get("profile_id"):
-        print(f"  [WARN] Using scraped profile id for '{slug}' (Ad Library name-match found nothing).")
-        return meta["profile_id"]
+        # Validate scraped HTML ids before trusting them — most will be the
+        # obfuscated New-Pages ids that ads_archive rejects.
+        for cand in (meta.get("profile_id"), meta.get("page_hint_id")):
+            if cand and _page_id_is_valid(cand, country, token):
+                print(f"  [OK] Validated scraped id {cand} for '{slug}'.")
+                return cand
 
+    print(f"  [WARN] No valid Ad Library page id for '{slug}'. The page may run no "
+          f"ads, or be a New-Pages-Experience page whose id ads_archive does not "
+          f"index. Use discover_pk.py to sweep the category by service terms.")
     return None
 
 

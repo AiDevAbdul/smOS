@@ -14,6 +14,14 @@ deterministic companion `skills/contract/contract.js`.
 > before sending — the Markdown, HTML, and PDF all carry that disclaimer, and the CLI
 > repeats it. Same honesty principle as the trademark step in `/brand-name`.
 
+**Rendering (revised 2026-07-16):** the client-facing agreement is built as **structured
+HTML on the shared design system** (`buildContractHtml` → canonical `ds-hero`, numbered
+clause cards, a real two-column signature block, attorney-review callout) via
+`scripts/lib/client_doc.js`, then PDF. Do **not** route it through the generic `mdToHtml`
+path — that produced a duplicate `<h1>`, literal `_italics_`, an empty hero, and an
+unstyled body. The Markdown twin (`buildContractMarkdown`) is kept for portability only.
+Template exemplar: `templates/contract-agreement.html`.
+
 ## What This Skill Does
 
 - Re-derive the package from the deal's retainer (or an explicit `--package <id>`) via the shared catalog helpers.

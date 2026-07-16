@@ -134,15 +134,15 @@
   },
   {
     "slug": "abdulwahabai",
-    "company_name": "abdulwahabai",
+    "company_name": "Abdul Wahab",
     "created_at": "2026-07-14T05:27:41.650Z",
-    "updated_at": "2026-07-14T05:27:41.652Z",
-    "stage": "lead",
+    "updated_at": "2026-07-16T18:43:06.843Z",
+    "stage": "won",
     "source": "pre-audit",
     "links": {
-      "pre_audit": null,
-      "proposal": null,
-      "contract": null,
+      "pre_audit": "prospects/abdulwahabai/deliverables/pre-audit/pre-audit.html",
+      "proposal": "proposals/abdulwahabai/proposal.pdf",
+      "contract": "contracts/abdulwahabai/agreement.pdf",
       "client_profile": null
     },
     "id": "abdulwahabai",
@@ -153,7 +153,7 @@
     },
     "services": [],
     "deal": {
-      "monthly_retainer": 0,
+      "monthly_retainer": 3000,
       "setup_fee": 0,
       "currency": "USD"
     },
@@ -162,8 +162,54 @@
     "owner": null,
     "next_action": null,
     "next_action_due": null,
-    "activities": [],
-    "won_at": null,
+    "activities": [
+      {
+        "at": "2026-07-16T15:14:17.630Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-07-16T15:21:01.446Z",
+        "type": "proposal",
+        "note": "proposed Growth (USD 3000/mo)"
+      },
+      {
+        "at": "2026-07-16T15:22:15.637Z",
+        "type": "proposal",
+        "note": "proposed Growth (USD 3000/mo)"
+      },
+      {
+        "at": "2026-07-16T16:12:05.539Z",
+        "type": "proposal",
+        "note": "proposed Growth (USD 3000/mo)"
+      },
+      {
+        "at": "2026-07-16T16:13:02.001Z",
+        "type": "contract",
+        "note": "agreement generated (Growth)"
+      },
+      {
+        "at": "2026-07-16T16:45:13.650Z",
+        "type": "contract",
+        "note": "agreement generated (Growth)"
+      },
+      {
+        "at": "2026-07-16T16:53:53.273Z",
+        "type": "contract",
+        "note": "agreement generated (Growth)"
+      },
+      {
+        "at": "2026-07-16T16:54:50.030Z",
+        "type": "contract",
+        "note": "agreement signed"
+      },
+      {
+        "at": "2026-07-16T18:43:03.754Z",
+        "type": "note",
+        "note": "invoice INV-abdulwahabai-2026-07 issued (USD 3750)"
+      }
+    ],
+    "won_at": "2026-07-16T16:54:50.028Z",
     "lost_at": null,
     "lost_reason": null
   },
@@ -366,20 +412,30 @@
     "lost_reason": null
   },
   {
-    "slug": "ba-creation",
+    "slug": "bacreation",
     "company_name": "BA Works",
-    "created_at": "2026-07-15T05:03:22.551Z",
+    "created_at": "2026-07-15T09:10:54.146Z",
     "source": "pre-audit",
     "stage": "audited",
     "links": {
-      "pre_audit": "prospects/ba-creation/pre_audit.html",
+      "pre_audit": "prospects/bacreation/deliverables/pre-audit/pre-audit.html",
       "proposal": null,
       "contract": null,
       "client_profile": null
     },
     "activities": [
       {
-        "at": "2026-07-15T05:03:22.549Z",
+        "at": "2026-07-15T09:10:54.144Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-07-15T09:27:42.557Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-07-15T10:31:39.350Z",
         "type": "note",
         "note": "pre-audit completed"
       }
@@ -389,8 +445,8 @@
       "setup_fee": 0,
       "currency": "USD"
     },
-    "updated_at": "2026-07-15T05:03:22.551Z",
-    "id": "ba-creation",
+    "updated_at": "2026-07-15T10:31:39.352Z",
+    "id": "bacreation",
     "contact": {
       "name": null,
       "email": null,
