@@ -22,7 +22,7 @@ DEFAULT_FIELDS = (
     "ad_delivery_stop_time,ad_creative_bodies,ad_creative_link_captions,"
     "ad_creative_link_titles,ad_creative_link_descriptions,ad_snapshot_url,"
     "publisher_platforms,impressions,spend,estimated_audience_size,languages,"
-    "call_to_action_type,bylines"
+    "call_to_action_type,bylines,display_format"
 )
 
 

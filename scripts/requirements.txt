@@ -1,0 +1,18 @@
+# Python dependencies for the smOS script layer (meta-ad-library pipeline,
+# report renderers, PDF export). Install with:
+#   pip install -r scripts/requirements.txt
+#   python -m playwright install chromium   # one-time browser download for PDF
+#
+# Pinned to compatible ranges; bump deliberately and re-run the test suite.
+
+# HTTP for Meta Ad Library / Graph API + public-data collection passes
+requests>=2.31,<3
+
+# Optional: Claude vision creative-matrix scoring (classifier.py, market.py).
+# The pipeline degrades gracefully when ANTHROPIC_API_KEY is unset, but the
+# package must be importable for the scoring path to run.
+anthropic>=0.40,<1
+
+# Optional: headless-Chromium PDF export (scripts/render_pdf.py). HTML still
+# ships without it; PDF is skipped with a clear message.
+playwright>=1.44,<2

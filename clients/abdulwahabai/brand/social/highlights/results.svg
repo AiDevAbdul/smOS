@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <rect width="1080" height="1920" fill="#F5F5F7"/>
+  <g transform="translate(540,900) scale(1.6)"><path d="M-70 60 v-40 M-25 60 v-80 M20 60 v-55 M65 60 v-110" stroke="#337526" stroke-width="16" stroke-linecap="round"/><path d="M-70 -20 L-25 -50 L20 -35 L70 -80" fill="none" stroke="#74D452" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></g>
+  <text x="540" y="1210" fill="#1D1D1F" font-family="-apple-system, 'SF Pro Text', system-ui, sans-serif" font-size="46" font-weight="600" text-anchor="middle">Results</text>
+</svg>

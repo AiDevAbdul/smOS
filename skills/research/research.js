@@ -9,8 +9,9 @@
  *   node skills/research/research.js <slug>
  *   node skills/research/research.js <slug> --days 90 --country US
  *   node skills/research/research.js <slug> --skip-classify   # skip LLM angle taxonomy
+ *   node skills/research/research.js <slug> --discover         # auto-discover competitors via Ad Library category sweep
  *
- * Halts if profile.competitors is empty or fewer than 2 entries.
+ * Halts if profile.competitors is empty or fewer than 2 entries (unless --discover finds suggestions).
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
@@ -75,6 +76,117 @@ function runPy(args, opts = {}) {
   return { stdout: res.stdout, stderr: res.stderr };
 }
 
+/**
+ * Auto-discover competitors by sweeping the Ad Library for the client's
+ * business category + geo. Uses discover_pk.py (category sweep) and
+ * optionally term_expansion.py (LLM term expansion) under the hood.
+ *
+ * Returns an array of {page_name, page_id, active_ads, reason} suggestions.
+ * Never auto-adds to profile.competitors — only suggests for human review.
+ */
+function discoverCompetitors(profile, country, days, reportsDir) {
+  const category = profile.business?.category || profile.business?.niche || null;
+  if (!category) {
+    console.error("[research] --discover: no business.category or business.niche in profile — skipping discovery");
+    return [];
+  }
+
+  const geoLabel = country || "US";
+
+  // Build seed search terms from the category
+  const seedTerms = [category];
+  if (profile.business?.niche && profile.business.niche !== category) {
+    seedTerms.push(profile.business.niche);
+  }
+  // Add any service keywords from the profile
+  const services = profile.business?.services || profile.services || [];
+  for (const svc of services.slice(0, 5)) {
+    const term = typeof svc === "string" ? svc : svc.name;
+    if (term) seedTerms.push(term);
+  }
+
+  // Step 1: Expand terms via term_expansion.py (best-effort)
+  let expandedTerms = seedTerms;
+  try {
+    const expandResult = runPy([
+      "scripts/meta-ad-library/term_expansion.py",
+      "--category", category.toLowerCase().replace(/\s+/g, "_"),
+      "--label", category,
+      "--seeds", ...seedTerms,
+      "--cache-dir", resolve(reportsDir, ".term_cache"),
+      "--no-llm",  // stay fast for discovery; LLM expansion is opt-in via market.py
+    ]);
+    const parsed = JSON.parse(expandResult.stdout.trim());
+    if (Array.isArray(parsed) && parsed.length) expandedTerms = parsed;
+  } catch (e) {
+    console.error(`[research] term expansion failed (${e.message.split("\n")[0]}) — using seed terms`);
+  }
+
+  // Step 2: Run discover_pk.py with the terms
+  const discoveryOutput = resolve(reportsDir, `discovery_${ts()}.json`);
+  try {
+    runPy([
+      "scripts/meta-ad-library/discover_pk.py",
+      "--terms", ...expandedTerms.slice(0, 10),
+      "--country", geoLabel,
+      "--max-pages", "3",
+      "--since", new Date(Date.now() - days * 86400000).toISOString().slice(0, 10),
+      "--output", discoveryOutput,
+    ]);
+  } catch (e) {
+    console.error(`[research] discover_pk.py failed: ${e.message.split("\n")[0]}`);
+    return [];
+  }
+
+  if (!existsSync(discoveryOutput)) return [];
+
+  const discovery = JSON.parse(readFileSync(discoveryOutput, "utf8"));
+  const pages = discovery.pages || [];
+
+  // Filter out the client's own page and any already-named competitors
+  const existingIds = new Set(
+    (profile.competitors || []).map((c) => String(typeof c === "string" ? c : (c.page_id || c.name)))
+  );
+  const clientPageId = String(profile.meta?.page_id || profile.facebook?.page_id || "");
+
+  const suggestions = pages
+    .filter((p) => !existingIds.has(p.page_id) && !existingIds.has(p.page_name) && p.page_id !== clientPageId)
+    .slice(0, 15)
+    .map((p) => ({
+      page_name: p.page_name,
+      page_id: p.page_id,
+      active_ads: p.ad_count_sampled,
+      reason: `top advertiser in ${category} in ${geoLabel}`,
+    }));
+
+  return suggestions;
+}
+
+/**
+ * Auto-persist the analyzed snapshot to Supabase via persist.py.
+ * Best-effort: if Supabase creds are missing or persist fails, log and continue.
+ */
+function autoPersistSnapshot(analyzedPath, slug, profile) {
+  const clientId = profile.meta?.ad_account_id || profile.ad_account?.id || slug;
+  try {
+    runPy([
+      "scripts/meta-ad-library/persist.py",
+      "competitor",
+      "--input", analyzedPath,
+      "--client-id", String(clientId),
+      "--slug", slug,
+    ]);
+    console.error(`[research] snapshot persisted to Supabase`);
+  } catch (e) {
+    const msg = e.message || "";
+    if (msg.includes("SUPABASE_URL") || msg.includes("SUPABASE_SERVICE_KEY")) {
+      console.error("[research] snapshot persistence skipped — Supabase credentials not configured");
+    } else {
+      console.error(`[research] snapshot persistence failed (best-effort): ${msg.split("\n")[0]}`);
+    }
+  }
+}
+
 async function main() {
   const argv = process.argv.slice(2);
   const slug = argv[0];
@@ -84,6 +196,7 @@ async function main() {
   }
   const days = parseInt(argVal(argv, "--days", "90"), 10);
   const skipClassify = argHas(argv, "--skip-classify");
+  const wantsDiscover = argHas(argv, "--discover");
 
   const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) throw new Error(`Profile not found: ${profilePath}`);
@@ -239,12 +352,53 @@ async function main() {
     }
   }
 
-  // Step 8: build competitor_intel.json from analyzed output
+  // Step 8: auto-discover competitors if --discover flag is set
+  let suggestedCompetitors = [];
+  if (wantsDiscover) {
+    console.error(`[research] running competitor auto-discovery for ${profile.business?.category || profile.business?.niche || "unknown category"}…`);
+    suggestedCompetitors = discoverCompetitors(profile, country, days, reportsDir);
+    if (suggestedCompetitors.length) {
+      console.error(`\n── Suggested competitors to review: ──────────────────`);
+      for (const s of suggestedCompetitors) {
+        console.error(`  ${String(s.active_ads).padStart(3)}  ${s.page_name}  (${s.page_id}) — ${s.reason}`);
+      }
+      console.error(`──────────────────────────────────────────────────────\n`);
+    } else {
+      console.error("[research] no new competitor suggestions found");
+    }
+  }
+
+  // Step 9: load diff summary for trend data
+  let trendData = null;
+  if (diffPath && existsSync(diffPath)) {
+    try {
+      trendData = JSON.parse(readFileSync(diffPath, "utf8"));
+      const s = trendData.summary || {};
+      console.error(`\n── Trend Summary (vs prior snapshot) ─────────────────`);
+      console.error(`  New ads:        ${s.total_new_ads || 0}`);
+      console.error(`  Killed ads:     ${s.total_killed_ads || 0}`);
+      console.error(`  Movers:         ${(s.competitors_with_changes || []).length} competitor(s)`);
+      for (const name of (s.competitors_with_changes || []).slice(0, 10)) {
+        const c = trendData.competitors?.[name];
+        if (!c) continue;
+        const bits = [];
+        if (c.new_ad_count) bits.push(`+${c.new_ad_count} new`);
+        if (c.killed_ad_count) bits.push(`-${c.killed_ad_count} killed`);
+        bits.push(...(c.changes || []));
+        console.error(`    · ${name}: ${bits.join("; ")}`);
+      }
+      console.error(`──────────────────────────────────────────────────────\n`);
+    } catch (e) {
+      console.error(`[research] could not load diff for trend summary: ${e.message.split("\n")[0]}`);
+    }
+  }
+
+  // Step 10: build competitor_intel.json from analyzed output
   const analyzed = JSON.parse(readFileSync(analyzedPath, "utf8"));
   // Normalize to canonical shape — crucially this derives the top-level `angles`
   // array (from analyzed.angles or aggregated from competitors[].angles) that
   // /strategy-brief reads to pick creative angles.
-  const intel = competitorSchema.normalize({
+  const intelData = {
     client_slug: slug,
     generated_at: new Date().toISOString(),
     country,
@@ -260,10 +414,25 @@ async function main() {
       diff: diffPath,
     },
     resolved_page_ids: resolved,
-  });
+  };
+
+  // Include trend data from diff if available
+  if (trendData) {
+    intelData.trend = trendData;
+  }
+
+  // Include discovery suggestions (separate from competitors — never auto-added)
+  if (suggestedCompetitors.length) {
+    intelData.suggested_competitors = suggestedCompetitors;
+  }
+
+  const intel = competitorSchema.normalize(intelData);
 
   const intelPath = P.clientFile(slug, "competitor_intel.json", { forWrite: true });
   writeFileSync(intelPath, JSON.stringify(intel, null, 2));
+
+  // Step 11: auto-persist snapshot to Supabase (best-effort)
+  autoPersistSnapshot(analyzedPath, slug, profile);
 
   console.log(JSON.stringify({
     slug,
@@ -275,6 +444,8 @@ async function main() {
     html_report: htmlPath,
     pdf_report: existsSync(pdfPath) ? pdfPath : null,
     diff: diffPath,
+    trend_summary: trendData?.summary || null,
+    suggested_competitors: suggestedCompetitors.length ? suggestedCompetitors : undefined,
     gap_count: (intel.gaps || []).length,
     next: "review competitor_intel.json, then /strategy-brief",
   }, null, 2));

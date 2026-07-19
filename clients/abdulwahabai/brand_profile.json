@@ -1,0 +1,186 @@
+{
+  "client_slug": "abdulwahabai",
+  "status": "complete",
+  "strategy": {
+    "purpose": "To free small businesses from the repetitive work that keeps them from growing — and to demystify AI so they own the systems running their business, not just rent them.",
+    "mission": "We build custom AI agents that automate the manual grind — done-for-you, shipped in days — and teach each client exactly how their automation works.",
+    "vision": "A world where every small business runs on AI agents it understands, so its people spend their hours on judgment and relationships, not data entry.",
+    "values": [
+      "Working agents over slideware",
+      "Teach, don't gatekeep",
+      "Ship in days, not months",
+      "Founder's hands only — never resold",
+      "Plain-English AI"
+    ],
+    "persona": "SME owners, agency owners, and operations managers (all ages) across Pakistan, the US, and the UK. Motivations: reclaim hours lost to repetitive tasks, scale output without hiring, look modern and efficient to their own clients. Fears: AI is too technical or risky to trust, being sold vaporware by a reseller, buying a black box no one on the team can maintain. Triggers: a backlog of manual data entry, losing deals because prospecting/SEO/social is done by hand, a competitor moving faster with automation.",
+    "archetype": {
+      "primary": "magician",
+      "secondary": "sage"
+    },
+    "value_proposition": "Custom AI agents that take the repetitive work off your team's plate in days — built and explained by the founder himself, so you own a system you actually understand.",
+    "differentiation": "Most AI providers are resellers handing clients a black box, or agencies that take months. Abdul Wahab is a hands-on technical founder who ships working agents in days AND teaches clients how they run — combining builder and educator in one person.",
+    "positioning_statement": "For SME and agency owners who are drowning in repetitive manual work, Abdul Wahab is the done-for-you AI automation partner that ships working agents in days — not months — because a hands-on technical founder builds every system himself and teaches the team how it runs, so clients own automation they truly understand.",
+    "messaging_pillars": [
+      "Shipped in days, not months",
+      "Built by the founder, never resold",
+      "You'll understand what's running (teach, don't gatekeep)",
+      "Automates the grind — data entry, prospecting, SEO, social",
+      "Own your system, don't rent a black box"
+    ],
+    "essence": "Automation you understand",
+    "promise": "We take the repetitive work off your plate — and leave you understanding exactly how.",
+    "positioning_approved_at": "2026-07-16T17:54:04.559Z"
+  },
+  "verbal": {
+    "name": "Abdul Wahab",
+    "name_candidates": [],
+    "name_screening": {
+      "domain_com_available": null,
+      "trademark_knockout_clear": null,
+      "handles_available": null,
+      "attorney_clearance_flagged": true
+    },
+    "name_approved_at": "2026-07-16T18:10:22.776Z",
+    "tagline": "Automation you understand.",
+    "voice": {
+      "traits": [
+        "Confident",
+        "Technical",
+        "Approachable",
+        "Educational"
+      ],
+      "spectrums": "Expert but never condescending; plain-spoken over jargon; direct over hype.",
+      "do": [
+        "Explain the how, not just the what",
+        "Show working agents and real results",
+        "Use plain English for technical ideas",
+        "Give a direct call to action (\"Book your call\")"
+      ],
+      "dont": [
+        "Use hype words like 'revolutionary' or 'guaranteed'",
+        "Call anything 'cheap'",
+        "Hide behind buzzwords or black-box mystique",
+        "Overpromise timelines"
+      ]
+    },
+    "messaging_house": {
+      "roof": "Automation you understand — custom AI agents that take the repetitive work off your plate, built and explained by the founder.",
+      "walls": [
+        "Shipped in days, not months",
+        "Built by the founder, never resold",
+        "You'll understand what's running (teach, don't gatekeep)",
+        "Automates the grind — data entry, prospecting, SEO, social",
+        "Own your system, don't rent a black box"
+      ],
+      "foundation": [
+        "Hands-on technical founder who builds every system personally",
+        "Teacher/trainer who educates clients on their automation",
+        "Fast delivery — working agents in days",
+        "Serves SME & agency owners across PK, US, UK"
+      ]
+    },
+    "elevator_pitch": "I build custom AI agents that automate the repetitive work draining your team — data entry, prospecting, SEO, social — and I ship them in days, not months. As a hands-on technical founder and trainer, I don't hand you a black box: I build the system and teach you exactly how it runs.",
+    "boilerplate": "Abdul Wahab builds custom AI agents that automate repetitive business workflows for SME and agency owners. Done-for-you setup plus training, workshops, and consultation — working agents shipped in days, built and explained by the founder so clients own automation they truly understand."
+  },
+  "visual": {
+    "moodboard_url": null,
+    "logo": {
+      "primary_url": "clients/abdulwahabai/assets/logo.svg",
+      "mark_url": null,
+      "wordmark_url": "clients/abdulwahabai/assets/logo.svg",
+      "mono_url": "clients/abdulwahabai/assets/logo.svg",
+      "reverse_url": "clients/abdulwahabai/assets/logo-white.svg",
+      "svg_url": null,
+      "clear_space": "Minimum clear space equal to the height of the 'A' on all sides.",
+      "min_size": "24px height for digital; 12mm for print."
+    },
+    "logo_approved_at": "2026-07-16T18:10:43.170Z",
+    "colors": {
+      "primary": "#337526",
+      "secondary": "#1D1D1F",
+      "accent": "#74D452",
+      "neutrals": [
+        "#FBFBFD",
+        "#F5F5F7",
+        "#6E6E73",
+        "#D2D2D7"
+      ]
+    },
+    "typography": {
+      "heading": "Fraunces (serif) — matches the wordmark",
+      "body": "SF Pro Text (system sans; ui-sans-serif fallback)",
+      "scale": "Apple/iOS-style type scale (display, title, body, caption); tabular numerals for data."
+    },
+    "imagery_style": "Clean, high-contrast product/agent screenshots and short demo clips; light #FBFBFD canvas with green accents; no stocky AI clichés.",
+    "iconography": "Minimal line icons, 1.5px stroke, rounded joins; monochrome ink or brand green.",
+    "ai_generated": false
+  },
+  "guidelines": {
+    "doc_url": "/Users/apple/abdul/smOS/clients/abdulwahabai/brand_book.html",
+    "pdf_url": "/Users/apple/abdul/smOS/clients/abdulwahabai/brand_book.pdf",
+    "version": "2026-07-16",
+    "generated_at": "2026-07-16T18:10:55.634Z"
+  },
+  "social": {
+    "profile_picture_url": "clients/abdulwahabai/brand/social/profile-picture.svg",
+    "fb_cover_url": "clients/abdulwahabai/brand/social/fb-cover.svg",
+    "ig_highlight_covers": [
+      "clients/abdulwahabai/brand/social/highlights/services.svg",
+      "clients/abdulwahabai/brand/social/highlights/workshops.svg",
+      "clients/abdulwahabai/brand/social/highlights/results.svg",
+      "clients/abdulwahabai/brand/social/highlights/about.svg"
+    ],
+    "templates": [
+      {
+        "type": "quote",
+        "spec": "1080x1350. Light #F5F5F7 canvas, Fraunces headline in ink #1D1D1F, green rule, 'Abdul.' wordmark bottom-left."
+      },
+      {
+        "type": "tip_carousel_cover",
+        "spec": "1080x1350. Bold Fraunces number/hook, green #337526 accent block, swipe cue; body slides in SF Pro Text."
+      },
+      {
+        "type": "promo",
+        "spec": "1080x1350. Green #337526 background, white headline, lime #74D452 CTA pill 'Book your call'."
+      },
+      {
+        "type": "testimonial",
+        "spec": "1080x1350. White card, client quote in SF Pro Text, name/role, small star row in green."
+      },
+      {
+        "type": "story_cta",
+        "spec": "1080x1920. Full-bleed, tagline top, link/CTA sticker zone in center-lower safe area, lime accent."
+      }
+    ],
+    "link_in_bio": {
+      "headline": "Automate the repetitive work.",
+      "destinations": [
+        {
+          "label": "Book a discovery call",
+          "url": "https://www.abdulwahabai.com/#contact",
+          "priority": 1
+        },
+        {
+          "label": "See what I build (agents & demos)",
+          "url": "https://www.abdulwahabai.com/#work",
+          "priority": 2
+        },
+        {
+          "label": "Workshops & training",
+          "url": "https://www.abdulwahabai.com/#learn",
+          "priority": 3
+        },
+        {
+          "label": "Book a paid consultation",
+          "url": "https://www.abdulwahabai.com/#consult",
+          "priority": 4
+        }
+      ]
+    },
+    "bios": {
+      "instagram": "🤖 Custom AI agents that kill repetitive work\n⚡ DFY setup · workshops · consulting — shipped in days\n👇 Book your call",
+      "facebook": "Drowning in repetitive tasks? I build custom AI agents that automate the grind — data entry, prospecting, SEO, social — and teach your team exactly how they run. Done-for-you setup, workshops, and consulting. Working agents in days, not months. Book your call."
+    },
+    "branded_hashtag": "#AutomationYouUnderstand"
+  }
+}

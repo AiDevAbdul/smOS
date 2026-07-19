@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <!-- Profile picture — logo monogram on brand green. Renders as a circle; mark centered. -->
+  <rect width="360" height="360" fill="#337526"/>
+  <text x="180" y="182" fill="#FFFFFF" font-family="Fraunces, Georgia, 'Times New Roman', serif"
+        font-size="200" font-weight="600" text-anchor="middle" dominant-baseline="central">A<tspan fill="#74D452">.</tspan></text>
+</svg>

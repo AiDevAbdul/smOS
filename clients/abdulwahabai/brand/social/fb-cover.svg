@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="851" height="315" viewBox="0 0 851 315">
+  <!-- Facebook cover 851x315. Content centered / away from edges (mobile crop safe). -->
+  <rect width="851" height="315" fill="#FBFBFD"/>
+  <rect x="0" y="0" width="851" height="8" fill="#337526"/>
+  <g text-anchor="middle" font-family="Fraunces, Georgia, serif">
+    <text x="425" y="132" fill="#1D1D1F" font-size="66" font-weight="600">Abdul<tspan fill="#337526">.</tspan></text>
+  </g>
+  <text x="425" y="180" fill="#6E6E73" font-family="-apple-system, 'SF Pro Text', system-ui, sans-serif"
+        font-size="26" text-anchor="middle">Automation you understand.</text>
+  <text x="425" y="222" fill="#337526" font-family="-apple-system, 'SF Pro Text', system-ui, sans-serif"
+        font-size="18" font-weight="600" text-anchor="middle">Custom AI agents that automate the repetitive work — shipped in days.</text>
+</svg>

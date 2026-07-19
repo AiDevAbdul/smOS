@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 """
+DEPRECATED — this file is hardcoded to automotive/Blue Rose and violates the
+"no per-client renderers" rule. It is retained only because existing data may
+have been generated with it. Do NOT wire it into new skills.
+
+The reusable term-expansion logic (expand_terms / _llm_expand) has been
+extracted to: scripts/meta-ad-library/term_expansion.py
+Import from there instead:
+    from term_expansion import expand_terms
+
+The category-sweep logic lives in: scripts/meta-ad-library/discover_pk.py
+
+Original description:
 Market research analyzer — reads category Ad Library JSONs,
 filters to automotive pages only, extracts copy themes, CTAs,
 formats, and generates a strategic HTML report for Blue Rose Auto.

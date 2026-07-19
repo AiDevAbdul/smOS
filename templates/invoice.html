@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invoice INV-bacreation-2026-07</title>
+<script>(function(){try{var t=localStorage.getItem("smos-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<style>
+.inv-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.inv-party__lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-muted);margin-bottom:6px;}
+.inv-party__name{font-size:15px;font-weight:700;}
+.inv-party__meta{font-size:13px;color:var(--ds-muted);margin-top:2px;}
+.inv-table td.amt,.inv-table th.amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.inv-table tfoot td{border-top:2px solid var(--ds-line-strong);font-weight:800;font-size:15px;}
+.inv-table tfoot td.amt{color:var(--ds-ink);}
+.inv-pay{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  background:var(--ds-surface);border:1px solid var(--ds-line);border-radius:var(--ds-r);padding:18px 22px;box-shadow:var(--ds-shadow-sm);}
+.inv-pay__terms{font-size:13px;color:var(--ds-muted);max-width:520px;}
+@media (max-width:640px){.inv-parties{grid-template-columns:1fr;}}
+</style>
+<style>/* ============================================================================
+   smOS Design System — "Cupertino"
+   Single source of truth for every client-facing report & template.
+   Apple / iOS visual language: SF Pro system type, #f5f5f7 canvas, #1d1d1f ink,
+   system semantic colors, soft elevation, generous radii, 8pt rhythm.
+
+   DO NOT fork this per report. Renderers read this file at render time via
+   scripts/lib/design_system.js (Node) and scripts/lib/design_system.py (Python)
+   and inline it. Edit here once; every deliverable inherits it.
+   ============================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Surfaces (Apple light-gray system) ---- */
+  --ds-bg:        #f5f5f7;   /* page canvas */
+  --ds-surface:   #ffffff;   /* cards, tables, sheets */
+  --ds-surface-2: #fbfbfd;   /* zebra rows, subtle fills */
+  --ds-glass:     rgba(255,255,255,.72);
+
+  /* ---- Ink / text ---- */
+  --ds-ink:    #1d1d1f;      /* primary text */
+  --ds-ink-2:  #3a3a3c;      /* strong secondary */
+  --ds-muted:  #6e6e73;      /* secondary / captions (Apple gray) */
+  --ds-faint:  #8e8e93;      /* tertiary / footnotes */
+
+  /* ---- Lines ---- */
+  --ds-line:        #e2e2e7;
+  --ds-line-strong: #d2d2d7;
+
+  /* ---- Brand + iOS system semantic colors ---- */
+  --ds-blue:        #0071e3;  /* primary action (Apple keynote blue) */
+  --ds-blue-strong: #0066cc;
+  --ds-indigo:      #5e5ce6;
+  --ds-green:       #34c759;  /* systemGreen — success / scale */
+  --ds-amber:       #ff9f0a;  /* systemOrange — at risk / warn */
+  --ds-red:         #ff3b30;  /* systemRed — critical / pause */
+  --ds-purple:      #af52de;  /* systemPurple */
+  --ds-teal:        #5ac8fa;  /* systemTeal */
+  --ds-pink:        #ff375f;  /* systemPink */
+
+  /* ---- Soft tints for callouts / pills (light) ---- */
+  --ds-blue-tint:  #eef5ff;
+  --ds-green-tint: #e7f9ed;
+  --ds-amber-tint: #fff5e6;
+  --ds-red-tint:   #ffece9;
+  --ds-ink-tint:   #f2f2f7;
+
+  /* ---- On-tint text (badges/callouts) — darker than the base semantic color
+     for AA contrast on the light pastel tint; swap to a lighter shade in dark
+     mode where the tint itself is a low-opacity dark fill. ---- */
+  --ds-green-ink: #1c7a3e;
+  --ds-amber-ink: #9a5b00;
+  --ds-red-ink:   #b3261e;
+
+  /* ---- Type ---- */
+  --ds-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+             "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ds-font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Radius ---- */
+  --ds-r-sm: 10px;
+  --ds-r:    14px;
+  --ds-r-lg: 20px;
+  --ds-r-xl: 28px;
+  --ds-r-pill: 980px;
+
+  /* ---- Elevation (low-contrast, Apple-soft) ---- */
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.06);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.10);
+
+  /* ---- Gradients ---- */
+  --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+  --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
+  /* Signature aurora — blue → indigo → violet. Used ONLY on the progress spine,
+     active states, and hero accent. The one place boldness is spent. */
+  --ds-grad-brand: linear-gradient(135deg, #06251c 0%, #0e5c3f 55%, #16a973 100%);
+
+  /* ---- "Operating system" shell (dark hub chrome that frames light reports) ---- */
+  --ds-shell:     #0b0b10;   /* console canvas (cool near-black) */
+  --ds-shell-2:   #16161d;   /* raised shell surface: bars, chips */
+  --ds-shell-3:   #20212a;   /* chip hover / hairline fills */
+  --ds-shell-ink: #f5f5f7;   /* primary text on shell */
+  --ds-shell-mut: #a1a1ab;   /* secondary text on shell */
+  --ds-shell-line:#2a2b35;   /* borders on shell */
+
+  /* ---- Display type scale ---- */
+  --ds-fs-display: clamp(30px, 4.2vw, 46px);
+
+  /* ---- Motion ---- */
+  --ds-ease:       cubic-bezier(.4, 0, .2, 1);
+  --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
+  --ds-dur:        220ms;
+  --ds-dur-fast:   140ms;
+}
+
+/* ------------------------------------------------------ Dark mode tokens ---
+   Auto (prefers-color-scheme) is the default; [data-theme] is a manual
+   override written by the bootstrap script in reportHead()/report_head() and
+   flipped by .ds-theme-toggle. [data-theme] always wins over the media query
+   in both directions (a light override on a dark OS, and vice versa).
+   Print/PDF always forces light regardless of any theme left on the page. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+  :root:not([data-theme="light"]) {
+    --ds-bg:        #000000;
+    --ds-surface:   #1c1c1e;
+    --ds-surface-2: #232326;
+    --ds-glass:     rgba(28,28,30,.72);
+
+    --ds-ink:    #f5f5f7;
+    --ds-ink-2:  #e5e5e7;
+    --ds-muted:  #98989d;
+    --ds-faint:  #6e6e73;
+
+    --ds-line:        #38383a;
+    --ds-line-strong: #48484a;
+
+    --ds-blue:   #0a84ff;
+    --ds-indigo: #7d7aff;
+    --ds-green:  #30d158;
+    --ds-amber:  #ff9f0a;
+    --ds-red:    #ff453a;
+    --ds-purple: #bf5af2;
+    --ds-teal:   #64d2ff;
+    --ds-pink:   #ff375f;
+
+    --ds-blue-tint:  rgba(10,132,255,.16);
+    --ds-green-tint: rgba(48,209,88,.16);
+    --ds-amber-tint: rgba(255,159,10,.16);
+    --ds-red-tint:   rgba(255,69,58,.16);
+    --ds-ink-tint:   #2c2c2e;
+    --ds-green-ink: #63d986;
+    --ds-amber-ink: #ffc46b;
+    --ds-red-ink:   #ff8a80;
+
+    --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+    --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+    --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ds-bg:        #000000;
+  --ds-surface:   #1c1c1e;
+  --ds-surface-2: #232326;
+  --ds-glass:     rgba(28,28,30,.72);
+
+  --ds-ink:    #f5f5f7;
+  --ds-ink-2:  #e5e5e7;
+  --ds-muted:  #98989d;
+  --ds-faint:  #6e6e73;
+
+  --ds-line:        #38383a;
+  --ds-line-strong: #48484a;
+
+  --ds-blue:   #0a84ff;
+  --ds-indigo: #7d7aff;
+  --ds-green:  #30d158;
+  --ds-amber:  #ff9f0a;
+  --ds-red:    #ff453a;
+  --ds-purple: #bf5af2;
+  --ds-teal:   #64d2ff;
+  --ds-pink:   #ff375f;
+
+  --ds-blue-tint:  rgba(10,132,255,.16);
+  --ds-green-tint: rgba(48,209,88,.16);
+  --ds-amber-tint: rgba(255,159,10,.16);
+  --ds-red-tint:   rgba(255,69,58,.16);
+  --ds-ink-tint:   #2c2c2e;
+  --ds-green-ink: #63d986;
+  --ds-amber-ink: #ffc46b;
+  --ds-red-ink:   #ff8a80;
+
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ds-green-ink: #1c7a3e;
+  --ds-amber-ink: #9a5b00;
+  --ds-red-ink:   #b3261e;
+}
+
+@media print {
+  :root, :root[data-theme="dark"] {
+    color-scheme: light !important;
+    --ds-bg:        #f5f5f7 !important;
+    --ds-surface:   #ffffff !important;
+    --ds-surface-2: #fbfbfd !important;
+    --ds-ink:       #1d1d1f !important;
+    --ds-ink-2:     #3a3a3c !important;
+    --ds-muted:     #6e6e73 !important;
+    --ds-faint:     #8e8e93 !important;
+    --ds-line:        #e2e2e7 !important;
+    --ds-line-strong: #d2d2d7 !important;
+    --ds-blue:   #0071e3 !important;
+    --ds-indigo: #5e5ce6 !important;
+    --ds-green:  #34c759 !important;
+    --ds-amber:  #ff9f0a !important;
+    --ds-red:    #ff3b30 !important;
+    --ds-purple: #af52de !important;
+    --ds-teal:   #5ac8fa !important;
+    --ds-pink:   #ff375f !important;
+    --ds-blue-tint:  #eef5ff !important;
+    --ds-green-tint: #e7f9ed !important;
+    --ds-amber-tint: #fff5e6 !important;
+    --ds-red-tint:   #ffece9 !important;
+    --ds-ink-tint:   #f2f2f7 !important;
+    --ds-green-ink: #1c7a3e !important;
+    --ds-amber-ink: #9a5b00 !important;
+    --ds-red-ink:   #b3261e !important;
+  }
+  .ds-theme-toggle { display: none !important; }
+}
+
+/* ---- Theme toggle (sun/moon icon button, top-right of the hero) ---- */
+.ds-theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--ds-dur) var(--ds-ease);
+}
+.ds-theme-toggle:hover { background: rgba(255,255,255,.24); }
+.ds-theme-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.ds-theme-toggle svg { width: 18px; height: 18px; fill: currentColor; }
+.ds-theme-toggle .ds-theme-toggle__moon { display: none; }
+:root[data-theme="dark"] .ds-theme-toggle .ds-theme-toggle__sun { display: none; }
+:root[data-theme="dark"] .ds-theme-toggle .ds-theme-toggle__moon { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ds-theme-toggle .ds-theme-toggle__sun { display: none; }
+  :root:not([data-theme="light"]) .ds-theme-toggle .ds-theme-toggle__moon { display: block; }
+}
+
+/* ---------------------------------------------------------------- Base ---- */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--ds-font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  background: var(--ds-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ds-ink);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 .5em;
+  font-weight: 600;
+}
+h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.022em; }
+h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; }
+h3 { font-size: 19px; }
+h4 { font-size: 16px; }
+
+p  { margin: .65em 0; }
+a  { color: var(--ds-blue-strong); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+small, .ds-caption { color: var(--ds-muted); font-size: 13px; }
+
+code, kbd, samp {
+  font-family: var(--ds-font-mono);
+  font-size: 88%;
+  background: var(--ds-ink-tint);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--ds-line);
+  margin: 32px 0;
+}
+
+ul, ol { margin: .6em 0 .6em 2px; padding-left: 22px; }
+li { margin: 4px 0; }
+
+/* Tabular numerals everywhere numbers live — prevents column jitter */
+.ds-num, td, th, .ds-kpi__value, .ds-metric { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------- Layout ---- */
+.ds-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+}
+.ds-wrap--wide { max-width: 1200px; }
+
+.ds-section { margin: 36px 0; }
+
+/* -------------------------------------------------------------- Hero ------ */
+/* ONE canonical report hero. Every client-facing report MUST render this exact
+   structure via heroHeader() (JS) / hero_header() (Py) — never fork it.
+   Structure: .ds-hero > .ds-hero__inner > (.ds-hero__main + optional .ds-hero__aside) */
+.ds-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--ds-grad-brand);
+  color: #fff;
+  border-radius: var(--ds-r-lg);
+  padding: 44px 40px;
+  margin-bottom: 28px;
+  box-shadow: 0 12px 32px rgba(14,92,63,.35);
+}
+/* Subtle radial glow for depth (Stripe-style). Behind content, non-interactive. */
+.ds-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 78% 30%, rgba(255,255,255,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ds-hero > * { position: relative; z-index: 1; }
+.ds-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.ds-hero__inner.has-aside { grid-template-columns: 1fr auto; }
+.ds-hero h1 { color: #fff; margin: 0; font-size: var(--ds-fs-display); letter-spacing: -0.026em; line-height: 1.08; }
+.ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
+.ds-hero__headline { margin-top: 12px; font-size: 15px; line-height: 1.55; max-width: 560px; color: rgba(255,255,255,.78); }
+
+/* Eyebrow promoted to a badge pill with a status dot. */
+.ds-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.26);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.ds-hero__badge::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,.8);
+}
+
+/* Optional pill row (snapshot stats). */
+.ds-hero__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ds-hero__pill {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Optional right-hand executive column: score ring + a single hero stat. */
+.ds-hero__aside { text-align: center; flex-shrink: 0; }
+.ds-hero__stat { margin-top: 18px; }
+.ds-hero__stat-label {
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.72); margin-top: 8px;
+}
+.ds-hero__aside .ds-hero__band {
+  display: inline-block;
+  font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; margin-top: 12px; padding: 6px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+}
+.ds-hero__stat-value { font-size: 32px; font-weight: 700; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.ds-hero__stat-caption { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; max-width: 200px; }
+@media (max-width: 720px) {
+  .ds-hero__inner.has-aside { grid-template-columns: 1fr; }
+  .ds-hero__aside { text-align: left; }
+}
+
+/* Scored hero variant — pre-audit's one true header: centered identity block
+   on top, then a big score gauge + verdict headline side-by-side below.
+   Scoped under .ds-hero--scored so it never affects the default .ds-hero
+   used by /audit, /report, /analyze, /before-after, /monthly-review. */
+.ds-hero--scored .ds-hero__center { text-align: center; }
+.ds-hero--scored .ds-hero__center h1 { font-size: var(--ds-fs-display); }
+.ds-hero--scored .ds-hero__center .ds-meta { margin: 10px 0 0; }
+.ds-hero__score-row {
+  margin-top: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 44px;
+  flex-wrap: wrap;
+}
+.ds-hero__gauge { flex-shrink: 0; text-align: center; }
+.ds-hero__gauge .ds-hero__band {
+  display: inline-block;
+  font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; margin-top: 14px; padding: 6px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+}
+.ds-hero__verdict { max-width: 420px; text-align: left; }
+.ds-hero__verdict-headline {
+  font-size: 22px; font-weight: 650; line-height: 1.32; color: #fff;
+  letter-spacing: -0.01em;
+}
+.ds-hero__verdict-sub {
+  margin-top: 14px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.78);
+}
+@media (max-width: 720px) {
+  .ds-hero__score-row { flex-direction: column; text-align: center; }
+  .ds-hero__verdict { text-align: center; }
+}
+
+.ds-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ds-muted);
+  margin-bottom: 6px;
+}
+
+/* -------------------------------------------------------------- Card ------ */
+.ds-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 22px 24px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-card + .ds-card { margin-top: 16px; }
+
+/* --------------------------------------------------------- KPI cards ------ */
+.ds-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.ds-kpi {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-kpi__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+}
+.ds-kpi__value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 6px 0 2px;
+}
+.ds-kpi__delta { font-size: 13px; font-weight: 500; }
+.ds-kpi__delta--up   { color: var(--ds-green); }
+.ds-kpi__delta--down { color: var(--ds-red); }
+
+/* --------------------------------------------------------- Badges --------- */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--ds-r-pill);
+  line-height: 1.3;
+}
+.ds-badge--good { background: var(--ds-green-tint); color: var(--ds-green-ink); }
+.ds-badge--warn { background: var(--ds-amber-tint); color: var(--ds-amber-ink); }
+.ds-badge--bad  { background: var(--ds-red-tint);   color: var(--ds-red-ink); }
+.ds-badge--info { background: var(--ds-blue-tint);  color: var(--ds-blue-strong); }
+.ds-badge--neutral { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
+
+/* --------------------------------------------------------- Callouts ------- */
+.ds-callout {
+  border-radius: var(--ds-r);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-left: 4px solid var(--ds-blue);
+  background: var(--ds-blue-tint);
+}
+.ds-callout--good { border-left-color: var(--ds-green); background: var(--ds-green-tint); }
+.ds-callout--warn { border-left-color: var(--ds-amber); background: var(--ds-amber-tint); }
+.ds-callout--bad  { border-left-color: var(--ds-red);   background: var(--ds-red-tint); }
+
+/* ---------------------------------------------------------- Tables -------- */
+.ds-table-wrap {
+  overflow-x: auto;
+  margin: 18px 0;
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  box-shadow: var(--ds-shadow-sm);
+}
+table.ds-table, .ds-table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+.ds-table-wrap thead th, table.ds-table thead th {
+  background: var(--ds-grad-ink);
+  color: #fff;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.ds-table-wrap tbody td, table.ds-table tbody td {
+  padding: 11px 16px;
+  border-top: 1px solid var(--ds-line);
+}
+.ds-table-wrap tbody tr:nth-child(even),
+table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
+
+/* ---------------------------------------------------------- Charts -------- */
+/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
+.ds-chart {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 20px;
+  box-shadow: var(--ds-shadow-sm);
+  margin: 18px 0;
+}
+.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+/* --------------------------------------------------------- Buttons -------- */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ds-font);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 11px 18px;
+  border-radius: var(--ds-r-pill);
+  border: 1px solid transparent;
+  background: var(--ds-blue);
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--ds-dur) var(--ds-ease), transform var(--ds-dur) var(--ds-ease);
+}
+.ds-btn:hover { background: var(--ds-blue-strong); text-decoration: none; }
+.ds-btn:active { transform: translateY(1px); }
+.ds-btn--ghost {
+  background: var(--ds-surface);
+  color: var(--ds-blue-strong);
+  border-color: var(--ds-line-strong);
+}
+.ds-btn--ghost:hover { background: var(--ds-ink-tint); }
+.ds-btn[aria-disabled="true"] {
+  background: transparent;
+  border: 1px dashed var(--ds-line-strong);
+  color: var(--ds-muted);
+  font-weight: 500;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------- Roadmap --------- */
+/* Vertical journey of numbered steps. Each step = a bold circular badge + a
+   card holding a title, description, and one or more action buttons. Used by
+   /bundle to assemble a client's whole engagement into one shareable hub. */
+.ds-roadmap { margin: 28px 0; }
+.ds-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 18px;
+  padding-bottom: 24px;
+}
+/* connector spine — aurora gradient on delivered steps, grey on pending */
+.ds-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 23px;
+  top: 48px;
+  bottom: -4px;
+  width: 2px;
+  background-image: var(--ds-grad-brand);
+}
+.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
+.ds-step-num {
+  position: relative;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-image: var(--ds-grad-brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 19px;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(14,92,63,.4);
+}
+.ds-step.is-pending .ds-step-num {
+  background: var(--ds-surface);
+  color: var(--ds-faint);
+  border: 2px dashed var(--ds-line-strong);
+  box-shadow: none;
+}
+.ds-step-body {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
+}
+.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
+.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
+.ds-step.is-pending .ds-step-body {
+  background: var(--ds-surface-2);
+  border-style: dashed;
+  box-shadow: none;
+}
+.ds-step-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+.ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
+.ds-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (max-width: 640px) {
+  .ds-step { grid-template-columns: 40px 1fr; gap: 14px; }
+  .ds-step-num { width: 40px; height: 40px; font-size: 16px; }
+  .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
+}
+
+/* -------------------------------------------------- Hub (OS console) ------ */
+/* The /bundle deliverables hub is a single-tab "operating system" console: a
+   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
+   frames each report as a bright, elevated "window" (the iframe). Dark chrome
+   around a light document = intentional app framing (no double-hero). */
+.ds-hub {
+  min-height: 100dvh; display: flex; flex-direction: column;
+  background: var(--ds-shell); color: var(--ds-shell-ink);
+}
+.ds-skip {
+  position: absolute; left: 12px; top: -48px; z-index: 100;
+  background: var(--ds-shell-2); color: var(--ds-shell-ink);
+  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
+  transition: top var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-skip:focus { top: 12px; text-decoration: none; }
+
+/* Header = the hero. Client name + agency + a live progress meter. */
+.ds-hub__head {
+  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
+  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
+  border-bottom: 1px solid var(--ds-shell-line);
+}
+.ds-hub__id { min-width: 0; }
+.ds-hub__eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ds-shell-mut); margin-bottom: 8px;
+}
+.ds-hub__title {
+  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
+  line-height: 1.02; margin: 0; color: #fff;
+  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
+}
+.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
+
+/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
+.ds-progress { min-width: 220px; flex: 0 1 320px; }
+.ds-progress__label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
+}
+.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
+.ds-progress__track { display: flex; gap: 5px; }
+.ds-progress__seg {
+  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
+}
+.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
+
+/* Chip menu (top + bottom) */
+.ds-hubnav {
+  display: flex; gap: 8px; align-items: center;
+  padding: 12px 24px; background: rgba(11,11,16,.72);
+  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--ds-shell-line);
+  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
+}
+.ds-hubnav::-webkit-scrollbar { display: none; }
+.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
+.ds-hubnav__btn {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
+  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
+  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
+  background: var(--ds-shell-2); color: var(--ds-shell-ink);
+  border: 1px solid var(--ds-shell-line); cursor: pointer;
+  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
+              transform var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-hubnav__btn .n {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 21px; height: 21px; border-radius: 50%;
+  background: var(--ds-shell-3); color: var(--ds-shell-ink);
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
+}
+.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
+.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
+.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
+.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
+.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
+
+/* Viewer = a bright elevated "window" floating in the dark shell. */
+.ds-viewer-wrap {
+  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
+  overflow: hidden; background: var(--ds-bg);
+  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
+}
+.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
+.ds-viewer__loader {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--ds-bg); opacity: 0; visibility: hidden;
+  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
+}
+.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
+.ds-spinner {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
+  animation: ds-spin .8s linear infinite;
+}
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+
+/* Entrance: chips + spine stagger in on load */
+@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
+
+@media (max-width: 760px) {
+  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
+  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
+  .ds-hub__head { padding: 18px 16px 14px; }
+  .ds-progress { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-anim, .ds-spinner { animation: none; }
+  .ds-hubnav__btn:hover { transform: none; }
+}
+
+/* --------------------------------------------------------- Footer --------- */
+
+/* --------------------------------------------------------- Footer --------- */
+.ds-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ds-line);
+  color: var(--ds-faint);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------- A11y ----------- */
+:focus-visible { outline: 2px solid var(--ds-blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* --------------------------------------------------------- Print ---------- */
+@page { size: Letter; margin: 14mm; }
+@media print {
+  body { background: #fff; }
+  .ds-card, .ds-kpi, .ds-table-wrap, .ds-chart { box-shadow: none; }
+  .ds-hero { box-shadow: none; }
+  .ds-section, .ds-card, .ds-kpi, .ds-chart, .ds-table-wrap { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+}
+
+/* --------------------------------------------------------- Responsive ----- */
+@media (max-width: 640px) {
+  .ds-wrap { padding: 24px 16px 56px; }
+  .ds-hero { padding: 28px 22px; }
+  h1 { font-size: 26px; }
+  .ds-kpi__value { font-size: 26px; }
+}
+</style>
+</head>
+<body><div class="ds-wrap">
+<header class="ds-hero">
+<button type="button" class="ds-theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+<svg class="ds-theme-toggle__sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5a1 1 0 0 1-1-1V2a1 1 0 1 1 2 0v1.5a1 1 0 0 1-1 1Zm0 15a1 1 0 0 1 1 1V22a1 1 0 1 1-2 0v-1.5a1 1 0 0 1 1-1ZM4.5 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1.5a1 1 0 0 1 1 1Zm18 0a1 1 0 0 1-1 1H20a1 1 0 1 1 0-2h1.5a1 1 0 0 1 1 1ZM6.3 6.3a1 1 0 0 1-1.4 0L3.8 5.2a1 1 0 1 1 1.4-1.4L6.3 4.9a1 1 0 0 1 0 1.4Zm12.9 12.9a1 1 0 0 1-1.4 0l-1.1-1.1a1 1 0 1 1 1.4-1.4l1.1 1.1a1 1 0 0 1 0 1.4ZM6.3 17.7l-1.1 1.1a1 1 0 1 1-1.4-1.4l1.1-1.1a1 1 0 1 1 1.4 1.4ZM19.2 6.3a1 1 0 0 1-1.4 0 1 1 0 0 1 0-1.4l1.1-1.1a1 1 0 1 1 1.4 1.4l-1.1 1.1ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z"/></svg>
+<svg class="ds-theme-toggle__moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.7 14.6a8.6 8.6 0 0 1-10.3-10A8.6 8.6 0 1 0 20.7 14.6Z"/></svg>
+</button>
+<div class="ds-hero__inner">
+<div class="ds-hero__main">
+<div class="ds-hero__badge">Invoice · Ducker Creative</div>
+<h1>Invoice INV-bacreation-2026-07</h1>
+<div class="ds-meta">Period <strong>2026-07</strong> &nbsp;·&nbsp; Issued 2026-07-16 &nbsp;·&nbsp; Due 2026-07-23</div>
+
+<div class="ds-hero__pills"><span class="ds-hero__pill">Total · USD 4,250</span><span class="ds-hero__pill">Status · draft</span></div>
+</div>
+
+</div>
+</header>
+<script>(function(){function apply(){var b=document.querySelector(".ds-theme-toggle");if(!b)return;b.addEventListener("click",function(){var root=document.documentElement;var current=root.getAttribute("data-theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");var next=current==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{localStorage.setItem("smos-theme",next);}catch(e){}b.setAttribute("aria-pressed",String(next==="dark"));});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply);else apply();})();</script>
+<div class="ds-section"><div class="inv-parties">
+<div class="ds-card"><div class="inv-party__lbl">From</div><div class="inv-party__name">Ducker Creative</div><div class="inv-party__meta">abdul@duckercreative.com</div></div>
+<div class="ds-card"><div class="inv-party__lbl">Billed to</div><div class="inv-party__name">BA Works</div><div class="inv-party__meta">Billing period 2026-07</div></div>
+</div></div>
+<div class="ds-section"><div class="ds-table-wrap"><table class="ds-table inv-table">
+<thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead>
+<tbody><tr><td>Growth management retainer — 2026-07</td><td class="amt">USD 3,000</td></tr><tr><td>One-time setup fee</td><td class="amt">USD 750</td></tr><tr><td>Ad spend pass-through — 2026-07</td><td class="amt">USD 500</td></tr></tbody>
+<tfoot><tr><td>Total due</td><td class="amt">USD 4,250</td></tr></tfoot>
+</table></div></div>
+<div class="ds-section"><div class="inv-pay"><div class="inv-pay__terms">Monthly in advance, Net 7.</div><span class="ds-badge ds-badge--neutral">draft</span></div></div>
+<footer class="ds-footer">Generated by smOS · 2026-07-16</footer>
+</div></body></html>

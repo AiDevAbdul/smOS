@@ -1,0 +1,47 @@
+{
+  "_comment": "Single source of truth for the industry benchmarks that anchor pre-audit opportunity sizing and 2 of the 5 score dimensions. Refresh quarterly via WebSearch and bump `refreshed`. Every value MUST carry a source + source_date so the report can cite it and a prospect cannot discredit an uncited number.",
+  "refreshed": "2026-07-15",
+  "as_of": "2025",
+  "metrics": {
+    "meta_avg_cpa": {
+      "label": "Meta Avg CPA",
+      "display": "$38.19",
+      "value": 38.19,
+      "note": "Industry avg cost-per-acquisition across verticals",
+      "source": "WordStream / LocaliQ Facebook Ads Benchmarks",
+      "source_date": "2025"
+    },
+    "meta_dtc_roas": {
+      "label": "Meta DTC ROAS",
+      "display": "1.86×",
+      "value": 1.86,
+      "note": "Avg return on ad spend, direct-to-consumer",
+      "source": "Varos / Triple Whale DTC benchmark",
+      "source_date": "2025"
+    },
+    "meta_cpl": {
+      "label": "Meta CPL",
+      "display": "$27.66",
+      "value": 27.66,
+      "note": "Cost per lead — ~60% cheaper than Google Ads ($70.11)",
+      "source": "WordStream Lead-Gen Benchmarks",
+      "source_date": "2025"
+    },
+    "carousel_er_pct": {
+      "label": "Carousel ER",
+      "display": "0.55%",
+      "value": 0.55,
+      "note": "Best engagement-rate format on Instagram",
+      "source": "Socialinsider Instagram benchmark",
+      "source_date": "2025"
+    },
+    "ad_survival_60d_pct": {
+      "label": "Ad survival >60d",
+      "display": "11.3%",
+      "value": 11.3,
+      "note": "Only ~11.3% of ads run past 60 days — longevity signals quality",
+      "source": "Meta Ad Library longevity analysis (internal, public ads)",
+      "source_date": "2025"
+    }
+  }
+}

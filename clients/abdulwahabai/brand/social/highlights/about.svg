@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
+  <rect width="1080" height="1920" fill="#F5F5F7"/>
+  <g transform="translate(540,900) scale(1.6)"><circle cx="0" cy="-30" r="34" fill="none" stroke="#337526" stroke-width="12"/><path d="M-58 60 a58 55 0 0 1 116 0" fill="none" stroke="#337526" stroke-width="12" stroke-linecap="round"/></g>
+  <text x="540" y="1210" fill="#1D1D1F" font-family="-apple-system, 'SF Pro Text', system-ui, sans-serif" font-size="46" font-weight="600" text-anchor="middle">About</text>
+</svg>

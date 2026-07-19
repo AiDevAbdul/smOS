@@ -1,0 +1,114 @@
+{
+  "slug": "abdulwahabai",
+  "name": "Abdul Wahab",
+  "business": {
+    "product_description": "Custom AI agents that automate repetitive business workflows — done-for-you setup plus a monthly retainer. Also offers AI trainings, workshops, and consultation.",
+    "price_low": 100,
+    "price_high": 5000,
+    "business_model": "service",
+    "usp": "Ships working AI agents in days, not months; a hands-on technical founder rather than a reseller; and a teacher/trainer who can clearly communicate and educate clients.",
+    "conversion_event": "contact_form"
+  },
+  "audience": {
+    "age_low": null,
+    "age_high": null,
+    "gender": "all",
+    "geo_targets": [
+      "Pakistan",
+      "United States",
+      "United Kingdom"
+    ],
+    "pain_points": [
+      "Drowning in repetitive manual tasks",
+      "Wasting hours on data entry",
+      "Manual client hunting / prospecting",
+      "SEO and social media done manually",
+      "Can't scale operations without hiring more staff"
+    ]
+  },
+  "voice": {
+    "tone": "Confident and technical but approachable and educational",
+    "restricted_words": [
+      "revolutionary",
+      "guaranteed",
+      "cheap"
+    ],
+    "cta_style": "direct"
+  },
+  "accounts": {
+    "ad_account_id": null,
+    "pixel_id": null,
+    "facebook_page_id": null,
+    "instagram_business_id": null,
+    "page_id": null,
+    "ig_account_id": null,
+    "bm_id": null,
+    "currency": null,
+    "timezone": null,
+    "business_id": null,
+    "system_user_id": null,
+    "pixel_installed": false,
+    "website_url": null,
+    "domain": null
+  },
+  "kpis": {
+    "target_cpa": null,
+    "target_roas": null,
+    "monthly_budget_low": 500,
+    "monthly_budget_high": 1000
+  },
+  "history": {
+    "previous_spend": 0,
+    "what_worked": null,
+    "what_failed": null
+  },
+  "competitors": [],
+  "assets": {
+    "formats_available": [
+      "video",
+      "image",
+      "logo"
+    ],
+    "brand_guidelines_url": null,
+    "brand_colors": []
+  },
+  "approvals": {
+    "channel": "discord",
+    "daily_cap": 500,
+    "extra_rules": []
+  },
+  "status": "planning",
+  "onboarded_at": "2026-07-16",
+  "blockers_before_live": [
+    "facebook_page_id",
+    "instagram_business_id",
+    "ad_account_id",
+    "pixel_id"
+  ],
+  "setup": {
+    "business_verified_at": null,
+    "page_created_at": null,
+    "instagram_created_at": null,
+    "instagram_professional_at": null,
+    "ig_page_linked_at": null,
+    "payment_method_added_at": null,
+    "asset_access_granted_at": null,
+    "ad_account_created_at": null,
+    "pixel_created_at": null,
+    "system_user_token_at": null,
+    "assets_assigned_at": null,
+    "domain_verified_at": null,
+    "landing_deployed_at": null
+  },
+  "unit_economics": {
+    "gross_margin": null,
+    "average_order_value": null,
+    "customer_ltv": null,
+    "target_cac": null,
+    "target_mer": null
+  },
+  "content_preferences": {
+    "mode": "ai_assisted",
+    "ai_captions": true
+  }
+}

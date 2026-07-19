@@ -1,0 +1,25 @@
+[
+  {
+    "id": "INV-abdulwahabai-2026-07",
+    "slug": "abdulwahabai",
+    "company": "Abdul Wahab",
+    "period": "2026-07",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Growth management retainer — 2026-07",
+        "amount": 3000
+      },
+      {
+        "description": "One-time setup fee",
+        "amount": 750
+      }
+    ],
+    "subtotal": 3750,
+    "total": 3750,
+    "status": "draft",
+    "issued_at": "2026-07-16T18:43:03.754Z",
+    "due_date": "2026-07-23T18:43:03.754Z",
+    "stripe": null
+  }
+]
