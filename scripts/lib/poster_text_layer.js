@@ -40,11 +40,13 @@ function readableOn(hex) {
   return lum > 0.45 ? "#0A0A0A" : "#ffffff";
 }
 
-// Footer is intentionally minimal — just the two actionable contact details
-// (phone + website) on one centered line, so it reads clean rather than busy.
-function contactStripText(contact) {
+// Footer is intentionally minimal — just the two actionable contact details.
+// Phone is anchored to the LEFT corner and website to the RIGHT corner (rather
+// than one centered run-on line) so each detail reads instantly and the strip
+// frames the poster edge-to-edge.
+function contactStripParts(contact) {
   const c = contact || {};
-  return [c.phone, c.website_display].filter(Boolean).join("    ·    ");
+  return { phone: c.phone || "", website: c.website_display || "" };
 }
 
 /**
@@ -71,7 +73,8 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
   const PAD = Math.round(Math.min(width, height) * 0.083);
   const stripH = Math.round(80 * S);
 
-  const strip = contactStripText(contact);
+  const { phone: stripPhone, website: stripWebsite } = contactStripParts(contact);
+  const hasStrip = Boolean(stripPhone || stripWebsite);
 
   // ---- benefit rows ----
   const benefits = (copy.benefits || []).slice(0, 3);
@@ -172,7 +175,8 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
         letterSpacing: Math.round(0.3 * S),
         padding: `${Math.round(15 * S)}px ${Math.round(34 * S)}px`,
         borderRadius: Math.round(10 * S),
-        boxShadow: `0 8px 22px ${hexToRgba(accent, 0.4)}`,
+        // Tight, low-spread shadow for lift without a dated neon "glow" bloom.
+        boxShadow: `0 6px 16px ${hexToRgba(accent, 0.26)}`,
       },
       copy.cta
     )
@@ -185,9 +189,16 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
   children.push(el("div", { display: "flex", height: 1 }));
   children.push(el("div", { display: "flex", flexDirection: "column" }, block));
 
-  // bottom contact strip (absolute, full-bleed) — a single centered line:
-  // phone · website only, so it reads clean instead of busy.
-  if (strip) {
+  // bottom contact strip (absolute, full-bleed): phone pinned to the LEFT
+  // corner, website to the RIGHT corner, with an inset margin so neither hugs
+  // the very edge. When only one is present it sits at its own corner.
+  if (hasStrip) {
+    const stripPadX = Math.round(52 * S);
+    const stripText = { display: "flex", fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(28 * S), letterSpacing: Math.round(0.3 * S), color: "#ffffff" };
+    const stripChildren = [];
+    if (stripPhone) stripChildren.push(el("div", stripText, stripPhone));
+    if (stripWebsite) stripChildren.push(el("div", stripText, stripWebsite));
+    const justify = stripPhone && stripWebsite ? "space-between" : stripPhone ? "flex-start" : "flex-end";
     children.push(
       el(
         "div",
@@ -199,13 +210,13 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
           height: stripH,
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: justify,
+          paddingLeft: stripPadX,
+          paddingRight: stripPadX,
           backgroundColor: "rgba(10,10,10,0.72)",
           borderTop: `3px solid ${accent}`,
         },
-        [
-          el("div", { display: "flex", fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(28 * S), letterSpacing: Math.round(0.3 * S), color: "#ffffff" }, strip),
-        ]
+        stripChildren
       )
     );
   }
@@ -225,6 +236,6 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
     children
   );
 
-  const svg = await satori(tree, { width, height, fonts: posterFonts() });
+  const svg = await satori(tree, { width, height, fonts: posterFonts(brand) });
   return new Resvg(svg, { fitTo: { mode: "width", value: width }, background: "rgba(0,0,0,0)" }).render().asPng();
 }

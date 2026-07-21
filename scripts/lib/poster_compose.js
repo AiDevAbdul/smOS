@@ -279,6 +279,23 @@ async function scrimBuffer(width, height) {
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
+/** Top-down darkening confined to the top band, so the top-left logo always
+ *  separates from a busy/bright photo behind it (e.g. a light background or the
+ *  subject's face) instead of fighting it for legibility. Transparent below the
+ *  band so the middle of the photo is untouched. */
+async function topScrimBuffer(width, height) {
+  const band = Math.round(height * 0.3);
+  const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="t" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0.5"/>
+      <stop offset="55%" stop-color="#000" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </linearGradient></defs>
+    <rect width="${width}" height="${band}" fill="url(#t)"/>
+  </svg>`;
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
 /**
  * Build a soft drop shadow from a logo's own alpha: a blurred black silhouette,
  * so a bare (chip-less) logo still separates cleanly from a busy photo. Returns
@@ -310,17 +327,24 @@ async function logoShadowBuffer(logoResized, lw, lh, blur = 7) {
  * Used when the caller supplies `copy` with a headline; otherwise composePoster
  * uses the legacy logo+contact-bar-only layout.
  */
-async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone }) {
+async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone, position }) {
   const logo = brand?.visual?.logo || {};
   const logoUrl = logo.primary_url || logo.reverse_url || logo.mono_url;
 
-  const base = sharp(backgroundBuffer).resize(width, height, { fit: "cover" });
+  // `position` re-frames a `cover`-fit crop away from center (e.g. "left" keeps
+  // more of the source's left/subject-right side) so a centered subject can be
+  // shifted clear of the top-left logo instead of sitting under it. Default
+  // (undefined → sharp's "centre") preserves prior behavior for every caller
+  // that doesn't pass it.
+  const base = sharp(backgroundBuffer).resize(width, height, { fit: "cover", position });
   const composites = [];
   if (duotone) {
     const washColor = brand?.visual?.colors?.primary || "#111111";
     composites.push({ input: await colorWashBuffer(width, height, washColor, 0.14), blend: "soft-light" });
   }
   composites.push({ input: await scrimBuffer(width, height), top: 0, left: 0 });
+  // Top-band scrim so the logo separates cleanly from whatever is behind it.
+  composites.push({ input: await topScrimBuffer(width, height), top: 0, left: 0 });
 
   const adLayer = await renderAdLayer({ width, height, brand, copy, contact });
   composites.push({ input: adLayer, top: 0, left: 0 });
@@ -335,9 +359,14 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
       throw new PosterComposeError(`Failed to fetch logo from ${logoUrl}: ${e.message}`);
     }
     const pad = Math.round(Math.min(width, height) * 0.083);
-    const logoH = Math.round(Math.min(width, height) * 0.15);
+    // Cap BOTH height and width: a wide wordmark sized by height alone bleeds
+    // across the poster into the subject. `fit: inside` scales it to sit inside
+    // the top-left box (short-edge-proportional height, ~44% of width max),
+    // leaving clear space so it never collides with a centered subject/face.
+    const logoH = Math.round(Math.min(width, height) * 0.12);
+    const logoMaxW = Math.round(width * 0.44);
     const logoResized = await sharp(logoBuffer)
-      .resize({ height: logoH, fit: "contain", kernel: "lanczos3" })
+      .resize({ height: logoH, width: logoMaxW, fit: "inside", kernel: "lanczos3" })
       .png()
       .toBuffer();
     const { width: lw, height: lh } = await sharp(logoResized).metadata();
@@ -356,12 +385,12 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
  * poster for this feature (see checkPosterInputs in scripts/lib/guards.js for
  * the upstream preflight that should catch missing-logo cases earlier).
  */
-export async function composePoster({ backgroundBuffer, brand, contact, copy = null, width = 1080, height = 1080, duotone = true } = {}) {
+export async function composePoster({ backgroundBuffer, brand, contact, copy = null, width = 1080, height = 1080, duotone = true, position } = {}) {
   // Ad-poster path: when the caller supplies real marketing copy (a headline),
   // render the full text layer (headline/subhead/benefits/CTA). Otherwise fall
   // back to the legacy logo + contact-bar-only branding.
   if (copy && copy.headline) {
-    return composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone });
+    return composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone, position });
   }
 
   const logo = brand?.visual?.logo || {};
@@ -393,7 +422,7 @@ export async function composePoster({ backgroundBuffer, brand, contact, copy = n
   const barPng = await sharp(Buffer.from(barSvg)).png().toBuffer();
   const { height: barCanvasHeight } = await sharp(barPng).metadata();
 
-  let base = sharp(backgroundBuffer).resize(width, height, { fit: "cover" });
+  let base = sharp(backgroundBuffer).resize(width, height, { fit: "cover", position });
   const composites = [];
 
   if (duotone) {
