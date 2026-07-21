@@ -361,10 +361,11 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
     const pad = Math.round(Math.min(width, height) * 0.083);
     // Cap BOTH height and width: a wide wordmark sized by height alone bleeds
     // across the poster into the subject. `fit: inside` scales it to sit inside
-    // the top-left box (short-edge-proportional height, ~44% of width max),
+    // the top-left box (short-edge-proportional height, ~4.8% of width max),
     // leaving clear space so it never collides with a centered subject/face.
-    const logoH = Math.round(Math.min(width, height) * 0.12);
-    const logoMaxW = Math.round(width * 0.44);
+    // (Reduced 60% from the original 0.12/0.44 — that size read as oversized.)
+    const logoH = Math.round(Math.min(width, height) * 0.048);
+    const logoMaxW = Math.round(width * 0.176);
     const logoResized = await sharp(logoBuffer)
       .resize({ height: logoH, width: logoMaxW, fit: "inside", kernel: "lanczos3" })
       .png()
