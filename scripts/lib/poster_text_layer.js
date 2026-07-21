@@ -40,25 +40,11 @@ function readableOn(hex) {
   return lum > 0.45 ? "#0A0A0A" : "#ffffff";
 }
 
+// Footer is intentionally minimal — just the two actionable contact details
+// (phone + website) on one centered line, so it reads clean rather than busy.
 function contactStripText(contact) {
   const c = contact || {};
-  const handles = c.social_handles || {};
-  const left = [c.phone, c.website_display].filter(Boolean).join("  ·  ");
-  // City, State only — drop the street + ZIP so the strip stays on one line.
-  let cityState = "";
-  if (c.address) {
-    const parts = c.address.split(",").map((s) => s.trim());
-    const city = parts[parts.length - 2] || "";
-    const state = (parts[parts.length - 1] || "").replace(/\d/g, "").trim();
-    cityState = [city, state].filter(Boolean).join(", ");
-  }
-  const handle = handles.instagram
-    ? `@${String(handles.instagram).replace(/^@/, "")}`
-    : handles.facebook
-    ? String(handles.facebook).replace(/^@/, "")
-    : "";
-  const right = [cityState, handle].filter(Boolean).join("  ·  ");
-  return { left, right };
+  return [c.phone, c.website_display].filter(Boolean).join("    ·    ");
 }
 
 /**
@@ -67,10 +53,13 @@ function contactStripText(contact) {
  * @param {number}   o.width, o.height
  * @param {object}   o.brand    brand_profile.json (reads visual.colors)
  * @param {object}   o.copy     { eyebrow, headline, subhead, benefits[], cta }
- * @param {Buffer}   [o.logoBuffer]  raw logo PNG (composited inline; no chip)
  * @param {object}   [o.contact]     client contact for the bottom strip
+ *
+ * NOTE: the logo is NOT drawn here — poster_compose.js composites the original
+ * logo with sharp (high-quality Lanczos downscale + soft shadow) for maximum
+ * clarity, which beats embedding it through Satori/resvg's image path.
  */
-export async function renderAdLayer({ width, height, brand, copy, logoBuffer, contact } = {}) {
+export async function renderAdLayer({ width, height, brand, copy, contact } = {}) {
   const colors = brand?.visual?.colors || {};
   const primary = colors.primary || "#29ABE2";
   const accent = colors.accent || primary;
@@ -81,9 +70,6 @@ export async function renderAdLayer({ width, height, brand, copy, logoBuffer, co
   const S = Math.min(width, height) / 1080;
   const PAD = Math.round(Math.min(width, height) * 0.083);
   const stripH = Math.round(80 * S);
-
-  const logoData = logoBuffer ? `data:image/png;base64,${logoBuffer.toString("base64")}` : null;
-  const logoH = Math.round(150 * S);
 
   const strip = contactStripText(contact);
 
@@ -194,27 +180,14 @@ export async function renderAdLayer({ width, height, brand, copy, logoBuffer, co
 
   // ---- children of the root ----
   const children = [];
-  // top: bare logo (no chip), with a soft shadow for separation on the photo
-  if (logoData) {
-    children.push(
-      el("div", { display: "flex" }, [
-        {
-          type: "img",
-          props: {
-            src: logoData,
-            height: logoH,
-            style: { objectFit: "contain", filter: "drop-shadow(0 4px 14px rgba(0,0,0,0.55))" },
-          },
-        },
-      ])
-    );
-  } else {
-    children.push(el("div", { display: "flex", height: 1 }));
-  }
+  // top spacer — the logo is composited separately by poster_compose.js (sharp),
+  // so here we just reserve the top zone and bottom-anchor the marketing block.
+  children.push(el("div", { display: "flex", height: 1 }));
   children.push(el("div", { display: "flex", flexDirection: "column" }, block));
 
-  // bottom contact strip (absolute, full-bleed)
-  if (strip.left || strip.right) {
+  // bottom contact strip (absolute, full-bleed) — a single centered line:
+  // phone · website only, so it reads clean instead of busy.
+  if (strip) {
     children.push(
       el(
         "div",
@@ -226,14 +199,12 @@ export async function renderAdLayer({ width, height, brand, copy, logoBuffer, co
           height: stripH,
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          padding: `0 ${PAD}px`,
+          justifyContent: "center",
           backgroundColor: "rgba(10,10,10,0.72)",
           borderTop: `3px solid ${accent}`,
         },
         [
-          el("div", { display: "flex", flexShrink: 0, fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(26 * S), color: "#ffffff" }, strip.left || ""),
-          el("div", { display: "flex", flexShrink: 0, fontFamily: FONT_FAMILIES.body, fontWeight: 500, fontSize: Math.round(23 * S), color: "rgba(255,255,255,0.8)" }, strip.right || ""),
+          el("div", { display: "flex", fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(28 * S), letterSpacing: Math.round(0.3 * S), color: "#ffffff" }, strip),
         ]
       )
     );
