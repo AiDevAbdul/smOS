@@ -280,23 +280,39 @@ async function scrimBuffer(width, height) {
 }
 
 /**
- * Ad-poster path: photo + brand wash + legibility scrim + the full marketing
- * text layer (eyebrow/headline/subhead/benefits/CTA + bare logo + contact
- * strip, rendered by poster_text_layer.js via Satori). Used when the caller
- * supplies `copy` with a headline; otherwise composePoster uses the legacy
- * logo+contact-bar-only layout.
+ * Build a soft drop shadow from a logo's own alpha: a blurred black silhouette,
+ * so a bare (chip-less) logo still separates cleanly from a busy photo. Returns
+ * { shadow, width, height } — shadow is a PNG buffer sized to the padded canvas.
+ */
+async function logoShadowBuffer(logoResized, lw, lh, blur = 7) {
+  const pad = Math.ceil(blur * 2);
+  const canvasW = lw + pad * 2;
+  const canvasH = lh + pad * 2;
+  // Black canvas masked by the logo's alpha (dest-in keeps black only where the
+  // logo is opaque), then blurred → a soft shadow shaped like the logo.
+  const shadow = await sharp({ create: { width: canvasW, height: canvasH, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input: await sharp({ create: { width: lw, height: lh, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 1 } } }).png().toBuffer(), left: pad, top: pad }])
+    .composite([{ input: logoResized, left: pad, top: pad, blend: "dest-in" }])
+    .blur(blur)
+    .png()
+    .toBuffer();
+  return { shadow, pad, canvasW, canvasH };
+}
+
+/**
+ * Ad-poster path: photo + brand wash + legibility scrim + the marketing text
+ * layer (eyebrow/headline/subhead/benefits/CTA + contact strip, rendered by
+ * poster_text_layer.js via Satori) + the logo composited SEPARATELY with sharp.
+ *
+ * The logo is drawn here rather than inside Satori because sharp's Lanczos
+ * downscale from the original high-res asset (plus an alpha-derived soft shadow)
+ * renders it markedly crisper than embedding it through resvg's image path.
+ * Used when the caller supplies `copy` with a headline; otherwise composePoster
+ * uses the legacy logo+contact-bar-only layout.
  */
 async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone }) {
   const logo = brand?.visual?.logo || {};
   const logoUrl = logo.primary_url || logo.reverse_url || logo.mono_url;
-  let logoBuffer = null;
-  if (logoUrl) {
-    try {
-      logoBuffer = await fetchBuffer(logoUrl);
-    } catch (e) {
-      throw new PosterComposeError(`Failed to fetch logo from ${logoUrl}: ${e.message}`);
-    }
-  }
 
   const base = sharp(backgroundBuffer).resize(width, height, { fit: "cover" });
   const composites = [];
@@ -305,8 +321,30 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
     composites.push({ input: await colorWashBuffer(width, height, washColor, 0.14), blend: "soft-light" });
   }
   composites.push({ input: await scrimBuffer(width, height), top: 0, left: 0 });
-  const adLayer = await renderAdLayer({ width, height, brand, copy, logoBuffer, contact });
+
+  const adLayer = await renderAdLayer({ width, height, brand, copy, contact });
   composites.push({ input: adLayer, top: 0, left: 0 });
+
+  // Logo: crisp Lanczos downscale of the original + soft shadow, top-left inside
+  // the same safe-zone padding the text layer uses (0.083 of the short edge).
+  if (logoUrl) {
+    let logoBuffer;
+    try {
+      logoBuffer = await fetchBuffer(logoUrl);
+    } catch (e) {
+      throw new PosterComposeError(`Failed to fetch logo from ${logoUrl}: ${e.message}`);
+    }
+    const pad = Math.round(Math.min(width, height) * 0.083);
+    const logoH = Math.round(Math.min(width, height) * 0.15);
+    const logoResized = await sharp(logoBuffer)
+      .resize({ height: logoH, fit: "contain", kernel: "lanczos3" })
+      .png()
+      .toBuffer();
+    const { width: lw, height: lh } = await sharp(logoResized).metadata();
+    const { shadow, pad: sPad } = await logoShadowBuffer(logoResized, lw, lh);
+    composites.push({ input: shadow, top: pad - sPad + Math.round(logoH * 0.03), left: pad - sPad });
+    composites.push({ input: logoResized, top: pad, left: pad });
+  }
 
   return base.composite(composites).png().toBuffer();
 }
