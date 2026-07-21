@@ -209,7 +209,7 @@ export function checkCompliance(toolName, input, ctx = {}) {
  *      Detection is explicit-flag based (mirrors ai-disclosure); we never inspect pixels.
  */
 export function checkBrandCompliance(toolName, input = {}, ctx = {}) {
-  if (!toolName.includes("create_ad")) return PASS;
+  if (!toolName.includes("create_ad") && toolName !== "create_organic_post") return PASS;
   const creative = input?.creative || input?.object_story_spec || input || {};
   const profile = profileFor(input, ctx);
   const slug = profile?.slug || profile?.client_slug || ctx?.slug || null;
@@ -342,7 +342,7 @@ export async function checkPixel(toolName, input, ctx = {}) {
  * (no silent omission). Detection is explicit-flag based — we never guess "is this AI".
  */
 export function checkAiDisclosure(toolName, input = {}) {
-  if (!toolName.includes("create_ad")) return PASS;
+  if (!toolName.includes("create_ad") && toolName !== "create_organic_post") return PASS;
   const creative = input?.creative || input || {};
   const aiGenerated =
     input.ai_generated === true ||
@@ -427,6 +427,43 @@ export function checkZeroStartPrereqs(profile, { need = ["page", "ad_account"] }
     message: missing.length
       ? `Zero-start prerequisites missing: ${missing.map((m) => `${m.label} (→ ${m.fix})`).join("; ")}`
       : "All required accounts present.",
+  };
+}
+
+/**
+ * Preflight for branded poster generation (see scripts/lib/poster_compose.js,
+ * skills/image-gen/image-gen.js, skills/image-gen/image-gen-ads.js). A poster
+ * without the client's logo, or with no contact/handle info at all, is not a
+ * valid poster for this feature — fail closed with a clear fix, same style as
+ * checkZeroStartPrereqs above, rather than silently shipping a blank bar.
+ *
+ * Pure (no I/O): pass the loaded brand_profile + client_profile.
+ */
+export function checkPosterInputs(brand, clientProfile) {
+  const missing = [];
+  const logo = brand?.visual?.logo || {};
+  const logoUrl = logo.reverse_url || logo.primary_url || logo.mono_url;
+  if (!brand?.visual?.logo_approved_at || !logoUrl) {
+    missing.push({ asset: "logo", label: "approved brand logo", fix: "run /brand-visual to design + approve a logo first" });
+  }
+
+  const contact = clientProfile?.contact || {};
+  const handles = contact.social_handles || {};
+  const hasContact = Boolean(contact.phone || contact.website_display || handles.instagram || handles.facebook || handles.tiktok);
+  if (!hasContact) {
+    missing.push({
+      asset: "contact",
+      label: "contact/handle info",
+      fix: "set at least one of client_profile.contact.{phone, website_display, social_handles.instagram, social_handles.facebook, social_handles.tiktok}",
+    });
+  }
+
+  return {
+    ok: missing.length === 0,
+    missing,
+    message: missing.length
+      ? `Poster inputs missing: ${missing.map((m) => `${m.label} (→ ${m.fix})`).join("; ")}`
+      : "Logo + contact info present.",
   };
 }
 
