@@ -61,8 +61,17 @@ function byScore(arr) {
 
 function firstSentence(text, maxLen = 60) {
   if (!text) return "";
-  const s = String(text).split(/(?<=[.!?])\s+/)[0].trim();
-  return s.length > maxLen ? s.slice(0, maxLen - 1).trim() + "…" : s;
+  // First clause: split on sentence punctuation OR an em/en-dash aside, so a
+  // long "A, B, or C — one shop, 30+ years" caption yields a punchy headline
+  // rather than the whole run-on line.
+  let s = String(text).split(/(?<=[.!?])\s+|\s+[—–]\s+/)[0].trim();
+  if (s.length > maxLen) {
+    // Truncate on a word boundary (never mid-word), then ellipsize.
+    const cut = s.slice(0, maxLen);
+    const lastSpace = cut.lastIndexOf(" ");
+    s = (lastSpace > maxLen * 0.5 ? cut.slice(0, lastSpace) : cut).replace(/[\s,;:.–—-]+$/, "") + "…";
+  }
+  return s;
 }
 
 /** Paid: build poster copy from an ad_copy.json angle. */
@@ -108,12 +117,15 @@ export function posterCopyFromItem(item, { brandName } = {}) {
   if (!item) return null;
   const headline = firstSentence(item.message);
   if (!headline) return null;
-  const keywords = Array.isArray(item.keywords) ? item.keywords.filter(Boolean) : [];
+  // Organic items carry a caption + SEO keywords, NOT ad-structured benefits —
+  // rendering search phrases as bullets reads awkwardly. So an organic poster is
+  // intentionally headline + CTA + contact only; the post caption carries the
+  // detail. (Benefit bullets are a paid-only feature, from angle.descriptions.)
   return {
     eyebrow: brandName || "",
     headline,
     subhead: "",
-    benefits: keywords.slice(0, 3),
+    benefits: [],
     cta: PILLAR_CTA[item.pillar_id] || "Learn More",
   };
 }

@@ -85,11 +85,11 @@
   "visual": {
     "moodboard_url": null,
     "logo": {
-      "primary_url": "clients/abdulwahabai/assets/logo.svg",
+      "primary_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/brand/logo.svg",
       "mark_url": null,
-      "wordmark_url": "clients/abdulwahabai/assets/logo.svg",
-      "mono_url": "clients/abdulwahabai/assets/logo.svg",
-      "reverse_url": "clients/abdulwahabai/assets/logo-white.svg",
+      "wordmark_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/brand/logo.svg",
+      "mono_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/brand/logo.svg",
+      "reverse_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/brand/logo-white.svg",
       "svg_url": null,
       "clear_space": "Minimum clear space equal to the height of the 'A' on all sides.",
       "min_size": "24px height for digital; 12mm for print."

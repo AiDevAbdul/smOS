@@ -322,9 +322,12 @@ async function auditAdAccount(graph, adAccountId, pixelId) {
   const [account, campaigns, audiences, pixelStats] = await Promise.all([
     graph.get(`/${act}`, { fields: "id,name,account_status,age,currency,timezone_name,balance,amount_spent,funding_source_details" }),
     graph.paginate(`/${act}/campaigns`, {
-      fields: "id,name,status,effective_status,objective,created_time,insights.date_preset(lifetime){spend,impressions,clicks,actions,action_values,cost_per_action_type,purchase_roas,frequency}",
+      fields: "id,name,status,effective_status,objective,created_time,insights.date_preset(maximum){spend,impressions,clicks,actions,action_values,cost_per_action_type,purchase_roas,frequency}",
       limit: 100,
-    }, 500).catch(() => []),
+    }, 500).catch((e) => {
+      console.error(`[audit] campaigns fetch failed: ${e.message}`);
+      return [];
+    }),
     graph.get(`/${act}/customaudiences`, {
       fields: "id,name,subtype,approximate_count_lower_bound,approximate_count_upper_bound,operation_status,time_updated",
       limit: 200,

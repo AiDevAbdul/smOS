@@ -436,6 +436,36 @@
       "published_at": null,
       "error": null,
       "schedule_native": false
+    },
+    {
+      "id": "abdulwahabai-2026-07-21-educate-agentic-intro",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-07-21T16:00:00.000Z",
+      "message": "Introduction to Agentic AI: what it actually is, and how it's different from a chatbot.\n\nAn agent doesn't just answer — it plans, takes actions across your tools, and checks its own work. That's the shift worth understanding before you buy (or build) anything.\n\nA plain-English breakdown, no hype and no jargon.\n\nWant this explained for your business specifically? Book your call — link in bio.",
+      "link": null,
+      "image_url": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "agentic AI",
+        "AI automation"
+      ],
+      "alt_text": "Branded graphic introducing agentic AI and how it differs from a chatbot.",
+      "hashtags": [
+        "#agenticAI",
+        "#AIautomation",
+        "#AIagents",
+        "#AIeducation",
+        "#futureofwork"
+      ],
+      "produced_by": "ai_assisted",
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
     }
   ]
 }

@@ -49,8 +49,8 @@
     "business_id": "1146469969685974",
     "system_user_id": null,
     "pixel_installed": false,
-    "website_url": null,
-    "domain": null
+    "website_url": "https://abdulwahabai.com",
+    "domain": "abdulwahabai.com"
   },
   "kpis": {
     "target_cpa": null,
@@ -111,6 +111,17 @@
   "content_preferences": {
     "mode": "ai_assisted",
     "ai_captions": true
+  },
+  "contact": {
+    "phone": "+923108643121",
+    "website_display": "abdulwahabai.com",
+    "email": null,
+    "address": null,
+    "social_handles": {
+      "instagram": "@aidevabdul",
+      "facebook": "@AbdulWahabAi",
+      "tiktok": null
+    }
   },
   "seo_keywords": [
     "AI automation",

@@ -103,6 +103,17 @@
     "phone": "(541) 641-8877",
     "primary_email": "contact@blueroseauto.com"
   },
+  "contact": {
+    "phone": "(541) 641-8877",
+    "website_display": "blueroseauto.com",
+    "email": "contact@blueroseauto.com",
+    "address": "3436 Olympic St, Springfield, OR 97478",
+    "social_handles": {
+      "instagram": "blueroseauto",
+      "facebook": "BlueRoseAuto",
+      "tiktok": null
+    }
+  },
   "drive_folder_id": "1mixyt5-wb_dD9_77WgVngFIxnAPyRsPl",
   "kpis": {
     "aware": {

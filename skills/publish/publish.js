@@ -15,6 +15,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { checkAiDisclosure, checkBrandCompliance } from "../../scripts/lib/guards.js";
 import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -240,6 +241,15 @@ async function main() {
     }
 
     try {
+      // AI-disclosure / brand-compliance apply to organic posts too — Meta's
+      // ai_generated fields never reach the Graph API payload for organic
+      // photos/media, so the meta-graph.js chokepoint can't see them; check here
+      // against the calendar item itself before anything goes out.
+      const disclosureCheck = checkAiDisclosure("create_organic_post", item);
+      if (!disclosureCheck.ok) throw new Error(disclosureCheck.reason);
+      const brandCheck = checkBrandCompliance("create_organic_post", item, { slug });
+      if (!brandCheck.ok) throw new Error(brandCheck.reason);
+
       let result;
       if (item.platform === "facebook") {
         if (isTbd(pageId)) throw new Error("facebook_page_id is TBD in client_profile");

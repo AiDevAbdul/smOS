@@ -800,6 +800,20 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
     ig_bio   = (ig.get("bio",   "") or "")[:120]
     ds_css   = design_system_css()
 
+    # ── Pre-compute opportunity sizing grid (avoids nested f-string in Py <3.12) ──
+    opp_sizing_grid = (
+        '<div class="card-grid">'
+        '<div class="card">'
+        '<div class="card-label">Bottom-up (from budget)</div>'
+        + sizing_table(bottom_up, "Provide monthly budget to generate.")
+        + '</div>'
+        '<div class="card">'
+        '<div class="card-label">Top-down (from revenue goal)</div>'
+        + sizing_table(top_down, "Provide revenue goal to generate.")
+        + '</div>'
+        '</div>'
+    )
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -986,16 +1000,7 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
         </div>
         <div class="cta-footnote" style="margin-top:8px">Benchmarks as of {bench_asof} · last refreshed {bench_refreshed}. Each figure is cited to its published source above.</div>
       </div>
-      {f"""<div class="card-grid">
-        <div class="card">
-          <div class="card-label">Bottom-up (from budget)</div>
-          {sizing_table(bottom_up, "Provide monthly budget to generate.")}
-        </div>
-        <div class="card">
-          <div class="card-label">Top-down (from revenue goal)</div>
-          {sizing_table(top_down, "Provide revenue goal to generate.")}
-        </div>
-      </div>"""}
+      {opp_sizing_grid}
     </div>
 
     {niche_block}

@@ -14,7 +14,7 @@
  * wired — both are reported as skipped, never silently dropped.
  *
  * Usage:
- *   node skills/image-gen/image-gen.js <slug> [--item <id>] [--prompt "..."] [--model bfl/flux-1-dev] [--dry-run]
+ *   node skills/image-gen/image-gen.js <slug> [--item <id>] [--prompt "..."] [--model bfl/flux-1-dev] [--theme dark|light] [--dry-run]
  */
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -47,10 +47,10 @@ function isTargetable(item) {
   return item.format === "image" && !item.image_url;
 }
 
-async function generateForItem(item, { slug, profile, brand, model, promptOverride, dryRun }) {
+async function generateForItem(item, { slug, profile, brand, model, promptOverride, dryRun, theme }) {
   const prompt = promptOverride || buildPrompt(item, profile);
   const copy = posterCopyFromItem(item, { brandName: brand?.verbal?.name });
-  if (dryRun) return { id: item.id, prompt, copy, dry_run: true };
+  if (dryRun) return { id: item.id, prompt, copy, theme, dry_run: true };
 
   const { image_url, local_path, brand_kit } = await generateBrandedPoster({
     slug,
@@ -60,17 +60,26 @@ async function generateForItem(item, { slug, profile, brand, model, promptOverri
     contact: profile?.contact,
     copy,
     model,
+    theme,
     tags: [item.pillar_id].filter(Boolean),
     altText: item.alt_text,
   });
 
-  item.image_url = image_url;
-  item.local_path = local_path;
+  // Light-mode variants are additional copies, not replacements — only the
+  // default dark render is the item's canonical image_url/local_path so
+  // /publish keeps shipping the original unless told otherwise.
+  if (theme !== "light") {
+    item.image_url = image_url;
+    item.local_path = local_path;
+  } else {
+    item.image_url_light = image_url;
+    item.local_path_light = local_path;
+  }
   item.ai_generated = true;
   item.ai_disclosed = true;
   item.brand_kit = brand_kit;
 
-  return { id: item.id, prompt, image_url, local_path };
+  return { id: item.id, prompt, theme, image_url, local_path };
 }
 
 async function main() {
@@ -86,6 +95,12 @@ async function main() {
   const promptOverride = promptIdx >= 0 ? args[promptIdx + 1] : null;
   const modelIdx = args.indexOf("--model");
   const model = modelIdx >= 0 ? args[modelIdx + 1] : undefined;
+  const themeIdx = args.indexOf("--theme");
+  const theme = themeIdx >= 0 ? args[themeIdx + 1] : "dark";
+  if (theme !== "dark" && theme !== "light") {
+    console.error(`Unknown --theme "${theme}" — must be "dark" or "light".`);
+    process.exit(1);
+  }
   const dryRun = args.includes("--dry-run");
 
   const profilePath = P.clientFile(slug, "client_profile.json");
@@ -138,7 +153,7 @@ async function main() {
   const errors = [];
   for (const item of targets) {
     try {
-      generated.push(await generateForItem(item, { slug, profile, brand, model, promptOverride: itemId ? promptOverride : null, dryRun }));
+      generated.push(await generateForItem(item, { slug, profile, brand, model, promptOverride: itemId ? promptOverride : null, dryRun, theme }));
     } catch (e) {
       errors.push({ id: item.id, error: e.message });
       item.error = e.message;

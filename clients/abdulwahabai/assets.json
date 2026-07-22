@@ -1,0 +1,77 @@
+{
+  "client_slug": "abdulwahabai",
+  "assets": [
+    {
+      "asset_id": "img_abdulwahabai-2026-07-21-educate-agentic-intro",
+      "client_slug": "abdulwahabai",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro.png",
+      "hash": "399d9262e2eecfa0df71ed05984f42ffdef079a516dfd80d11c6de53d53cf0c3",
+      "angle_id": null,
+      "tags": [
+        "educate"
+      ],
+      "alt_text": "Branded graphic introducing agentic AI and how it differs from a chatbot.",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T17:19:32.600Z"
+    },
+    {
+      "asset_id": "img_abdulwahabai-2026-07-21-educate-agentic-intro_v2",
+      "client_slug": "abdulwahabai",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_abdulwahabai-2026-07-21-educate-agentic-intro",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro.png",
+      "hash": "bffe13abfb0d50b0f0932db49ff1b45f986a7f72c3080c6c09843f0171e20edb",
+      "angle_id": null,
+      "tags": [
+        "educate"
+      ],
+      "alt_text": "Branded graphic introducing agentic AI and how it differs from a chatbot.",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T17:20:15.285Z"
+    },
+    {
+      "asset_id": "img_abdulwahabai-2026-07-21-educate-agentic-intro-light",
+      "client_slug": "abdulwahabai",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro-light.png",
+      "hash": "3b4fe043e303a8436600681063449679ba4dfc7a42a4d7f85bb92ac838c000b6",
+      "angle_id": null,
+      "tags": [
+        "educate"
+      ],
+      "alt_text": "Branded graphic introducing agentic AI and how it differs from a chatbot.",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T17:28:39.609Z"
+    }
+  ]
+}

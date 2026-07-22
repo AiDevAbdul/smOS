@@ -103,6 +103,27 @@ export function normalizeContentPreferences(raw) {
   };
 }
 
+// Human-facing business contact info — printed on branded poster imagery
+// (logo/contact bar, see scripts/lib/poster_compose.js) and nowhere else today.
+// Distinct from accounts.website_url (the Meta-facing tracked URL): these are
+// display strings the client wants a customer to see on a graphic. All optional;
+// the poster pipeline (not this schema) enforces at least one being present.
+export function normalizeContact(raw) {
+  const c = raw || {};
+  const handles = c.social_handles || {};
+  return {
+    phone: pick(c, "phone") ?? null,
+    website_display: pick(c, "website_display") ?? null,
+    email: pick(c, "email", "primary_email") ?? null,
+    address: pick(c, "address") ?? null,
+    social_handles: {
+      instagram: pick(handles, "instagram") ?? null,
+      facebook: pick(handles, "facebook") ?? null,
+      tiktok: pick(handles, "tiktok") ?? null,
+    },
+  };
+}
+
 export function normalize(raw) {
   const r = raw || {};
   return {
@@ -111,6 +132,7 @@ export function normalize(raw) {
     setup: normalizeSetup(r.setup),
     unit_economics: normalizeUnitEconomics(r.unit_economics),
     content_preferences: normalizeContentPreferences(r.content_preferences),
+    contact: normalizeContact(r.contact),
   };
 }
 

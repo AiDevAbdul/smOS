@@ -35,6 +35,10 @@ export function normalizeItem(raw) {
     message: pick(r, "message", "caption", "copy") ?? "",
     link: pick(r, "link", "url") ?? null,
     image_url: pick(r, "image_url") ?? null,
+    // local filesystem copy of image_url, written by /image-gen for fast
+    // review without a network round trip — informational only, /publish
+    // always posts from image_url.
+    local_path: pick(r, "local_path") ?? null,
     video_url: pick(r, "video_url") ?? null,
     items: asArray(pick(r, "items")), // carousel slides
     // Social-SEO (2.6)
@@ -43,6 +47,11 @@ export function normalizeItem(raw) {
     hashtags: asArray(pick(r, "hashtags")),
     // who writes the copy: "smos_ai" (AI-drafted) or "client_team" (opt-out)
     produced_by: pick(r, "produced_by") ?? "smos_ai",
+    // set by /image-gen when image_url was AI-generated (Krea) — read by
+    // /publish's ai-disclosure + brand-compliance guards before posting
+    ai_generated: pick(r, "ai_generated") === true,
+    ai_disclosed: pick(r, "ai_disclosed") === true,
+    brand_kit: pick(r, "brand_kit") ?? null,
     // publish runtime fields (kept so a round-trip through /publish is lossless)
     status: (pick(r, "status") || "pending").toLowerCase(),
     published_id: pick(r, "published_id") ?? null,

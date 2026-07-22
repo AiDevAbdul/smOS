@@ -32,6 +32,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | Audience targeting plan | `/audience-map` |
 | Campaign strategy | `/strategy-brief` |
 | Write ad copy | `/creative` |
+| Generate branded poster imagery (organic + paid, logo/contact/handles composited in) | `/image-gen` |
 | Design or evaluate a structured creative test (hook/concept/format) | `/creative-test` |
 | Launch a campaign | `/launch` |
 | Check performance | `/analyze` |

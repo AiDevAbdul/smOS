@@ -1,0 +1,35 @@
+{
+  "client_slug": "blue-rose-auto",
+  "status": "complete",
+  "strategy": {
+    "positioning_statement": "Springfield/Eugene's precision auto care shop for drivers who want dealership-grade craftsmanship — mechanical and cosmetic — without dealership runaround.",
+    "values": ["craftsmanship", "honesty", "precision", "reliability"],
+    "positioning_approved_at": "2026-07-22T00:00:00.000Z"
+  },
+  "verbal": {
+    "name": "Blue Rose Auto",
+    "name_approved_at": "2026-07-22T00:00:00.000Z"
+  },
+  "visual": {
+    "logo": {
+      "primary_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png",
+      "reverse_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png",
+      "source": "https://blueroseauto.com/wp-content/uploads/2026/01/Blue-Rose-Auto.webp",
+      "clear_space": "0.25x shield height on all sides",
+      "min_size": "80px height"
+    },
+    "logo_approved_at": "2026-07-22T00:00:00.000Z",
+    "colors": {
+      "primary": "#29ABE2",
+      "secondary": "#939598",
+      "accent": "#29ABE2",
+      "neutrals": ["#000000", "#FFFFFF"]
+    },
+    "typography": {
+      "heading": "sans-serif (bold, condensed)",
+      "body": "sans-serif"
+    },
+    "imagery_style": "clean, precision-shop automotive photography — not stock-generic",
+    "ai_generated": false
+  }
+}

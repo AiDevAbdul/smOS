@@ -61,11 +61,24 @@ function contactStripParts(contact) {
  * logo with sharp (high-quality Lanczos downscale + soft shadow) for maximum
  * clarity, which beats embedding it through Satori/resvg's image path.
  */
-export async function renderAdLayer({ width, height, brand, copy, contact } = {}) {
+export async function renderAdLayer({ width, height, brand, copy, contact, theme = "dark" } = {}) {
   const colors = brand?.visual?.colors || {};
   const primary = colors.primary || "#29ABE2";
   const accent = colors.accent || primary;
   const ctaText = readableOn(accent);
+  const isLight = theme === "light";
+  // Dark theme: white text over a darkened photo (scrimBuffer). Light theme:
+  // ink text over a lightened photo (see poster_compose.js scrimBuffer(theme)) —
+  // matches the brand kit's own "Light #F5F5F7 canvas, ink #1D1D1F" template spec
+  // (brand_profile.social.templates) instead of forcing every poster dark.
+  const ink = colors.secondary || "#1D1D1F";
+  const headlineColor = isLight ? ink : "#ffffff";
+  const subheadColor = isLight ? hexToRgba(ink, 0.82) : "rgba(255,255,255,0.92)";
+  const benefitColor = isLight ? hexToRgba(ink, 0.92) : "rgba(255,255,255,0.96)";
+  const headlineShadow = isLight ? "none" : "0 3px 18px rgba(0,0,0,0.55)";
+  const subheadShadow = isLight ? "none" : "0 2px 10px rgba(0,0,0,0.5)";
+  const stripBg = isLight ? "rgba(255,255,255,0.82)" : "rgba(10,10,10,0.72)";
+  const stripColor = isLight ? ink : "#ffffff";
 
   // Type scale keyed off the short edge so square + vertical both stay in
   // proportion. Base tuned at 1080.
@@ -90,7 +103,7 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
         flexShrink: 0,
         boxShadow: `0 0 0 ${Math.round(5 * S)}px ${hexToRgba(accent, 0.25)}`,
       }),
-      el("div", { fontFamily: FONT_FAMILIES.body, fontWeight: 500, fontSize: Math.round(33 * S), color: "rgba(255,255,255,0.96)" }, b),
+      el("div", { fontFamily: FONT_FAMILIES.body, fontWeight: 500, fontSize: Math.round(33 * S), color: benefitColor }, b),
     ])
   );
 
@@ -127,10 +140,10 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
         fontWeight: 600,
         fontSize: Math.round(94 * S),
         lineHeight: 1.02,
-        color: "#ffffff",
+        color: headlineColor,
         letterSpacing: Math.round(-0.5 * S),
         textTransform: "uppercase",
-        textShadow: "0 3px 18px rgba(0,0,0,0.55)",
+        textShadow: headlineShadow,
         marginBottom: Math.round(16 * S),
         maxWidth: width - PAD * 2,
       },
@@ -146,8 +159,8 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
           fontFamily: FONT_FAMILIES.body,
           fontWeight: 500,
           fontSize: Math.round(37 * S),
-          color: "rgba(255,255,255,0.92)",
-          textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+          color: subheadColor,
+          textShadow: subheadShadow,
           marginBottom: Math.round(28 * S),
           maxWidth: width - PAD * 2,
         },
@@ -194,7 +207,7 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
   // the very edge. When only one is present it sits at its own corner.
   if (hasStrip) {
     const stripPadX = Math.round(52 * S);
-    const stripText = { display: "flex", fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(28 * S), letterSpacing: Math.round(0.3 * S), color: "#ffffff" };
+    const stripText = { display: "flex", fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(28 * S), letterSpacing: Math.round(0.3 * S), color: stripColor };
     const stripChildren = [];
     if (stripPhone) stripChildren.push(el("div", stripText, stripPhone));
     if (stripWebsite) stripChildren.push(el("div", stripText, stripWebsite));
@@ -213,7 +226,7 @@ export async function renderAdLayer({ width, height, brand, copy, contact } = {}
           justifyContent: justify,
           paddingLeft: stripPadX,
           paddingRight: stripPadX,
-          backgroundColor: "rgba(10,10,10,0.72)",
+          backgroundColor: stripBg,
           borderTop: `3px solid ${accent}`,
         },
         stripChildren

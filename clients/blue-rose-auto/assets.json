@@ -1,0 +1,318 @@
+{
+  "client_slug": "blue-rose-auto",
+  "assets": [
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-13-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer.png",
+      "hash": "c979339cf6a22b849baa0481c3c989be4be9a01fe4cbd41625bddf113e907188",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T11:40:22.144Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-22-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer.png",
+      "hash": "1a31beabd099d5c287b8fe1703d5537104173452458c067987f5da46ebd174e7",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T11:40:33.222Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-31-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer.png",
+      "hash": "b3d23931bf0fd622d2b08792e1333dc27f063cb0510efedd337057a580e6a1a5",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T11:40:43.410Z"
+    },
+    {
+      "asset_id": "img_AWARE_LEGACY-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad.png",
+      "hash": "f3d211750b5795ee81b7db50e4d0afb3d7d0d4b69b5b76b2033832abe65fb5ac",
+      "angle_id": null,
+      "tags": [
+        "AWARE_LEGACY"
+      ],
+      "alt_text": "AWARE_LEGACY ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T12:25:28.652Z"
+    },
+    {
+      "asset_id": "img_AWARE_LEGACY-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_AWARE_LEGACY-ad",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad.png",
+      "hash": "830b11063979eed168112b2eeb2c5e2d49499050cd839c338db1914b38062f5d",
+      "angle_id": null,
+      "tags": [
+        "AWARE_LEGACY"
+      ],
+      "alt_text": "AWARE_LEGACY ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T12:28:18.370Z"
+    },
+    {
+      "asset_id": "img_LEADS_TESLAEV_WHITESPACE-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad.png",
+      "hash": "4ed00ad6a55acc914ec2351419aed4d2d70fd9f5df8db2fedc8729ff97e148c7",
+      "angle_id": null,
+      "tags": [
+        "LEADS_TESLAEV_WHITESPACE"
+      ],
+      "alt_text": "LEADS_TESLAEV_WHITESPACE ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T12:32:15.888Z"
+    },
+    {
+      "asset_id": "img_LEADS_MECH_TRUST-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad.png",
+      "hash": "07c813b9e1726f231a8c066330d459535484b2d28a8676f33a51813f92712433",
+      "angle_id": null,
+      "tags": [
+        "LEADS_MECH_TRUST"
+      ],
+      "alt_text": "LEADS_MECH_TRUST ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T12:33:28.081Z"
+    },
+    {
+      "asset_id": "img_LEADS_MECH_TRUST-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_MECH_TRUST-ad",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad.png",
+      "hash": "fea92650838ea3736ff8a8d142efab08ce945bd6f50f07e180204c17452992b0",
+      "angle_id": null,
+      "tags": [
+        "LEADS_MECH_TRUST"
+      ],
+      "alt_text": "LEADS_MECH_TRUST ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T13:30:13.705Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-ppf-poster",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-ppf-poster.png",
+      "hash": "08cf5517cf997eec7c9237fbed382674efccf551321e9d81bb9ab5f679342ca8",
+      "angle_id": null,
+      "tags": [
+        "ppf",
+        "paid-or-organic-poster"
+      ],
+      "alt_text": "Blue Rose Auto paint protection film (PPF) service poster",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T13:35:30.239Z"
+    },
+    {
+      "asset_id": "img_LEADS_LUXCOS_TRANSFORM-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_LUXCOS_TRANSFORM-ad.png",
+      "hash": "9c2a9f061d9ca28e395e41b4602a724189b4e8da15e7122872a8397481716495",
+      "angle_id": null,
+      "tags": [
+        "LEADS_LUXCOS_TRANSFORM"
+      ],
+      "alt_text": "LEADS_LUXCOS_TRANSFORM ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T14:11:57.417Z"
+    },
+    {
+      "asset_id": "img_LEADS_LUXCOS_TRANSFORM-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_LUXCOS_TRANSFORM-ad",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_LUXCOS_TRANSFORM-ad.png",
+      "hash": "30017068381f155a8b94a8ca14604044f18dc8115f921df0b470354bef6d2915",
+      "angle_id": null,
+      "tags": [
+        "LEADS_LUXCOS_TRANSFORM"
+      ],
+      "alt_text": "LEADS_LUXCOS_TRANSFORM ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T15:35:57.362Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-22-offer_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_blue-rose-auto-2026-07-22-offer",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer.png",
+      "hash": "b98220eef2e6905964183c1b4bd62c15508ff313069011902b95b2c94d791939",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T15:42:39.804Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-22-offer_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_blue-rose-auto-2026-07-22-offer",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer.png",
+      "hash": "96392311673904280b57b6ef8dc87873f1d3e3e3efd2031fd44d0c581363fd78",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-21T15:46:23.157Z"
+    }
+  ]
+}

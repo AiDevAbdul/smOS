@@ -24,10 +24,10 @@
         "#workflowautomation"
       ],
       "produced_by": "ai_assisted",
-      "status": "pending",
+      "status": "error",
       "published_id": null,
       "published_at": null,
-      "error": null,
+      "error": "instagram reels requires video_url",
       "schedule_native": false
     },
     {
@@ -389,6 +389,55 @@
       "published_at": null,
       "error": null,
       "schedule_native": false
+    },
+    {
+      "id": "abdulwahabai-2026-07-21-educate-agentic-intro",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-07-21T16:00:00.000Z",
+      "message": "Introduction to Agentic AI: what it actually is, and how it's different from a chatbot.\n\nAn agent doesn't just answer — it plans, takes actions across your tools, and checks its own work. That's the shift worth understanding before you buy (or build) anything.\n\nA plain-English breakdown, no hype and no jargon.\n\nWant this explained for your business specifically? Book your call — link in bio.",
+      "link": null,
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "agentic AI",
+        "AI automation"
+      ],
+      "alt_text": "Branded graphic introducing agentic AI and how it differs from a chatbot.",
+      "hashtags": [
+        "#agenticAI",
+        "#AIautomation",
+        "#AIagents",
+        "#AIeducation",
+        "#futureofwork"
+      ],
+      "produced_by": "ai_assisted",
+      "status": "error",
+      "published_id": null,
+      "published_at": null,
+      "error": "Meta API 10: (#10) Application does not have permission for this action (type=OAuthException, trace=A0JNArqza6q2a48abJFzW19)",
+      "schedule_native": false,
+      "local_path": "/Users/apple/abdul/smOS/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#337526",
+          "secondary": "#1D1D1F",
+          "accent": "#74D452",
+          "neutrals": [
+            "#FBFBFD",
+            "#F5F5F7",
+            "#6E6E73",
+            "#D2D2D7"
+          ]
+        },
+        "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/brand/logo.svg"
+      },
+      "image_url_light": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro-light.png",
+      "local_path_light": "/Users/apple/abdul/smOS/clients/abdulwahabai/generated/abdulwahabai-2026-07-21-educate-agentic-intro-light.png"
     }
   ]
 }

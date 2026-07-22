@@ -263,33 +263,36 @@ async function colorWashBuffer(width, height, color, opacity) {
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
-/** Bottom-to-top dark gradient scrim so headline/benefit text stays legible
- *  over a busy photographic background (transparent at top → opaque at the
- *  bottom where the marketing block sits). */
-async function scrimBuffer(width, height) {
+/** Bottom-to-top gradient scrim so headline/benefit text stays legible over a
+ *  busy photographic background (transparent at top → opaque at the bottom
+ *  where the marketing block sits). Dark theme darkens toward black (for white
+ *  text); light theme lightens toward white (for ink text) — see
+ *  poster_text_layer.js's theme-driven text colors, which this must match. */
+async function scrimBuffer(width, height, theme = "dark") {
+  const c = theme === "light" ? "#fff" : "#000";
   const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
     <defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="40%" stop-color="#000" stop-opacity="0.12"/>
-      <stop offset="70%" stop-color="#000" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0.9"/>
+      <stop offset="0%" stop-color="${c}" stop-opacity="0"/>
+      <stop offset="40%" stop-color="${c}" stop-opacity="0.12"/>
+      <stop offset="70%" stop-color="${c}" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="${c}" stop-opacity="0.9"/>
     </linearGradient></defs>
     <rect width="${width}" height="${height}" fill="url(#s)"/>
   </svg>`;
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
-/** Top-down darkening confined to the top band, so the top-left logo always
- *  separates from a busy/bright photo behind it (e.g. a light background or the
- *  subject's face) instead of fighting it for legibility. Transparent below the
- *  band so the middle of the photo is untouched. */
-async function topScrimBuffer(width, height) {
+/** Top-band scrim so the top-left logo always separates from a busy/bright
+ *  photo behind it, regardless of theme. Transparent below the band so the
+ *  middle of the photo is untouched. */
+async function topScrimBuffer(width, height, theme = "dark") {
+  const c = theme === "light" ? "#fff" : "#000";
   const band = Math.round(height * 0.3);
   const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
     <defs><linearGradient id="t" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#000" stop-opacity="0.5"/>
-      <stop offset="55%" stop-color="#000" stop-opacity="0.14"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="0%" stop-color="${c}" stop-opacity="0.5"/>
+      <stop offset="55%" stop-color="${c}" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="${c}" stop-opacity="0"/>
     </linearGradient></defs>
     <rect width="${width}" height="${band}" fill="url(#t)"/>
   </svg>`;
@@ -327,9 +330,14 @@ async function logoShadowBuffer(logoResized, lw, lh, blur = 7) {
  * Used when the caller supplies `copy` with a headline; otherwise composePoster
  * uses the legacy logo+contact-bar-only layout.
  */
-async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone, position }) {
+async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone, position, theme = "dark" }) {
   const logo = brand?.visual?.logo || {};
-  const logoUrl = logo.primary_url || logo.reverse_url || logo.mono_url;
+  // Dark theme composites over a darkened photo → the reverse (light/white)
+  // logo mark reads best. Light theme lightens the photo → the primary (dark)
+  // mark reads best. Falls back across whichever variants the brand kit has.
+  const logoUrl = theme === "light"
+    ? logo.primary_url || logo.mono_url || logo.reverse_url
+    : logo.reverse_url || logo.primary_url || logo.mono_url;
 
   // `position` re-frames a `cover`-fit crop away from center (e.g. "left" keeps
   // more of the source's left/subject-right side) so a centered subject can be
@@ -342,11 +350,11 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
     const washColor = brand?.visual?.colors?.primary || "#111111";
     composites.push({ input: await colorWashBuffer(width, height, washColor, 0.14), blend: "soft-light" });
   }
-  composites.push({ input: await scrimBuffer(width, height), top: 0, left: 0 });
+  composites.push({ input: await scrimBuffer(width, height, theme), top: 0, left: 0 });
   // Top-band scrim so the logo separates cleanly from whatever is behind it.
-  composites.push({ input: await topScrimBuffer(width, height), top: 0, left: 0 });
+  composites.push({ input: await topScrimBuffer(width, height, theme), top: 0, left: 0 });
 
-  const adLayer = await renderAdLayer({ width, height, brand, copy, contact });
+  const adLayer = await renderAdLayer({ width, height, brand, copy, contact, theme });
   composites.push({ input: adLayer, top: 0, left: 0 });
 
   // Logo: crisp Lanczos downscale of the original + soft shadow, top-left inside
@@ -386,12 +394,13 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
  * poster for this feature (see checkPosterInputs in scripts/lib/guards.js for
  * the upstream preflight that should catch missing-logo cases earlier).
  */
-export async function composePoster({ backgroundBuffer, brand, contact, copy = null, width = 1080, height = 1080, duotone = true, position } = {}) {
+export async function composePoster({ backgroundBuffer, brand, contact, copy = null, width = 1080, height = 1080, duotone = true, position, theme = "dark" } = {}) {
   // Ad-poster path: when the caller supplies real marketing copy (a headline),
   // render the full text layer (headline/subhead/benefits/CTA). Otherwise fall
-  // back to the legacy logo + contact-bar-only branding.
+  // back to the legacy logo + contact-bar-only branding (theme not supported
+  // there — that legacy layout has no headline/body text to re-color).
   if (copy && copy.headline) {
-    return composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone, position });
+    return composeAdPoster({ backgroundBuffer, brand, contact, copy, width, height, duotone, position, theme });
   }
 
   const logo = brand?.visual?.logo || {};

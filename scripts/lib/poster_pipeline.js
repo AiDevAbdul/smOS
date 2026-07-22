@@ -33,25 +33,31 @@ export async function generateBrandedPoster({
   height = 1080,
   tags = [],
   altText = null,
+  theme = "dark",
 } = {}) {
   const { urls } = await generateImage({ prompt, model, width, height });
   const backgroundBuffer = await fetchBuffer(urls[0]);
-  const composited = await composePoster({ backgroundBuffer, brand, contact, copy, width, height });
+  const composited = await composePoster({ backgroundBuffer, brand, contact, copy, width, height, theme });
 
-  const remotePath = `clients/${slug}/generated/${idTag}.png`;
+  // Theme-suffix the remote/local filenames so a light-mode re-run doesn't
+  // clobber the dark-mode original — callers can generate and keep both.
+  const idFile = theme === "light" ? `${idTag}-light` : idTag;
+  const remotePath = `clients/${slug}/generated/${idFile}.png`;
   const image_url = await uploadPublicAsset(composited, remotePath, { contentType: "image/png" });
 
-  const local_path = resolve(clientRoot(slug), "generated", `${idTag}.png`);
+  const local_path = resolve(clientRoot(slug), "generated", `${idFile}.png`);
   ensureParent(local_path);
   writeFileSync(local_path, composited);
 
   const brand_kit = {
     colors: brand?.visual?.colors || null,
-    logo_url: brand?.visual?.logo?.reverse_url || brand?.visual?.logo?.primary_url || null,
+    logo_url: theme === "light"
+      ? brand?.visual?.logo?.primary_url || brand?.visual?.logo?.reverse_url || null
+      : brand?.visual?.logo?.reverse_url || brand?.visual?.logo?.primary_url || null,
   };
 
   const dam = register(slug, {
-    asset_id: `img_${idTag}`,
+    asset_id: `img_${idFile}`,
     media_type: "image",
     uri: image_url,
     hash: hashBytes(composited),

@@ -43,7 +43,7 @@ test("posterCopyFromAngle: supports bare-string variants (no score objects)", ()
   assert.equal(copy.cta, "Book Now");
 });
 
-test("posterCopyFromItem: derives headline from message, benefits from keywords, pillar CTA", () => {
+test("posterCopyFromItem: headline from first sentence, no keyword bullets, pillar CTA", () => {
   const item = {
     message: "Protect your paint for a decade with ceramic coating. Read on for details.",
     keywords: ["ceramic coating", "paint protection", "auto detailing", "extra"],
@@ -52,11 +52,34 @@ test("posterCopyFromItem: derives headline from message, benefits from keywords,
   const copy = posterCopyFromItem(item, { brandName: "Blue Rose Auto" });
   assert.ok(copy.headline.startsWith("Protect your paint")); // first sentence only
   assert.ok(!copy.headline.includes("Read on")); // second sentence dropped
-  assert.equal(copy.benefits.length, 3); // capped at 3 keywords
+  assert.deepEqual(copy.benefits, []); // organic posters: no keyword bullets (headline + CTA only)
   assert.equal(copy.cta, "Learn More"); // educate pillar
 });
 
 test("posterCopyFromItem: returns null with no message", () => {
   assert.equal(posterCopyFromItem({ message: "" }), null);
   assert.equal(posterCopyFromItem(null), null);
+});
+
+test("posterCopyFromItem: headline splits on an em-dash aside (punchy, not run-on)", () => {
+  const copy = posterCopyFromItem(
+    { message: "Mechanical, collision, or cosmetic — one shop, 30+ years, ASE-certified.", pillar_id: "offer" },
+    { brandName: "X" }
+  );
+  assert.equal(copy.headline, "Mechanical, collision, or cosmetic"); // clause before the dash
+  assert.equal(copy.cta, "Get a Quote"); // offer pillar
+});
+
+test("posterCopyFromItem: long headline truncates on a word boundary, never mid-word", () => {
+  const copy = posterCopyFromItem(
+    { message: "Springfield drivers trust our certified technicians for everything automotive today", pillar_id: "educate" },
+    { brandName: "X" }
+  );
+  const msg = "Springfield drivers trust our certified technicians for everything automotive today";
+  assert.ok(copy.headline.endsWith("…"));
+  assert.ok(!copy.headline.includes(" …")); // no dangling space before the ellipsis
+  const stem = copy.headline.slice(0, -1); // drop the ellipsis
+  assert.ok(msg.startsWith(stem)); // stem is a real prefix of the message
+  assert.equal(msg[stem.length], " "); // cut fell on a word boundary (next char is a space)
+  assert.ok(copy.headline.length <= 62);
 });
