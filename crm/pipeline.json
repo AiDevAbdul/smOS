@@ -26,7 +26,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "updated_at": "2026-06-30T06:55:22.236Z",
     "id": "3star-kitchen-equipment",
@@ -67,7 +68,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "updated_at": "2026-07-06T20:14:24.210Z",
     "id": "abdulwahab",
@@ -91,12 +93,12 @@
     "company_name": "HOPE'87",
     "created_at": "2026-07-13T07:09:49.401Z",
     "source": "pre-audit",
-    "stage": "proposed",
+    "stage": "won",
     "links": {
       "pre_audit": "prospects/hope87/pre_audit.html",
       "proposal": "proposals/hope87/proposal.pdf",
-      "contract": null,
-      "client_profile": null
+      "contract": "contracts/hope87/agreement.pdf",
+      "client_profile": "clients/hope87/profile.json"
     },
     "activities": [
       {
@@ -108,27 +110,87 @@
         "at": "2026-07-13T07:19:42.689Z",
         "type": "proposal",
         "note": "proposed Starter (USD 1500/mo)"
+      },
+      {
+        "at": "2026-07-31T05:44:20.903Z",
+        "type": "stage",
+        "note": "Client signed on; kicking off access/credentials request for full audit"
+      },
+      {
+        "at": "2026-07-31T06:24:19.525Z",
+        "type": "note",
+        "note": "Expanded scope: website redesign (Astro, EN/DE), donation landing page, initial video + graphics production added as itemized one-time deliverables alongside the recurring retainer."
+      },
+      {
+        "at": "2026-07-31T06:24:31.431Z",
+        "type": "proposal",
+        "note": "proposed Starter (USD 1500/mo)"
+      },
+      {
+        "at": "2026-07-31T06:26:02.644Z",
+        "type": "proposal",
+        "note": "proposed Starter (USD 1500/mo)"
+      },
+      {
+        "at": "2026-07-31T06:26:22.541Z",
+        "type": "proposal",
+        "note": "proposed Starter (EUR 1500/mo)"
+      },
+      {
+        "at": "2026-07-31T06:26:48.800Z",
+        "type": "contract",
+        "note": "agreement generated (Starter)"
       }
     ],
     "deal": {
       "monthly_retainer": 1500,
-      "setup_fee": 0,
-      "currency": "USD"
+      "setup_fee": 500,
+      "currency": "EUR",
+      "addons": [
+        {
+          "name": "Website Redesign & Development (Astro, dual-language EN/DE)",
+          "amount": 6500,
+          "currency": "EUR",
+          "description": "Full rebuild of the WordPress site on Astro: information architecture, dual-language (English/German) routing and content model, migration of existing content, performance/SEO optimization, and CMS handoff.",
+          "recurring": false
+        },
+        {
+          "name": "Donation Landing Page",
+          "amount": 1800,
+          "currency": "EUR",
+          "description": "Dedicated, conversion-optimized donation landing page (cause-specific, bilingual EN/DE) with an embedded/linked donation flow, trust signals, and Meta Pixel + Conversions API event wiring.",
+          "recurring": false
+        },
+        {
+          "name": "Initial Video Production Package",
+          "amount": 2200,
+          "currency": "EUR",
+          "description": "First batch of donor-facing video assets (impact stories, Reels-ready cuts, subtitled EN/DE) for organic and paid use.",
+          "recurring": false
+        },
+        {
+          "name": "Initial Graphics & Social Rebrand Package",
+          "amount": 1500,
+          "currency": "EUR",
+          "description": "Social media visual refresh (FB/IG profile, cover, highlight covers, post/story templates) plus an initial batch of donation-campaign graphics.",
+          "recurring": false
+        }
+      ]
     },
-    "updated_at": "2026-07-13T07:19:42.689Z",
+    "updated_at": "2026-07-31T06:28:43.401Z",
     "id": "hope87",
     "contact": {
       "name": null,
-      "email": null,
+      "email": "shoaib@hope87.org",
       "phone": null
     },
     "services": [],
-    "probability": 35,
+    "probability": 100,
     "expected_close": null,
     "owner": null,
     "next_action": null,
     "next_action_due": null,
-    "won_at": null,
+    "won_at": "2026-07-31T05:44:20.902Z",
     "lost_at": null,
     "lost_reason": null
   },
@@ -155,7 +217,8 @@
     "deal": {
       "monthly_retainer": 3000,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "probability": 10,
     "expected_close": null,
@@ -236,7 +299,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "probability": 35,
     "expected_close": null,
@@ -277,7 +341,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "probability": 75,
     "expected_close": "2026-07-14",
@@ -318,7 +383,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "probability": 10,
     "expected_close": null,
@@ -353,7 +419,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "probability": 10,
     "expected_close": null,
@@ -378,7 +445,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "owner": null,
     "created_at": "2026-07-14T05:28:09.927Z",
@@ -453,7 +521,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "updated_at": "2026-07-19T08:01:47.333Z",
     "id": "bacreation",
@@ -509,7 +578,8 @@
     "deal": {
       "monthly_retainer": 0,
       "setup_fee": 0,
-      "currency": "USD"
+      "currency": "USD",
+      "addons": []
     },
     "updated_at": "2026-07-17T07:23:17.733Z",
     "id": "habibpizza",

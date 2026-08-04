@@ -27,6 +27,19 @@ import * as P from "../../scripts/lib/paths.js";
 
 loadEnv();
 
+// Standard social ratios at a 1080px base edge — mirrors the map in
+// image-gen-ads.js (kept separate since these two scripts have no shared
+// module for CLI-level concerns).
+const RATIOS = {
+  "1:1": { width: 1080, height: 1080 },
+  "4:5": { width: 1080, height: 1350 },
+  "9:16": { width: 1080, height: 1920 },
+};
+
+function ratioSlug(ratio) {
+  return ratio.replace(":", "x");
+}
+
 function loadBrand(slug) {
   const p = P.clientFile(slug, "brand_profile.json");
   if (!existsSync(p)) return null;
@@ -82,11 +95,55 @@ async function generateForItem(item, { slug, profile, brand, model, promptOverri
   return { id: item.id, prompt, theme, image_url, local_path };
 }
 
+/** All prior (`--ratios` unaware) generations used the 1080x1080 default, so a
+ *  legacy `image_url` backfills cleanly into `images["1:1"]` without needing
+ *  to inspect actual pixel dimensions. */
+function missingRatiosForItem(item, requestedRatios) {
+  if (!item.images && item.image_url) {
+    item.images = { "1:1": { image_url: item.image_url, local_path: item.local_path || null } };
+  }
+  const have = item.images || {};
+  return requestedRatios.filter((r) => !have[r]);
+}
+
+async function generateForItemRatio(item, ratio, { slug, profile, brand, model, promptOverride, dryRun }) {
+  const prompt = promptOverride || buildPrompt(item, profile);
+  const { width, height } = RATIOS[ratio];
+  const copy = posterCopyFromItem(item, { brandName: brand?.verbal?.name });
+  if (dryRun) return { id: item.id, ratio, prompt, width, height, copy, dry_run: true };
+
+  const { image_url, local_path, brand_kit } = await generateBrandedPoster({
+    slug,
+    prompt,
+    idTag: `${item.id}-${ratioSlug(ratio)}`,
+    brand,
+    contact: profile?.contact,
+    copy,
+    model,
+    width,
+    height,
+    tags: [item.pillar_id].filter(Boolean),
+    altText: item.alt_text,
+  });
+
+  item.images = item.images || {};
+  item.images[ratio] = { image_url, local_path };
+  if (!item.image_url || ratio === "1:1") {
+    item.image_url = image_url;
+    item.local_path = local_path;
+  }
+  item.ai_generated = true;
+  item.ai_disclosed = true;
+  item.brand_kit = brand_kit;
+
+  return { id: item.id, ratio, prompt, width, height, image_url, local_path };
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
   if (!slug || slug.startsWith("--")) {
-    console.error("Usage: node skills/image-gen/image-gen.js <slug> [--item <id>] [--prompt \"...\"] [--model bfl/flux-1-dev] [--dry-run]");
+    console.error("Usage: node skills/image-gen/image-gen.js <slug> [--item <id>] [--ratios 1:1,9:16,4:5] [--prompt \"...\"] [--model bfl/flux-1-dev] [--theme dark|light] [--dry-run]");
     process.exit(1);
   }
   const itemIdx = args.indexOf("--item");
@@ -102,6 +159,15 @@ async function main() {
     process.exit(1);
   }
   const dryRun = args.includes("--dry-run");
+  const ratiosIdx = args.indexOf("--ratios");
+  const ratios = ratiosIdx >= 0 ? args[ratiosIdx + 1].split(",").map((r) => r.trim()) : null;
+  if (ratios) {
+    const unknown = ratios.filter((r) => !RATIOS[r]);
+    if (unknown.length) {
+      console.error(`Unknown ratio(s) ${unknown.join(", ")} — supported: ${Object.keys(RATIOS).join(", ")}`);
+      process.exit(1);
+    }
+  }
 
   const profilePath = P.clientFile(slug, "client_profile.json");
   const calendarPath = P.clientFile(slug, "content_calendar.json");
@@ -143,6 +209,8 @@ async function main() {
       process.exit(5);
     }
     targets = [found];
+  } else if (ratios) {
+    targets = items.filter((i) => i.format === "image" && missingRatiosForItem(i, ratios).length > 0);
   } else {
     targets = items.filter(isTargetable);
   }
@@ -151,12 +219,25 @@ async function main() {
 
   const generated = [];
   const errors = [];
-  for (const item of targets) {
-    try {
-      generated.push(await generateForItem(item, { slug, profile, brand, model, promptOverride: itemId ? promptOverride : null, dryRun, theme }));
-    } catch (e) {
-      errors.push({ id: item.id, error: e.message });
-      item.error = e.message;
+  if (ratios) {
+    for (const item of targets) {
+      for (const ratio of missingRatiosForItem(item, ratios)) {
+        try {
+          generated.push(await generateForItemRatio(item, ratio, { slug, profile, brand, model, promptOverride: itemId ? promptOverride : null, dryRun }));
+        } catch (e) {
+          errors.push({ id: item.id, ratio, error: e.message });
+          item.error = e.message;
+        }
+      }
+    }
+  } else {
+    for (const item of targets) {
+      try {
+        generated.push(await generateForItem(item, { slug, profile, brand, model, promptOverride: itemId ? promptOverride : null, dryRun, theme }));
+      } catch (e) {
+        errors.push({ id: item.id, error: e.message });
+        item.error = e.message;
+      }
     }
   }
 

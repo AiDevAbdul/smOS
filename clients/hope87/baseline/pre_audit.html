@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pre-Audit · HOPE&#x27;87</title>
+<style>
+/* ============================================================================
+   smOS Design System — "Cupertino"
+   Single source of truth for every client-facing report & template.
+   Apple / iOS visual language: SF Pro system type, #f5f5f7 canvas, #1d1d1f ink,
+   system semantic colors, soft elevation, generous radii, 8pt rhythm.
+
+   DO NOT fork this per report. Renderers read this file at render time via
+   scripts/lib/design_system.js (Node) and scripts/lib/design_system.py (Python)
+   and inline it. Edit here once; every deliverable inherits it.
+   ============================================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Surfaces (Apple light-gray system) ---- */
+  --ds-bg:        #f5f5f7;   /* page canvas */
+  --ds-surface:   #ffffff;   /* cards, tables, sheets */
+  --ds-surface-2: #fbfbfd;   /* zebra rows, subtle fills */
+  --ds-glass:     rgba(255,255,255,.72);
+
+  /* ---- Ink / text ---- */
+  --ds-ink:    #1d1d1f;      /* primary text */
+  --ds-ink-2:  #3a3a3c;      /* strong secondary */
+  --ds-muted:  #6e6e73;      /* secondary / captions (Apple gray) */
+  --ds-faint:  #8e8e93;      /* tertiary / footnotes */
+
+  /* ---- Lines ---- */
+  --ds-line:        #e2e2e7;
+  --ds-line-strong: #d2d2d7;
+
+  /* ---- Brand + iOS system semantic colors ---- */
+  --ds-blue:        #0071e3;  /* primary action (Apple keynote blue) */
+  --ds-blue-strong: #0066cc;
+  --ds-indigo:      #5e5ce6;
+  --ds-green:       #34c759;  /* systemGreen — success / scale */
+  --ds-amber:       #ff9f0a;  /* systemOrange — at risk / warn */
+  --ds-red:         #ff3b30;  /* systemRed — critical / pause */
+  --ds-purple:      #af52de;  /* systemPurple */
+  --ds-teal:        #5ac8fa;  /* systemTeal */
+  --ds-pink:        #ff375f;  /* systemPink */
+
+  /* ---- Soft tints for callouts / pills (light) ---- */
+  --ds-blue-tint:  #eef5ff;
+  --ds-green-tint: #e7f9ed;
+  --ds-amber-tint: #fff5e6;
+  --ds-red-tint:   #ffece9;
+  --ds-ink-tint:   #f2f2f7;
+
+  /* ---- Type ---- */
+  --ds-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+             "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ds-font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---- Radius ---- */
+  --ds-r-sm: 10px;
+  --ds-r:    14px;
+  --ds-r-lg: 20px;
+  --ds-r-xl: 28px;
+  --ds-r-pill: 980px;
+
+  /* ---- Elevation (low-contrast, Apple-soft) ---- */
+  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.06);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.10);
+
+  /* ---- Gradients ---- */
+  --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
+  --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
+  /* Signature aurora — blue → indigo → violet. Used ONLY on the progress spine,
+     active states, and hero accent. The one place boldness is spent. */
+  --ds-grad-brand: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 52%, #7d3cff 100%);
+
+  /* ---- "Operating system" shell (dark hub chrome that frames light reports) ---- */
+  --ds-shell:     #0b0b10;   /* console canvas (cool near-black) */
+  --ds-shell-2:   #16161d;   /* raised shell surface: bars, chips */
+  --ds-shell-3:   #20212a;   /* chip hover / hairline fills */
+  --ds-shell-ink: #f5f5f7;   /* primary text on shell */
+  --ds-shell-mut: #a1a1ab;   /* secondary text on shell */
+  --ds-shell-line:#2a2b35;   /* borders on shell */
+
+  /* ---- Display type scale ---- */
+  --ds-fs-display: clamp(30px, 4.2vw, 46px);
+
+  /* ---- Motion ---- */
+  --ds-ease:       cubic-bezier(.4, 0, .2, 1);
+  --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
+  --ds-dur:        220ms;
+  --ds-dur-fast:   140ms;
+}
+
+/* ---------------------------------------------------------------- Base ---- */
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--ds-font);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ds-ink);
+  background: var(--ds-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ds-ink);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0 0 .5em;
+  font-weight: 600;
+}
+h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.022em; }
+h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; }
+h3 { font-size: 19px; }
+h4 { font-size: 16px; }
+
+p  { margin: .65em 0; }
+a  { color: var(--ds-blue-strong); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+small, .ds-caption { color: var(--ds-muted); font-size: 13px; }
+
+code, kbd, samp {
+  font-family: var(--ds-font-mono);
+  font-size: 88%;
+  background: var(--ds-ink-tint);
+  border-radius: 5px;
+  padding: 1px 6px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--ds-line);
+  margin: 32px 0;
+}
+
+ul, ol { margin: .6em 0 .6em 2px; padding-left: 22px; }
+li { margin: 4px 0; }
+
+/* Tabular numerals everywhere numbers live — prevents column jitter */
+.ds-num, td, th, .ds-kpi__value, .ds-metric { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------- Layout ---- */
+.ds-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 72px;
+}
+.ds-wrap--wide { max-width: 1200px; }
+
+.ds-section { margin: 36px 0; }
+
+/* -------------------------------------------------------------- Hero ------ */
+/* ONE canonical report hero. Every client-facing report MUST render this exact
+   structure via heroHeader() (JS) / hero_header() (Py) — never fork it.
+   Structure: .ds-hero > .ds-hero__inner > (.ds-hero__main + optional .ds-hero__aside) */
+.ds-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--ds-grad-brand);
+  color: #fff;
+  border-radius: var(--ds-r-lg);
+  padding: 44px 40px;
+  margin-bottom: 28px;
+  box-shadow: 0 12px 32px rgba(94,92,230,.28);
+}
+/* Subtle radial glow for depth (Stripe-style). Behind content, non-interactive. */
+.ds-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 78% 30%, rgba(255,255,255,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ds-hero > * { position: relative; z-index: 1; }
+.ds-hero__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.ds-hero__inner.has-aside { grid-template-columns: 1fr auto; }
+.ds-hero h1 { color: #fff; margin: 0; font-size: var(--ds-fs-display); letter-spacing: -0.026em; line-height: 1.08; }
+.ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
+.ds-hero__headline { margin-top: 12px; font-size: 15px; line-height: 1.55; max-width: 560px; color: rgba(255,255,255,.78); }
+
+/* Eyebrow promoted to a badge pill with a status dot. */
+.ds-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 5px 13px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.26);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.ds-hero__badge::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,.8);
+}
+
+/* Optional pill row (snapshot stats). */
+.ds-hero__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ds-hero__pill {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* Optional right-hand executive column: score ring + a single hero stat. */
+.ds-hero__aside { text-align: center; flex-shrink: 0; }
+.ds-hero__stat { margin-top: 18px; }
+.ds-hero__stat-label,
+.ds-hero__aside .ds-hero__band {
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.72); margin-top: 8px;
+}
+.ds-hero__stat-value { font-size: 32px; font-weight: 700; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.ds-hero__stat-caption { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; max-width: 200px; }
+@media (max-width: 720px) {
+  .ds-hero__inner.has-aside { grid-template-columns: 1fr; }
+  .ds-hero__aside { text-align: left; }
+}
+
+.ds-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ds-muted);
+  margin-bottom: 6px;
+}
+
+/* -------------------------------------------------------------- Card ------ */
+.ds-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 22px 24px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-card + .ds-card { margin-top: 16px; }
+
+/* --------------------------------------------------------- KPI cards ------ */
+.ds-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.ds-kpi {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-kpi__label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ds-muted);
+}
+.ds-kpi__value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 6px 0 2px;
+}
+.ds-kpi__delta { font-size: 13px; font-weight: 500; }
+.ds-kpi__delta--up   { color: var(--ds-green); }
+.ds-kpi__delta--down { color: var(--ds-red); }
+
+/* --------------------------------------------------------- Badges --------- */
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 11px;
+  border-radius: var(--ds-r-pill);
+  line-height: 1.3;
+}
+.ds-badge--good { background: var(--ds-green-tint); color: #1c7a3e; }
+.ds-badge--warn { background: var(--ds-amber-tint); color: #9a5b00; }
+.ds-badge--bad  { background: var(--ds-red-tint);   color: #b3261e; }
+.ds-badge--info { background: var(--ds-blue-tint);  color: var(--ds-blue-strong); }
+.ds-badge--neutral { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
+
+/* --------------------------------------------------------- Callouts ------- */
+.ds-callout {
+  border-radius: var(--ds-r);
+  padding: 16px 18px;
+  margin: 18px 0;
+  border-left: 4px solid var(--ds-blue);
+  background: var(--ds-blue-tint);
+}
+.ds-callout--good { border-left-color: var(--ds-green); background: var(--ds-green-tint); }
+.ds-callout--warn { border-left-color: var(--ds-amber); background: var(--ds-amber-tint); }
+.ds-callout--bad  { border-left-color: var(--ds-red);   background: var(--ds-red-tint); }
+
+/* ---------------------------------------------------------- Tables -------- */
+.ds-table-wrap {
+  overflow-x: auto;
+  margin: 18px 0;
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  box-shadow: var(--ds-shadow-sm);
+}
+table.ds-table, .ds-table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+.ds-table-wrap thead th, table.ds-table thead th {
+  background: var(--ds-grad-ink);
+  color: #fff;
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.ds-table-wrap tbody td, table.ds-table tbody td {
+  padding: 11px 16px;
+  border-top: 1px solid var(--ds-line);
+}
+.ds-table-wrap tbody tr:nth-child(even),
+table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
+
+/* ---------------------------------------------------------- Charts -------- */
+/* Canvas wrapper so Chart.js / SVG charts inherit card styling consistently */
+.ds-chart {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 20px;
+  box-shadow: var(--ds-shadow-sm);
+  margin: 18px 0;
+}
+.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+
+/* --------------------------------------------------------- Buttons -------- */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--ds-font);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 11px 18px;
+  border-radius: var(--ds-r-pill);
+  border: 1px solid transparent;
+  background: var(--ds-blue);
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--ds-dur) var(--ds-ease), transform var(--ds-dur) var(--ds-ease);
+}
+.ds-btn:hover { background: var(--ds-blue-strong); text-decoration: none; }
+.ds-btn:active { transform: translateY(1px); }
+.ds-btn--ghost {
+  background: var(--ds-surface);
+  color: var(--ds-blue-strong);
+  border-color: var(--ds-line-strong);
+}
+.ds-btn--ghost:hover { background: var(--ds-ink-tint); }
+.ds-btn[aria-disabled="true"] {
+  background: transparent;
+  border: 1px dashed var(--ds-line-strong);
+  color: var(--ds-muted);
+  font-weight: 500;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------- Roadmap --------- */
+/* Vertical journey of numbered steps. Each step = a bold circular badge + a
+   card holding a title, description, and one or more action buttons. Used by
+   /bundle to assemble a client's whole engagement into one shareable hub. */
+.ds-roadmap { margin: 28px 0; }
+.ds-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 18px;
+  padding-bottom: 24px;
+}
+/* connector spine — aurora gradient on delivered steps, grey on pending */
+.ds-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 23px;
+  top: 48px;
+  bottom: -4px;
+  width: 2px;
+  background-image: var(--ds-grad-brand);
+}
+.ds-step.is-pending:not(:last-child)::before { background: var(--ds-line-strong); }
+.ds-step-num {
+  position: relative;
+  z-index: 1;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-image: var(--ds-grad-brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 19px;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(94,92,230,.32);
+}
+.ds-step.is-pending .ds-step-num {
+  background: var(--ds-surface);
+  color: var(--ds-faint);
+  border: 2px dashed var(--ds-line-strong);
+  box-shadow: none;
+}
+.ds-step-body {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  padding: 18px 20px;
+  box-shadow: var(--ds-shadow-sm);
+  transition: transform var(--ds-dur) var(--ds-ease), box-shadow var(--ds-dur) var(--ds-ease);
+}
+.ds-step:not(.is-pending) .ds-step-body:hover { transform: translateY(-2px); box-shadow: var(--ds-shadow); }
+.ds-step.is-pending .ds-step-title { color: var(--ds-muted); }
+.ds-step.is-pending .ds-step-body {
+  background: var(--ds-surface-2);
+  border-style: dashed;
+  box-shadow: none;
+}
+.ds-step-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+.ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
+.ds-step-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (max-width: 640px) {
+  .ds-step { grid-template-columns: 40px 1fr; gap: 14px; }
+  .ds-step-num { width: 40px; height: 40px; font-size: 16px; }
+  .ds-step:not(:last-child)::before { left: 19px; top: 40px; }
+}
+
+/* -------------------------------------------------- Hub (OS console) ------ */
+/* The /bundle deliverables hub is a single-tab "operating system" console: a
+   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
+   frames each report as a bright, elevated "window" (the iframe). Dark chrome
+   around a light document = intentional app framing (no double-hero). */
+.ds-hub {
+  min-height: 100dvh; display: flex; flex-direction: column;
+  background: var(--ds-shell); color: var(--ds-shell-ink);
+}
+.ds-skip {
+  position: absolute; left: 12px; top: -48px; z-index: 100;
+  background: var(--ds-shell-2); color: var(--ds-shell-ink);
+  padding: 10px 16px; border-radius: var(--ds-r-sm); border: 1px solid var(--ds-shell-line);
+  transition: top var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-skip:focus { top: 12px; text-decoration: none; }
+
+/* Header = the hero. Client name + agency + a live progress meter. */
+.ds-hub__head {
+  padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
+  align-items: flex-end; justify-content: space-between; gap: 16px 24px;
+  border-bottom: 1px solid var(--ds-shell-line);
+}
+.ds-hub__id { min-width: 0; }
+.ds-hub__eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ds-shell-mut); margin-bottom: 8px;
+}
+.ds-hub__title {
+  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
+  line-height: 1.02; margin: 0; color: #fff;
+  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
+}
+.ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
+
+/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
+.ds-progress { min-width: 220px; flex: 0 1 320px; }
+.ds-progress__label {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
+}
+.ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
+.ds-progress__track { display: flex; gap: 5px; }
+.ds-progress__seg {
+  height: 6px; flex: 1; border-radius: var(--ds-r-pill); background: var(--ds-shell-3);
+}
+.ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
+
+/* Chip menu (top + bottom) */
+.ds-hubnav {
+  display: flex; gap: 8px; align-items: center;
+  padding: 12px 24px; background: rgba(11,11,16,.72);
+  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--ds-shell-line);
+  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
+}
+.ds-hubnav::-webkit-scrollbar { display: none; }
+.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
+.ds-hubnav__btn {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
+  font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
+  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
+  background: var(--ds-shell-2); color: var(--ds-shell-ink);
+  border: 1px solid var(--ds-shell-line); cursor: pointer;
+  transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
+              transform var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-hubnav__btn .n {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 21px; height: 21px; border-radius: 50%;
+  background: var(--ds-shell-3); color: var(--ds-shell-ink);
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
+}
+.ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
+.ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
+.ds-hubnav__btn.is-active .n { background: rgba(255,255,255,.25); color: #fff; }
+.ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
+.ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
+
+/* Viewer = a bright elevated "window" floating in the dark shell. */
+.ds-viewer-wrap {
+  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
+  overflow: hidden; background: var(--ds-bg);
+  box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
+}
+.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
+.ds-viewer__loader {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--ds-bg); opacity: 0; visibility: hidden;
+  transition: opacity var(--ds-dur) var(--ds-ease), visibility var(--ds-dur) var(--ds-ease);
+}
+.ds-viewer__loader.is-on { opacity: 1; visibility: visible; }
+.ds-spinner {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid var(--ds-line); border-top-color: var(--ds-blue);
+  animation: ds-spin .8s linear infinite;
+}
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+
+/* Entrance: chips + spine stagger in on load */
+@keyframes ds-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
+
+@media (max-width: 760px) {
+  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
+  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
+  .ds-hub__head { padding: 18px 16px 14px; }
+  .ds-progress { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-anim, .ds-spinner { animation: none; }
+  .ds-hubnav__btn:hover { transform: none; }
+}
+
+/* --------------------------------------------------------- Footer --------- */
+
+/* --------------------------------------------------------- Footer --------- */
+.ds-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ds-line);
+  color: var(--ds-faint);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------- A11y ----------- */
+:focus-visible { outline: 2px solid var(--ds-blue); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+/* --------------------------------------------------------- Print ---------- */
+@page { size: Letter; margin: 14mm; }
+@media print {
+  body { background: #fff; }
+  .ds-card, .ds-kpi, .ds-table-wrap, .ds-chart { box-shadow: none; }
+  .ds-hero { box-shadow: none; }
+  .ds-section, .ds-card, .ds-kpi, .ds-chart, .ds-table-wrap { break-inside: avoid; }
+  h2, h3 { break-after: avoid; }
+}
+
+/* --------------------------------------------------------- Responsive ----- */
+@media (max-width: 640px) {
+  .ds-wrap { padding: 24px 16px 56px; }
+  .ds-hero { padding: 28px 22px; }
+  h1 { font-size: 26px; }
+  .ds-kpi__value { font-size: 26px; }
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* pre-audit local tokens mapped onto the smOS design system (Apple palette) */
+:root {
+  --ink:     #1d1d1f;
+  --ground:  #f5f5f7;
+  --signal:  #ff3b30;
+  --resolve: #34c759;
+  --rule:    #e2e2e7;
+  --muted:   #6e6e73;
+  --amber:   #ff9f0a;
+  --radius:  var(--ds-r);
+  --shadow:  var(--ds-shadow);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ds-font);
+  background: var(--ground); color: var(--ink);
+  line-height: 1.6; font-size: 15px;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────── */
+/* The hero is the ONE canonical design-system hero (.ds-hero, supplied by
+   design_system_css() and rendered via hero_header()). No bespoke hero CSS
+   here — the score gauge canvas lives inside .ds-hero__aside. The wrapper
+   only centers the rounded hero card to match the .layout width below. */
+.hero-wrap { max-width: 940px; margin: 0 auto; padding: 40px 24px 0; }
+
+/* ── Layout ───────────────────────────────────────────────────── */
+.layout {
+  max-width: 940px; margin: 0 auto;
+  display: grid; grid-template-columns: 168px 1fr; gap: 40px;
+  padding: 48px 24px 80px;
+}
+
+/* ── Rail ─────────────────────────────────────────────────────── */
+.rail { position: relative; }
+.rail-inner {
+  position: sticky; top: 28px;
+  border-right: 1px solid var(--rule); padding-right: 20px;
+}
+.rail-nav { list-style: none; }
+.rail-link {
+  display: block; padding: 7px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  text-decoration: none; transition: color .15s, background .15s;
+  line-height: 1.3;
+}
+.rail-link:hover, .rail-link.active {
+  color: var(--ink); background: var(--rule);
+}
+.rail-section-label {
+  font-family: var(--ds-font-mono);
+  font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--rule); padding: 16px 10px 4px; list-style: none;
+}
+
+/* ── Sections ─────────────────────────────────────────────────── */
+.content { min-width: 0; }
+.section { margin-bottom: 52px; scroll-margin-top: 28px; }
+.section-heading {
+  font-family: var(--ds-font);
+  font-size: 25px; font-weight: 400; color: var(--ink); margin-bottom: 4px;
+}
+.section-sub {
+  font-size: 12px; color: var(--muted); margin-bottom: 18px; line-height: 1.5;
+}
+
+/* ── Cards ────────────────────────────────────────────────────── */
+.card {
+  background: #fff; border-radius: var(--radius); padding: 22px 26px;
+  box-shadow: var(--shadow); border: 1px solid var(--rule);
+}
+.card + .card { margin-top: 10px; }
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.card-label {
+  font-family: var(--ds-font-mono);
+  font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 4px;
+}
+.card-value {
+  font-family: var(--ds-font-mono);
+  font-size: 26px; font-weight: 700; color: var(--ink); line-height: 1.1;
+}
+.card-caption { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+/* ── Tables ───────────────────────────────────────────────────── */
+.table-wrap {
+  background: #fff; border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); border: 1px solid var(--rule);
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--ink); color: var(--ground);
+  padding: 11px 14px; text-align: left;
+  font-family: var(--ds-font-mono);
+  font-size: 9px; font-weight: 700; letter-spacing: .9px;
+  text-transform: uppercase; white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid var(--rule); }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 11px 14px; vertical-align: middle; }
+.page-name { font-weight: 600; }
+.mono { font-family: var(--ds-font-mono); }
+.muted { color: var(--muted); }
+.small { font-size: 11px; }
+.dim-label { font-weight: 500; font-size: 13px; }
+.dim-weight {
+  font-family: var(--ds-font-mono);
+  font-size: 11px; color: var(--muted); text-align: right;
+}
+
+/* Bars */
+.bar-wrap { display: flex; align-items: center; gap: 10px; }
+.bar-track {
+  flex: 1; height: 5px; background: var(--rule); border-radius: 3px;
+  overflow: hidden; max-width: 180px;
+}
+.bar-fill {
+  height: 100%; border-radius: 3px; width: 0;
+  transition: width .85s cubic-bezier(.4,0,.2,1);
+}
+.bar-num {
+  font-family: var(--ds-font-mono);
+  font-size: 13px; font-weight: 700; min-width: 30px;
+}
+
+/* ── Tracking ─────────────────────────────────────────────────── */
+.tracking-list { list-style: none; }
+.tracking-list li {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--rule); font-size: 13px;
+}
+.tracking-list li:last-child { border-bottom: none; }
+.tick { font-weight: 700; font-size: 15px; width: 16px; flex-shrink: 0; }
+
+/* ── Wins & Gaps ──────────────────────────────────────────────── */
+.wins-gaps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wins-card { border-top: 3px solid #34c759; }
+.gaps-card { border-top: 3px solid #ff3b30; }
+.card-type-label {
+  font-family: var(--ds-font-mono);
+  font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.wins-card .card-type-label { color: #34c759; }
+.gaps-card .card-type-label { color: #ff3b30; }
+.tier-group { margin-bottom: 10px; }
+.tier-label {
+  font-family: var(--ds-font-mono);
+  font-size: 8px; letter-spacing: 1.4px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
+  padding-bottom: 4px; border-bottom: 1px solid var(--rule);
+}
+.bullet-list { list-style: none; padding: 0; }
+.bullet-list li {
+  padding: 7px 0 7px 22px; position: relative;
+  border-bottom: 1px solid var(--rule); font-size: 13px; line-height: 1.45;
+}
+.bullet-list li:last-child { border-bottom: none; }
+.bullet-list.wins li::before {
+  content: "✓"; position: absolute; left: 0; color: #34c759; font-weight: 700;
+}
+.bullet-list.gaps li::before {
+  content: "✗"; position: absolute; left: 0; color: #ff3b30; font-weight: 700;
+}
+
+/* ── Recommendations ──────────────────────────────────────────── */
+.rec-card {
+  background: #fff; border-radius: var(--radius); padding: 20px 24px;
+  box-shadow: var(--shadow); border: 1px solid var(--rule);
+  display: grid; grid-template-columns: 44px 1fr; gap: 18px;
+  margin-bottom: 10px;
+}
+.rec-num {
+  font-family: var(--ds-font);
+  font-size: 36px; font-weight: 400; color: var(--rule);
+  line-height: 1; text-align: center; padding-top: 2px;
+}
+.rec-problem { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+.rec-evidence { font-size: 13px; color: var(--muted); margin-bottom: 5px; line-height: 1.5; }
+.rec-action   { font-size: 13px; margin-bottom: 4px; }
+.rec-outcome  {
+  font-size: 11px; color: #34c759; font-weight: 700;
+  font-family: var(--ds-font-mono); letter-spacing: .3px;
+}
+
+/* ── CTA ──────────────────────────────────────────────────────── */
+.cta-section {
+  background: var(--ink); color: var(--ground);
+  padding: 72px 40px; text-align: center;
+}
+.cta-inner { max-width: 520px; margin: 0 auto; }
+.cta-heading {
+  font-family: var(--ds-font);
+  font-size: 32px; font-weight: 400; margin-bottom: 10px;
+}
+.cta-sub {
+  font-size: 14px; color: rgba(247,246,242,.65);
+  margin-bottom: 32px; line-height: 1.6;
+}
+.timeline { margin-bottom: 36px; text-align: left; }
+.timeline-row {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 13px 0; border-top: 1px solid rgba(226,224,216,.12);
+}
+.timeline-row:last-child { border-bottom: 1px solid rgba(226,224,216,.12); }
+.timeline-day {
+  font-family: var(--ds-font-mono);
+  font-size: 10px; color: #34c759; font-weight: 700;
+  min-width: 50px; padding-top: 3px; letter-spacing: .5px;
+}
+.timeline-desc { font-size: 13px; color: rgba(247,246,242,.75); line-height: 1.5; }
+.cta-btn {
+  display: inline-block;
+  background: var(--signal); color: #fff;
+  border-radius: 8px; padding: 13px 34px;
+  font-size: 14px; font-weight: 600; text-decoration: none;
+  letter-spacing: .2px;
+}
+.cta-btn:hover { opacity: .88; }
+.cta-footnote {
+  font-size: 11px; color: rgba(247,246,242,.35); margin-top: 12px;
+}
+
+/* ── Footer ───────────────────────────────────────────────────── */
+.footer {
+  text-align: center; padding: 22px;
+  font-family: var(--ds-font-mono);
+  font-size: 10px; color: var(--muted); letter-spacing: .5px;
+  border-top: 1px solid var(--rule); background: var(--ground);
+}
+
+/* ── Print ────────────────────────────────────────────────────── */
+@media print {
+  .rail { display: none; }
+  .layout { grid-template-columns: 1fr; padding: 24px; }
+  .hero, .cta-section {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .card, .table-wrap, .rec-card {
+    box-shadow: none; break-inside: avoid;
+  }
+  .section-heading { break-after: avoid; }
+}
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; padding: 28px 16px 60px; }
+  .rail { display: none; }
+  .wins-gaps-grid, .card-grid { grid-template-columns: 1fr; }
+  .rec-card { grid-template-columns: 1fr; }
+  .cta-heading { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══════════════════════════════════════════════════════ -->
+<div class="hero-wrap"><header class="ds-hero">
+<div class="ds-hero__inner has-aside">
+<div class="ds-hero__main">
+<div class="ds-hero__badge">Pre-Audit Report · Prepared by Abdul</div>
+<h1>HOPE'87</h1>
+<div class="ds-meta">July 13, 2026</div>
+<div class="ds-hero__headline">HOPE'87 has real community trust but zero paid presence and zero tracking in the exact markets — AT/DE Pakistani diaspora — where it wants to raise donations.</div>
+<div class="ds-hero__pills"><span class="ds-hero__pill">FB · 2,696 likes</span><span class="ds-hero__pill">IG · 289 followers</span><span class="ds-hero__pill">0.75/wk posts</span></div>
+</div>
+<div class="ds-hero__aside"><canvas id="scoreGauge" width="160" height="160"></canvas>
+<div class="ds-hero__band">Critical</div><div class="ds-hero__stat">
+<div class="ds-hero__stat-label">Competitor outspend</div>
+<div class="ds-hero__stat-value">35×</div>
+<div class="ds-hero__stat-caption">Category benchmark — named competitors could not be resolved.</div>
+</div></div>
+</div>
+</header></div>
+
+<!-- ═══ LAYOUT ══════════════════════════════════════════════════════ -->
+<div class="layout">
+
+  <aside class="rail">
+    <div class="rail-inner">
+      <ul class="rail-nav">
+        <li class="rail-section-label">Analysis</li>
+        <li><a href="#score"       class="rail-link">Score</a></li>
+        <li><a href="#profile"     class="rail-link">Profile</a></li>
+        <li><a href="#organic"     class="rail-link">Organic</a></li>
+        <li><a href="#paid"        class="rail-link">Paid Ads</a></li>
+        <li><a href="#competitors" class="rail-link">Competitors</a></li>
+        <li class="rail-section-label">Pitch</li>
+        <li><a href="#wins-gaps"   class="rail-link">Wins &amp; Gaps</a></li>
+        <li><a href="#opportunity" class="rail-link">Opportunity</a></li>
+        <li><a href="#recs"        class="rail-link">Recommendations</a></li>
+        <li><a href="#next-steps"  class="rail-link">Next Steps</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <!-- 1. Score breakdown -->
+    <div class="section" id="score">
+      <h2 class="section-heading">Score Breakdown</h2>
+      <p class="section-sub">Five equally-weighted dimensions · each scored 0–100 from public data only.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Dimension</th><th>Score</th><th>Weight</th></tr></thead>
+          <tbody><tr><td class="dim-label">Profile &amp; Brand Presence</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:0%;background:#34c759" data-pct="70"></div></div><span class="bar-num" style="color:#34c759">70</span></div></td><td class="dim-weight">20%</td></tr><tr><td class="dim-label">Organic Content Quality</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:0%;background:#ff3b30" data-pct="25"></div></div><span class="bar-num" style="color:#ff3b30">25</span></div></td><td class="dim-weight">20%</td></tr><tr><td class="dim-label">Paid Ads Activity</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:0%;background:#ff3b30" data-pct="15"></div></div><span class="bar-num" style="color:#ff3b30">15</span></div></td><td class="dim-weight">20%</td></tr><tr><td class="dim-label">Competitor Position</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:0%;background:#ff3b30" data-pct="5"></div></div><span class="bar-num" style="color:#ff3b30">5</span></div></td><td class="dim-weight">20%</td></tr><tr><td class="dim-label">Technical Foundation</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:0%;background:#ff3b30" data-pct="15"></div></div><span class="bar-num" style="color:#ff3b30">15</span></div></td><td class="dim-weight">20%</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2. Profile & Brand Presence -->
+    <div class="section" id="profile">
+      <h2 class="section-heading">Profile &amp; Brand Presence</h2>
+      <p class="section-sub">What a prospect sees before they click an ad — trust signals that live or die on the page itself.</p>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">Facebook Page</div>
+          <div class="card-value">2,696</div>
+          <div class="card-caption">Likes · Category unknown</div>
+          
+        </div>
+        <div class="card">
+          <div class="card-label">Instagram</div>
+          <div class="card-value">289</div>
+          <div class="card-caption">Followers · @hope87.at</div>
+          <div style="margin-top:10px;font-size:12px;color:#6e6e73">The Future of Humanitarian Aid. Represented in 9 Countries Worldwide. The Support of Youth Training and Employment Proje</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Organic Content -->
+    <div class="section" id="organic">
+      <h2 class="section-heading">Organic Content</h2>
+      <p class="section-sub">Carousels average 0.55% ER (best format for engagement); Reels lead on reach and discovery. Industry target: ≥ 3 posts/week.</p>
+      <div class="card-grid" style="margin-bottom:10px">
+        <div class="card">
+          <div class="card-label">Posts / Week</div>
+          <div class="card-value" style="color:#ff3b30">0.75</div>
+          <div class="card-caption">Target ≥ 3/week</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Engagement Rate</div>
+          <div class="card-value" style="color:#ff3b30">—</div>
+          <div class="card-caption">Benchmark: 0.55% (carousel avg)</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Format (last 90d)</th><th>Count</th></tr></thead>
+          <tbody><tr><td colspan="2" class="muted small">No format breakdown available</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4. Paid Ads -->
+    <div class="section" id="paid">
+      <h2 class="section-heading">Paid Ads Activity</h2>
+      <p class="section-sub">Source: Meta Ad Library (public). Only 11.3% of ads survive past 60 days — run duration is the strongest public performance proxy.</p>
+      <div class="card-grid" style="margin-bottom:10px">
+        <div class="card">
+          <div class="card-label">Active Ads (90d)</div>
+          <div class="card-value">0</div>
+        </div>
+        <div class="card">
+          <div class="card-label">New Ads (14d)</div>
+          <div class="card-value">0</div>
+          <div class="card-caption">Pace indicator</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Avg Creative Age</div>
+          <div class="card-value">—</div>
+          <div class="card-caption">&gt;60d = strong signal</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Surviving &gt;60d</div>
+          <div class="card-value" style="color:#ff3b30">—</div>
+          <div class="card-caption">Industry avg: 11.3%</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Tracking Surface</div>
+        <ul class="tracking-list" style="margin-top:10px"><li><span class="tick" style="color:#ff3b30">✗</span> Meta Pixel</li><li><span class="tick" style="color:#ff3b30">✗</span> Google Tag Manager</li><li><span class="tick" style="color:#ff3b30">✗</span> Google Analytics 4</li><li><span class="tick" style="color:#ff3b30">✗</span> Conversion event tracking</li><li><span class="tick" style="color:#34c759">✓</span> Mobile-responsive viewport</li></ul>
+      </div>
+    </div>
+
+    <!-- 5. Competitor Intelligence -->
+    <div class="section" id="competitors">
+      <h2 class="section-heading">Competitor Intelligence</h2>
+      <p class="section-sub">Creative Score = avg of hook strength, visual strategy, CTA match, psychological trigger, run-duration proxy (each /10). Higher = stronger creative operation.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Competitor</th>
+              <th>Active (90d)</th>
+              <th>New (14d)</th>
+              <th>Avg Age</th>
+              <th>Formats</th>
+              <th>Creative Score</th>
+            </tr>
+          </thead>
+          <tbody><tr><td class="page-name">Islamic Relief Worldwide</td><td class="mono">104</td><td class="mono">0</td><td class="mono">5d</td><td class="small">carousel, image</td><td class="mono" style="color:#ff9f0a;font-weight:700">6.0</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 6. Wins & Gaps -->
+    <div class="section" id="wins-gaps">
+      <h2 class="section-heading">Wins &amp; Gaps</h2>
+      <p class="section-sub">Every gap is reframed as an opportunity with a cost of inaction — never a criticism.</p>
+      <div class="wins-gaps-grid">
+        <div class="card wins-card">
+          <div class="card-type-label">What you're doing right</div>
+          <ul class="bullet-list wins"><li>Instagram is a Business account categorized as &quot;Nonprofit organization&quot; with a linked donation page (PayPal) — the basic trust/credibility signals are already in place.</li><li>Facebook Page has built real community equity: 2,696 likes and 18 people actively talking about the Page after years of organic presence.</li><li>Website is fully responsive (mobile viewport meta present) — a baseline technical foundation is already there to build tracking on top of.</li></ul>
+        </div>
+        <div class="card gaps-card">
+          <div class="card-type-label">Where you're losing ground</div>
+          <ul class="bullet-list gaps"><li>No Meta Pixel, GTM, or GA4 detected anywhere on hope87.at (checked ~148KB of homepage HTML, 67 external scripts) — every visitor who clicks through to the PayPal donation link today is completely unmeasured.</li><li>0 ads have ever run in the Meta Ad Library for hope87.at in Austria or Germany, while Islamic Relief Worldwide alone placed 104 ads in AT+DE in the last 90 days (~35/month, mostly carousel appeals) — you have no paid footprint at all in the two countries you most want to reach Pakistani diaspora donors.</li><li>Organic cadence has fallen to 0.75 posts/week (target ≥3/week for a maintained account) with an 11.6-day gap since the last post — inconsistent presence weakens trust with a diaspora audience that competitors are courting on a weekly cadence.</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Opportunity Sizing -->
+    <div class="section" id="opportunity">
+      <h2 class="section-heading">Opportunity Sizing</h2>
+      <p class="section-sub">Industry benchmarks anchor the projection. Prospect-specific figures populated from stated budget and revenue goal.</p>
+      <div class="card" style="margin-bottom:10px">
+        <div class="card-label">Industry Benchmarks — Meta 2025</div>
+        <div class="table-wrap" style="margin-top:12px;box-shadow:none;border:none">
+          <table>
+            <thead><tr><th>Metric</th><th>Value</th><th>Notes</th></tr></thead>
+            <tbody><tr><td class="dim-label">Meta Avg CPA</td><td class="mono" style="font-weight:700">$38.19</td><td class="muted small">Industry avg cost-per-acquisition across verticals (2025)</td></tr><tr><td class="dim-label">Meta DTC ROAS</td><td class="mono" style="font-weight:700">1.86×</td><td class="muted small">Avg return on ad spend, direct-to-consumer</td></tr><tr><td class="dim-label">Meta CPL</td><td class="mono" style="font-weight:700">$27.66</td><td class="muted small">Cost per lead — 60% cheaper than Google Ads ($70.11)</td></tr><tr><td class="dim-label">Carousel ER</td><td class="mono" style="font-weight:700">0.55%</td><td class="muted small">Best engagement-rate format on Instagram (Socialinsider 2025)</td></tr><tr><td class="dim-label">Ad survival &gt;60d</td><td class="mono" style="font-weight:700">11.3%</td><td class="muted small">Only 11.3% of ads run past 60 days — longevity signals quality</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-label">Bottom-up (from budget)</div>
+          <p class="muted small" style="padding:8px 0">Provide monthly budget to generate.</p>
+        </div>
+        <div class="card">
+          <div class="card-label">Top-down (from revenue goal)</div>
+          <p class="muted small" style="padding:8px 0">Provide revenue goal to generate.</p>
+        </div>
+      </div>
+    </div>
+
+    
+
+    <!-- 8. Recommendations -->
+    <div class="section" id="recs">
+      <h2 class="section-heading">Recommendations</h2>
+      <p class="section-sub">Three actions maximum. Problem → evidence → proposed action → expected outcome.</p>
+      <div class="rec-card"><div class="rec-num">01</div><div class="rec-body"><div class="rec-problem">Every donation click is currently unmeasured.</div><div class="rec-evidence">0 tracking signals found (no fbq, no GTM, no GA4, no conversion event) across the full homepage scan.</div><div class="rec-action"><strong>Action:</strong> Install Meta Pixel + server-side CAPI on the PayPal/donation handoff, define a Donate conversion event.</div><div class="rec-outcome">Enables conversion-optimized ad delivery from day one instead of running blind.</div></div></div><div class="rec-card"><div class="rec-num">02</div><div class="rec-body"><div class="rec-problem">0 ads running in Austria/Germany while a comparable NGO runs ~35 ads/month in the same countries.</div><div class="rec-evidence">Islamic Relief Worldwide: 104 ads in AT+DE over 90 days, dominant format carousel (76 of 104 ads).</div><div class="rec-action"><strong>Action:</strong> Structure a seasonal-appeal campaign (Ramadan/Qurbani-style moments) with Urdu/German bilingual creative targeted to the Pakistani diaspora in AT/DE.</div><div class="rec-outcome">Establishes a first paid channel in the exact target geography instead of relying on organic reach alone.</div></div></div><div class="rec-card"><div class="rec-num">03</div><div class="rec-body"><div class="rec-problem">Posting only 0.75x/week, well below the 3x/week maintained-account benchmark.</div><div class="rec-evidence">12 most recent posts span 111.7 days (avg one post every ~9.3 days); last post was 11.6 days ago.</div><div class="rec-action"><strong>Action:</strong> Move to a 3x/week content rhythm mixing Reels (reach/discovery) and carousels (engagement/saves), anchored on project impact stories relevant to Pakistani donors.</div><div class="rec-outcome">Rebuilds top-of-funnel reach and warms the audience before paid spend begins.</div></div></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ CTA ════════════════════════════════════════════════════════ -->
+<div class="cta-section" id="next-steps">
+  <div class="cta-inner">
+    <h2 class="cta-heading">What the next 90 days look like</h2>
+    <p class="cta-sub">A clear onboarding arc — no surprises, no jargon, measurable milestones at every stage.</p>
+    <div class="timeline">
+      <div class="timeline-row">
+        <div class="timeline-day">Day 30</div>
+        <div class="timeline-desc">Install Pixel + CAPI, define Donate conversion event, launch first $50/day AT/DE conversion test</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-day">Day 60</div>
+        <div class="timeline-desc">Iterate creative on Ramadan/Qurbani-style appeals, restore 3x/week organic cadence</div>
+      </div>
+      <div class="timeline-row">
+        <div class="timeline-day">Day 90</div>
+        <div class="timeline-desc">Full-funnel reporting vs Islamic Relief benchmark, scale winning adsets, retainer review</div>
+      </div>
+    </div>
+    <a href="mailto:abdul@duckercreative.com?subject=Pre-Audit+%E2%80%94+HOPE&#x27;87" class="cta-btn">Book a Free Strategy Call</a>
+    <div class="cta-footnote">30 minutes · no commitment · results framework in writing</div>
+  </div>
+</div>
+
+<div class="footer">
+  HOPE&#x27;87 &nbsp;·&nbsp; Pre-Audit &nbsp;·&nbsp; July 13, 2026 &nbsp;·&nbsp; Public-data analysis &nbsp;·&nbsp; Abdul
+</div>
+
+<script>
+(function () {
+  var SCORE = 26;
+  var SIGNAL  = '#ff3b30';
+  var RESOLVE = '#34c759';
+  var AMBER   = '#ff9f0a';
+  var RULE    = '#e2e2e7';
+  var MUTED   = '#6e6e73';
+
+  // ── Canvas gauge ──────────────────────────────────────────────
+  function drawGauge(id, score) {
+    var canvas = document.getElementById(id);
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    var cx = 80, cy = 80, r = 62, lw = 13;
+    var start  = Math.PI * 0.75;
+    var finish = Math.PI * 2.25;
+    var color  = score >= 65 ? RESOLVE : score >= 40 ? AMBER : SIGNAL;
+    var target = start + (finish - start) * (score / 100);
+    var current = start;
+    var step = (target - start) / 45;
+
+    function frame() {
+      ctx.clearRect(0, 0, 160, 160);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, start, finish);
+      ctx.strokeStyle = RULE; ctx.lineWidth = lw; ctx.lineCap = 'round';
+      ctx.stroke();
+
+      if (current < target) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, start, current);
+        ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+        ctx.stroke();
+        current += step;
+        requestAnimationFrame(frame);
+      } else {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, start, target);
+        ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = color;
+      ctx.font = 'bold 28px var(--ds-font-mono)';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(score, cx, cy - 6);
+      ctx.fillStyle = MUTED;
+      ctx.font = '11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+      ctx.fillText('/100', cx, cy + 13);
+    }
+    frame();
+  }
+
+  drawGauge('scoreGauge', SCORE);
+
+  // ── Bar animation on scroll ───────────────────────────────────
+  function animateBars() {
+    document.querySelectorAll('.bar-fill').forEach(function (el) {
+      var pct = el.getAttribute('data-pct');
+      if (pct) el.style.width = pct + '%';
+    });
+  }
+
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) animateBars(); });
+    }, { threshold: 0.1 });
+    var tbl = document.getElementById('score');
+    if (tbl) obs.observe(tbl);
+  } else {
+    animateBars();
+  }
+
+  // ── Active rail on scroll ─────────────────────────────────────
+  var sections = document.querySelectorAll('.section[id], .cta-section[id]');
+  var links    = document.querySelectorAll('.rail-link');
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY + 80;
+    var active = '';
+    sections.forEach(function (s) { if (s.offsetTop <= y) active = s.id; });
+    links.forEach(function (l) {
+      var href = (l.getAttribute('href') || '').replace('#', '');
+      l.classList.toggle('active', href === active);
+    });
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

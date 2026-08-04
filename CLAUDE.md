@@ -169,6 +169,7 @@ cryptic null-halt.
 - **AI-content disclosure:** any ad built from GenAI imagery/video MUST set `ai_disclosed: true`. The `ai-disclosure` guard (in `scripts/lib/guards.js`) fail-closed blocks undisclosed AI creatives — Meta rejects them (since Mar 2026).
 - **Brand compliance:** the `brand-compliance` guard (in `scripts/lib/guards.js`) fail-closed blocks ad creatives that use off-brand language (`client.voice.avoid` / `brand.verbal.voice.dont`) and, for locked brands (`SMOS_REQUIRE_BRAND_KIT=1` or `brand.visual.brand_kit_locked`), AI-generated visuals that don't declare a `brand_kit` matching the approved palette/logo. Enforces the *client's* brand, beyond Meta policy.
 - **Per-client tokens:** organic actions (publish, inbox, threads) resolve a per-client token via `scripts/lib/tokens.js` (`META_PAGE_TOKEN_<SLUG>` etc.) — never assume the global page token in a multi-client setup.
+- **Two Meta MCP servers, different roles.** `meta` (`mcp/meta-server/`) is smOS's own 13-module server — it wraps every write with our guardrails, naming conventions, per-client tokens, and Supabase logging, and is the ONLY server allowed to perform writes (create/update campaigns, adsets, ads, budgets). `meta-official` (added 2026-07-22, `https://mcp.facebook.com/ads`) is Meta's own hosted MCP — 29 generic tools, Business OAuth auth, everything it creates lands PAUSED at Meta's end too. Treat it as **read-only / comparison use** (reporting, diagnostics, cross-checking numbers) until it's explicitly wrapped the same way the custom server is — it has no awareness of our naming conventions or `guards.js` checks, so routing writes through it bypasses brand-compliance, AI-disclosure, and audit logging. Requires one-time human OAuth authorization (`/mcp` in an interactive session) — cannot be authorized from a non-interactive run.
 
 ---
 
@@ -293,3 +294,4 @@ components). Spec & component reference: **`design-system/MASTER.md`**.
 ## Active Clients
 
 - [Blue Rose Auto Care & Repair Services](clients/blue-rose-auto/CLAUDE.md) · Status: Planning mode (no live Meta accounts yet) · Engagement start: 2026-06-18
+- [HOPE'87](clients/hope87/CLAUDE.md) · Status: Active — expanded scope (Astro EN/DE website rebuild + donation landing page + content/creative production + Meta retainer); ad account & pixel still TBD · Engagement start: 2026-07-31

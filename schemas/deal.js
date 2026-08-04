@@ -48,6 +48,21 @@ export function normalizeActivity(raw) {
   };
 }
 
+// One-time (non-recurring) line items alongside the recurring retainer — e.g. a
+// website rebuild, a landing page, an initial video/graphics production package.
+// Kept separate from `deal.monthly_retainer`/`setup_fee` so proposal/contract
+// renderers can list recurring vs. one-time charges distinctly.
+export function normalizeAddon(raw) {
+  const r = raw || {};
+  return {
+    name: pick(r, "name", "title") ?? null,
+    amount: isFiniteNumber(Number(pick(r, "amount", "price"))) ? Number(pick(r, "amount", "price")) : 0,
+    currency: pick(r, "currency") ?? null,
+    description: pick(r, "description") ?? null,
+    recurring: false,
+  };
+}
+
 export function normalize(raw) {
   const r = raw || {};
   const stage = (pick(r, "stage") || "lead").toLowerCase();
@@ -71,6 +86,7 @@ export function normalize(raw) {
       monthly_retainer: Number(pick(deal, "monthly_retainer") ?? pick(r, "monthly_retainer") ?? 0) || 0,
       setup_fee: Number(pick(deal, "setup_fee") ?? 0) || 0,
       currency: pick(deal, "currency") ?? pick(r, "currency") ?? "USD",
+      addons: asArray(pick(deal, "addons")).map(normalizeAddon),
     },
     probability: isFiniteNumber(r.probability) ? r.probability : (STAGE_PROBABILITY[stage] ?? 0),
     expected_close: pick(r, "expected_close") ?? null,
@@ -101,6 +117,10 @@ export function validate(obj) {
   if (!STAGES.includes(d.stage)) errors.push(`deal.stage "${d.stage}" is not a valid stage`);
   if (d.probability < 0 || d.probability > 100) errors.push("deal.probability must be 0–100");
   if (d.deal.monthly_retainer < 0) errors.push("deal.deal.monthly_retainer must be ≥ 0");
+  d.deal.addons.forEach((a, i) => {
+    if (!isNonEmptyString(a.name)) errors.push(`deal.deal.addons[${i}].name is missing`);
+    if (a.amount < 0) errors.push(`deal.deal.addons[${i}].amount must be ≥ 0`);
+  });
   // A won deal must carry the artifacts that justify the win.
   if (d.stage === "won" && !isNonEmptyString(d.links.proposal)) {
     errors.push("deal.stage=won requires links.proposal (run /proposal before marking won)");

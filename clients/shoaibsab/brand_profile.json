@@ -1,0 +1,169 @@
+{
+  "client_slug": "shoaibsab",
+  "status": "draft",
+  "strategy": {
+    "purpose": null,
+    "mission": null,
+    "vision": null,
+    "values": [],
+    "persona": null,
+    "archetype": {
+      "primary": null,
+      "secondary": null
+    },
+    "value_proposition": null,
+    "differentiation": null,
+    "positioning_statement": null,
+    "messaging_pillars": [],
+    "essence": null,
+    "promise": null,
+    "positioning_approved_at": null
+  },
+  "verbal": {
+    "name": null,
+    "name_candidates": [
+      {
+        "name": "Vitalume",
+        "domain_com_available": false,
+        "domain": "vitalume.com",
+        "trademark_knockout_clear": null,
+        "trademark_note": "no USPTO_ODP_API_KEY — verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)",
+        "handles_available": {
+          "instagram": null,
+          "tiktok": null,
+          "linkedin": true,
+          "facebook": null,
+          "x": null
+        },
+        "attorney_clearance_flagged": true
+      },
+      {
+        "name": "Herbanex",
+        "domain_com_available": null,
+        "domain": "herbanex.com",
+        "trademark_knockout_clear": null,
+        "trademark_note": "no USPTO_ODP_API_KEY — verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)",
+        "handles_available": {
+          "tiktok": null,
+          "instagram": null,
+          "linkedin": true,
+          "facebook": null,
+          "x": true
+        },
+        "attorney_clearance_flagged": true
+      },
+      {
+        "name": "Sanavyx",
+        "domain_com_available": null,
+        "domain": "sanavyx.com",
+        "trademark_knockout_clear": null,
+        "trademark_note": "no USPTO_ODP_API_KEY — verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)",
+        "handles_available": {
+          "tiktok": null,
+          "facebook": null,
+          "linkedin": true,
+          "x": null,
+          "instagram": null
+        },
+        "attorney_clearance_flagged": true
+      },
+      {
+        "name": "Zenovita",
+        "domain_com_available": false,
+        "domain": "zenovita.com",
+        "trademark_knockout_clear": null,
+        "trademark_note": "no USPTO_ODP_API_KEY — verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)",
+        "handles_available": {
+          "tiktok": null,
+          "facebook": null,
+          "x": null,
+          "linkedin": null,
+          "instagram": null
+        },
+        "attorney_clearance_flagged": true
+      },
+      {
+        "name": "Calyxel",
+        "domain_com_available": false,
+        "domain": "calyxel.com",
+        "trademark_knockout_clear": null,
+        "trademark_note": "no USPTO_ODP_API_KEY — verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)",
+        "handles_available": {
+          "tiktok": null,
+          "instagram": null,
+          "linkedin": true,
+          "facebook": null,
+          "x": null
+        },
+        "attorney_clearance_flagged": true
+      }
+    ],
+    "name_screening": {
+      "domain_com_available": null,
+      "trademark_knockout_clear": null,
+      "handles_available": null,
+      "attorney_clearance_flagged": null
+    },
+    "name_approved_at": null,
+    "tagline": null,
+    "voice": {
+      "traits": [],
+      "spectrums": null,
+      "do": [],
+      "dont": []
+    },
+    "messaging_house": {
+      "roof": null,
+      "walls": [],
+      "foundation": []
+    },
+    "elevator_pitch": null,
+    "boilerplate": null
+  },
+  "visual": {
+    "moodboard_url": null,
+    "logo": {
+      "primary_url": null,
+      "mark_url": null,
+      "wordmark_url": null,
+      "mono_url": null,
+      "reverse_url": null,
+      "svg_url": null,
+      "clear_space": null,
+      "min_size": null
+    },
+    "logo_approved_at": null,
+    "colors": {
+      "primary": null,
+      "secondary": null,
+      "accent": null,
+      "neutrals": []
+    },
+    "typography": {
+      "heading": null,
+      "body": null,
+      "scale": null
+    },
+    "imagery_style": null,
+    "iconography": null,
+    "ai_generated": false
+  },
+  "guidelines": {
+    "doc_url": null,
+    "pdf_url": null,
+    "version": null,
+    "generated_at": null
+  },
+  "social": {
+    "profile_picture_url": null,
+    "fb_cover_url": null,
+    "ig_highlight_covers": [],
+    "templates": [],
+    "link_in_bio": null,
+    "bios": {
+      "instagram": null,
+      "facebook": null
+    },
+    "branded_hashtag": null
+  }
+}

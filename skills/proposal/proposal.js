@@ -129,8 +129,20 @@ function winGapItems(findings, which) {
 /* Kept for portability (email paste, plaintext). Emphasis uses *asterisks* so a
    generic markdown renderer produces <em>/<strong> (the old `_x_` rendered
    literally). Not the primary deliverable — the HTML below is. */
-export function buildProposalMarkdown({ company, catalog, pkg, retainer, findings }) {
-  const a = catalog.agency, t = catalog.terms, cur = pkg.currency;
+/** Render one-time add-on deliverables (website builds, video/graphics packages, …)
+ *  as a markdown list, clearly separated from the recurring retainer. */
+function addonsMarkdown(addons) {
+  if (!addons || !addons.length) return "";
+  const cur = addons[0].currency || "USD";
+  const total = addons.reduce((s, a) => s + (a.amount || 0), 0);
+  let md = `## One-time deliverables (separate from the monthly retainer)\n\n`;
+  md += addons.map((a) => `- **${a.name}** — ${money(a.currency || cur, a.amount)}${a.description ? ` — ${a.description}` : ""}`).join("\n");
+  md += `\n\n**Total one-time investment:** ${money(cur, total)} (billed once, separately from the recurring retainer)\n\n`;
+  return md;
+}
+
+export function buildProposalMarkdown({ company, catalog, pkg, retainer, findings, addons, currency }) {
+  const a = catalog.agency, t = catalog.terms, cur = currency || pkg.currency;
   const price = retainer > 0 ? retainer : pkg.monthly_retainer;
   const snap = extractSnapshot(findings);
   const list = (arr) => arr.map((x) => `- ${x}`).join("\n");
@@ -144,6 +156,7 @@ export function buildProposalMarkdown({ company, catalog, pkg, retainer, finding
   if (gaps.length) md += `**Where the upside is**\n${list(gaps)}\n\n`;
   if (!wins.length && !gaps.length) md += `Based on our review of ${company}'s social presence, there's clear room to improve paid performance and bring organic and paid under one system.\n\n`;
   md += `## Recommended package — ${pkg.name}\n\n*${pkg.best_for}*\n\n**${money(cur, price)}/month** · one-time setup ${money(cur, pkg.setup_fee)}\n\n**Included**\n${list(pkg.includes)}\n\n`;
+  md += addonsMarkdown(addons);
   md += `## How we work\n\nYou approve every campaign before spend. Every optimization is logged with its reasoning, and you get HTML + PDF reporting on a fixed cadence — the same standard as the pre-audit this proposal sits beside.\n\n`;
   md += `## Terms\n\n- **Term:** ${t.contract_length_months}-month initial commitment\n- **Ad spend:** ${t.ad_spend}\n- **Payment:** ${t.payment}\n- **Cancellation:** ${t.cancellation}\n\n`;
   md += `## Next step\n\nApprove and we'll send the agreement (e-sign) and onboarding. Your accounts can be set up and first campaigns built within a week.\n`;
@@ -275,10 +288,10 @@ function winsGaps(findings) {
 </div>`;
 }
 
-function pricing(catalog, pkg, retainer) {
+function pricing(catalog, pkg, retainer, currency) {
   const pair = pickTierPair(catalog, pkg);
   const cards = pair.map(({ pkg: p, featured }) => {
-    const cur = p.currency;
+    const cur = currency || p.currency;
     const price = featured && retainer > 0 ? retainer : p.monthly_retainer;
     const items = (p.includes || []).map((x) => `<li>${esc(x)}</li>`).join("");
     return `<div class="prop-tier${featured ? " prop-tier--featured" : ""}">
@@ -291,6 +304,17 @@ function pricing(catalog, pkg, retainer) {
 </div>`;
   }).join("");
   return `<div class="prop-tiers">${cards}</div>`;
+}
+
+/** Render one-time add-on deliverables (website builds, video/graphics packages, …)
+ *  as their own HTML block, clearly separated from the recurring retainer above. */
+function addonsBlock(addons) {
+  if (!addons || !addons.length) return "";
+  const cur = addons[0].currency || "USD";
+  const total = addons.reduce((s, a) => s + (a.amount || 0), 0);
+  const rows = addons.map((a) => `<div class="prop-term"><div class="prop-term__k">${esc(a.name)}</div><div class="prop-term__v">${esc(money(a.currency || cur, a.amount))}${a.description ? ` — ${esc(a.description)}` : ""}</div></div>`).join("");
+  return `<div class="ds-card"><div class="prop-terms">${rows}</div></div>
+<div class="prop-tier__note" style="margin-top:12px">Total one-time investment: <strong>${esc(money(cur, total))}</strong> — billed once, up front, separately from the monthly retainer above.</div>`;
 }
 
 function roiBand(findings) {
@@ -359,17 +383,20 @@ function acceptBlock({ company, agency, date }) {
 </div>`;
 }
 
-export function buildProposalHtml({ company, catalog, pkg, retainer, findings, date }) {
+export function buildProposalHtml({ company, catalog, pkg, retainer, findings, date, addons, currency }) {
   const agency = catalog.agency, t = catalog.terms;
   const snap = extractSnapshot(findings);
   const roi = roiBand(findings);
+  const addonsHtml = addonsBlock(addons);
   const body = [
     heroSection({ company, agency, date, snap }),
     recallBand(company, snap),
     section("opportunity", "The opportunity", "What we're building on — and what we're fixing",
       "Straight from your pre-audit: we start from genuine strengths and close the gaps costing you measurable growth.", winsGaps(findings)),
     section("package", "Recommended package", "Where you start, and where we take it",
-      "Start on the entry tier to stand up measurement and prove the channel, then step up once the numbers are in.", pricing(catalog, pkg, retainer)),
+      "Start on the entry tier to stand up measurement and prove the channel, then step up once the numbers are in.", pricing(catalog, pkg, retainer, currency)),
+    addonsHtml ? section("addons", "One-time deliverables", "Beyond the monthly retainer",
+      "Priced separately from the recurring management retainer — due once, up front, not month to month.", addonsHtml) : "",
     roi ? `<section class="ds-section">${roi}</section>` : "",
     section("how", "How we work", "You stay in control the whole way", "", howWeWork()),
     section("timeline", "Your first 90 days", "From signed to scaling", "", roadmap(findings)),
@@ -415,17 +442,21 @@ async function main() {
   const retainer = dealRec?.deal?.monthly_retainer || 0;
   const pkg = pickPackage(catalog, { packageId, retainer });
   const findings = loadFindings(slug);
+  const addons = dealRec?.deal?.addons || [];
+  // The deal's currency wins over the catalog package's — a client billed in EUR
+  // must not see a USD retainer next to EUR one-time line items.
+  const currency = dealRec?.deal?.currency || pkg.currency;
   const date = new Date().toISOString().slice(0, 10);
 
   const outDir = resolve(ROOT, "proposals", slug);
   mkdirSync(outDir, { recursive: true });
 
   // Markdown twin (portable) + structured HTML (primary deliverable) + PDF.
-  const md = buildProposalMarkdown({ company, catalog, pkg, retainer, findings });
+  const md = buildProposalMarkdown({ company, catalog, pkg, retainer, findings, addons, currency });
   const mdPath = resolve(outDir, "proposal.md");
   writeFileSync(mdPath, md);
 
-  const html = buildProposalHtml({ company, catalog, pkg, retainer, findings, date });
+  const html = buildProposalHtml({ company, catalog, pkg, retainer, findings, date, addons, currency });
   const htmlPath = resolve(outDir, "proposal.html");
   writeFileSync(htmlPath, html);
   const { pdfPath, pdfOk } = writeProposalPdf(htmlPath);
@@ -440,8 +471,8 @@ async function main() {
         company_name: company,
         stage,
         links: { proposal: linkPath },
-        deal: { monthly_retainer: retainer > 0 ? retainer : pkg.monthly_retainer, currency: pkg.currency },
-        activities: [...(dealRec?.activities || []), { at: new Date().toISOString(), type: "proposal", note: `proposed ${pkg.name} (${pkg.currency} ${pkg.monthly_retainer}/mo)` }],
+        deal: { monthly_retainer: retainer > 0 ? retainer : pkg.monthly_retainer, currency },
+        activities: [...(dealRec?.activities || []), { at: new Date().toISOString(), type: "proposal", note: `proposed ${pkg.name} (${currency} ${retainer > 0 ? retainer : pkg.monthly_retainer}/mo)` }],
       });
       crm = { stage: saved.stage, proposal_link: saved.links.proposal, stage_changed: stage !== current };
     } catch (e) { crm = { error: e.message }; }
@@ -449,7 +480,7 @@ async function main() {
 
   console.log(JSON.stringify({
     slug, company, package: pkg.id,
-    monthly: `${pkg.currency} ${retainer > 0 ? retainer : pkg.monthly_retainer}`,
+    monthly: `${currency} ${retainer > 0 ? retainer : pkg.monthly_retainer}`,
     html: htmlPath, pdf: pdfOk ? pdfPath : "(PDF skipped — install playwright)",
     used_pre_audit: !!findings, crm,
     next: "Send to the prospect. On signature: /contract, then /intake + /billing.",

@@ -29,7 +29,15 @@ const FB_REEL_POLL_MS = 5000;
 
 function pageTokenFor(slug) {
   const envKey = `META_PAGE_TOKEN_${slug.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;
-  return process.env[envKey] || process.env.META_PAGE_TOKEN;
+  return process.env[envKey] || process.env.META_PAGE_TOKEN || process.env.META_ACCESS_TOKEN;
+}
+
+// A per-client token can belong to a different Meta App than the global default
+// (e.g. a client-specific system user under its own app) — appsecret_proof must
+// be computed with THAT app's secret or Meta rejects every call.
+function appSecretFor(slug) {
+  const envKey = `META_APP_SECRET_${slug.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;
+  return process.env[envKey] || process.env.META_APP_SECRET;
 }
 
 async function pollContainer(graph, containerId) {
@@ -227,7 +235,7 @@ async function main() {
     return;
   }
 
-  const graph = createGraph();
+  const graph = createGraph(pageToken, { appSecret: appSecretFor(slug) });
   const logPath = P.clientFile(slug, "publish_log.json", { forWrite: true });
   let igLimitReached = false;
   const summary = { published: 0, scheduled: 0, errors: 0 };

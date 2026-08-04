@@ -57,5 +57,35 @@
     "ad_spend": "Billed separately and paid directly to Meta — not included in the retainer.",
     "payment": "Monthly in advance, Net 7.",
     "cancellation": "30 days written notice after the initial 3-month term."
-  }
+  },
+  "addons": [
+    {
+      "id": "website_redesign_astro",
+      "name": "Website Redesign & Development (Astro, dual-language EN/DE)",
+      "currency": "EUR",
+      "one_time_price": 6500,
+      "description": "Full rebuild of the WordPress site on Astro: information architecture, dual-language (English/German) routing and content model, migration of existing content, performance/SEO optimization, and CMS handoff."
+    },
+    {
+      "id": "donation_landing_page",
+      "name": "Donation Landing Page",
+      "currency": "EUR",
+      "one_time_price": 1800,
+      "description": "Dedicated, conversion-optimized donation landing page (cause-specific, bilingual EN/DE) with an embedded/linked donation flow, trust signals, and Meta Pixel + Conversions API event wiring."
+    },
+    {
+      "id": "video_production_initial",
+      "name": "Initial Video Production Package",
+      "currency": "EUR",
+      "one_time_price": 2200,
+      "description": "First batch of donor-facing video assets (impact stories, Reels-ready cuts, subtitled EN/DE) for organic and paid use."
+    },
+    {
+      "id": "graphics_rebrand_initial",
+      "name": "Initial Graphics & Social Rebrand Package",
+      "currency": "EUR",
+      "one_time_price": 1500,
+      "description": "Social media visual refresh (FB/IG profile, cover, highlight covers, post/story templates) plus an initial batch of donation-campaign graphics."
+    }
+  ]
 }

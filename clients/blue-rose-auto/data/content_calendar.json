@@ -122,7 +122,33 @@
       "error": null,
       "schedule_native": false,
       "ai_generated": true,
-      "ai_disclosed": true
+      "ai_disclosed": true,
+      "images": {
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer.png",
+          "local_path": null
+        },
+        "9:16": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer-9x16.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer-9x16.png"
+        },
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer-4x5.png"
+        }
+      },
+      "brand_kit": {
+        "colors": {
+          "primary": "#29ABE2",
+          "secondary": "#939598",
+          "accent": "#29ABE2",
+          "neutrals": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
+      }
     },
     {
       "id": "blue-rose-auto-2026-07-15-educate",
@@ -259,6 +285,20 @@
           ]
         },
         "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
+      },
+      "images": {
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer.png"
+        },
+        "9:16": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer-9x16.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer-9x16.png"
+        },
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer-4x5.png"
+        }
       }
     },
     {
@@ -383,7 +423,33 @@
       "error": null,
       "schedule_native": false,
       "ai_generated": true,
-      "ai_disclosed": true
+      "ai_disclosed": true,
+      "images": {
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer.png",
+          "local_path": null
+        },
+        "9:16": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer-9x16.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer-9x16.png"
+        },
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer-4x5.png"
+        }
+      },
+      "brand_kit": {
+        "colors": {
+          "primary": "#29ABE2",
+          "secondary": "#939598",
+          "accent": "#29ABE2",
+          "neutrals": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
+      }
     }
   ]
 }

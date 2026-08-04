@@ -144,7 +144,7 @@
         "BOOK_NOW"
       ],
       "error": "Krea API POST /generate/image/bfl/flux-1-dev -> 401: {\"message\":\"Unauthorized\"}",
-      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad.png",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-1x1.png",
       "ai_generated": true,
       "ai_disclosed": true,
       "brand_kit": {
@@ -159,7 +159,21 @@
         },
         "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
       },
-      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/AWARE_LEGACY-ad.png"
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-1x1.png",
+      "images": {
+        "9:16": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/AWARE_LEGACY-ad.png"
+        },
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-1x1.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-1x1.png"
+        },
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-4x5.png"
+        }
+      }
     },
     {
       "angle_id": "LEADS_LUXCOS_TRANSFORM",
@@ -302,6 +316,12 @@
           ]
         },
         "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
+      },
+      "images": {
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_LUXCOS_TRANSFORM-ad.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_LUXCOS_TRANSFORM-ad.png"
+        }
       }
     },
     {
@@ -428,7 +448,7 @@
         "BOOK_NOW",
         "LEARN_MORE"
       ],
-      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad.png",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-1x1.png",
       "ai_generated": true,
       "ai_disclosed": true,
       "brand_kit": {
@@ -443,7 +463,21 @@
         },
         "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
       },
-      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad.png"
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-1x1.png",
+      "images": {
+        "9:16": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad.png"
+        },
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-1x1.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-1x1.png"
+        },
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-4x5.png"
+        }
+      }
     },
     {
       "angle_id": "LEADS_MECH_TRUST",
@@ -583,7 +617,21 @@
         },
         "logo_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png"
       },
-      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad.png"
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad.png",
+      "images": {
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad.png"
+        },
+        "9:16": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-9x16.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-9x16.png"
+        },
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-4x5.png"
+        }
+      }
     }
   ],
   "summary": {

@@ -1,23 +1,23 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-07-21T05:22:37.594Z",
+  "generated_at": "2026-08-04T07:38:09.922Z",
   "organic": {
     "facebook": {
       "page_id": "1709708972688957",
       "page_name": "Blue Rose Auto Care & Repair Services",
       "has_page_token": true,
-      "followers": 1784,
+      "followers": 1794,
       "new_follows_90d": 0,
       "followers_delta_90d": null,
       "page_completeness": 100,
       "page_completeness_table": "| Field | Set |\n|---|---|\n| Name | ✓ |\n| About | ✓ |\n| Category | ✓ |\n| Website | ✓ |\n| Phone | ✓ |\n| Email | ✓ |\n| Address | ✓ |\n| Profile picture | ✓ |\n| Cover photo | ✓ |",
-      "post_count": 10,
-      "posts_per_week": 1.2,
-      "days_since_last_post": 0,
+      "post_count": 19,
+      "posts_per_week": 2.2,
+      "days_since_last_post": 1,
       "format_mix_pct": {
-        "video": 90,
+        "video": 89.5,
         "image": 0,
-        "carousel": 10,
+        "carousel": 10.5,
         "link": 0,
         "status": 0
       },
@@ -29,33 +29,1040 @@
       "insights_error": null
     },
     "instagram": {
-      "skipped": true
+      "error": "Meta API 100: Unsupported get request. Object with ID '17841417245534835' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api (type=GraphMethodException, trace=AWHSBIh-Tj1-ghMCJOd5_FI)"
     }
   },
   "paid": {
     "account_id": "act_1999616770762846",
     "account_name": "Blue Rose Auto Care and Repair Services",
-    "account_status": 1,
-    "account_age_days": 12.589965277778,
+    "account_status": 9,
+    "account_age_days": 26.684050925926,
     "currency": "USD",
     "timezone": "America/Los_Angeles",
-    "total_spend_lifetime": 163.12,
-    "amount_spent_to_date": 139.36,
-    "balance": 13.04,
-    "campaign_count_total": 2,
+    "total_spend_lifetime": 731.4,
+    "amount_spent_to_date": 730.61,
+    "balance": 9.04,
+    "campaign_count_total": 4,
     "campaign_count_active": 2,
     "campaign_count_archived": 0,
     "best_cpa": null,
     "best_roas": null,
     "zombie_count": 0,
     "naming_compliance_pct": 0,
-    "custom_audience_count": 0,
-    "custom_audience_healthy": 0,
+    "custom_audience_count": 3,
+    "custom_audience_healthy": 3,
     "custom_audience_broken": 0,
     "audience_issues": [],
     "pixel_health": "none",
     "pixel_stats": {
-      "data": []
+      "data": [
+        {
+          "start_time": "2026-07-28T05:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-28T13:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-28T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-28T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-28T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-28T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-28T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 13
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 15
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T03:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 11
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T05:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 11
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T08:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T16:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 26
+            },
+            {
+              "value": "Lead",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-29T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 18
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T03:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 28
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T08:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 14
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 56
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 34
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T11:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T12:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T15:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T17:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T18:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 17
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 34
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-30T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 23
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T03:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 23
+            },
+            {
+              "value": "Lead",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T05:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 12
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 18
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T14:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T16:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-07-31T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 7
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 20
+            },
+            {
+              "value": "Lead",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 18
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T18:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 13
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-01T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-02T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-02T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 26
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-02T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-02T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-02T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 21
+            },
+            {
+              "value": "Lead",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T03:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T11:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-03T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 16
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 28
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T03:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 20
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T05:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T08:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 25
+            },
+            {
+              "value": "Lead",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 10
+            }
+          ]
+        }
+      ],
+      "paging": {
+        "cursors": {
+          "after": "MTc4NTgyMzIwMAZDZD"
+        },
+        "next": "https://graph.facebook.com/v25.0/2183558222437003/stats?access_token=EAASS4YE5pSwBRQD8ZASJZAqBAaK9M6UQeJXRbtFgmVkMhaJCozGvSe3VvLHNi3csLQCp1ZCnYzSmbaZBbbZCyRkUXUzqYZA0hrPXjP2ZCnW4lHhTPneF0t55S4KWYZCBGQOoKeezAZCHplDZCMyjPqwwIRR58d70AyB1bDUodZC1MKCDNdfPHp9qs6lM7k197eR9IXALbVhAhC6mRol3X8W6JC7&start_time=2026-07-28&limit=25&after=MTc4NTgyMzIwMAZDZD"
+      }
     }
   },
   "website_tracking": null,
@@ -63,5 +1070,5 @@
   "pixel_cross_reference": null,
   "pre_audit_source": null,
   "creative": null,
-  "health_score": 40
+  "health_score": 53
 }

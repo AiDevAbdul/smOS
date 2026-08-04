@@ -1,6 +1,6 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-07-22T06:38:27.864Z",
+  "generated_at": "2026-07-22T07:17:10.147Z",
   "pixel_id": "2183558222437003",
   "events": [
     {
@@ -27,14 +27,19 @@
   "dataset": {
     "id": "2183558222437003",
     "name": "Blue Rose Auto's Pixel",
-    "last_fired_time": "2026-05-20T00:50:20+0500",
+    "last_fired_time": "2026-07-22T12:11:50+0500",
     "first_party_cookie_status": "first_party_cookie_enabled",
     "enable_automatic_matching": false,
     "creation_time": "2026-05-20T00:47:10+0500"
   },
   "test_event": {
-    "fired": false,
-    "event_id": null
+    "fired": true,
+    "event_id": "capi-test-1784704629526-ufyqnb",
+    "response": {
+      "events_received": 1,
+      "messages": [],
+      "fbtrace_id": "AKQ2POVf7AKbYVCCKGl-cgU"
+    }
   },
   "gaps": [
     "'Lead' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Lead'))",

@@ -94,8 +94,9 @@ export function createGraph(token = process.env.META_ACCESS_TOKEN, opts = {}) {
     maxRetries = 4,
     baseDelayMs = 500,
     sleep = realSleep,
+    appSecret,
   } = opts;
-  const proof = appsecretProof(token);
+  const proof = appsecretProof(token, appSecret);
 
   function normalizeError(err) {
     const meta = err.response?.data?.error;

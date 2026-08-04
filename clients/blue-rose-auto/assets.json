@@ -313,6 +313,294 @@
         "roas": null
       },
       "created_at": "2026-07-21T15:46:23.157Z"
+    },
+    {
+      "asset_id": "img_AWARE_LEGACY-ad-1x1",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-1x1.png",
+      "hash": "8871cf6f95e89b26d09f538b24d84cc78478128d63ae8ed201681ad3be7420f4",
+      "angle_id": null,
+      "tags": [
+        "AWARE_LEGACY"
+      ],
+      "alt_text": "AWARE_LEGACY ad creative (1:1)",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:49:57.492Z"
+    },
+    {
+      "asset_id": "img_AWARE_LEGACY-ad-4x5",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/AWARE_LEGACY-ad-4x5.png",
+      "hash": "0f27c18ea863e98783234ea9c29496a97f9210fe877148e6d269945ef7339deb",
+      "angle_id": null,
+      "tags": [
+        "AWARE_LEGACY"
+      ],
+      "alt_text": "AWARE_LEGACY ad creative (4:5)",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:50:12.080Z"
+    },
+    {
+      "asset_id": "img_LEADS_TESLAEV_WHITESPACE-ad-1x1",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-1x1.png",
+      "hash": "dd34fe82d356d39740ff584c74c1bc434bd3effaff8072c3e73f1909b5353f71",
+      "angle_id": null,
+      "tags": [
+        "LEADS_TESLAEV_WHITESPACE"
+      ],
+      "alt_text": "LEADS_TESLAEV_WHITESPACE ad creative (1:1)",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:50:24.457Z"
+    },
+    {
+      "asset_id": "img_LEADS_TESLAEV_WHITESPACE-ad-4x5",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_TESLAEV_WHITESPACE-ad-4x5.png",
+      "hash": "1ff7e3ad83d711a47ad10a45f4270b3ae0a12a269381294f12f05d66746ab283",
+      "angle_id": null,
+      "tags": [
+        "LEADS_TESLAEV_WHITESPACE"
+      ],
+      "alt_text": "LEADS_TESLAEV_WHITESPACE ad creative (4:5)",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:50:37.450Z"
+    },
+    {
+      "asset_id": "img_LEADS_MECH_TRUST-ad-9x16",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-9x16.png",
+      "hash": "f1d0cce08a30b652ecd759474cbba50b8ddaaaca6f14eadf1f4242577c591165",
+      "angle_id": null,
+      "tags": [
+        "LEADS_MECH_TRUST"
+      ],
+      "alt_text": "LEADS_MECH_TRUST ad creative (9:16)",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:50:49.847Z"
+    },
+    {
+      "asset_id": "img_LEADS_MECH_TRUST-ad-4x5",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-4x5.png",
+      "hash": "0a3ae376e260a4dc86a53743254a9605c644d9aa3bedd392ddf1e205fa5f9275",
+      "angle_id": null,
+      "tags": [
+        "LEADS_MECH_TRUST"
+      ],
+      "alt_text": "LEADS_MECH_TRUST ad creative (4:5)",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:51:01.490Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-13-offer-9x16",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer-9x16.png",
+      "hash": "682dc9990d5d9ffa550531dd5fe6c52019ef11915d38d07a40abe899904c9f4d",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:51:22.338Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-13-offer-4x5",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-13-offer-4x5.png",
+      "hash": "a1dc9ffe51c5a6cfd959a355adaadfa044bddd9f38812b68c8170a5927ec81b3",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:51:34.404Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-22-offer-9x16",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer-9x16.png",
+      "hash": "91dbb2d7e3b2227250e35e48fcf6f03110ffe8341db470ea04f0000c48752b6f",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:51:47.259Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-22-offer-4x5",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-22-offer-4x5.png",
+      "hash": "8fb59a26b6bd2196696e3f272a0838385252b6487f4cff6c26f8734adc477ec3",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:52:02.827Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-31-offer-9x16",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer-9x16.png",
+      "hash": "d3c30aae279c3f8c434639e9a3b66022b5d5f831dff8d22345c676e0988b9ecc",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:52:15.077Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-07-31-offer-4x5",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-07-31-offer-4x5.png",
+      "hash": "82acfde825598216f89da172dc388d8c552633db7ec302f11e608a7efd3a9c1f",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-07-22T15:52:28.058Z"
     }
   ]
 }

@@ -60,6 +60,15 @@ function matchIn(dir, re, labeller) {
 }
 /** First non-empty resolver result. */
 function firstOf(...lists) { for (const l of lists) if (l.length) return l.slice(0, 1); return []; }
+/**
+ * A rendered engagement deliverable under clients/{slug}/deliverables/{dir}/{stem}.html.
+ * Scoping/strategy docs authored as markdown are rendered to HTML by their producing
+ * step (via scripts/lib/md_to_html.js); this only collects the result — bundle stays a
+ * pure assembler and never renders one itself.
+ */
+function deliverable(dir, stem, label) {
+  return exact(resolve(P.clientDeliverableDir(slug, dir), `${stem}.html`), label);
+}
 
 /**
  * Scan dated reports in BOTH layouts:
@@ -124,9 +133,27 @@ const PHASES = [
       exact(P.prospectDeliverable(slug, "pre-audit", "html"), "Pre-Audit"),
       exact(resolve(P.prospectRoot(slug), "pre_audit.html"), "Pre-Audit"),
       matchIn(publicDir, /-pre-audit\.html$/, () => "Pre-Audit")) },
+  { key: "engagement-overview", title: "Engagement Overview",
+    desc: "The whole engagement on one page — context, scope, commercials, and what happens next.",
+    resolve: () => deliverable(".", "README", "Open Overview") },
   { key: "audit", title: "Account Audit",
     desc: "Full Facebook, Instagram & pixel health audit with a scored breakdown.",
     resolve: () => scanReports(/^audit$/, () => "Open Audit") },
+  { key: "engagement-strategy", title: "Strategy & Campaign Plan",
+    desc: "Cause framing, campaign structure, awareness & trust-building, and audience targeting.",
+    resolve: () => deliverable("strategy-plan", "strategy-and-campaign-plan", "Open Strategy Plan") },
+  { key: "roadmap", title: "90-Day Roadmap",
+    desc: "Three monthly phases plus a week-by-week task list with owners and critical-path dependencies.",
+    resolve: () => deliverable("3-month-roadmap", "roadmap-and-weekly-plan", "Open Roadmap") },
+  { key: "website-scope", title: "Website Redesign Scope",
+    desc: "Information architecture, language strategy, donation landing page spec, and migration plan.",
+    resolve: () => deliverable("website-redesign-scope", "website-redesign-scope", "Open Website Scope") },
+  { key: "content-production", title: "Content & Creative Production",
+    desc: "Social rebrand direction, graphics & video packages, ad creative angles, and production cadence.",
+    resolve: () => deliverable("content-production-plan", "content-and-creative-plan", "Open Production Plan") },
+  { key: "influencer-plan", title: "Influencer Marketing Plan",
+    desc: "Partner archetypes, partnership models, collaboration formats, sourcing, and measurement.",
+    resolve: () => deliverable("influencer-marketing-plan", "influencer-marketing-plan", "Open Influencer Plan") },
   { key: "research", title: "Market Research",
     desc: "Competitor creative intelligence and category benchmarking.",
     resolve: () => scanReports(/^competitor$/, () => "Open Research") },
@@ -145,6 +172,10 @@ const PHASES = [
   { key: "content-sops", title: "Content Creation SOPs",
     desc: "The per-platform production playbook — media specs, copy limits, algorithm signals, and publish paths for every channel.",
     resolve: () => { const p = renderContentSops(); return p ? [{ srcPath: p, label: "Open SOPs" }] : []; } },
+  // NOTE: proposal + service agreement are deliberately NOT bundled. The hub deploys to
+  // a public, unauthenticated URL with `Cache-Control: public`, so pricing and contract
+  // terms would be fetchable and cacheable by anyone holding the link. Send commercial
+  // paperwork to the client directly (proposals/{slug}/, contracts/{slug}/).
   { key: "reports", title: "Performance Reports", group: true,
     desc: "Ongoing results — weekly, monthly, and before/after reviews.",
     resolve: () => scanReports(/^(weekly|monthly[-_]review|before[-_]after)$/, (date, stem) => {

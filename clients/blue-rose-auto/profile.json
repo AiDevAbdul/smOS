@@ -92,7 +92,7 @@
     "facebook_page_id": "1709708972688957",
     "pre_audit_slug": "bluersoeauto",
     "instagram_handle": "blueroseauto",
-    "instagram_business_id": "TBD_IG_BUSINESS_ID",
+    "instagram_business_id": "17841417245534835",
     "ad_account_id": "act_1999616770762846",
     "pixel_id": "2183558222437003",
     "timezone": "America/Los_Angeles",
@@ -157,7 +157,5 @@
     "existing_meta_creative": "none",
     "vehicle_photos": "client_to_provide"
   },
-  "blockers_before_live": [
-    "instagram_business_id"
-  ]
+  "blockers_before_live": []
 }

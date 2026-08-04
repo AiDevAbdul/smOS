@@ -1,30 +1,30 @@
 # Audit Report — Blue Rose Auto Care & Repair Services
-**Audit date:** 2026-07-21
+**Audit date:** 2026-08-04
 **Ad Account:** `act_1999616770762846` · **Currency:** USD · **Timezone:** America/Los_Angeles
 
 ---
 
 ## Executive Summary
 
-- **Overall health score:** 40/100
+- **Overall health score:** 53/100
 - **Top 3 wins to surface to client:**
-  1. Facebook Page profile is 100% complete (name, about, category, website, phone, email, address, profile picture, cover photo all set) — no trust-signal gaps for prospective customers.
-  2. Two campaigns are live and delivering: $163.12 spent lifetime across 73,350+ impressions, with a heavy (90%) video-first creative mix that plays well on Feed/Reels placements.
-  3. Zero zombie campaigns — both active campaigns are actually delivering impressions, not silently burning budget with no reach.
+  1. **Pixel verified + lead conversions flowing**: Pixel is firing on-site with 572 PageView events and 11 Lead events captured in the first week (Jul 28–Aug 4). Conversion event is live and trackable.
+  2. **Consistent content calendar (2.2 posts/week, 89.5% video)**: 19 posts in 60 days with last post 1 day ago. Heavy video-first approach is highest-engagement format for automotive service at scale.
+  3. **Page completeness is 100%**: All required fields (name, about, category, website, phone, email, address, profile pic, cover) are set — removes a common friction point for trust + click-through.
 - **Top 3 issues blocking results:**
-  1. Pixel is installed but showing 0 events despite $163+ in spend — conversion tracking is not confirmed working, which blocks any CPA/ROAS optimization.
-  2. Campaign naming doesn't follow the agency convention (`[OBJECTIVE]_[AUDIENCE_CODE]_[YYYYMM]`) — 0% compliance, which will make scaling/reporting harder as more campaigns launch.
-  3. Posting cadence is light (1.2 posts/week) and per-post engagement can't be measured yet — the Page access token is missing `pages_read_user_content`, so engagement rate is a known gap, not a zero.
+  1. **0% naming convention compliance**: All 4 campaigns bypass the required `[OBJECTIVE]_[AUDIENCE_CODE]_[YYYYMM]` naming standard. Prevents systematic optimization, audience layering, and scaling — must rename before next spend increase.
+  2. **Instagram account unreachable**: Cannot access IG Business account (API 100 error). Likely missing Professional Account conversion or app permissions. No visibility into 2nd major platform; need immediate troubleshooting.
+  3. **Permission gap: pages_read_user_content not granted**: Engagement rate, best/worst posts, and per-content performance cannot be measured. Blocks creative optimization loop. Need to re-grant at Page level (Code 10 — Meta API limitation, not account issue).
 
 ---
 
 ## Organic Audit — Facebook Page
 
 - **Page name:** Blue Rose Auto Care & Repair Services
-- **Followers:** 1,784 (new follows, 90d: 0)
+- **Followers:** 1,794 (new follows, 90d: 0)
 - **Page completeness:** 100/100
-- **Posts (last 60 days):** 10 (1.2/week) · last post 0 days ago
-- **Format mix:** 90% video · 0% image · 10% carousel · 0% link
+- **Posts (last 60 days):** 19 (2.2/week) · last post 1 days ago
+- **Format mix:** 89.5% video · 0% image · 10.5% carousel · 0% link
 - **Avg engagement rate:** —% _(per-post engagement unavailable — pages_read_user_content not granted (code 10); cadence & format mix are live)_
 - **Best post:** — — —% ER
 - **Worst post:** — — —% ER
@@ -44,32 +44,37 @@
 
 ## Organic Audit — Instagram
 
-- **Followers:** —
-- **Posts (last 60 days):** — (—/week)
-- **Format mix:** 0% Reels · 0% image · 0% carousel
-- **Avg engagement rate:** 0%
-- **Reach (28d):** —
-- **Profile views (28d):** —
+**⚠️ Account unreachable (API 100 error)** — Instagram Business Account `17841417245534835` cannot be accessed due to missing permissions or account status issue. Likely causes:
+- IG account not yet converted to Professional Account status
+- IG↔Page link not active
+- Missing `instagram_business_management` app permission
+
+**Action:** Verify Professional Account conversion in IG settings, re-grant app permissions, then re-run audit.
+
+- **Followers:** — (blocked)
+- **Posts (last 60 days):** — (blocked)
+- **Avg engagement rate:** — (blocked)
+- **Reach (28d):** — (blocked)
 
 ---
 
 ## Paid Audit — Ad Account
 
-- **Account status:** ACTIVE
-- **Account age:** 12.589965277778 days
-- **Total historical spend:** USD 163.12
-- **Current balance / payment method:** USD 13.04
-- **Campaigns lifetime:** 2 (2 active)
+- **Account status:** code=9
+- **Account age:** 26.684050925926 days
+- **Total historical spend:** USD 731.40
+- **Current balance / payment method:** USD 9.04
+- **Campaigns lifetime:** 4 (2 active)
 - **Best CPA seen:** —
 - **Best ROAS seen:** —
 
 ### Pixel Health
 
 - **Pixel ID:** `2183558222437003`
-- **Status (account-side):** none (—)
-- **Installed on website:** unknown
-- **Events firing:** —
-- **Missing events (recommended to add):** _(review Standard Events list)_
+- **Status (account-side):** Firing (verified)
+- **Installed on website:** Confirmed (572 PageView events, 11 Lead events captured Jul 28 – Aug 4)
+- **Events firing:** PageView (572), Lead (11)
+- **Missing events (recommended to add):** View, InitiateCheckout, Purchase (for full ROAS optimization); Schedule event for appointment bookings (CTA-specific conversion tracking)
 
 
 ### Website & Tracking — carried from pre-audit (none found)
@@ -85,7 +90,7 @@
 
 ### Audiences
 
-- **Custom audiences:** 0 (0 healthy, 0 broken/stale)
+- **Custom audiences:** 3 (3 healthy, 0 broken/stale)
 - **Lookalikes:** _(see audiences)_ (— healthy, — broken)
 - **Audiences needing attention:**
   _(none)_
@@ -107,9 +112,9 @@ _(Run `/audit-creative` to populate.)_
 
 ## Recommended Next Steps
 
-1. Confirm pixel firing — verify the Meta Pixel (`2183558222437003`) is correctly installed on blueroseauto.com and test standard events (Lead, Schedule) before optimizing spend toward conversions.
-2. Grant the app's Meta token `pages_read_user_content` and `read_insights` permissions on this Page so per-post engagement, best/worst post, and true engagement rate can be measured.
-3. Rename the two active campaigns to the agency convention and set up Custom/Lookalike audiences — currently 0 custom audiences exist, so targeting is running on interest/broad only.
+1. **Audit + rename existing campaigns** to naming convention (`CONV_[AUDIENCE]_202608` etc.). Block future launches via `naming-check` guard until all active campaigns comply. Current 4 campaigns need immediate re-labeling to enable optimization rules & scaling.
+2. **Re-grant pages_read_user_content permission** for the Page token. This unblocks per-post engagement metrics, creative scoring via `/audit-creative`, and audience-targeting optimization. Quick fix, high ROI.
+3. **Troubleshoot Instagram Business account access**: Verify IG account is linked to Page, converted to Professional Account status, and that the app has `instagram_business_management` permission. Once fixed, run `/audit --no-ig false` to capture IG baseline (followers, content cadence, reach/impressions).
 
 ---
 
@@ -118,4 +123,4 @@ _(Run `/audit-creative` to populate.)_
 This audit's metrics are saved as the immutable baseline in `baseline_snapshots` table. All future before/after reports compare against this row.
 
 - **Snapshot ID:** _(set after baseline-snapshot.js)_
-- **Saved at:** 2026-07-21T05:22:37.619Z
+- **Saved at:** 2026-08-04T07:38:09.954Z

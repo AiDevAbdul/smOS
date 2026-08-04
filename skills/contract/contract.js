@@ -32,8 +32,8 @@ loadEnv();
 const nowIso = () => new Date().toISOString();
 const today = () => nowIso().slice(0, 10);
 
-export function buildContractMarkdown({ agency, client, pkg, retainer, terms, date }) {
-  const cur = pkg.currency;
+export function buildContractMarkdown({ agency, client, pkg, retainer, terms, date, addons, currency }) {
+  const cur = currency || pkg.currency;
   const monthly = retainer > 0 ? retainer : pkg.monthly_retainer;
   let md = `# Social Media Management Agreement\n\n`;
   md += `*Effective ${date}*\n\n`;
@@ -48,6 +48,10 @@ export function buildContractMarkdown({ agency, client, pkg, retainer, terms, da
   md += `## 3. Fees\n\n`;
   md += `- **Monthly management retainer:** ${cur} ${monthly.toLocaleString()}, due monthly in advance.\n`;
   md += `- **One-time setup fee:** ${cur} ${(pkg.setup_fee || 0).toLocaleString()}, due on signing.\n`;
+  if (addons && addons.length) {
+    md += `- **One-time deliverables (due on signing, separate from the monthly retainer):**\n`;
+    addons.forEach((a) => { md += `  - ${a.name}: ${(a.currency || cur)} ${(a.amount || 0).toLocaleString()}\n`; });
+  }
   md += `- **Ad spend:** ${terms.ad_spend}\n\n`;
 
   md += `## 4. Term & Renewal\n\n`;
@@ -101,10 +105,11 @@ function clause(title, bodyHtml) {
   return `<div class="doc-clause"><h3>${escHtml(title)}</h3>${bodyHtml}</div>`;
 }
 
-export function buildContractHtml({ agency, client, pkg, retainer, terms, date, proposalAccepted }) {
-  const cur = pkg.currency;
+export function buildContractHtml({ agency, client, pkg, retainer, terms, date, proposalAccepted, addons, currency }) {
+  const cur = currency || pkg.currency;
   const monthly = retainer > 0 ? retainer : pkg.monthly_retainer;
   const money = (n) => `${cur} ${Number(n || 0).toLocaleString()}`;
+  const addonRows = (addons || []).map((a) => `<div class="lbl">${escHtml(a.name)} (due on signing)</div><div class="amt">${money(a.amount)}</div>`).join("");
 
   const hero = heroHeader({
     title: "Service Agreement",
@@ -125,6 +130,7 @@ export function buildContractHtml({ agency, client, pkg, retainer, terms, date, 
     clause("Fees", `<div class="doc-fees">
 <div class="lbl">Monthly management retainer (due in advance)</div><div class="amt">${money(monthly)}</div>
 <div class="lbl">One-time setup fee (due on signing)</div><div class="amt">${money(pkg.setup_fee)}</div>
+${addonRows}
 <div class="lbl">Ad spend</div><div class="amt" style="font-weight:500">${escHtml(terms.ad_spend)}</div>
 </div>`),
     clause("Term &amp; Renewal", `<p>Initial term of <strong>${terms.contract_length_months} months</strong> from the effective date, renewing month-to-month thereafter unless cancelled.</p>`),
@@ -219,7 +225,9 @@ async function main() {
   const pkgIdx = args.indexOf("--package");
   const pkg = pickPackage(catalog, { packageId: pkgIdx >= 0 ? args[pkgIdx + 1] : null, retainer: d.deal.monthly_retainer });
   const client = { company: d.company_name, contact_name: d.contact.name, contact_email: d.contact.email };
-  const contractArgs = { agency: catalog.agency, client, pkg, retainer: d.deal.monthly_retainer, terms: catalog.terms, date: today() };
+  // The deal's currency wins over the catalog package's, so the retainer and the
+  // one-time line items are always quoted in the same currency the client is billed in.
+  const contractArgs = { agency: catalog.agency, client, pkg, retainer: d.deal.monthly_retainer, terms: catalog.terms, date: today(), addons: d.deal.addons || [], currency: d.deal.currency || pkg.currency };
   const md = buildContractMarkdown(contractArgs);
   const outDir = resolve(ROOT, "contracts", slug);
   mkdirSync(outDir, { recursive: true });

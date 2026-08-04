@@ -28,6 +28,35 @@ import * as P from "../../scripts/lib/paths.js";
 
 loadEnv();
 
+// Standard social ratios at a 1080px base edge, keyed by the label the rest of
+// this script and callers use on the CLI / in `angle.images`.
+const RATIOS = {
+  "1:1": { width: 1080, height: 1080 },
+  "4:5": { width: 1080, height: 1350 },
+  "9:16": { width: 1080, height: 1920 },
+};
+
+function ratioSlug(ratio) {
+  return ratio.replace(":", "x");
+}
+
+/** Classify an existing WxH as one of RATIOS (nearest match) so a legacy
+ *  single-size `image_url` can be backfilled into `angle.images` instead of
+ *  regenerated. */
+function nearestRatio(width, height) {
+  const target = width / height;
+  let best = null;
+  let bestDelta = Infinity;
+  for (const [label, dims] of Object.entries(RATIOS)) {
+    const delta = Math.abs(dims.width / dims.height - target);
+    if (delta < bestDelta) {
+      best = label;
+      bestDelta = delta;
+    }
+  }
+  return best;
+}
+
 function loadBrand(slug) {
   const p = P.clientFile(slug, "brand_profile.json");
   if (!existsSync(p)) return null;
@@ -121,11 +150,61 @@ async function generateForAngle(angle, { slug, profile, brand, model, promptOver
   return { angle_id: angle.angle_id, prompt, size: primarySize, skipped_sizes: skippedSizes, image_url, local_path };
 }
 
+/** Multi-ratio path (--ratios). Backfills `angle.images` from a pre-existing
+ *  legacy `image_url` (classified by its recorded design_brief size) so a prior
+ *  single-size run isn't regenerated, then fills only the ratios still missing. */
+function missingRatiosForAngle(angle, requestedRatios) {
+  if (!angle.images && angle.image_url) {
+    const [primarySize] = angle.design_brief?.sizes?.length ? angle.design_brief.sizes : ["1080x1080"];
+    const { width, height } = parseSize(primarySize);
+    const label = nearestRatio(width, height);
+    angle.images = { [label]: { image_url: angle.image_url, local_path: angle.local_path || null } };
+  }
+  const have = angle.images || {};
+  return requestedRatios.filter((r) => !have[r]);
+}
+
+async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride, dryRun }) {
+  const prompt = promptOverride || buildPrompt(angle, profile);
+  const { width, height } = RATIOS[ratio];
+  const copy = posterCopyFromAngle(angle, { brandName: brand?.verbal?.name });
+
+  if (dryRun) return { angle_id: angle.angle_id, ratio, prompt, width, height, copy, dry_run: true };
+
+  const { image_url, local_path, brand_kit } = await generateBrandedPoster({
+    slug,
+    prompt,
+    idTag: `${angle.angle_id}-ad-${ratioSlug(ratio)}`,
+    brand,
+    contact: profile?.contact,
+    copy,
+    model,
+    width,
+    height,
+    tags: [angle.angle_id].filter(Boolean),
+    altText: `${angle.name || angle.angle_id} ad creative (${ratio})`,
+  });
+
+  angle.images = angle.images || {};
+  angle.images[ratio] = { image_url, local_path };
+  // Keep the legacy flat fields pointing at a real creative for /launch's
+  // readAssetRef() — prefer 1:1 as the canonical default when nothing is set yet.
+  if (!angle.image_url || ratio === "1:1") {
+    angle.image_url = image_url;
+    angle.local_path = local_path;
+  }
+  angle.ai_generated = true;
+  angle.ai_disclosed = true;
+  angle.brand_kit = brand_kit;
+
+  return { angle_id: angle.angle_id, ratio, prompt, width, height, image_url, local_path };
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
   if (!slug || slug.startsWith("--")) {
-    console.error("Usage: node skills/image-gen/image-gen-ads.js <slug> [--angle <angle_id>] [--prompt \"...\"] [--model bfl/flux-1-dev] [--dry-run]");
+    console.error("Usage: node skills/image-gen/image-gen-ads.js <slug> [--angle <angle_id>] [--ratios 1:1,9:16,4:5] [--prompt \"...\"] [--model bfl/flux-1-dev] [--dry-run]");
     process.exit(1);
   }
   const angleIdx = args.indexOf("--angle");
@@ -135,6 +214,15 @@ async function main() {
   const modelIdx = args.indexOf("--model");
   const model = modelIdx >= 0 ? args[modelIdx + 1] : undefined;
   const dryRun = args.includes("--dry-run");
+  const ratiosIdx = args.indexOf("--ratios");
+  const ratios = ratiosIdx >= 0 ? args[ratiosIdx + 1].split(",").map((r) => r.trim()) : null;
+  if (ratios) {
+    const unknown = ratios.filter((r) => !RATIOS[r]);
+    if (unknown.length) {
+      console.error(`Unknown ratio(s) ${unknown.join(", ")} — supported: ${Object.keys(RATIOS).join(", ")}`);
+      process.exit(1);
+    }
+  }
 
   const profilePath = P.clientFile(slug, "client_profile.json");
   const adCopyPath = P.clientFile(slug, "ad_copy.json");
@@ -181,20 +269,35 @@ async function main() {
       process.exit(6);
     }
     targets = [found];
+  } else if (ratios) {
+    targets = angles.filter((a) => !isCarouselFormat(a) && missingRatiosForAngle(a, ratios).length > 0);
   } else {
     targets = angles.filter(isTargetable);
   }
 
-  const skippedCarousel = angles.filter((a) => !a.image_url && isCarouselFormat(a) && (!angleId || a.angle_id !== angleId));
+  const skippedCarousel = angles.filter((a) => isCarouselFormat(a) && (!angleId || a.angle_id !== angleId) && (ratios ? missingRatiosForAngle(a, ratios).length > 0 : !a.image_url));
 
   const generated = [];
   const errors = [];
-  for (const angle of targets) {
-    try {
-      generated.push(await generateForAngle(angle, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun }));
-    } catch (e) {
-      errors.push({ angle_id: angle.angle_id, error: e.message });
-      angle.error = e.message;
+  if (ratios) {
+    for (const angle of targets) {
+      for (const ratio of missingRatiosForAngle(angle, ratios)) {
+        try {
+          generated.push(await generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun }));
+        } catch (e) {
+          errors.push({ angle_id: angle.angle_id, ratio, error: e.message });
+          angle.error = e.message;
+        }
+      }
+    }
+  } else {
+    for (const angle of targets) {
+      try {
+        generated.push(await generateForAngle(angle, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun }));
+      } catch (e) {
+        errors.push({ angle_id: angle.angle_id, error: e.message });
+        angle.error = e.message;
+      }
     }
   }
 

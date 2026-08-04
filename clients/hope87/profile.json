@@ -1,0 +1,111 @@
+{
+  "slug": "hope87",
+  "name": "HOPE'87",
+  "business": {
+    "product_description": "International humanitarian & development NGO (est. 1987, represented in 9 countries) running youth training, employment, and livelihood/skills-development programs; raises donations primarily from the Pakistani diaspora community in Austria and Germany.",
+    "price_low": null,
+    "price_high": null,
+    "business_model": "donation / nonprofit",
+    "usp": "Decades of on-the-ground credibility across 9 countries plus direct cultural/community trust with the Pakistani diaspora; tangible livelihood and skills-training outcomes donors can point to.",
+    "conversion_event": "Donation (currently via PayPal link; moving to an on-site donation flow as part of the website redesign)"
+  },
+  "audience": {
+    "age_low": 25,
+    "age_high": 55,
+    "gender": "all",
+    "geo_targets": [
+      "Austria",
+      "Germany"
+    ],
+    "pain_points": [
+      "Untracked donation funnel — no Meta Pixel, GTM, or GA4 anywhere on hope87.at",
+      "Zero paid presence in AT/DE vs. comparable NGOs (Islamic Relief Worldwide ran ~35 ads/month in the same window)",
+      "Organic posting cadence collapsed to 0.75x/week (11.6-day gap since last post)",
+      "Current WordPress site has no bilingual (EN/DE) structure for the diaspora audience"
+    ]
+  },
+  "voice": {
+    "tone": "Warm, trustworthy, community-rooted, humble-but-credible; storytelling over statistics",
+    "restricted_words": [],
+    "cta_style": "soft"
+  },
+  "accounts": {
+    "ad_account_id": "TBD_no_ad_account_yet",
+    "pixel_id": null,
+    "facebook_page_id": "100064328454024",
+    "instagram_business_id": null,
+    "page_id": "100064328454024",
+    "ig_account_id": null,
+    "bm_id": null,
+    "currency": "EUR",
+    "timezone": "Europe/Vienna",
+    "business_id": null,
+    "system_user_id": null,
+    "pixel_installed": false,
+    "website_url": "https://hope87.at",
+    "domain": "hope87.at"
+  },
+  "kpis": {
+    "target_cpa": null,
+    "target_roas": null,
+    "monthly_budget_low": null,
+    "monthly_budget_high": null
+  },
+  "history": {
+    "previous_spend": "0 — no paid campaigns have ever run in AT/DE",
+    "what_worked": "Organic community trust: 2,696 Facebook likes, engaged local following, IG linked as a verified-category Nonprofit Business account",
+    "what_failed": "No paid distribution, inconsistent posting cadence, no conversion tracking on the donation flow"
+  },
+  "competitors": [
+    "Islamic Relief Worldwide"
+  ],
+  "assets": {
+    "formats_available": [],
+    "brand_guidelines_url": null,
+    "brand_colors": []
+  },
+  "approvals": {
+    "channel": "discord",
+    "daily_cap": 500,
+    "extra_rules": []
+  },
+  "status": "active",
+  "onboarded_at": "2026-07-31",
+  "setup": {
+    "business_verified_at": null,
+    "page_created_at": null,
+    "instagram_created_at": null,
+    "instagram_professional_at": null,
+    "ig_page_linked_at": null,
+    "payment_method_added_at": null,
+    "asset_access_granted_at": null,
+    "ad_account_created_at": null,
+    "pixel_created_at": null,
+    "system_user_token_at": null,
+    "assets_assigned_at": null,
+    "domain_verified_at": null,
+    "landing_deployed_at": null
+  },
+  "unit_economics": {
+    "gross_margin": null,
+    "average_order_value": null,
+    "customer_ltv": null,
+    "target_cac": null,
+    "target_mer": null
+  },
+  "content_preferences": {
+    "mode": "ai_assisted",
+    "ai_captions": true
+  },
+  "contact": {
+    "phone": null,
+    "website_display": "hope87.at",
+    "email": "shoaib@hope87.org",
+    "address": null,
+    "social_handles": {
+      "instagram": "hope87.at",
+      "facebook": "hope87.at",
+      "tiktok": null
+    }
+  }
+}

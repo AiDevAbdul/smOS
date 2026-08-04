@@ -1,41 +1,67 @@
 {
   "client_slug": "blue-rose-auto",
-  "snapshot_date": "2026-06-18",
-  "status": "interim_public_only",
-  "immutable_locked_at": null,
-  "note": "This snapshot will be re-captured and locked once Meta API access is provided. Until locked, /before-after will refuse to run.",
-  "website": {
-    "url": "https://blueroseauto.com/",
-    "reachable": true,
-    "completeness_score": 8,
-    "completeness_max": 10,
-    "pixel_verified": null
-  },
+  "snapshot_date": "2026-08-04",
+  "status": "locked",
+  "immutable_locked_at": "2026-08-04T07:38:09.954Z",
+  "note": "First live capture from Meta API. Locked baseline for before/after comparisons. Instagram temporarily blocked by API access issue — will be captured after Professional Account fix.",
   "facebook": {
-    "handle": "BlueRoseAuto",
-    "followers": null,
-    "likes": null,
-    "engagement_rate_30d": null,
-    "posts_per_week_30d": null,
-    "page_completeness_pct": null
+    "page_id": "1709708972688957",
+    "followers": 1794,
+    "new_follows_90d": 0,
+    "posts_count_60d": 19,
+    "posts_per_week": 2.2,
+    "days_since_last_post": 1,
+    "page_completeness_pct": 100,
+    "format_mix": {
+      "video_pct": 89.5,
+      "image_pct": 0,
+      "carousel_pct": 10.5,
+      "link_pct": 0,
+      "status_pct": 0
+    },
+    "engagement_available": false,
+    "engagement_blocked_reason": "pages_read_user_content not granted (code 10)",
+    "avg_engagement_rate": null,
+    "best_post_er": null,
+    "worst_post_er": null
   },
   "instagram": {
-    "handle": "blueroseauto",
+    "status": "blocked",
+    "error": "API 100 — Account not accessible. Likely needs Professional Account conversion or permission grant.",
     "followers": null,
-    "following": null,
-    "post_count": null,
-    "engagement_rate_30d": null,
-    "posts_per_week_30d": null
-  },
-  "creative_quality": {
-    "score_out_of_10": null,
-    "note": "audit-creative deferred — no Meta-API access to pull recent posts"
+    "posts_count_60d": null,
+    "avg_engagement_rate": null
   },
   "paid": {
-    "monthly_ad_spend": 0,
-    "campaigns_active": 0,
-    "cost_per_lead": null,
-    "roas": null,
-    "pixel_events_per_month": null
-  }
+    "account_id": "act_1999616770762846",
+    "account_age_days": 26.68,
+    "currency": "USD",
+    "timezone": "America/Los_Angeles",
+    "total_spend_lifetime": 731.4,
+    "current_balance": 9.04,
+    "campaign_count_total": 4,
+    "campaign_count_active": 2,
+    "campaign_count_archived": 0,
+    "campaign_naming_compliance_pct": 0,
+    "zombie_campaign_count": 0,
+    "best_cpa": null,
+    "best_roas": null,
+    "custom_audience_count": 3,
+    "custom_audience_healthy": 3,
+    "custom_audience_broken": 0
+  },
+  "pixel": {
+    "pixel_id": "2183558222437003",
+    "status": "firing",
+    "health": "none",
+    "pageview_events_7d": 572,
+    "lead_events_7d": 11,
+    "last_event": "2026-08-04T10:00:00Z"
+  },
+  "health_score": 53,
+  "blockers_to_unblock": [
+    "Grant pages_read_user_content permission for Facebook engagement metrics",
+    "Fix Instagram Professional Account access (API 100 error)",
+    "Rename all 4 campaigns to naming convention [OBJECTIVE]_[AUDIENCE]_[YYYYMM]"
+  ]
 }
