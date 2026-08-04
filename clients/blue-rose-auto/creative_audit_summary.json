@@ -1,0 +1,72 @@
+{
+  "client_slug": "blue-rose-auto",
+  "generated_at": "2026-08-04T12:38:56.802Z",
+  "overall_score": 6,
+  "formats": {
+    "image": {
+      "count": 12,
+      "visual_quality": 6,
+      "brand_consistency": 7,
+      "cta_present_pct": 0,
+      "text_density_compliant_pct": 0,
+      "messaging_clarity": 5
+    },
+    "video": {
+      "count": 12,
+      "visual_quality": 6,
+      "brand_consistency": 7,
+      "cta_present_pct": 0,
+      "text_density_compliant_pct": 0,
+      "messaging_clarity": 5.2,
+      "avg_retention_score": 4.6,
+      "avg_hook_rate_pct": 87.8,
+      "avg_hold_rate_pct": 3.6,
+      "avg_completion_pct": 1.5
+    },
+    "carousel": {
+      "count": 2,
+      "visual_quality": 6,
+      "brand_consistency": 7,
+      "cta_present_pct": 0,
+      "text_density_compliant_pct": 0,
+      "messaging_clarity": 5
+    }
+  },
+  "top3": [
+    {
+      "asset_id": "1752908102370494",
+      "weighted": 7.2,
+      "notes": "64x64, text~42%, brightness~119"
+    },
+    {
+      "asset_id": "28430768893191889",
+      "weighted": 6.5,
+      "notes": "64x64, text~100%, brightness~117"
+    },
+    {
+      "asset_id": "2506427769769931",
+      "weighted": 6.5,
+      "notes": "64x64, text~100%, brightness~70"
+    }
+  ],
+  "bottom3": [
+    {
+      "asset_id": "982577398204025",
+      "weighted": 4.5,
+      "notes": null
+    },
+    {
+      "asset_id": "1967588900617203",
+      "weighted": 4.5,
+      "notes": "64x64, text~100%, brightness~117"
+    },
+    {
+      "asset_id": "4541398592812452",
+      "weighted": 4.5,
+      "notes": "64x64, text~100%, brightness~115"
+    }
+  ],
+  "violations": [],
+  "scored_count": 26,
+  "total_count": 43
+}

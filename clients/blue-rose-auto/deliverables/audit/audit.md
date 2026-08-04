@@ -124,3 +124,31 @@ This audit's metrics are saved as the immutable baseline in `baseline_snapshots`
 
 - **Snapshot ID:** _(set after baseline-snapshot.js)_
 - **Saved at:** 2026-08-04T07:38:09.954Z
+
+
+### Creative Audit
+
+**Assets scored:** 26 (0 organic, 26 ads)
+**Overall creative health score:** 6/10
+
+| Format | Visual quality | Brand consistency | CTA presence | Text density compliant | Messaging clarity |
+|---|---|---|---|---|---|
+| Image | 6 | 7 | 0% | 0% | 5 |
+| Video | 6 | 7 | 0% | 0% | 5.2 |
+| Carousel | 6 | 7 | 0% | 0% | 5 |
+
+**Video hook & retention** (scored on play metrics, not thumbnail):
+- Avg retention score: 4.6/10
+- Avg hook rate (3s): 87.8% · hold rate (p75): 3.6% · completion: 1.5%
+
+**Top 3 best performers:**
+1. 1752908102370494 — 64x64, text~42%, brightness~119 (weighted 7.2)
+2. 28430768893191889 — 64x64, text~100%, brightness~117 (weighted 6.5)
+3. 2506427769769931 — 64x64, text~100%, brightness~70 (weighted 6.5)
+
+**Top 3 worst performers (replace):**
+1. 982577398204025 —  (weighted 4.5)
+2. 1967588900617203 — 64x64, text~100%, brightness~117 (weighted 4.5)
+3. 4541398592812452 — 64x64, text~100%, brightness~115 (weighted 4.5)
+
+**Brand voice violations:** none

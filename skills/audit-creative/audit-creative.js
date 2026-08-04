@@ -15,13 +15,15 @@
  *   node skills/audit-creative/audit-creative.js <slug> aggregate
  */
 
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { computeVideoScore } from "../../scripts/lib/video_scoring.js";
 import * as P from "../../scripts/lib/paths.js";
+import { createWriteStream } from "node:fs";
+import { pipeline } from "node:stream/promises";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -142,6 +144,19 @@ function checkRestricted(copy, restricted) {
   });
 }
 
+async function downloadImage(url, localPath) {
+  if (!url) return null;
+  try {
+    const response = await fetch(url, { timeout: 5000 });
+    if (!response.ok) return null;
+    await pipeline(response.body, createWriteStream(localPath));
+    return localPath;
+  } catch (e) {
+    console.error(`[audit-creative] image download failed for ${url}: ${e.message}`);
+    return null;
+  }
+}
+
 function buildBatches(assets) {
   const batches = [];
   for (let i = 0; i < assets.length; i += BATCH_SIZE) {
@@ -174,23 +189,36 @@ async function collect(slug) {
 
   const restricted = [...(profile.voice?.restricted_words || []), ...(profile.voice?.avoid || [])].map((w) => String(w).toLowerCase());
 
-  const enriched = all.map((a) => ({
-    ...a,
-    copy_length: (a.copy || "").length,
-    restricted_word_hits: checkRestricted(a.copy, restricted),
-    // B3: videos carry a hook+retention score from play metrics (null until
-    // metrics exist); images/carousels stay on the thumbnail vision-scorer.
-    video_score: a.format === "video" && videoInsights[a.asset_id]
-      ? computeVideoScore(videoInsights[a.asset_id])
-      : null,
-    vision_scores: {
-      visual_quality: null,
-      brand_consistency: null,
-      cta_present: null,
-      text_density_pct: null,
-      messaging_clarity: null,
-      notes: null,
-    },
+  // Download images to temp location for vision analysis
+  const imgDir = resolve(ROOT, "clients", slug, ".img-cache");
+  mkdirSync(imgDir, { recursive: true });
+
+  const enriched = await Promise.all(all.map(async (a) => {
+    let local_image_path = null;
+    if (a.image_url && a.format !== "video") {
+      const filename = `${a.asset_id}.jpg`;
+      const localPath = resolve(imgDir, filename);
+      local_image_path = await downloadImage(a.image_url, localPath);
+    }
+    return {
+      ...a,
+      local_image_path,
+      copy_length: (a.copy || "").length,
+      restricted_word_hits: checkRestricted(a.copy, restricted),
+      // B3: videos carry a hook+retention score from play metrics (null until
+      // metrics exist); images/carousels stay on the thumbnail vision-scorer.
+      video_score: a.format === "video" && videoInsights[a.asset_id]
+        ? computeVideoScore(videoInsights[a.asset_id])
+        : null,
+      vision_scores: {
+        visual_quality: null,
+        brand_consistency: null,
+        cta_present: null,
+        text_density_pct: null,
+        messaging_clarity: null,
+        notes: null,
+      },
+    };
   }));
 
   const batches = buildBatches(enriched);
@@ -206,10 +234,11 @@ async function collect(slug) {
     batches: batches.map((b, i) => ({
       batch_id: i,
       asset_ids: b.map((a) => a.asset_id),
+      image_paths: b.map((a) => a.local_image_path).filter(Boolean),
       vision_prompt: buildVisionPrompt(b, profile),
     })),
     assets: enriched,
-    instructions: "For each batch, send the vision_prompt + the batch's image URLs to Claude. Claude returns a JSON array; merge each result into assets[].vision_scores. Then run: node skills/audit-creative/audit-creative.js " + slug + " aggregate",
+    instructions: "For each batch, send the vision_prompt + the batch's local image paths to Claude. Claude returns a JSON array; merge each result into assets[].vision_scores. Then run: node skills/audit-creative/audit-creative.js " + slug + " aggregate",
   };
 
   const outPath = P.clientFile(slug, "creative_assets.json", { forWrite: true });
@@ -223,6 +252,7 @@ async function collect(slug) {
     ads: out.ad_count,
     batches: batches.length,
     output: outPath,
+    images_cached: `${imgDir}`,
     next: "have Claude fill assets[].vision_scores per the batch prompts, then run aggregate",
   }, null, 2));
 }

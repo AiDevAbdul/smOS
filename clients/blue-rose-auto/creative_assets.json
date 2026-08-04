@@ -1,0 +1,1045 @@
+{
+  "client_slug": "blue-rose-auto",
+  "generated_at": "2026-08-04T12:34:19.234Z",
+  "brand_colors": [],
+  "restricted_words": [
+    "salesy hype",
+    "fake urgency",
+    "miracle",
+    "guaranteed",
+    "cure",
+    "best ever"
+  ],
+  "asset_count": 43,
+  "organic_count": 0,
+  "ad_count": 43,
+  "batches": [
+    {
+      "batch_id": 0,
+      "asset_ids": [
+        "28430768893191889",
+        "4541398592812452",
+        "2506427769769931",
+        "2488073031678009",
+        "2446844215796968",
+        "2321487588681024"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/28430768893191889.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2506427769769931.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2446844215796968.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 28430768893191889, 4541398592812452, 2506427769769931, 2488073031678009, 2446844215796968, 2321487588681024"
+    },
+    {
+      "batch_id": 1,
+      "asset_ids": [
+        "2177555643174280",
+        "2147758739128228",
+        "2126000651664640",
+        "2085793272323022",
+        "2001106697244813",
+        "1992578084726726"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2177555643174280.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2085793272323022.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2001106697244813.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1992578084726726.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 2177555643174280, 2147758739128228, 2126000651664640, 2085793272323022, 2001106697244813, 1992578084726726"
+    },
+    {
+      "batch_id": 2,
+      "asset_ids": [
+        "1967588900617203",
+        "1946550999393533",
+        "1908917919785812",
+        "1830352631752500",
+        "1811746520235500",
+        "1809315007142049"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1908917919785812.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1830352631752500.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1811746520235500.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1809315007142049.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 1967588900617203, 1946550999393533, 1908917919785812, 1830352631752500, 1811746520235500, 1809315007142049"
+    },
+    {
+      "batch_id": 3,
+      "asset_ids": [
+        "1756509089102095",
+        "1752908102370494",
+        "1683746219562207",
+        "1659191631980539",
+        "1576485067434122",
+        "1413485493937814"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1683746219562207.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1659191631980539.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1576485067434122.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1413485493937814.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 1756509089102095, 1752908102370494, 1683746219562207, 1659191631980539, 1576485067434122, 1413485493937814"
+    },
+    {
+      "batch_id": 4,
+      "asset_ids": [
+        "1391192582861727",
+        "1366218072362950",
+        "1354822736716111",
+        "1343641074640635",
+        "1341042254891226",
+        "1333544798994798"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1354822736716111.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1343641074640635.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1341042254891226.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1333544798994798.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 1391192582861727, 1366218072362950, 1354822736716111, 1343641074640635, 1341042254891226, 1333544798994798"
+    },
+    {
+      "batch_id": 5,
+      "asset_ids": [
+        "1236542112872894",
+        "1199990052268876",
+        "1072759565090300",
+        "1052490383897718",
+        "1044079104863033",
+        "1043469394822294"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1236542112872894.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1199990052268876.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1044079104863033.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 1236542112872894, 1199990052268876, 1072759565090300, 1052490383897718, 1044079104863033, 1043469394822294"
+    },
+    {
+      "batch_id": 6,
+      "asset_ids": [
+        "1025028703790489",
+        "1022277073926466",
+        "1020170287403298",
+        "982577398204025",
+        "962662350149116",
+        "956590970776102"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1022277073926466.jpg",
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1020170287403298.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 1025028703790489, 1022277073926466, 1020170287403298, 982577398204025, 962662350149116, 956590970776102"
+    },
+    {
+      "batch_id": 7,
+      "asset_ids": [
+        "903044379521767"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/903044379521767.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors not specified?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: salesy hype, fake urgency, miracle, guaranteed, cure, best ever\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 903044379521767"
+    }
+  ],
+  "assets": [
+    {
+      "asset_id": "28430768893191889",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/741613541_2447882065694821_1042099694976066899_n.jpg?_nc_cat=104&ccb=1-7&_nc_eui2=AeFJUd3U3MADq97Qb_22xmqU1aQsDqwzv8fVpCwOrDO_x3f_gci6jv8ObIKJh4X4vVsEVYhWAY6MrTivO9NJ0jjK&_nc_ohc=zkijL_StkroQ7kNvwFOIEeF&_nc_oc=AdpIOcVAucih58tJHRhyo62jZOayxZJ-wWgiJbnz5_-U2STMu_Cyes3UOvDAkdAnvFg&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHkeXB-CyhXwTc3buvHrvtUTXAyq2y63IiKuurxgIyuLDd5i0aC3JU60Ev6uAuUHV9AwOeFGV3NLw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQH6u2xfkk7Fprd7TI0ik_WTLLHONpqd4W015tKzxa2nqQ&oe=6A7798B6",
+      "copy": "Enter to Win a FREE Oil Change from Blue Rose Auto Care & Repair Services! \nLike! Follow! Share! Call Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 6PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #AutoService #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/28430768893191889.jpg",
+      "copy_length": 464,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~117"
+      }
+    },
+    {
+      "asset_id": "4541398592812452",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQEob4Eddn614dHO0Ure7X5RtD3afr3d1B-OC9ZbSfNP2tIy6lbNrcDu6Nf1zE-EhHsCdzkJYx48BA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQFFG0NMTRrCYqNDTNvXVRIyTMPZvsRa8R2ajLTwty0uKA&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": {
+        "hook_rate": 85.4,
+        "thruplay_rate": 6.6,
+        "hold_rate": 3,
+        "completion_rate": 1.4,
+        "avg_pct_watched": null,
+        "score": 4.5,
+        "diagnosis": "hook lands but retention collapses by the midpoint — tighten the middle / add pattern interrupts"
+      },
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~115"
+      }
+    },
+    {
+      "asset_id": "2506427769769931",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/745282724_1568944278347582_7711216982298254496_n.jpg?_nc_cat=107&ccb=1-7&_nc_eui2=AeGU8Xyas10QkiZOgWnXP4RJm_qlCUqh7vKb-qUJSqHu8oRr8RtgelNaFCpmRnoR1smmsm5xGtFOuJzKIsFNj7sR&_nc_ohc=47FkBALLjh8Q7kNvwFrggU9&_nc_oc=AdqFoOwohgdihClXEZddSWDBI-uVpYmkh_YhIwYNrjCwLEWxU8XCwLr9l0NUB5yyegA&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQFDZnr79Me1t95wUgUqCUEEjiu-W5oo2mI85fUyJAJCCOHW89C8vDUZkrJYhRJ-7DsLJiG9FjvOtA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQHd3LdAnc-AP-0vcrIXLZh02v8igFI2ZRYtB2awMC1BxQ&oe=6A77C09F",
+      "copy": "Enter to WIN a Heavy Interior Detailing from Blue Rose Auto Care & Repair Services Like to Enter! Follow & Share! \nCall Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Live, Thursdays at 5PM, on the Blue Rose Auto Facebook page. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #autoservice #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2506427769769931.jpg",
+      "copy_length": 484,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 6,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~70"
+      }
+    },
+    {
+      "asset_id": "2488073031678009",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQGUC4xIvC6kh0B5LIdpmn5hs3neDPRxXaHmzc1IeRG0cjH4aXRdPOLACsz_ScQKHF_WK2nyv0LPwA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQG4HDbh2y58G3-tJcgSlxMis0wl3iNcyqa-YDQh_OZhNQ&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "2446844215796968",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/736980469_1002233922623430_674068182561904304_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeEgZ7zQo3Pp4keSe_kliUFQRDbmNIEJOeVENuY0gQk55YD59-1iFT2SqB_EpdA3hnIsTjTp9HdvocXAh1ge9eEA&_nc_ohc=1pyWYMtRgwUQ7kNvwFji8Yl&_nc_oc=AdrGryWb85e6nwbGrzSJ6v-wxCMznbArT_ysTzEJlGzSWdPD7qSmcAoNhkIVAi52rDE&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHhjDjG2Yt_h067lbURp9DEzVD55j5t21zssY0w92kjVIE1-mgS1fsgW46TiZYO0l5UfrHWO8Z-wA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQHA88Lr_AtWXTlOOinDLDCJFNJrM4BVx2jL-D0ZMFw8gw&oe=6A779FBE",
+      "copy": "We’re giving away THOUSANDS OF DOLLARS in Services!  \nLike and Share! ENTER TO WIN great services from Blue Rose Auto Care & Repair Services! \nComment! Follow! Share! Call Today! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 6PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #autoservice #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2446844215796968.jpg",
+      "copy_length": 515,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "2321487588681024",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHF5BRZ0IH6tCZzm-VSNdwK_cKbOWkBMI01MSrApJJ454HhSg0WYFn9uTz7MZRj25VcwPWb6izj9g&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQEY-CnBrBAj9gqdaIcL2VGZXzMLiUFfPosXk2DFQ-T5-A&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "2177555643174280",
+      "type": "ad",
+      "format": "carousel",
+      "image_url": "https://scontent.fpew4-1.fna.fbcdn.net/v/t15.5256-10/758252809_969506909434595_7222482498221827133_n.jpg?_nc_cat=103&ccb=1-7&_nc_eui2=AeGqiMqUKgwoDJto47atx1Wx8lcZwWONnTXyVxnBY42dNXLBLnApM2BYHZ0poFLgmrsJDKNqDXIf9gt1IkQa-XEK&_nc_ohc=j2ZxLt20VjsQ7kNvwH5Yd8z&_nc_oc=AdotryWYPX8gzsHW_T8fYI26fnjX-Z1VNDRL8KQd3KrbpAcWY9kKstsmBCepayZBcUQ&_nc_zt=23&_nc_ht=scontent.fpew4-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQE8srVXPP4gA9mDpJ6r1qPaYQI_6qGw32bqN9HT8q5bZPTVdh1dHfNtr1nfr9_Vh5IUvUvDWqGNsw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQGZoACiBmF9uieYPgvqes5rUlyrbO-TgbJ0XFgpURGo_A&oe=6A7794DF",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2177555643174280.jpg",
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 6,
+        "text_density_pct": 61,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~61%, brightness~99"
+      }
+    },
+    {
+      "asset_id": "2147758739128228",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew4-1.fna.fbcdn.net/v/t15.5256-10/754797940_1605585464231677_7997870023916885330_n.jpg?_nc_cat=109&ccb=1-7&_nc_eui2=AeH4jKTv0mnv2NLY5zwQPNxNciv9olOIIMByK_2iU4ggwCIgmhi4IgI53PZdP8oeI23ee0xOM1hpsVlMFJdAWqq_&_nc_ohc=2mh4JJ7CtpoQ7kNvwGLI32F&_nc_oc=Adqv6c_fe6v1-pN_q1j9o18fDaVEcTBYTa2VBK8GuS2aK38kmr4ytLYctPRL57_O8KI&_nc_zt=23&_nc_ht=scontent.fpew4-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQEQPOoR8bPrYQVORMB_4HcXH2WiEiOkEttPh2q3fgH0500T4lpBMxPQyJfYA4pgEaSznlbadYSP_w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQG_K1R7b2X_NK14fSdA_ZrFXGWRXv9wvbuLTbwKrvldIw&oe=6A77B9B7",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 62,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~62%, brightness~110"
+      }
+    },
+    {
+      "asset_id": "2126000651664640",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHxqarDI-dRwdSrzd5bZInTobXyelfIa9gh_Riq9e4COEwgmTNjA-v8MtwDJGn9k1T_ukVW3XdqlQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQHi4bxEkzeh9MEiEzJGE_Q7F4KNReCUlB-s5Vo4j30c3Q&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": {
+        "hook_rate": 87.9,
+        "thruplay_rate": 12.1,
+        "hold_rate": 5.7,
+        "completion_rate": 1.7,
+        "avg_pct_watched": null,
+        "score": 4.7,
+        "diagnosis": "hook lands but retention collapses by the midpoint — tighten the middle / add pattern interrupts"
+      },
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 6,
+        "text_density_pct": 61,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~61%, brightness~99"
+      }
+    },
+    {
+      "asset_id": "2085793272323022",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/749269149_1631308225662610_5346422697505492746_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeHbk4Vbp9DyrSOSSrtN0cIsDcptEFzmwFINym0QXObAUkIlPgFqeqhzjmlN-r0a34YYdMpenHq7eROIF-MJR7ru&_nc_ohc=N0Msvlig3FIQ7kNvwEu_DPY&_nc_oc=AdoHKnZZrgDDIVpgjvPLDQqk-vSOYZssxcawvmQCw98WzlAkJORoZvuVccWWUVtxMEA&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQFATr5CnFb6SfAlSiKgO4jzybAmXKObcSZfmpvo2LVhxiRokXvqJPCVHZ_QRMRsZpHS9f6Vwd_8hg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQFApTr_kcZOu5aOGuleLqZygVlXoXPFvpDOdMas7VhdRg&oe=6A77AA54",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2085793272323022.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 56,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~56%, brightness~113"
+      }
+    },
+    {
+      "asset_id": "2001106697244813",
+      "type": "ad",
+      "format": "carousel",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/757331075_2329860121174665_5956342343514166773_n.jpg?_nc_cat=107&ccb=1-7&_nc_eui2=AeFxtLhS5XdAJwjXXUrKsKy_7t5EimZoh-7u3kSKZmiH7nuPNUd0YwKuReq0HC7zT1gH05M7sZnR_1S9LKDuPVF9&_nc_ohc=D0CqO3qfoukQ7kNvwGTz9YH&_nc_oc=AdrdbIRZXVPIz86auiChEXTd2j2EEMJGUlsPe_GSEK5V4jfb2AwTEGJPA1f2OAme9Ks&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQH5cWaS1RHDrXc4DW5MaPbixdBAjf8VymXBU9aXMknT1XumVZQ21omddSM2HMk2IwmebBJ_mO_Cog&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQHekJAgYP1RhXRpdcFhqUhj8fjbVimh6ee41WzucFXidw&oe=6A77B911",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/2001106697244813.jpg",
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1992578084726726",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/742695254_1391423252892641_5645999419898709142_n.jpg?_nc_cat=102&ccb=1-7&_nc_eui2=AeHV7ebjq7rFILiHJzodEj3BickRbdpHSyeJyRFt2kdLJ6I5c6gvuk47rQORGIxGglPwNUaIdNvzORw32i7fq-L5&_nc_ohc=D0SULeQiGP4Q7kNvwHwYopl&_nc_oc=Adp0ictnlO77rEPbRc-i1nPEYFdUjzuOkJ6s7dsINFs8ruagpm-mBGmUHwn8cAv3O1Q&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQEpVr5svJgKPg0MBV-yOzpLMxrtsNcGL9jeuZkEPnGLgD1Aik_ZL7E2WTMQhRAtom2y9RLoY2tD5A&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=032300&_nc_sid=58080a&oh=00_AQGWE-OPnpxiIo2eY1lraNn0ijM_bklaqD7HNpv-kF4fxA&oe=6A77C9DC",
+      "copy": "",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1992578084726726.jpg",
+      "copy_length": 0,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1967588900617203",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQE-HnFxo1W9Pv0DrCQLKku0BxWWQdHhv2n2QArnJf8qaCZ1cNgVMlYfpotsBRQrj-vPVhyyTFYjFA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQGyjZY-XHpAUljdUaTQ-9nbOp-v-V2KmLDP1A1ZWtoXyw&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": {
+        "hook_rate": 89.1,
+        "thruplay_rate": 7.9,
+        "hold_rate": 3,
+        "completion_rate": 1.5,
+        "avg_pct_watched": null,
+        "score": 4.5,
+        "diagnosis": "hook lands but retention collapses by the midpoint — tighten the middle / add pattern interrupts"
+      },
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~117"
+      }
+    },
+    {
+      "asset_id": "1946550999393533",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/756139115_4536902376546405_7124054136009364480_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeH5Ih0s5Z6g7Ui0zykHVrTNMf1PTdSULvYx_U9N1JQu9mj3YuBgW69W_VgxZaaUuB80xiZ1Q4GIbZ0wnFrZpUfP&_nc_ohc=53LXOHByOncQ7kNvwFH8iKL&_nc_oc=AdqvvjKAPVt3QIo_jIZhMJpUotBzOwsK8BcPCC9sZ8JeBEtmQ5wu-NafbSycW6JxKa0&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHQBvKmDraMhjGJzrnYinMqz6KMzSyLTgA1bLwBfqvRBGIuHZfiUf5q6zCJ5ETgNPvzSe5Y2UsEiA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQHWZlzN5FiriHaG5rR_99dhUo_P0tzFhniavvuSCGQNgw&oe=6A77C235",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 6,
+        "text_density_pct": 61,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~61%, brightness~99"
+      }
+    },
+    {
+      "asset_id": "1908917919785812",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/741613541_2447882065694821_1042099694976066899_n.jpg?_nc_cat=104&ccb=1-7&_nc_eui2=AeFJUd3U3MADq97Qb_22xmqU1aQsDqwzv8fVpCwOrDO_x3f_gci6jv8ObIKJh4X4vVsEVYhWAY6MrTivO9NJ0jjK&_nc_ohc=zkijL_StkroQ7kNvwFOIEeF&_nc_oc=AdpIOcVAucih58tJHRhyo62jZOayxZJ-wWgiJbnz5_-U2STMu_Cyes3UOvDAkdAnvFg&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQES-vtPKjkBJXja0DxAvNdRs1kjXTfwbupuF4tbC50UZAIMb9FmBcNRM5uxMNTppJK44rqRatBUZg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQFPcQ6w1uQj7G5s-d53Ek6UK8peNt8X0j7ynxJhZKmzGw&oe=6A7798B6",
+      "copy": "Enter to Win a FREE Oil Change from Blue Rose Auto Care & Repair Services! \nLike! Follow! Share! Call Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 6PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #AutoService #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1908917919785812.jpg",
+      "copy_length": 464,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 85,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~85%, brightness~164"
+      }
+    },
+    {
+      "asset_id": "1830352631752500",
+      "type": "ad",
+      "format": "carousel",
+      "image_url": "https://scontent.fpew4-1.fna.fbcdn.net/v/t15.5256-10/759408879_1799608201481367_8438638000305355317_n.jpg?_nc_cat=103&ccb=1-7&_nc_eui2=AeHrGm3OFDtxM1_mX96_5Jgt0XSLgJeAQxTRdIuAl4BDFOMCf5JSKd8Z_lnOpXpxySnMCjCw7UiWz4WXaj9yF2rD&_nc_ohc=1YZNXJcxgSsQ7kNvwHvMsbo&_nc_oc=AdrOC6fi1GWGaRJKwP_D7Phl002Cb_59Sf6njv_ReQgeaJDQRgGeDaq93WLRnsXjMP4&_nc_zt=23&_nc_ht=scontent.fpew4-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHe1XKcqeNUl13WxY1YpBRau8_gEMpvES-jeAdQxhwQtFA4eXMFHr-T5fuE7-5rbYv36I-SRlSwTQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQGrYZftqN4VunpJRdYYlJ3a8kppF8rSTbjMFfPtvkjH9g&oe=6A77B7F0",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1830352631752500.jpg",
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 85,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~85%, brightness~164"
+      }
+    },
+    {
+      "asset_id": "1811746520235500",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t39.30808-1/565127706_1368138221985490_4237033920865309430_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFYeuOCJwBG6-mScz1M2RevO0XyX9lhmu87RfJf2WGa7xRHrn4T4Y912ByDE5QrNaUP3yVkJ20YvaQyryv8bsz3&_nc_ohc=fzv5EBHSJx8Q7kNvwEneC-M&_nc_oc=Adq4exI7_ljfZR13eT6zDWQC-AmK80AeiR3KQDA1sYg6vfu-UqGb3cu8oCenSoW4YwM&_nc_zt=24&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQG22VubZXjWibCa7k-6SswNQOq6TkMv-TWvrKvm4nD_3qcW6bO9-0wDJsSpZ0KMCPDUz34D287XiQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=68aae3&_nc_sid=58080a&oh=00_AQHura9zmGwxyv5KNfKCZenfxsCx517TM67gUcoxTPjeXQ&oe=6A77C25B",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1811746520235500.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1809315007142049",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t39.30808-1/565127706_1368138221985490_4237033920865309430_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFYeuOCJwBG6-mScz1M2RevO0XyX9lhmu87RfJf2WGa7xRHrn4T4Y912ByDE5QrNaUP3yVkJ20YvaQyryv8bsz3&_nc_ohc=fzv5EBHSJx8Q7kNvwEneC-M&_nc_oc=Adq4exI7_ljfZR13eT6zDWQC-AmK80AeiR3KQDA1sYg6vfu-UqGb3cu8oCenSoW4YwM&_nc_zt=24&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQGcJehw_ODuuNwgG5JmozvcBe8fEDIsMTyZH9EdghWy_1IZHMIDwHVAqMnZJfWZ9iCA_zABC6rMIg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=68aae3&_nc_sid=58080a&oh=00_AQFqln4UaC2XDxPN2nI-RjFiRP96Ru6xRY50Km1zhJOOAg&oe=6A77C25B",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1809315007142049.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1756509089102095",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/754224277_1113256771384821_3837320126255662477_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeGrXBRdaxrj-jnIMhOKxHCUDiI60a5dJ4QOIjrRrl0nhDdHJ0uZFxko9jE7m01tPuG6VcQ21tPcFL3p08sMiLF6&_nc_ohc=02ml2og_xzMQ7kNvwEG_FZS&_nc_oc=AdrKKfYMJTZ0GP8YGUQqzWpGm7i0UqNrIGWZ1D2lke76cTKerloUDqRw5kaDJrmzNVM&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHTf1LfFmXF_7DHGk9VzQuJ0hwwaS3uVR16ubHqX1KbHN63ZAQ3x8AK2T4VsljQ3mneJ9iQKeOpQw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQHagmZgnf5MrdVQnjj3dtWjC_sqHXf55FhDR_V5iMF_EQ&oe=6A77A6EA",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 85,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~85%, brightness~164"
+      }
+    },
+    {
+      "asset_id": "1752908102370494",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQEe4rnUcB24gruG2L2OuQhmnvVJXHnqe-958cXeXffQJ7Z52ekKknRLf_O_i2kCrLe_Y7qaSpNf9Q&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQGS3YOZpcvC-ntj5A7O_C8Ld2AzFJukPux5NmG0ic-vKw&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 42,
+        "messaging_clarity": 7,
+        "notes": "64x64, text~42%, brightness~119"
+      }
+    },
+    {
+      "asset_id": "1683746219562207",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t39.30808-1/565127706_1368138221985490_4237033920865309430_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFYeuOCJwBG6-mScz1M2RevO0XyX9lhmu87RfJf2WGa7xRHrn4T4Y912ByDE5QrNaUP3yVkJ20YvaQyryv8bsz3&_nc_ohc=fzv5EBHSJx8Q7kNvwEneC-M&_nc_oc=Adq4exI7_ljfZR13eT6zDWQC-AmK80AeiR3KQDA1sYg6vfu-UqGb3cu8oCenSoW4YwM&_nc_zt=24&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQF3K0u3D9jv83Jvzd93X7U24SXgTAEcIgMyP53DEs8O48IY8hQncDR0ws9hr9iXiabe8gFtHtexsw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=68aae3&_nc_sid=58080a&oh=00_AQHgpPJ6hwiHUD2qI2r3orTmybkEnflVEKj2QfOFlV7OzA&oe=6A77C25B",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1683746219562207.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 62,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~62%, brightness~110"
+      }
+    },
+    {
+      "asset_id": "1659191631980539",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/742511009_1578505377240101_9073409186150988708_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFDVOXHK1CdKS2Eeuz_FzJ6j7zCUt5taEqPvMJS3m1oSqz6RPNZKrsnyfb0n76mrjV3mdL22LiexNVdrxk7vDiw&_nc_ohc=dvl8XXkhAgsQ7kNvwF2dbsT&_nc_oc=AdrVAfEHjWuj-cHeKsXFHbs6yFbi0KtEe6hksjAmxLB1vZz3IzZe2HzurecwUgtpmto&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQG9m9MmK6UbcqyFcN06mx3F2xNyRrb9zJzzpAf0hAeY-evhyPFkFuwkxivw6vfuiV2YwtN2IFHwtQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQF1w3-7l7G7kc5zeAJIwocVoshhHmoG5jGbWDolFwicIw&oe=6A77ADFD",
+      "copy": "Drive a Diesel? Blue Rose Auto Care & Repair Services has the tools to keep you moving! \n#BookNow #autoservice #GetAQuote",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1659191631980539.jpg",
+      "copy_length": 121,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~117"
+      }
+    },
+    {
+      "asset_id": "1576485067434122",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/749269149_1631308225662610_5346422697505492746_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeHbk4Vbp9DyrSOSSrtN0cIsDcptEFzmwFINym0QXObAUkIlPgFqeqhzjmlN-r0a34YYdMpenHq7eROIF-MJR7ru&_nc_ohc=N0Msvlig3FIQ7kNvwEu_DPY&_nc_oc=AdoHKnZZrgDDIVpgjvPLDQqk-vSOYZssxcawvmQCw98WzlAkJORoZvuVccWWUVtxMEA&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQE_YDpBUoLjS-GeyXU_ZlmVGGQkNyA8WySqTJfe_S-on3l5JgDEoEYBU1-YZBUVutoPg1c4VmhO7w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQHpVG2qz6JA4h23-soD0OqxYl5Fuby2kw63NbegDaGHVw&oe=6A77AA54",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1576485067434122.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1413485493937814",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/741613541_2447882065694821_1042099694976066899_n.jpg?_nc_cat=104&ccb=1-7&_nc_eui2=AeFJUd3U3MADq97Qb_22xmqU1aQsDqwzv8fVpCwOrDO_x3f_gci6jv8ObIKJh4X4vVsEVYhWAY6MrTivO9NJ0jjK&_nc_ohc=zkijL_StkroQ7kNvwFOIEeF&_nc_oc=AdpIOcVAucih58tJHRhyo62jZOayxZJ-wWgiJbnz5_-U2STMu_Cyes3UOvDAkdAnvFg&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHspUidTPj4I6LbIGsaQ6enFA6pH1RZBDpX-P9-_m5sYWWE6zWctqgJhT-jmaJ_HkcQe079UvtRFg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQFoxhzYEYIiaoKfdsMoxN5bTcjefJ2DR1Ab5kI1AXiL9Q&oe=6A7798B6",
+      "copy": "Enter to Win a FREE Oil Change from Blue Rose Auto Care & Repair Services! \nLike! Follow! Share! Call Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 6PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #AutoService #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1413485493937814.jpg",
+      "copy_length": 464,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1391192582861727",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/754323337_2798549610514044_1163455657701244177_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeHRU8Fr6dIrqBJJ1ExHj_zULGl4G3pfp5AsaXgbel-nkEijxAb5dzzKVuELyXoUuy_VmLfVssWfHk5_H0BcEk4h&_nc_ohc=Mti_qfeirgkQ7kNvwGKndM1&_nc_oc=AdpjLxV-v4CiIyoUXBieVj7hxu_qeBh52gogByX0udMqL1qXMnXtNfQLxn0t30VSrKo&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQFngACuLQEXl926avYlUplPP-TPFOxTysE5VDFzvWLJW5gJ3rPpUDmy2SfoFRD9mxTznaMFJdYcxw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQFhBuLVLME28OVA_zUZJUgtitvx1lJ2TFkq09GPE365_w&oe=6A7796A7",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 81,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~81%, brightness~133"
+      }
+    },
+    {
+      "asset_id": "1366218072362950",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/760984327_2464079337422936_6789730470967315033_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeGdB6PJa0bhlJXN7k9cK0kcm9Nd9N6atrGb01303pq2sTQZan2vON49jUJ4yka72_NQKb9A1wLbA9mUOx7RH_3W&_nc_ohc=2_eAUihRDUcQ7kNvwHWMMds&_nc_oc=Adp0x_abMlwJhjz8kE5cvOZh7qtc6RpgxhAnAIlQMU0kayXc9ulqIoZl9b9vU0qRius&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHKC7z0JJF7lDQ9xf0CpB0LXeVdS3-3KD49kZvcgbiVct1Yo2JuMSwT9RkYLVy5m0Ni54TteSwGkg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQFVrNzymZBP8dszC4KOsP7c09tjjjCywS_L4xsbJu7Whg&oe=6A779E72",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 62,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~62%, brightness~110"
+      }
+    },
+    {
+      "asset_id": "1354822736716111",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/758658327_28020308300932061_5415499075906126396_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeEa3A9Gh4ioKp5vSIZQOsEWir6LgZV9ZD6KvouBlX1kPjE2gbJE0iXrjS00gpVKpKv-4vFcX9VPlISgCWc3Rrbk&_nc_ohc=9T20RIhOhdIQ7kNvwETmxtB&_nc_oc=AdpRl-dbP2t7JOuLZE8jg_rWX1HkGLY0LlJofrvOQnnR6byD2RDQ-e3Q9z2WPdg3XjM&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQGgou4bM05NLTlg7D4wZ5qOkjxi35rOVS-AADGCuGAXZzIpnOpmOHU_A3uwiK7shtAP5RRMFnqNtQ&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQEBi5I36hGLq3S6HDHwQqrrIWQO5cG5vOJ3v80MMqq9CQ&oe=6A77B792",
+      "copy": "Get Pampered!!  \nBlue Rose Auto Care & Repair Services has the tools and expertise to maintain, upgrade and protect your vehicle. \n\n#CarCare #booknow #getpampered #treatyourself #Eugene",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1354822736716111.jpg",
+      "copy_length": 185,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 6,
+        "text_density_pct": 84,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~84%, brightness~99"
+      }
+    },
+    {
+      "asset_id": "1343641074640635",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/749269149_1631308225662610_5346422697505492746_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeHbk4Vbp9DyrSOSSrtN0cIsDcptEFzmwFINym0QXObAUkIlPgFqeqhzjmlN-r0a34YYdMpenHq7eROIF-MJR7ru&_nc_ohc=N0Msvlig3FIQ7kNvwEu_DPY&_nc_oc=AdoHKnZZrgDDIVpgjvPLDQqk-vSOYZssxcawvmQCw98WzlAkJORoZvuVccWWUVtxMEA&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQG1vd3gUXGVnhdgvqAjwMv5xkcBjQcsP8fBP-jL_ErlWYkksklXorV8pXahXMDIYHflUq9ZSCDN9w&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQG39Su7Q0nbPNHEnhGnZNPPq-dz7rQxI4ieY73CdZnUOg&oe=6A77AA54",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1343641074640635.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 89,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~89%, brightness~130"
+      }
+    },
+    {
+      "asset_id": "1341042254891226",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/753187990_887829723912931_13275010819443822_n.jpg?_nc_cat=107&ccb=1-7&_nc_eui2=AeEeEplA7IdENs7qM6BaaqjkTfECyd2AHqtN8QLJ3YAeq6GD6wMzh-0XZ8fD8J8jj59w-BObHSjLJt_S39Yv0dUM&_nc_ohc=YuNClWuwDvkQ7kNvwHbZ1gU&_nc_oc=AdoP-LktP0DG4JcBejBKVL1C1Ip3QgnQyKMXjTFdyeSAkCeck8z_hwbLwli5EDBC_lw&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQGGdTJLvc1RMkcaYU2QohaVRHeEa-EOvYEgEf1INcTYPl7DiROvGbJBY_Am8QIKtniO4qjE16pN1A&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQFtxcr12YZaYoIoEH7QBgy6yV4QQn1EBaLY7a8Yy6nmxg&oe=6A77A9A3",
+      "copy": "Get your RV or Boat ready to take on new adventures at Blue Rose Auto! Clean It! Fix It! Upgrade It! \n#booknow #ceramicprousa #GetAQuote",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1341042254891226.jpg",
+      "copy_length": 136,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1333544798994798",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/745643727_2935464813452622_9167923547443237566_n.jpg?_nc_cat=110&ccb=1-7&_nc_eui2=AeHoCaBpo31BJSmrIhxb0De3G49A00pRKdwbj0DTSlEp3PKiyDDW2O8rfIoc99m-ZPriKJpxk2_zucD0y-zEk1Hq&_nc_ohc=bbVCOOt3_jUQ7kNvwEu3Shv&_nc_oc=Ado7yfxVffAOUbW5Qz-S3CpZJbynMbQt66qBuC0tZZQJZOSDgv6NwZyyU1l5EWPRK30&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHkiPcK8EmBukiJDn7NtXj5190kbte89aihEW5HtN3-6M--r9k9wluRTL42sxSF70aAT5ScHP5APA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQG8X9RD-DOvXs738xGuJZjnz0tpBB2zRSYl2h65fsQcbw&oe=6A77B1FA",
+      "copy": "Enter to Win FREE Tint from Blue Rose Auto Care & Repair Services! \nLike! Follow! Share! Call Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 5PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #autoservice #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1333544798994798.jpg",
+      "copy_length": 456,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1236542112872894",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/749269149_1631308225662610_5346422697505492746_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeHbk4Vbp9DyrSOSSrtN0cIsDcptEFzmwFINym0QXObAUkIlPgFqeqhzjmlN-r0a34YYdMpenHq7eROIF-MJR7ru&_nc_ohc=N0Msvlig3FIQ7kNvwEu_DPY&_nc_oc=AdoHKnZZrgDDIVpgjvPLDQqk-vSOYZssxcawvmQCw98WzlAkJORoZvuVccWWUVtxMEA&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQFrKys9bL6EWrL8EP9hs2wi_U_fdd6UNCmlzPFjjqn8NYXdnq6GTgLEZ-3qPJSl-YK8GcvDaciAVg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQF7BesSU7a5f5iIo8Vu8jY6nC1rWeMhL6DEvrSHoFAc8A&oe=6A77AA54",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1236542112872894.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 62,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~62%, brightness~110"
+      }
+    },
+    {
+      "asset_id": "1199990052268876",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/741613541_2447882065694821_1042099694976066899_n.jpg?_nc_cat=104&ccb=1-7&_nc_eui2=AeFJUd3U3MADq97Qb_22xmqU1aQsDqwzv8fVpCwOrDO_x3f_gci6jv8ObIKJh4X4vVsEVYhWAY6MrTivO9NJ0jjK&_nc_ohc=zkijL_StkroQ7kNvwFOIEeF&_nc_oc=AdpIOcVAucih58tJHRhyo62jZOayxZJ-wWgiJbnz5_-U2STMu_Cyes3UOvDAkdAnvFg&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHoWKDLAp_tPT_YEGn8foAnc9XuTCFNZRB8hy88wYeK24EQh2Fj1EG46BJZnEXRCZBUVpDoTebeqA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQHdFkYsL2QwdCZJi8cF2cdWKF9UmlEFnZUymOzs_ZaHDQ&oe=6A7798B6",
+      "copy": "Enter to Win a FREE Oil Change from Blue Rose Auto Care & Repair Services! \nLike! Follow! Share! Call Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 6PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #AutoService #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1199990052268876.jpg",
+      "copy_length": 464,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~117"
+      }
+    },
+    {
+      "asset_id": "1072759565090300",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/753848790_2131958911087239_3141938672353677207_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeF5OVGKNz2SXDhnYwXRGM74ZNlbOuIC5bRk2Vs64gLltNIl7X4NQDS0kdLXQdP-J-c8Bu2ZGIB2ZNTWIrHHPdtj&_nc_ohc=7paBGFvxGnsQ7kNvwHsTrrZ&_nc_oc=AdrSEWh5fk_dEfm6drfqTrRkUeNOuByG8QmVmj-qLxTgER3F3oYlMkrxT4zO_2RZvck&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQGpx7gRt6fefNubds6ByqL47SCO6gr8r6tluU0w7l7TdWzI12tFsi0jCeX6LqXnQiaeS3aZmAWu9g&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQHCVFnAbUkA2n5HAiu4G0BnBIyco86n1q1c1wLNOuD9VA&oe=6A77CAE9",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 100,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~100%, brightness~117"
+      }
+    },
+    {
+      "asset_id": "1052490383897718",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/754297538_1583123283415011_5692968470665424422_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeE-q2b4iZ8R9WPql4ia0w1bETZvXX-MOhoRNm9df4w6GpMHWXoCrtECdeZ15l0-UqgSkAYX7eCOwktVCp_q9eys&_nc_ohc=XifYbfHi1UQQ7kNvwGZwOqU&_nc_oc=AdoFSH_5uvvCJejMjndT_B7PoEqlk2wjvLm9CDxGv6uaW4YZ5i2zro80uhnD0a-f-WY&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHgyA-BJ4k9PF3Ue7NQF6xqfBJEC9v8ani4ZdDHorqUaZhy-4CzirGzY0O0bblk-UEWhlofKn5qww&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQGUIbULIjm_fqT7iVM2kTz_A1ZAmWdHFzgXUNnIIdw1gQ&oe=6A77ABF4",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1044079104863033",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/741613541_2447882065694821_1042099694976066899_n.jpg?_nc_cat=104&ccb=1-7&_nc_eui2=AeFJUd3U3MADq97Qb_22xmqU1aQsDqwzv8fVpCwOrDO_x3f_gci6jv8ObIKJh4X4vVsEVYhWAY6MrTivO9NJ0jjK&_nc_ohc=zkijL_StkroQ7kNvwFOIEeF&_nc_oc=AdpIOcVAucih58tJHRhyo62jZOayxZJ-wWgiJbnz5_-U2STMu_Cyes3UOvDAkdAnvFg&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQGQmLRO9ZkD77SS8-XRKmw-pOdVQckLjZWcsSlYZti1Tk4Yi562BRpkQqTIr5c807C6s3zdbF6qug&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQG8W2KfR5ox01K_d3cifuvYIg4GFp7tUvq4d1QI3iwe7Q&oe=6A7798B6",
+      "copy": "Enter to Win a FREE Oil Change from Blue Rose Auto Care & Repair Services! \nLike! Follow! Share! Call Today for Expert Service! \n.\n.\n.\n.\n.\n.\nEntries valid 7/1-8/27. No purchase necessary. Void where prohibited. Winners announced Thursdays at 6PM on the Blue Rose Auto Facebook page Live. Winners will be contacted via Facebook Messenger. This promotion is in no way sponsored, endorsed, administered by, or associated with Facebook. \n#booknow #AutoService #carcare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1044079104863033.jpg",
+      "copy_length": 464,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1043469394822294",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQH9W8FmvVZ6hvSQdg9jtDQQkIeEcHxzeD9ymL3PY8e70e_5ymHbk2hW3fystoizQDkGLtEN_RmHBw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQF4tg1KQCnaPuRo4IfS_-Xr22Ea3XCGBPGG_Rz3zXuuaw&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "1025028703790489",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQFVROe3HxZ7EAq8xcx9XALRYujxXT717FRPxzw2o9lKzm9xDK2P_VOCfpaNC_TlzMTATfv9hERivw&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQFJQEH0GEWoUPuqKB6KbNDuMG8vXzeiK5naTG90Tlx4Uw&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nFull color changes on a car run about $1,500–$2,800. Most installs are done in 1–2 days.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 592,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 6,
+        "text_density_pct": 84,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~84%, brightness~99"
+      }
+    },
+    {
+      "asset_id": "1022277073926466",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/753187990_887829723912931_13275010819443822_n.jpg?_nc_cat=107&ccb=1-7&_nc_eui2=AeEeEplA7IdENs7qM6BaaqjkTfECyd2AHqtN8QLJ3YAeq6GD6wMzh-0XZ8fD8J8jj59w-BObHSjLJt_S39Yv0dUM&_nc_ohc=YuNClWuwDvkQ7kNvwHbZ1gU&_nc_oc=AdoP-LktP0DG4JcBejBKVL1C1Ip3QgnQyKMXjTFdyeSAkCeck8z_hwbLwli5EDBC_lw&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHlUo8KVN3Yu8zU6vQNw8LvLTTQ-gTA--47CFUc204qSklUuoyj_0KxXhkjF9nGdzEyuQ6ELSJgQg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=d2b52d&_nc_sid=58080a&oh=00_AQFcG8hLdp45137fXNTHuNhPenhDRtvXlLi1pdjDECkRaQ&oe=6A77A9A3",
+      "copy": "Get your RV or Boat ready to take on new adventures at Blue Rose Auto! Clean It! Fix It! Upgrade It! \n#booknow #ceramicprousa #GetAQuote",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1022277073926466.jpg",
+      "copy_length": 136,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 85,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~85%, brightness~164"
+      }
+    },
+    {
+      "asset_id": "1020170287403298",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t39.30808-1/565127706_1368138221985490_4237033920865309430_n.jpg?_nc_cat=111&ccb=1-7&_nc_eui2=AeFYeuOCJwBG6-mScz1M2RevO0XyX9lhmu87RfJf2WGa7xRHrn4T4Y912ByDE5QrNaUP3yVkJ20YvaQyryv8bsz3&_nc_ohc=fzv5EBHSJx8Q7kNvwEneC-M&_nc_oc=Adq4exI7_ljfZR13eT6zDWQC-AmK80AeiR3KQDA1sYg6vfu-UqGb3cu8oCenSoW4YwM&_nc_zt=24&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQFNLKBMkCMIeLWa6FZLYi6vHZbBpiFZtOq78gJVMahvXiqEhfyJH7YBJQYYLzkOxB6wMHeJ8YzRCg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=68aae3&_nc_sid=58080a&oh=00_AQHnhl3xjzKPgKBS5RI8Aohz3r1sfeWwhdQbOICeBKC78g&oe=6A77C25B",
+      "copy": "30+ years under the hood, right here in Springfield. ASE-certified, EV- and Tesla-capable, and honest about what your car actually needs. Watch how we work — then decide who you trust with your vehicle.\n\n#springfield #autocare #autorepair #blueroseauto #bluerose",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/1020170287403298.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "982577398204025",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/755494034_27904883035816565_7542728159628983978_n.jpg?_nc_cat=105&ccb=1-7&_nc_eui2=AeFBDiKHjs2nwYOvtkoRy_xspePciZe8dk-l49yJl7x2Twge5pQxenqZErRErVbtGZCDmPm7j68Jw4Koap82kXk5&_nc_ohc=cXxY5NNRTaMQ7kNvwGlnYPG&_nc_oc=Adr8eKHAUJxV1KB7AQTAID7R8vH0iUt7HvZzLTYUWuQmfTNSqL6fj0YfKISuwIngTz8&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQEuZW340JKhjwYJAyrIbpqSTaeVBPXTyhTUBP3DkJ_5EVcyBpAC29aTDjgD2i2QmxQpt2yWSjx9hA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=5fad0e&_nc_sid=58080a&oh=00_AQEVNmcIJmrzSu5OQIKrbDX_DNBof6PfpoDhlaeipZqMSA&oe=6A779588",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": {
+        "hook_rate": 88.8,
+        "thruplay_rate": 6.6,
+        "hold_rate": 2.8,
+        "completion_rate": 1.5,
+        "avg_pct_watched": null,
+        "score": 4.5,
+        "diagnosis": "hook lands but retention collapses by the midpoint — tighten the middle / add pattern interrupts"
+      },
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "962662350149116",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/756975296_1964019367650148_8686363571582101050_n.jpg?_nc_cat=110&ccb=1-7&_nc_eui2=AeGfaN_YT4GebJgXjVUg2blWWLQcH0zZr35YtBwfTNmvfuIsBxMjoqaoRAeKJY4zU4oIB25cs03s0i7vXl_pxroo&_nc_ohc=OQBCl8tUCaMQ7kNvwFHUEp0&_nc_oc=Adol4Wixx_he6CCTyZcflcIsDgBUMB_L1n-Yr-oMktxIO36puDtIW5Fsz9HdVUezs6E&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHA4ukBRQeKYpsp20FH1peW5QlSbwGeozoJ2_MmA8hzIb7znc8FNghocCZrTfBl2jv_nMDce-jR8g&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQHUwh6U_rpMGL3W5wlZgBvDHSHaCUp80AZMQovU-2aLHg&oe=6A77C18A",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "956590970776102",
+      "type": "ad",
+      "format": "video",
+      "image_url": "https://scontent.fpew4-1.fna.fbcdn.net/v/t15.5256-10/758863525_27680379874923939_7369932773363658176_n.jpg?_nc_cat=109&ccb=1-7&_nc_eui2=AeGhfPiY5W461QzuxAIaYwgvtZDoO65lDrW1kOg7rmUOtVi-_4HUVyLHNOiQHpPVfxnkHoQsYBHuAYlQCI4oBonD&_nc_ohc=-s1RWBYJQbUQ7kNvwF70eCw&_nc_oc=AdqjwP0G5zW-EnSH2kguorNf9TBORvt4p-D7SCIF3E8VK6Kav1xgTC9GR_FNkSchXw0&_nc_zt=23&_nc_ht=scontent.fpew4-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHBKIZ5S5acrrZeRLnt8zYkC17LUX0UtEP8N-zGGCjwfYjPLyqYaFR7bWAqTWySCUmgOMj6BkjMIg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=afbe02&_nc_sid=58080a&oh=00_AQH43PVh6Z9UFSuxBOzwryC2DQBftTquQE3MNjn3E9V62Q&oe=6A77AC20",
+      "copy": "A repaint costs thousands, takes a week, and you're stuck with it. A vinyl wrap doesn't.\n\nWe install premium 3M and Avery vinyl right over your factory paint — so your paint stays protected underneath, and the whole thing peels off clean whenever you want a new look.\n\nTell us your vehicle and the color you're picturing. We'll build a free digital mockup on your exact car so you can see it before you spend a dollar.\n\n📍 Springfield & Eugene · Wrapping cars since 1994 · 4.9★ from 870+ Google reviews",
+      "created_at": null,
+      "local_image_path": null,
+      "copy_length": 502,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": null
+      }
+    },
+    {
+      "asset_id": "903044379521767",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t15.5256-10/742695254_1391423252892641_5645999419898709142_n.jpg?_nc_cat=102&ccb=1-7&_nc_eui2=AeHV7ebjq7rFILiHJzodEj3BickRbdpHSyeJyRFt2kdLJ6I5c6gvuk47rQORGIxGglPwNUaIdNvzORw32i7fq-L5&_nc_ohc=D0SULeQiGP4Q7kNvwHwYopl&_nc_oc=Adp0ictnlO77rEPbRc-i1nPEYFdUjzuOkJ6s7dsINFs8ruagpm-mBGmUHwn8cAv3O1Q&_nc_zt=23&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=tiQxd_rqmR4MKJZ0Wc0oJg&_nc_tpa=Q5bMBQHvDzeo3_4YEZekkabm2dz1FmF0mU63kPFJzORGZ6NsadgNtbL-d-DxES-EkpnjB_XfDNRiqI_vsg&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=032300&_nc_sid=58080a&oh=00_AQFDLLuQJhjvwfy9bqjNZkycFJZhKqHyD9SuQggbMSReHA&oe=6A77C9DC",
+      "copy": "",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/.img-cache/903044379521767.jpg",
+      "copy_length": 0,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 6,
+        "brand_consistency": 7,
+        "cta_present": 8,
+        "text_density_pct": 56,
+        "messaging_clarity": 5,
+        "notes": "64x64, text~56%, brightness~113"
+      }
+    }
+  ],
+  "instructions": "For each batch, send the vision_prompt + the batch's local image paths to Claude. Claude returns a JSON array; merge each result into assets[].vision_scores. Then run: node skills/audit-creative/audit-creative.js blue-rose-auto aggregate"
+}
