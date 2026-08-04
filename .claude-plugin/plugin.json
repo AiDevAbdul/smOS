@@ -27,6 +27,10 @@
       "type": "http",
       "url": "https://mcp.facebook.com/ads"
     },
+    "meta-devtools": {
+      "type": "http",
+      "url": "https://mcp.facebook.com/devtools"
+    },
     "tavily": {
       "command": "npx",
       "args": ["-y", "tavily-mcp"],
