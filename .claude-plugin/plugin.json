@@ -23,6 +23,10 @@
         "META_APP_SECRET": "${META_APP_SECRET}"
       }
     },
+    "meta-official": {
+      "type": "http",
+      "url": "https://mcp.facebook.com/ads"
+    },
     "tavily": {
       "command": "npx",
       "args": ["-y", "tavily-mcp"],
