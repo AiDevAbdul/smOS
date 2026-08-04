@@ -19,7 +19,7 @@
       "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/meta-server/index.js"],
       "env": {
         "META_ACCESS_TOKEN": "${META_ACCESS_TOKEN}",
-        "META_APP_ID": "${META_APP_ID}",
+        "META_APP_ID": "1278284687853453",
         "META_APP_SECRET": "${META_APP_SECRET}"
       }
     },
