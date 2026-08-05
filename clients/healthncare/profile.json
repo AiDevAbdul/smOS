@@ -108,13 +108,13 @@
   },
   "contact": {
     "phone": null,
-    "website_display": null,
-    "email": null,
+    "website_display": "healthncare.com",
+    "email": "wellness.healthncare@gmail.com",
     "address": null,
     "social_handles": {
-      "instagram": null,
-      "facebook": null,
-      "tiktok": null
+      "instagram": "@healthncare",
+      "facebook": "@healthncare",
+      "tiktok": "@healthncare"
     }
   }
 }

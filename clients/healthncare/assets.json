@@ -1,0 +1,77 @@
+{
+  "client_slug": "healthncare",
+  "assets": [
+    {
+      "asset_id": "img_PAIN-ad",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/healthncare/generated/PAIN-ad.png",
+      "hash": "53b5a6e6a07f550076afe5f46154a0d1e1ccbd12e433bfbedcea5290ab258fc8",
+      "angle_id": null,
+      "tags": [
+        "PAIN"
+      ],
+      "alt_text": "Problem-Agitate-Solve (PAS) ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-05T19:55:17.574Z"
+    },
+    {
+      "asset_id": "img_ASPIRATION-ad",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/healthncare/generated/ASPIRATION-ad.png",
+      "hash": "8e343af55cb7b8791f29205f0509095cb4760b6e58ba769a8e9f06a0bde499e4",
+      "angle_id": null,
+      "tags": [
+        "ASPIRATION"
+      ],
+      "alt_text": "Before & After Transformation ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-05T19:55:26.472Z"
+    },
+    {
+      "asset_id": "img_PROOF-ad",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/healthncare/generated/PROOF-ad.png",
+      "hash": "ebdd3fc1f3d448dc22b94eda2d0477dfe0efae79624f13394d6d8534500b5c3f",
+      "angle_id": null,
+      "tags": [
+        "PROOF"
+      ],
+      "alt_text": "Scientific Proof / Clinical Research ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-05T19:55:35.580Z"
+    }
+  ]
+}

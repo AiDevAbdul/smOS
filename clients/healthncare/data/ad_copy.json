@@ -828,6 +828,24 @@
         ],
         "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
         "visual_direction": "Lead with the pain-led question. Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Health & Care."
+      },
+      "error": "fetch failed",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/PAIN-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
       }
     },
     {
@@ -1611,6 +1629,24 @@
         ],
         "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
         "visual_direction": "Lead with the outcome-led visual. Show the outcome from Before & After Transformation. Feature real customer results; focus on the emotional payoff (confidence, energy, freedom)."
+      },
+      "error": "fetch failed",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/ASPIRATION-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
       }
     },
     {
@@ -2394,6 +2430,24 @@
         ],
         "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
         "visual_direction": "Lead with the authority / social proof. Establish credibility via Scientific Proof / Clinical Research. Lead with clinical backing, ingredient efficacy, research citations."
+      },
+      "error": "fetch failed",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/PROOF-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
       }
     }
   ],
