@@ -117,10 +117,12 @@ function reportLabel(f) {
 }
 
 // ── Curated client journey (grouped by phase) ──────────────────────────────
+// Phase 2: Added tooltip context for locked phases
 const PHASE_GROUPS = [
   {
     group: "Planning",
     icon: "🔍",
+    tooltip: "Starting phase — check back soon",
     phases: [
       { key: "pre-audit", title: "Pre-Audit",
         desc: "Where you started — market & account snapshot before we engaged.",
@@ -136,6 +138,7 @@ const PHASE_GROUPS = [
   {
     group: "Strategy & Creative",
     icon: "📈",
+    tooltip: "Unlocks after Planning is complete",
     phases: [
       { key: "research", title: "Market Research",
         desc: "Competitor creative intelligence and category benchmarking.",
@@ -154,6 +157,7 @@ const PHASE_GROUPS = [
   {
     group: "Content & Execution",
     icon: "📝",
+    tooltip: "Unlocks after Strategy & Creative is complete",
     phases: [
       { key: "content-plan", title: "Content Plan",
         desc: "Your organic content pillars and the Reels-first calendar.",
@@ -260,20 +264,22 @@ const progressHtml = `<div class="ds-progress ds-anim" style="animation-delay:.0
 function menuHtml(pos) {
   const home = `<button class="ds-hubnav__btn is-active" data-src="_roadmap.html" title="Overview & roadmap"><span class="icon">🏠</span><span class="label">Overview</span></button>`;
 
-  // Build grouped items
+  // Build grouped items (Phase 2: with tooltip context + breadcrumb data)
   let groupedItems = '';
   let itemIndex = 0;
 
-  for (const group of PHASE_GROUPS) {
+  for (let groupIdx = 0; groupIdx < PHASE_GROUPS.length; groupIdx++) {
+    const group = PHASE_GROUPS[groupIdx];
     const groupPhases = group.phases;
     const groupDelivered = menuItems
       .slice(itemIndex, itemIndex + groupPhases.length)
       .filter(m => !m.disabled).length;
     const groupTotal = groupPhases.length;
+    const groupStatus = groupDelivered === 0 ? "locked" : groupDelivered === groupTotal ? "complete" : "partial";
 
     groupedItems += `
-      <div class="ds-hubnav__group">
-        <div class="ds-hubnav__group-header">
+      <div class="ds-hubnav__group" data-group-status="${groupStatus}">
+        <div class="ds-hubnav__group-header" title="${esc(group.tooltip)}">
           <span class="icon">${group.icon}</span>
           <span class="title">${esc(group.group)}</span>
           <span class="progress">${groupDelivered}/${groupTotal}</span>
@@ -281,16 +287,19 @@ function menuHtml(pos) {
 
     for (let i = 0; i < groupPhases.length; i++) {
       const m = menuItems[itemIndex + i];
+      const badge = m.disabled ? "🔒" : "✓";
+      const title = m.disabled ? group.tooltip : `Open ${m.title}`;
+
       if (m.disabled) {
         groupedItems += `
-        <span class="ds-hubnav__btn is-disabled" aria-disabled="true" title="Coming soon">
-          <span class="status">🔒</span>
+        <span class="ds-hubnav__btn is-disabled" aria-disabled="true" title="${esc(title)}" data-tooltip="${esc(title)}">
+          <span class="status">${badge}</span>
           <span class="label">${esc(m.title)}</span>
         </span>`;
       } else {
         groupedItems += `
-        <button class="ds-hubnav__btn" data-src="${esc(m.src)}">
-          <span class="status">✓</span>
+        <button class="ds-hubnav__btn" data-src="${esc(m.src)}" data-group="${esc(group.group)}" data-item="${esc(m.title)}" title="${esc(title)}">
+          <span class="status">${badge}</span>
           <span class="label">${esc(m.title)}</span>
         </button>`;
       }
@@ -398,21 +407,98 @@ const bundleStyles = `<style>
   display: none;
 }
 
-/* Improved disabled state */
+/* Phase 2: Refined disabled state with visual pattern + context tooltips */
 .ds-hubnav__btn.is-disabled {
-  opacity: 0.6;
-  background: var(--ds-shell-2);
-  border-color: var(--ds-shell-line);
-  cursor: default;
+  opacity: 0.65;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--ds-shell-2),
+      var(--ds-shell-2) 10px,
+      rgba(255,255,255,.03) 10px,
+      rgba(255,255,255,.03) 20px
+    );
+  border: 1px dashed var(--ds-shell-line);
+  cursor: not-allowed;
+  position: relative;
 }
 
 .ds-hubnav__btn.is-disabled:hover {
-  background: var(--ds-shell-2);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--ds-shell-3),
+      var(--ds-shell-3) 10px,
+      rgba(255,255,255,.05) 10px,
+      rgba(255,255,255,.05) 20px
+    );
   transform: none;
+  border-color: var(--ds-shell-3);
 }
 
 .ds-hubnav__btn.is-disabled .status {
   color: var(--ds-shell-mut);
+}
+
+/* Tooltip on disabled items */
+.ds-hubnav__btn.is-disabled::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: var(--ds-shell);
+  border: 1px solid var(--ds-shell-3);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ds-shell-ink);
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--ds-dur-fast) var(--ds-ease), visibility var(--ds-dur-fast) var(--ds-ease);
+}
+
+.ds-hubnav__btn.is-disabled:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Phase 2: Breadcrumb navigation */
+.ds-viewer-breadcrumb {
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  right: 20px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ds-muted);
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+
+.breadcrumb-item {
+  color: var(--ds-muted);
+}
+
+.breadcrumb-item.is-active {
+  color: var(--ds-ink);
+  font-weight: 600;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: "›";
+  margin-left: 8px;
+  color: var(--ds-line);
 }
 
 /* Mobile: Vertical layout */
@@ -437,6 +523,10 @@ const bundleStyles = `<style>
     background: var(--ds-shell);
     z-index: 2;
     margin-bottom: 4px;
+  }
+
+  .ds-viewer-breadcrumb {
+    display: none;
   }
 }
 
@@ -463,6 +553,9 @@ ${bundleStyles}
   </header>
   ${menuHtml("top")}
   <main class="ds-viewer-wrap ds-anim" id="viewer-main" tabindex="-1" style="animation-delay:.1s">
+    <div class="ds-viewer-breadcrumb">
+      <span class="breadcrumb-item is-active">Overview</span>
+    </div>
     <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
     <div class="ds-viewer__loader" id="loader" aria-hidden="true"><div class="ds-spinner"></div></div>
   </main>
@@ -472,15 +565,33 @@ ${bundleStyles}
     var viewer = document.getElementById("viewer");
     var loader = document.getElementById("loader");
     var main = document.getElementById("viewer-main");
+    var breadcrumb = document.querySelector(".ds-viewer-breadcrumb");
+
     viewer.addEventListener("load", function () { loader.classList.remove("is-on"); });
+
     document.addEventListener("click", function (e) {
       var b = e.target.closest(".ds-hubnav__btn[data-src]");
       if (!b) return;
       var src = b.getAttribute("data-src");
-      if (viewer.getAttribute("src") !== src) { loader.classList.add("is-on"); viewer.setAttribute("src", src); }
+      if (viewer.getAttribute("src") !== src) {
+        loader.classList.add("is-on");
+        viewer.setAttribute("src", src);
+      }
       document.querySelectorAll(".ds-hubnav__btn").forEach(function (x) {
         x.classList.toggle("is-active", x.getAttribute("data-src") === src);
       });
+
+      // Update breadcrumb (Phase 2)
+      var group = b.getAttribute("data-group");
+      var item = b.getAttribute("data-item");
+      if (breadcrumb) {
+        if (group && item) {
+          breadcrumb.innerHTML = '<span class="breadcrumb-item">' + group + '</span><span class="breadcrumb-item is-active">' + item + '</span>';
+        } else {
+          breadcrumb.innerHTML = '<span class="breadcrumb-item is-active">Overview</span>';
+        }
+      }
+
       main.focus({ preventScroll: true });
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
