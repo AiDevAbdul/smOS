@@ -376,13 +376,40 @@ def build_synthesis_html(data: dict) -> str:
     produces a synthesized *category* intel (angles, hooks, CTAs, offers, visual
     patterns, whitespace gaps) instead of a ranked competitor table. This branch
     renders that shape into the same design system so the deliverable still lands in
-    the client hub. Any future synthesis-mode client inherits this automatically.
+    the client hub.
+
+    The exact synthesis-mode field names vary by author (see
+    skills/research/references/io-contract.md for the documented canonical shape) —
+    every lookup below is tolerant of the documented keys AND the realistic
+    alternates a human/LLM author reaches for (`category`/`market_overview` instead
+    of a `category_landscape` block, `frequency_pct` instead of `frequency`,
+    gap objects shaped `{category, insight, <slug>_advantage}`, etc.), falling back
+    to values derived from `competitors[]` before ever showing a bare "—".
     """
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
     from design_system import report_head, hero_header, _esc  # noqa: E402
 
     slug = data.get("client_slug", "")
-    client = slug.replace("-", " ").title() if slug else "Client"
+
+    # Client display name — prefer the real business name over a title-cased slug
+    # (a one-word slug like "healthncare" title-cases to "Healthncare", not the
+    # client's actual name).
+    client = None
+    if slug:
+        client_dir = Path(__file__).resolve().parents[2] / "clients" / slug
+        for fname in ("profile.json", "client_profile.json"):  # canonical, then legacy
+            try:
+                profile_path = client_dir / fname
+                if profile_path.exists():
+                    prof = json.loads(profile_path.read_text())
+                    client = (prof.get("business") or {}).get("name") or prof.get("name")
+                    if client:
+                        break
+            except Exception:
+                pass
+    if not client:
+        client = slug.replace("-", " ").replace("_", " ").title() if slug else "Client"
+
     gen = data.get("generated_at", "")
     # Agency eyebrow — keep every report heading consistent with the rest of the hub.
     agency = "smOS"
@@ -395,28 +422,82 @@ def build_synthesis_html(data: dict) -> str:
     note = data.get("note", "")
     timestamp = datetime.utcnow().strftime("%B %d, %Y at %H:%M UTC")
 
-    landscape = data.get("category_landscape", {})
-    fmt = data.get("format_mix", {})
-    angles = data.get("angles", [])
-    hooks = data.get("hooks_seen", [])
-    ctas = data.get("ctas_seen", [])
-    offers = data.get("offers_seen", [])
-    visuals = data.get("visual_patterns", {})
+    competitors = data.get("competitors") or []
+    landscape = data.get("category_landscape") or data.get("landscape_summary") or {}
+    category_label = data.get("category") or landscape.get("category")
+    market_overview = data.get("market_overview") or landscape.get("market_overview")
+    angles = data.get("angles") or []
+    hooks = data.get("hooks_seen") or []
+    ctas = data.get("ctas_seen") or []
+    offers = data.get("offers_seen") or []
+    visuals = data.get("visual_patterns") or {}
     gaps = data.get("gaps_for_blue_rose_to_exploit") or data.get("gaps") or []
-    recipe = data.get("winning_recipe_recommendation", {})
+    recipe = data.get("winning_recipe_recommendation") or data.get("recommended_strategy") or {}
     refresh = data.get("refresh_recommended_after", "")
 
     e = _esc
 
+    # ── Fallbacks derived from competitors[] when the dedicated fields are absent ──
+    fmt = data.get("format_mix") or {}
+    if not fmt:
+        agg: dict = {}
+        for c in competitors:
+            for k, v in (c.get("formats") or {}).items():
+                if isinstance(v, (int, float)):
+                    agg[k] = agg.get(k, 0) + v
+        total = sum(agg.values())
+        if total:
+            fmt = {k: v / total for k, v in agg.items()}
+
+    if not ctas:
+        seen = []
+        for c in competitors:
+            for x in c.get("top_ctas", []) or []:
+                if x not in seen:
+                    seen.append(x)
+        ctas = seen
+
+    if not offers:
+        offers = sorted({a.get("offer_type") for a in angles if a.get("offer_type")})
+
+    if not hooks:
+        hooks = [a.get("angle") or a.get("name") for a in angles if (a.get("angle") or a.get("name"))][:8]
+
     # ── KPI overview ──────────────────────────────────────────────────────────
     fmt_pairs = [(k, v) for k, v in fmt.items() if isinstance(v, (int, float))]
-    dominant_fmt = max(fmt_pairs, key=lambda x: x[1])[0] if fmt_pairs else "—"
-    high_fit = sum(1 for a in angles if a.get("fit_for_client") in ("high", "very_high"))
+    dominant_fmt = max(fmt_pairs, key=lambda x: x[1])[0] if fmt_pairs else None
+
+    saturation = landscape.get("saturation")
+    if not saturation:
+        saturation = next((c.get("ad_volume_estimate") for c in competitors if c.get("ad_volume_estimate")), None)
+
+    typical_spend = landscape.get("typical_local_shop_spend") or landscape.get("typical_spend")
+    if not typical_spend:
+        spends = [c.get("estimated_monthly_spend_usd") for c in competitors
+                  if isinstance(c.get("estimated_monthly_spend_usd"), (int, float))]
+        if spends:
+            typical_spend = f"${sum(spends) / len(spends):,.0f}/mo"
+
+    has_fit_signal = any(a.get("fit_for_client") for a in angles)
+    if has_fit_signal:
+        high_fit = sum(1 for a in angles if a.get("fit_for_client") in ("high", "very_high"))
+        angle_kpi = ("High-Fit Angles", str(high_fit), f"of {len(angles)} angles screened")
+    else:
+        # No explicit fit rating in this intel — surface coverage instead of
+        # fabricating a screening score the data doesn't support.
+        angle_kpi = ("Angles Mapped", str(len(angles)), "ready for the creative brief" if angles else "—")
+
+    category_kpi_label = "Category" if category_label else "Category Saturation"
+    category_kpi_val = category_label or (str(saturation).replace("_", " ").title() if saturation else "—")
+    overview_sub = market_overview or "Category competitive landscape"
+    category_kpi_sub = (overview_sub[:72] + "…") if len(overview_sub) > 72 else overview_sub
+
     kpis = [
-        ("Category Saturation", str(landscape.get("saturation", "—")).title(), "Local-service competition"),
-        ("Typical Shop Spend", landscape.get("typical_local_shop_spend", "—"), "Estimated monthly"),
-        ("Dominant Format", dominant_fmt.replace("_", " ").title(), f"{int(dominant_fmt and fmt.get(dominant_fmt, 0)*100)}% of category ads" if fmt_pairs else ""),
-        ("High-Fit Angles", str(high_fit), f"of {len(angles)} angles screened"),
+        (category_kpi_label, category_kpi_val, category_kpi_sub),
+        ("Typical Spend", typical_spend or "—", "Estimated monthly"),
+        ("Dominant Format", (dominant_fmt or "—").replace("_", " ").title(),
+         f"{int(fmt.get(dominant_fmt, 0) * 100)}% of category ads" if dominant_fmt else ""),
+        angle_kpi,
     ]
     kpi_html = "\n".join(
         f'<div class="ds-kpi"><div class="ds-caption">{e(lbl)}</div>'
@@ -442,20 +523,38 @@ def build_synthesis_html(data: dict) -> str:
     for a in angles:
         fit = a.get("fit_for_client", "")
         badge = fit_badge.get(fit, "ds-badge--neutral")
-        use = ", ".join(a.get("use_for", [])) or "—"
+        freq = a.get("frequency")
+        if freq is None and isinstance(a.get("frequency_pct"), (int, float)):
+            freq = f"{a['frequency_pct']}%"
+        use = ", ".join(a.get("use_for", [])) or a.get("offer_type") or "—"
+        notes = a.get("notes") or a.get("description") or ""
         angle_rows += f"""
         <tr>
-            <td style="font-weight:600">{e(a.get('angle',''))}</td>
-            <td><span class="ds-badge ds-badge--neutral">{e(str(a.get('frequency','')).replace('_',' '))}</span></td>
-            <td><span class="ds-badge {badge}">{e(str(fit).replace('_',' '))}</span></td>
+            <td style="font-weight:600">{e(a.get('angle') or a.get('name') or '')}</td>
+            <td><span class="ds-badge ds-badge--neutral">{e(str(freq or '—').replace('_',' '))}</span></td>
+            <td><span class="ds-badge {badge}">{e(str(fit).replace('_',' ') if fit else '—')}</span></td>
             <td class="ds-caption">{e(use)}</td>
-            <td class="ds-caption">{e(a.get('notes',''))}</td>
+            <td class="ds-caption">{e(notes)}</td>
         </tr>"""
 
     def chip_list(items):
         return "".join(f'<span class="ds-badge ds-badge--info" style="margin:0 6px 8px 0;display:inline-block">{e(s)}</span>' for s in items)
 
-    gaps_html = "\n".join(f"<li>{e(g)}</li>" for g in gaps)
+    def gap_to_li(g):
+        if isinstance(g, str):
+            return f"<li>{e(g)}</li>"
+        if isinstance(g, dict):
+            label = (g.get("type") or g.get("category") or "").replace("_", " ").title()
+            obs = g.get("observation") or g.get("insight") or ""
+            rec = (g.get("recommended_angle") or g.get("recommendation")
+                   or next((v for k, v in g.items() if k.endswith("_advantage") and isinstance(v, str)), ""))
+            bits = [f"<strong>{e(label)}:</strong> " if label else "", e(obs)]
+            if rec:
+                bits.append(f' <span class="ds-caption">→ {e(rec)}</span>')
+            return f"<li>{''.join(bits)}</li>"
+        return f"<li>{e(str(g))}</li>"
+
+    gaps_html = "\n".join(gap_to_li(g) for g in gaps)
     visual_html = "\n".join(
         f'<div style="margin-bottom:14px"><div class="ds-caption" style="text-transform:uppercase;'
         f'letter-spacing:.5px">{e(k.replace("_"," "))}</div><div style="margin-top:2px">{e(v)}</div></div>'
@@ -467,7 +566,7 @@ def build_synthesis_html(data: dict) -> str:
         for k, v in recipe.items()
     )
 
-    implication = landscape.get("implication", "")
+    implication = landscape.get("implication") or data.get("synthesis_rationale", "")
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -477,7 +576,7 @@ def build_synthesis_html(data: dict) -> str:
 <main class="ds-wrap ds-wrap--wide">
 
   <div class="ds-callout ds-callout--warn">
-    <strong>Synthesized category intel</strong> — {e(note)}
+    <strong>Synthesized category intel</strong>{f' — {e(note)}' if note else ''}
   </div>
 
   <section class="ds-section">
@@ -488,13 +587,13 @@ def build_synthesis_html(data: dict) -> str:
     {f'<div class="ds-callout ds-callout--good" style="margin-top:16px"><strong>Strategic implication:</strong> {e(implication)}</div>' if implication else ''}
   </section>
 
-  <section class="ds-section">
+  {f'''<section class="ds-section">
     <h2>Creative Format Mix</h2>
     <div class="ds-card">
       {fmt_rows}
       {f'<div class="ds-callout ds-callout--info" style="margin-top:8px"><strong>Winning signal:</strong> {e(fmt_signal)}</div>' if fmt_signal else ''}
     </div>
-  </section>
+  </section>''' if fmt_rows else ''}
 
   <section class="ds-section">
     <h2>Messaging Angles — Fit Screen</h2>
@@ -506,34 +605,31 @@ def build_synthesis_html(data: dict) -> str:
     </div>
   </section>
 
-  <section class="ds-section">
+  {f'''<section class="ds-section">
     <h2>Whitespace — Gaps to Exploit</h2>
     <div class="ds-card">
       <ul style="margin:0;padding-left:20px;line-height:1.9">{gaps_html}</ul>
     </div>
-  </section>
+  </section>''' if gaps_html else ''}
 
-  <section class="ds-section">
+  {f'''<section class="ds-section">
     <h2>Swipe File</h2>
     <div class="ds-card">
-      <div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Hooks Seen</div>
-      <div style="margin-bottom:18px">{chip_list(hooks)}</div>
-      <div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">CTAs Seen</div>
-      <div style="margin-bottom:18px">{chip_list(ctas)}</div>
-      <div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Offers Seen</div>
-      <div>{chip_list(offers)}</div>
+      {f'<div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Hooks Seen</div><div style="margin-bottom:18px">{chip_list(hooks)}</div>' if hooks else ''}
+      {f'<div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">CTAs Seen</div><div style="margin-bottom:18px">{chip_list(ctas)}</div>' if ctas else ''}
+      {f'<div class="ds-caption" style="text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Offers Seen</div><div>{chip_list(offers)}</div>' if offers else ''}
     </div>
-  </section>
+  </section>''' if (hooks or ctas or offers) else ''}
 
-  <section class="ds-section">
+  {f'''<section class="ds-section">
     <h2>Visual Patterns</h2>
     <div class="ds-card">{visual_html}</div>
-  </section>
+  </section>''' if visual_html else ''}
 
-  <section class="ds-section">
+  {f'''<section class="ds-section">
     <h2>Winning Recipe Recommendations</h2>
     {recipe_html}
-  </section>
+  </section>''' if recipe_html else ''}
 
   {f'<div class="ds-callout ds-callout--neutral"><strong>Refresh recommended:</strong> {e(refresh)}</div>' if refresh else ''}
 

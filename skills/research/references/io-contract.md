@@ -40,6 +40,50 @@ the bundle then shows research as "In progress".
      `reports/competitor_report_<ts>.html` + `.pdf` using the shared design system.
 3. Run `/bundle {slug}` — the research phase now resolves.
 
+#### Synthesis-mode field reference
+
+`build_synthesis_html()` is tolerant of the shapes below — every field has a fallback
+derived from `competitors[]`/`angles[]` before it ever shows a bare "—" — but prefer these
+exact keys so the report renders with no gaps:
+
+```json
+{
+  "client_slug": "acme",
+  "mode": "generic_keyword_synthesis",
+  "generated_at": "2026-08-05T16:00:00Z",
+  "note": "one-line reason there's no live pull (shown at the top of the report)",
+  "category_landscape": {
+    "saturation": "high",
+    "typical_local_shop_spend": "$2,500/mo",
+    "implication": "one-sentence strategic takeaway"
+  },
+  "format_mix": { "image": 0.43, "video": 0.30, "carousel": 0.26, "winning_format_signal": "..." },
+  "angles": [
+    { "angle": "Before & After Transformation", "frequency": "common", "fit_for_client": "high",
+      "use_for": ["Social proof creative"], "notes": "..." }
+  ],
+  "hooks_seen": ["..."], "ctas_seen": ["Shop Now"], "offers_seen": ["30-day money-back"],
+  "visual_patterns": { "color_palette": "...", "composition": "..." },
+  "gaps_for_blue_rose_to_exploit": [
+    { "type": "offer", "observation": "...", "recommended_angle": "..." }
+  ],
+  "winning_recipe_recommendation": { "format": "...", "angle": "...", "cta": "..." },
+  "refresh_recommended_after": "60 days"
+}
+```
+
+Known accepted alternates (used as fallbacks, not the target shape — do not rely on these
+for a *new* client if the exact keys above are just as easy to author): top-level
+`category`/`market_overview` instead of `category_landscape`; `landscape_summary` instead
+of `category_landscape`; per-angle `frequency_pct` (number) instead of `frequency`
+(string) and no `fit_for_client`; `description`/`offer_type` instead of `notes`/`use_for`;
+gap objects shaped `{category, insight, <slug>_advantage}` instead of
+`{type, observation, recommended_angle}`; `format_mix` omitted entirely (aggregated from
+`competitors[].formats`); `hooks_seen`/`ctas_seen`/`offers_seen` omitted (derived from
+`angles[]` and `competitors[].top_ctas`). Client display name is resolved from
+`clients/{slug}/profile.json` (`business.name`, falling back to top-level `name`), never
+from the slug — an un-hyphenated slug like `healthncare` title-cases to the wrong thing.
+
 ## Inputs
 
 - `clients/{slug}/client_profile.json` — reads `competitors[]` (strings or `{name,page_id}`), `audience.geo_targets[]`, `location.country`, `business.usp`.
