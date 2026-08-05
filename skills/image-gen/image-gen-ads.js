@@ -24,6 +24,7 @@ import { storageConfigured } from "../../scripts/lib/media_storage.js";
 import { generateBrandedPoster } from "../../scripts/lib/poster_pipeline.js";
 import { checkPosterInputs } from "../../scripts/lib/guards.js";
 import { posterCopyFromAngle } from "../../scripts/lib/poster_spec.js";
+import { adCopy as adCopySchema } from "../../schemas/index.js";
 import * as P from "../../scripts/lib/paths.js";
 
 loadEnv();
@@ -116,14 +117,17 @@ function isTargetable(angle) {
   return !angle.image_url && !isCarouselFormat(angle);
 }
 
-async function generateForAngle(angle, { slug, profile, brand, model, promptOverride, dryRun }) {
+async function generateForAngle(angle, { slug, profile, brand, model, promptOverride, dryRun, copySource }) {
   const prompt = promptOverride || buildPrompt(angle, profile);
   const sizes = angle.design_brief?.sizes?.length ? angle.design_brief.sizes : ["1080x1080"];
   const [primarySize, ...skippedSizes] = sizes;
   const { width, height } = parseSize(primarySize);
   // Resolve the on-poster marketing copy (headline/subhead/benefits/CTA) from
-  // the angle's own scored variants — no new manual input.
-  const copy = posterCopyFromAngle(angle, { brandName: brand?.verbal?.name });
+  // the angle's own scored variants — no new manual input. `copySource` is the
+  // schema-normalized twin of `angle` (flat headlines/descriptions/hooks[]),
+  // since /creative's "lint shape" (per-hook-combo nesting) has no top-level
+  // headlines/descriptions field for posterCopyFromAngle to read directly.
+  const copy = posterCopyFromAngle(copySource || angle, { brandName: brand?.verbal?.name });
 
   if (dryRun) return { angle_id: angle.angle_id, prompt, size: primarySize, skipped_sizes: skippedSizes, copy, dry_run: true };
 
@@ -164,10 +168,10 @@ function missingRatiosForAngle(angle, requestedRatios) {
   return requestedRatios.filter((r) => !have[r]);
 }
 
-async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride, dryRun }) {
+async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride, dryRun, copySource }) {
   const prompt = promptOverride || buildPrompt(angle, profile);
   const { width, height } = RATIOS[ratio];
-  const copy = posterCopyFromAngle(angle, { brandName: brand?.verbal?.name });
+  const copy = posterCopyFromAngle(copySource || angle, { brandName: brand?.verbal?.name });
 
   if (dryRun) return { angle_id: angle.angle_id, ratio, prompt, width, height, copy, dry_run: true };
 
@@ -256,6 +260,10 @@ async function main() {
 
   const adCopy = JSON.parse(readFileSync(adCopyPath, "utf8"));
   const angles = adCopy.angles || [];
+  // Schema-normalized twin, keyed by angle_id, for copy resolution only — the
+  // raw `angles` objects (with /creative's original per-hook-combo nesting)
+  // are still what gets mutated with image_url and written back to disk.
+  const normByAngleId = new Map(adCopySchema.normalize(adCopy).angles.map((a) => [a.angle_id, a]));
 
   let targets;
   if (angleId) {
@@ -283,7 +291,7 @@ async function main() {
     for (const angle of targets) {
       for (const ratio of missingRatiosForAngle(angle, ratios)) {
         try {
-          generated.push(await generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun }));
+          generated.push(await generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun, copySource: normByAngleId.get(angle.angle_id) }));
         } catch (e) {
           errors.push({ angle_id: angle.angle_id, ratio, error: e.message });
           angle.error = e.message;
@@ -293,7 +301,7 @@ async function main() {
   } else {
     for (const angle of targets) {
       try {
-        generated.push(await generateForAngle(angle, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun }));
+        generated.push(await generateForAngle(angle, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun, copySource: normByAngleId.get(angle.angle_id) }));
       } catch (e) {
         errors.push({ angle_id: angle.angle_id, error: e.message });
         angle.error = e.message;
