@@ -1,0 +1,883 @@
+{
+  "slug": "healthncare",
+  "generated_at": "2026-08-05T18:37:57.613Z",
+  "live_phase": {
+    "phase": "A",
+    "start_day": 0,
+    "objective": "OUTCOME_TRAFFIC",
+    "reason": "pixel learning — start lighter-funnel, graduate after 200+ events"
+  },
+  "deferred_phases": [
+    {
+      "phase": "B",
+      "start_day": 14,
+      "objective": "OUTCOME_SALES",
+      "reason": "promote to conversion objective once pixel has signal"
+    },
+    {
+      "phase": "C",
+      "start_day": 21,
+      "objective": "OUTCOME_SALES",
+      "reason": "scale into lookalike + second cluster"
+    }
+  ],
+  "campaigns": [
+    {
+      "audience_id": "BROAD",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": null,
+        "name": "TRAFFIC_BROAD_202608",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "667",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "FEED_2570_BROAD",
+            "status": "PAUSED",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 25,
+              "age_max": 70,
+              "geo_locations": {
+                "countries": [
+                  "US",
+                  "Canada"
+                ]
+              },
+              "targeting_automation": {
+                "advantage_audience": 1
+              }
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "IMG_PAIN_v1",
+              "angle": "PAIN",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PAIN_FEED_2570_BROAD",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                    "link": "",
+                    "name": "The Honest Supplement Brand",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PAIN",
+                "primary_text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                "headline": "The Honest Supplement Brand",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "ASPIRATION_FEED_2570_BROAD",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                    "link": "",
+                    "name": "See What's Possible",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "ASPIRATION",
+                "primary_text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                "headline": "See What's Possible",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6.5
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_FEED_2570_BROAD",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                    "link": "",
+                    "name": "See What's Really Inside",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PROOF",
+                "primary_text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                "headline": "See What's Really Inside",
+                "description": null,
+                "cta": "LEARN_MORE",
+                "score_composite": 6.3
+              },
+              "warnings": []
+            }
+          ],
+          "audience_id": "BROAD"
+        }
+      ]
+    },
+    {
+      "audience_id": "INT_SUPPLEMENTS",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": null,
+        "name": "TRAFFIC_INTSUPPLEMENTS_202608",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "667",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "FEED_2570_INTSUPPLEMENTS",
+            "status": "PAUSED",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 25,
+              "age_max": 70,
+              "geo_locations": {
+                "countries": [
+                  "US",
+                  "Canada"
+                ]
+              },
+              "flexible_spec": [
+                {
+                  "interests": [
+                    {
+                      "name": "supplements"
+                    }
+                  ],
+                  "behaviors": []
+                }
+              ],
+              "targeting_automation": {
+                "advantage_audience": 1
+              }
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "IMG_PAIN_v1",
+              "angle": "PAIN",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PAIN_FEED_2570_INTSUPPLEMENTS",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                    "link": "",
+                    "name": "The Honest Supplement Brand",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PAIN",
+                "primary_text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                "headline": "The Honest Supplement Brand",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "ASPIRATION_FEED_2570_INTSUPPLEMENTS",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                    "link": "",
+                    "name": "See What's Possible",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "ASPIRATION",
+                "primary_text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                "headline": "See What's Possible",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6.5
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_FEED_2570_INTSUPPLEMENTS",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                    "link": "",
+                    "name": "See What's Really Inside",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PROOF",
+                "primary_text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                "headline": "See What's Really Inside",
+                "description": null,
+                "cta": "LEARN_MORE",
+                "score_composite": 6.3
+              },
+              "warnings": []
+            }
+          ],
+          "audience_id": "INT_SUPPLEMENTS"
+        }
+      ]
+    },
+    {
+      "audience_id": "INT_WEIGHT_LOSS",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": null,
+        "name": "TRAFFIC_INTWEIGHTLOSS_202608",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "667",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "FEED_2570_INTWEIGHTLOSS",
+            "status": "PAUSED",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 25,
+              "age_max": 70,
+              "geo_locations": {
+                "countries": [
+                  "US",
+                  "Canada"
+                ]
+              },
+              "flexible_spec": [
+                {
+                  "interests": [
+                    {
+                      "name": "weight-loss"
+                    }
+                  ],
+                  "behaviors": []
+                }
+              ],
+              "targeting_automation": {
+                "advantage_audience": 1
+              }
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "IMG_PAIN_v1",
+              "angle": "PAIN",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PAIN_FEED_2570_INTWEIGHTLOSS",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                    "link": "",
+                    "name": "The Honest Supplement Brand",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PAIN",
+                "primary_text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                "headline": "The Honest Supplement Brand",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "ASPIRATION_FEED_2570_INTWEIGHTLOSS",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                    "link": "",
+                    "name": "See What's Possible",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "ASPIRATION",
+                "primary_text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                "headline": "See What's Possible",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6.5
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_FEED_2570_INTWEIGHTLOSS",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                    "link": "",
+                    "name": "See What's Really Inside",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PROOF",
+                "primary_text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                "headline": "See What's Really Inside",
+                "description": null,
+                "cta": "LEARN_MORE",
+                "score_composite": 6.3
+              },
+              "warnings": []
+            }
+          ],
+          "audience_id": "INT_WEIGHT_LOSS"
+        }
+      ]
+    },
+    {
+      "audience_id": "RT_PIX_30D",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": null,
+        "name": "TRAFFIC_RTPIX30D_202608",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "417",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "FEED_2570_RTPIX30D",
+            "status": "PAUSED",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 25,
+              "age_max": 70,
+              "geo_locations": {
+                "countries": [
+                  "US",
+                  "Canada"
+                ]
+              },
+              "custom_audiences": [
+                {
+                  "id": "<TBD_RT_PIX_30D>"
+                }
+              ],
+              "targeting_automation": {
+                "advantage_audience": 0
+              }
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "IMG_PAIN_v1",
+              "angle": "PAIN",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PAIN_FEED_2570_RTPIX30D",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                    "link": "",
+                    "name": "The Honest Supplement Brand",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PAIN",
+                "primary_text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                "headline": "The Honest Supplement Brand",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "ASPIRATION_FEED_2570_RTPIX30D",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                    "link": "",
+                    "name": "See What's Possible",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "ASPIRATION",
+                "primary_text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                "headline": "See What's Possible",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6.5
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_FEED_2570_RTPIX30D",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                    "link": "",
+                    "name": "See What's Really Inside",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PROOF",
+                "primary_text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                "headline": "See What's Really Inside",
+                "description": null,
+                "cta": "LEARN_MORE",
+                "score_composite": 6.3
+              },
+              "warnings": []
+            }
+          ],
+          "audience_id": "RT_PIX_30D"
+        }
+      ]
+    },
+    {
+      "audience_id": "RT_PIX_90D",
+      "phase": "A",
+      "payload": {
+        "ad_account_id": null,
+        "name": "TRAFFIC_RTPIX90D_202608",
+        "objective": "OUTCOME_TRAFFIC",
+        "status": "PAUSED",
+        "daily_budget": "417",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "special_ad_categories": []
+      },
+      "adsets": [
+        {
+          "payload": {
+            "campaign_id": "<pending>",
+            "name": "FEED_2570_RTPIX90D",
+            "status": "PAUSED",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "targeting": {
+              "age_min": 25,
+              "age_max": 70,
+              "geo_locations": {
+                "countries": [
+                  "US",
+                  "Canada"
+                ]
+              },
+              "custom_audiences": [
+                {
+                  "id": "<TBD_RT_PIX_90D>"
+                }
+              ],
+              "targeting_automation": {
+                "advantage_audience": 0
+              }
+            },
+            "attribution_spec": [
+              {
+                "event_type": "CLICK_THROUGH",
+                "window_days": 7
+              },
+              {
+                "event_type": "VIEW_THROUGH",
+                "window_days": 1
+              }
+            ]
+          },
+          "ads": [
+            {
+              "name": "IMG_PAIN_v1",
+              "angle": "PAIN",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PAIN_FEED_2570_RTPIX90D",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                    "link": "",
+                    "name": "The Honest Supplement Brand",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PAIN",
+                "primary_text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+                "headline": "The Honest Supplement Brand",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_ASPIRATION_v1",
+              "angle": "ASPIRATION",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "ASPIRATION_FEED_2570_RTPIX90D",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                    "link": "",
+                    "name": "See What's Possible",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "SHOP_NOW"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "ASPIRATION",
+                "primary_text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+                "headline": "See What's Possible",
+                "description": null,
+                "cta": "SHOP_NOW",
+                "score_composite": 6.5
+              },
+              "warnings": []
+            },
+            {
+              "name": "IMG_PROOF_v1",
+              "angle": "PROOF",
+              "format": "single_image",
+              "creative_payload": {
+                "name": "PROOF_FEED_2570_RTPIX90D",
+                "object_story_spec": {
+                  "page_id": null,
+                  "instagram_actor_id": null,
+                  "link_data": {
+                    "message": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                    "link": "",
+                    "name": "See What's Really Inside",
+                    "description": "",
+                    "call_to_action": {
+                      "type": "LEARN_MORE"
+                    }
+                  }
+                },
+                "degrees_of_freedom_spec": {
+                  "creative_features_spec": {
+                    "standard_enhancements": {
+                      "enroll_status": "OPT_OUT"
+                    }
+                  }
+                }
+              },
+              "asset": null,
+              "copy_used": {
+                "angle_id": "PROOF",
+                "primary_text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+                "headline": "See What's Really Inside",
+                "description": null,
+                "cta": "LEARN_MORE",
+                "score_composite": 6.3
+              },
+              "warnings": []
+            }
+          ],
+          "audience_id": "RT_PIX_90D"
+        }
+      ]
+    }
+  ],
+  "naming_issues": [],
+  "mode": "DRY_RUN"
+}

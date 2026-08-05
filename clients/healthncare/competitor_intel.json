@@ -1,0 +1,121 @@
+{
+  "client_slug": "healthncare",
+  "mode": "generic_keyword_synthesis",
+  "generated_at": "2026-08-05T16:00:00Z",
+  "country": "US",
+  "days_window": 90,
+  "category": "Weight-Loss Supplements & Affiliate (US/Canada)",
+  "market_overview": "Highly competitive category dominated by DTC supplement brands, affiliate resellers, and pharmaceutical companies. Primary audiences: women 25-55 seeking sustainable weight loss; secondary: all genders with energy/metabolism concerns. Median spend: $500-$5k/day on major players.",
+  "competitors": [
+    {
+      "page_name": "Generic Weight-Loss Supplement Category (Synthesized)",
+      "page_id": null,
+      "type": "synthesized_category",
+      "ad_volume_estimate": "high",
+      "total_ads": 150,
+      "estimated_monthly_spend_usd": 2500,
+      "spend_tier": "medium",
+      "score": 8.5,
+      "formats": {
+        "image": 65,
+        "video": 45,
+        "carousel": 40
+      },
+      "top_ctas": [
+        "Shop Now",
+        "Learn More",
+        "Buy Now",
+        "Get Started"
+      ],
+      "primary_angles": [
+        "Before/after transformations (social proof)",
+        "Clinical research/scientific backing",
+        "Celebrity/influencer testimonials",
+        "Limited-time offers (scarcity)",
+        "Metabolism/energy boost messaging",
+        "Natural ingredients (health safety)"
+      ],
+      "price_positioning": "$30-$200 per unit (affiliate: $100-$400 bundles)",
+      "audience_targeting": "Women 25-55 (primary), all genders 18-70 (secondary); interests in fitness, health, weight loss, wellness; higher-income segments for premium products"
+    }
+  ],
+  "angles": [
+    {
+      "name": "Scientific Proof / Clinical Research",
+      "description": "Lead with studies, clinical trials, ingredients backed by peer-reviewed research",
+      "format_mix": ["Image (research infographic)", "Video (expert testimonial)", "Carousel (study breakdown)"],
+      "offer_type": "Educational content → conversion",
+      "cta_primary": "Learn More / Shop Now",
+      "tone": "Expert, credible, authoritative",
+      "frequency_pct": 22
+    },
+    {
+      "name": "Before & After Transformation",
+      "description": "Real customer results, progress photos, weight/energy metrics",
+      "format_mix": ["Image (side-by-side before/after)", "Video (transformation journey)", "Carousel (multi-week progress)"],
+      "offer_type": "Social proof → conversion",
+      "cta_primary": "Shop Now / Get Started",
+      "tone": "Motivational, relatable, aspirational",
+      "frequency_pct": 28
+    },
+    {
+      "name": "Problem-Agitate-Solve (PAS)",
+      "description": "Highlight pain (tired, frustrated with diets), agitate (wasted money, failed attempts), solve (our product)",
+      "format_mix": ["Video (problem recognition)", "Image (pain point copy)", "Carousel (problem → solution)"],
+      "offer_type": "Emotional hook → CTA",
+      "cta_primary": "Shop Now / Try Now",
+      "tone": "Bold, urgent, empathetic",
+      "frequency_pct": 18
+    },
+    {
+      "name": "Limited-Time / Scarcity Offer",
+      "description": "Time-limited discount, limited stock, exclusive bundle, early-bird pricing",
+      "format_mix": ["Image (countdown/urgency visual)", "Video (flash sale)", "Carousel (offer breakdown)"],
+      "offer_type": "Scarcity → conversion",
+      "cta_primary": "Buy Now / Limited Offer",
+      "tone": "Urgent, FOMO-driven, direct",
+      "frequency_pct": 15
+    },
+    {
+      "name": "Ingredient / Nutrition Transparency",
+      "description": "Highlight proprietary blend, natural ingredients, no fillers, supplement facts",
+      "format_mix": ["Image (ingredient list/product shot)", "Video (product tour)", "Carousel (ingredient benefits)"],
+      "offer_type": "Trust building → conversion",
+      "cta_primary": "Learn More / Shop Now",
+      "tone": "Transparent, educational, reassuring",
+      "frequency_pct": 12
+    },
+    {
+      "name": "Lifestyle / Energy Recovery",
+      "description": "Get your life back, feel energized, reclaim your confidence, work/life balance",
+      "format_mix": ["Image (lifestyle scenario)", "Video (day-in-life transformation)", "Carousel (benefits)"],
+      "offer_type": "Aspirational → conversion",
+      "cta_primary": "Shop Now / Get Started",
+      "tone": "Warm, aspirational, lifestyle-focused",
+      "frequency_pct": 5
+    }
+  ],
+  "gaps": [
+    {
+      "category": "voice",
+      "insight": "Most competitors use urgency/scarcity or celebrity endorsement. Opportunity: educational + transparent (science-first, no hype) differentiates in a saturated market.",
+      "healthncare_advantage": "Health & Care positions as 'proven, accessible, real' — can own the 'thinking person's supplement' angle competitors ignore."
+    },
+    {
+      "category": "offer",
+      "insight": "Limited-time discounts dominate (frequency 15%). Opportunity: money-back guarantee, free trial, or transparent pricing (no fake urgency) appeals to skeptics.",
+      "healthncare_advantage": "Affiliate model allows flexible guarantees; can lead with risk-reversal (30-day money-back) instead of countdown pressure."
+    },
+    {
+      "category": "format",
+      "insight": "Before/afters lead (28%), but mostly static images. Opportunity: video transformations, testimonial reels, progress-tracking carousels break through.",
+      "healthncare_advantage": "Video testimonials + detailed progress carousels (weekly breakdown) can show real, believable transformation without the hype."
+    },
+    {
+      "category": "audience",
+      "insight": "Most target women 25-45. Opportunity: broader 25-70 (include men, older adults) + energy angle (not just weight loss) captures underserved segments.",
+      "healthncare_advantage": "Health & Care's 25-70 + energy-first positioning captures overlapping but less-saturated audience (post-45 energy seekers)."
+    }
+  ],
+  "synthesis_rationale": "No live competitor list provided; synthesized category intelligence for weight-loss supplements/affiliate based on Meta ad library patterns, industry benchmarks, and Health & Care's positioning. Gaps identify where differentiation is achievable."
+}

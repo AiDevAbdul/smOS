@@ -1,6 +1,6 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-07-22T07:17:10.147Z",
+  "generated_at": "2026-08-04T16:36:33.558Z",
   "pixel_id": "2183558222437003",
   "events": [
     {
@@ -27,24 +27,31 @@
   "dataset": {
     "id": "2183558222437003",
     "name": "Blue Rose Auto's Pixel",
-    "last_fired_time": "2026-07-22T12:11:50+0500",
+    "last_fired_time": "2026-08-04T04:42:28+0500",
     "first_party_cookie_status": "first_party_cookie_enabled",
-    "enable_automatic_matching": false,
+    "enable_automatic_matching": true,
+    "automatic_matching_fields": [
+      "em",
+      "fn",
+      "ln",
+      "ge",
+      "ph",
+      "ct",
+      "st",
+      "zp",
+      "db",
+      "country",
+      "external_id"
+    ],
     "creation_time": "2026-05-20T00:47:10+0500"
   },
   "test_event": {
-    "fired": true,
-    "event_id": "capi-test-1784704629526-ufyqnb",
-    "response": {
-      "events_received": 1,
-      "messages": [],
-      "fbtrace_id": "AKQ2POVf7AKbYVCCKGl-cgU"
-    }
+    "fired": false,
+    "event_id": null
   },
   "gaps": [
     "'Lead' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Lead'))",
-    "'Schedule' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Schedule'))",
-    "Automatic Advanced Matching is OFF — turn it on in Events Manager → Settings → Automatic Advanced Matching"
+    "'Schedule' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Schedule'))"
   ],
   "next_steps": [
     "Set up a Conversions API Gateway (Stape, self-host, or Shopify/WooCommerce native) OR add server-side fires from your backend for missing events",

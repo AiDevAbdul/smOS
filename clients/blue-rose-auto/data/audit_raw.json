@@ -1,12 +1,12 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-08-04T07:38:09.922Z",
+  "generated_at": "2026-08-04T18:18:01.240Z",
   "organic": {
     "facebook": {
       "page_id": "1709708972688957",
       "page_name": "Blue Rose Auto Care & Repair Services",
       "has_page_token": true,
-      "followers": 1794,
+      "followers": 1795,
       "new_follows_90d": 0,
       "followers_delta_90d": null,
       "page_completeness": 100,
@@ -29,26 +29,26 @@
       "insights_error": null
     },
     "instagram": {
-      "error": "Meta API 100: Unsupported get request. Object with ID '17841417245534835' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api (type=GraphMethodException, trace=AWHSBIh-Tj1-ghMCJOd5_FI)"
+      "error": "Meta API 100: Unsupported get request. Object with ID '17841417245534835' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api (type=GraphMethodException, trace=AK4S2q0Wlmur4Xtm2AXQWy8)"
     }
   },
   "paid": {
     "account_id": "act_1999616770762846",
     "account_name": "Blue Rose Auto Care and Repair Services",
     "account_status": 9,
-    "account_age_days": 26.684050925926,
+    "account_age_days": 27.128402777778,
     "currency": "USD",
     "timezone": "America/Los_Angeles",
-    "total_spend_lifetime": 731.4,
-    "amount_spent_to_date": 730.61,
-    "balance": 9.04,
+    "total_spend_lifetime": 749.29,
+    "amount_spent_to_date": 730.96,
+    "balance": 26.29,
     "campaign_count_total": 4,
     "campaign_count_active": 2,
     "campaign_count_archived": 0,
     "best_cpa": null,
     "best_roas": null,
     "zombie_count": 0,
-    "naming_compliance_pct": 0,
+    "naming_compliance_pct": 100,
     "custom_audience_count": 3,
     "custom_audience_healthy": 3,
     "custom_audience_broken": 0,
@@ -1055,13 +1055,71 @@
               "count": 10
             }
           ]
+        },
+        {
+          "start_time": "2026-08-04T18:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 8
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            },
+            {
+              "value": "Lead",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 28
+            },
+            {
+              "value": "Lead",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-08-04T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 19
+            }
+          ]
         }
       ],
       "paging": {
         "cursors": {
-          "after": "MTc4NTgyMzIwMAZDZD"
+          "after": "MTc4NTg2NjQwMAZDZD"
         },
-        "next": "https://graph.facebook.com/v25.0/2183558222437003/stats?access_token=EAASS4YE5pSwBRQD8ZASJZAqBAaK9M6UQeJXRbtFgmVkMhaJCozGvSe3VvLHNi3csLQCp1ZCnYzSmbaZBbbZCyRkUXUzqYZA0hrPXjP2ZCnW4lHhTPneF0t55S4KWYZCBGQOoKeezAZCHplDZCMyjPqwwIRR58d70AyB1bDUodZC1MKCDNdfPHp9qs6lM7k197eR9IXALbVhAhC6mRol3X8W6JC7&start_time=2026-07-28&limit=25&after=MTc4NTgyMzIwMAZDZD"
+        "next": "https://graph.facebook.com/v25.0/2183558222437003/stats?access_token=EAASS4YE5pSwBRQD8ZASJZAqBAaK9M6UQeJXRbtFgmVkMhaJCozGvSe3VvLHNi3csLQCp1ZCnYzSmbaZBbbZCyRkUXUzqYZA0hrPXjP2ZCnW4lHhTPneF0t55S4KWYZCBGQOoKeezAZCHplDZCMyjPqwwIRR58d70AyB1bDUodZC1MKCDNdfPHp9qs6lM7k197eR9IXALbVhAhC6mRol3X8W6JC7&start_time=2026-07-28&limit=25&after=MTc4NTg2NjQwMAZDZD"
       }
     }
   },
@@ -1070,5 +1128,5 @@
   "pixel_cross_reference": null,
   "pre_audit_source": null,
   "creative": null,
-  "health_score": 53
+  "health_score": 65
 }

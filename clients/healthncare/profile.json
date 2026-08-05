@@ -1,0 +1,120 @@
+{
+  "slug": "healthncare",
+  "name": "Health & Care",
+  "business": {
+    "product_description": "Supplements and weight-loss medicines (affiliate via Maxweb and Clickbank)",
+    "price_low": 100,
+    "price_high": 300,
+    "business_model": "affiliate",
+    "usp": "None - generic reseller",
+    "conversion_event": "purchase_affiliate_link"
+  },
+  "audience": {
+    "age_low": 25,
+    "age_high": 70,
+    "gender": "all",
+    "geo_targets": [
+      "US",
+      "Canada"
+    ],
+    "pain_points": [
+      "Struggling with weight loss",
+      "Lack of energy"
+    ]
+  },
+  "voice": {
+    "tone": "educational, bold, urgent",
+    "restricted_words": [],
+    "cta_style": "direct"
+  },
+  "accounts": {
+    "ad_account_id": null,
+    "pixel_id": null,
+    "facebook_page_id": null,
+    "instagram_business_id": null,
+    "page_id": null,
+    "ig_account_id": null,
+    "bm_id": null,
+    "currency": null,
+    "timezone": null,
+    "business_id": null,
+    "system_user_id": null,
+    "pixel_installed": false,
+    "website_url": null,
+    "domain": null
+  },
+  "kpis": {
+    "target_cpa": 25,
+    "target_roas": 1.5,
+    "monthly_budget_low": 1000,
+    "monthly_budget_high": 1000
+  },
+  "history": {
+    "previous_spend": 0,
+    "what_worked": "N/A - first time advertising on any platform",
+    "what_failed": "N/A - no prior advertising experience"
+  },
+  "competitors": [],
+  "assets": {
+    "formats_available": [
+      "product_photos",
+      "lifestyle_photos"
+    ],
+    "brand_guidelines_url": null,
+    "brand_colors": [
+      "Dark Green",
+      "Light Green"
+    ],
+    "logo_ready": true
+  },
+  "approvals": {
+    "channel": "both",
+    "daily_cap": 33,
+    "extra_rules": []
+  },
+  "status": "planning",
+  "onboarded_at": "2026-08-05",
+  "blockers_before_live": [
+    "facebook_page_id",
+    "instagram_business_id",
+    "ad_account_id",
+    "pixel_id"
+  ],
+  "setup": {
+    "business_verified_at": null,
+    "page_created_at": null,
+    "instagram_created_at": null,
+    "instagram_professional_at": null,
+    "ig_page_linked_at": null,
+    "payment_method_added_at": null,
+    "asset_access_granted_at": null,
+    "ad_account_created_at": null,
+    "pixel_created_at": null,
+    "system_user_token_at": null,
+    "assets_assigned_at": null,
+    "domain_verified_at": null,
+    "landing_deployed_at": null
+  },
+  "unit_economics": {
+    "gross_margin": null,
+    "average_order_value": null,
+    "customer_ltv": null,
+    "target_cac": null,
+    "target_mer": null
+  },
+  "content_preferences": {
+    "mode": "ai_assisted",
+    "ai_captions": true
+  },
+  "contact": {
+    "phone": null,
+    "website_display": null,
+    "email": null,
+    "address": null,
+    "social_handles": {
+      "instagram": null,
+      "facebook": null,
+      "tiktok": null
+    }
+  }
+}

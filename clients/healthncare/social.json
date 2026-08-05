@@ -1,0 +1,39 @@
+{
+  "profile_picture_url": "clients/healthncare/brand/social/profile_picture.png",
+  "fb_cover_url": "clients/healthncare/brand/social/cover_photo.png",
+  "ig_highlight_covers": [
+    {
+      "category": "About",
+      "url": "clients/healthncare/brand/social/highlight_about.png"
+    },
+    {
+      "category": "Products",
+      "url": "clients/healthncare/brand/social/highlight_products.png"
+    },
+    {
+      "category": "Results",
+      "url": "clients/healthncare/brand/social/highlight_results.png"
+    },
+    {
+      "category": "Science",
+      "url": "clients/healthncare/brand/social/highlight_science.png"
+    },
+    {
+      "category": "FAQ",
+      "url": "clients/healthncare/brand/social/highlight_faq.png"
+    }
+  ],
+  "templates": [
+    "quote: Pull-quote in brand voice (Poppins Bold, 36-48px on gradient blue-to-teal background)",
+    "tip: Educational carousel cover (1080×1350) with header, stat, and teal CTA",
+    "promo: Product image + price + Shop Now CTA button in primary blue",
+    "testimonial: Before/after image + quote, blue frame with teal accent",
+    "story-cta: Vertical story (1080×1920) with safe margins (top 250px, bottom 310px)"
+  ],
+  "bios": {
+    "instagram": "Health & Care · Science-Backed Supplements\nClinically proven weight loss & energy.\nNo hype. No fluff. Just results.\nShop now →",
+    "facebook": "Tired of supplements that don't work? Health & Care is the curated marketplace of science-backed weight-loss and energy solutions at prices that actually make sense. Real results backed by research."
+  },
+  "link_in_bio": "https://healthncare.com",
+  "branded_hashtag": "#RealTransformation"
+}

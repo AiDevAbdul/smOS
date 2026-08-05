@@ -295,3 +295,4 @@ components). Spec & component reference: **`design-system/MASTER.md`**.
 
 - [Blue Rose Auto Care & Repair Services](clients/blue-rose-auto/CLAUDE.md) · Status: Planning mode (no live Meta accounts yet) · Engagement start: 2026-06-18
 - [HOPE'87](clients/hope87/CLAUDE.md) · Status: Active — expanded scope (Astro EN/DE website rebuild + donation landing page + content/creative production + Meta retainer); ad account & pixel still TBD · Engagement start: 2026-07-31
+- [Health & Care](clients/healthncare/CLAUDE.md) · Status: Zero-start (wellness/fitness affiliate) · Engagement start: 2026-08-05

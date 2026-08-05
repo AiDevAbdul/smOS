@@ -9,7 +9,7 @@
     "price_high": 3500,
     "blended_avg_ticket": 700,
     "business_model": "local_service",
-    "usp": "30+ years experience \u00b7 ASE-certified \u00b7 Tesla-capable \u00b7 premium materials \u00b7 precision craftsmanship",
+    "usp": "30+ years experience · ASE-certified · Tesla-capable · premium materials · precision craftsmanship",
     "conversion_events": [
       "Lead",
       "Schedule"
@@ -97,7 +97,15 @@
     "pixel_id": "2183558222437003",
     "timezone": "America/Los_Angeles",
     "currency": "USD",
-    "instagram_url": "https://www.instagram.com/blueroseauto/"
+    "instagram_url": "https://www.instagram.com/blueroseauto/",
+    "page_id": "1709708972688957",
+    "ig_account_id": "17841417245534835",
+    "bm_id": "2016802985574383",
+    "business_id": "2016802985574383",
+    "system_user_id": null,
+    "pixel_installed": false,
+    "website_url": null,
+    "domain": null
   },
   "contacts": {
     "phone": "(541) 641-8877",
@@ -119,11 +127,11 @@
     "aware": {
       "cpm_max": 15,
       "frequency_7d_min": 1.5,
-      "frequency_7d_max": 3.0
+      "frequency_7d_max": 3
     },
     "leads": {
       "target_cpa": 35,
-      "target_ctr_link": 1.0,
+      "target_ctr_link": 1,
       "target_roas": 1.5,
       "ltv_assumed": 175
     },
@@ -157,5 +165,31 @@
     "existing_meta_creative": "none",
     "vehicle_photos": "client_to_provide"
   },
-  "blockers_before_live": []
+  "blockers_before_live": [],
+  "setup": {
+    "business_verified_at": "2026-08-04T16:06:22.804Z",
+    "page_created_at": null,
+    "instagram_created_at": null,
+    "instagram_professional_at": null,
+    "ig_page_linked_at": null,
+    "payment_method_added_at": null,
+    "asset_access_granted_at": null,
+    "ad_account_created_at": null,
+    "pixel_created_at": null,
+    "system_user_token_at": null,
+    "assets_assigned_at": null,
+    "domain_verified_at": null,
+    "landing_deployed_at": null
+  },
+  "unit_economics": {
+    "gross_margin": null,
+    "average_order_value": null,
+    "customer_ltv": null,
+    "target_cac": null,
+    "target_mer": null
+  },
+  "content_preferences": {
+    "mode": "ai_assisted",
+    "ai_captions": true
+  }
 }

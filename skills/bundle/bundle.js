@@ -60,15 +60,6 @@ function matchIn(dir, re, labeller) {
 }
 /** First non-empty resolver result. */
 function firstOf(...lists) { for (const l of lists) if (l.length) return l.slice(0, 1); return []; }
-/**
- * A rendered engagement deliverable under clients/{slug}/deliverables/{dir}/{stem}.html.
- * Scoping/strategy docs authored as markdown are rendered to HTML by their producing
- * step (via scripts/lib/md_to_html.js); this only collects the result — bundle stays a
- * pure assembler and never renders one itself.
- */
-function deliverable(dir, stem, label) {
-  return exact(resolve(P.clientDeliverableDir(slug, dir), `${stem}.html`), label);
-}
 
 /**
  * Scan dated reports in BOTH layouts:
@@ -125,64 +116,63 @@ function reportLabel(f) {
   return `${pretty} · ${m[1]}`;
 }
 
-// ── Curated client journey ──────────────────────────────────────────────────
-const PHASES = [
-  { key: "pre-audit", title: "Pre-Audit",
-    desc: "Where you started — market & account snapshot before we engaged.",
-    resolve: () => firstOf(
-      exact(P.prospectDeliverable(slug, "pre-audit", "html"), "Pre-Audit"),
-      exact(resolve(P.prospectRoot(slug), "pre_audit.html"), "Pre-Audit"),
-      matchIn(publicDir, /-pre-audit\.html$/, () => "Pre-Audit")) },
-  { key: "engagement-overview", title: "Engagement Overview",
-    desc: "The whole engagement on one page — context, scope, commercials, and what happens next.",
-    resolve: () => deliverable(".", "README", "Open Overview") },
-  { key: "audit", title: "Account Audit",
-    desc: "Full Facebook, Instagram & pixel health audit with a scored breakdown.",
-    resolve: () => scanReports(/^audit$/, () => "Open Audit") },
-  { key: "engagement-strategy", title: "Strategy & Campaign Plan",
-    desc: "Cause framing, campaign structure, awareness & trust-building, and audience targeting.",
-    resolve: () => deliverable("strategy-plan", "strategy-and-campaign-plan", "Open Strategy Plan") },
-  { key: "roadmap", title: "90-Day Roadmap",
-    desc: "Three monthly phases plus a week-by-week task list with owners and critical-path dependencies.",
-    resolve: () => deliverable("3-month-roadmap", "roadmap-and-weekly-plan", "Open Roadmap") },
-  { key: "website-scope", title: "Website Redesign Scope",
-    desc: "Information architecture, language strategy, donation landing page spec, and migration plan.",
-    resolve: () => deliverable("website-redesign-scope", "website-redesign-scope", "Open Website Scope") },
-  { key: "content-production", title: "Content & Creative Production",
-    desc: "Social rebrand direction, graphics & video packages, ad creative angles, and production cadence.",
-    resolve: () => deliverable("content-production-plan", "content-and-creative-plan", "Open Production Plan") },
-  { key: "influencer-plan", title: "Influencer Marketing Plan",
-    desc: "Partner archetypes, partnership models, collaboration formats, sourcing, and measurement.",
-    resolve: () => deliverable("influencer-marketing-plan", "influencer-marketing-plan", "Open Influencer Plan") },
-  { key: "research", title: "Market Research",
-    desc: "Competitor creative intelligence and category benchmarking.",
-    resolve: () => scanReports(/^competitor$/, () => "Open Research") },
-  { key: "strategy-brief", title: "Strategy Brief",
-    desc: "The paid-media game plan: objectives, offers, and creative angles.",
-    resolve: () => exact(P.clientFile(slug, "strategy_brief.html"), "Open Strategy") },
-  { key: "audience-map", title: "Audience Map",
-    desc: "Targeting plan — audience clusters, interests, and lookalikes.",
-    resolve: () => exact(P.clientFile(slug, "audience_map.html"), "Open Audience Map") },
-  { key: "ad-creative", title: "Ad Creative",
-    desc: "Scored, voice-checked ad copy package ready to launch.",
-    resolve: () => exact(P.clientFile(slug, "ad_copy.html"), "Open Ad Copy") },
-  { key: "content-plan", title: "Content Plan",
-    desc: "Your organic content pillars and the Reels-first calendar.",
-    resolve: () => exact(P.clientFile(slug, "content_plan.html"), "Open Content Plan") },
-  { key: "content-sops", title: "Content Creation SOPs",
-    desc: "The per-platform production playbook — media specs, copy limits, algorithm signals, and publish paths for every channel.",
-    resolve: () => { const p = renderContentSops(); return p ? [{ srcPath: p, label: "Open SOPs" }] : []; } },
-  // NOTE: proposal + service agreement are deliberately NOT bundled. The hub deploys to
-  // a public, unauthenticated URL with `Cache-Control: public`, so pricing and contract
-  // terms would be fetchable and cacheable by anyone holding the link. Send commercial
-  // paperwork to the client directly (proposals/{slug}/, contracts/{slug}/).
-  { key: "reports", title: "Performance Reports", group: true,
-    desc: "Ongoing results — weekly, monthly, and before/after reviews.",
-    resolve: () => scanReports(/^(weekly|monthly[-_]review|before[-_]after)$/, (date, stem) => {
-      const pretty = REPORT_TYPE[stem.replace(/-/g, "_")] || stem.replace(/[-_]/g, " ");
-      return date ? `${pretty} · ${date}` : pretty;
-    }) },
+// ── Curated client journey (grouped by phase) ──────────────────────────────
+const PHASE_GROUPS = [
+  {
+    group: "Planning",
+    icon: "🔍",
+    phases: [
+      { key: "pre-audit", title: "Pre-Audit",
+        desc: "Where you started — market & account snapshot before we engaged.",
+        resolve: () => firstOf(
+          exact(P.prospectDeliverable(slug, "pre-audit", "html"), "Pre-Audit"),
+          exact(resolve(P.prospectRoot(slug), "pre_audit.html"), "Pre-Audit"),
+          matchIn(publicDir, /-pre-audit\.html$/, () => "Pre-Audit")) },
+      { key: "audit", title: "Account Audit",
+        desc: "Full Facebook, Instagram & pixel health audit with a scored breakdown.",
+        resolve: () => scanReports(/^audit$/, () => "Open Audit") },
+    ]
+  },
+  {
+    group: "Strategy & Creative",
+    icon: "📈",
+    phases: [
+      { key: "research", title: "Market Research",
+        desc: "Competitor creative intelligence and category benchmarking.",
+        resolve: () => scanReports(/^competitor$/, () => "Open Research") },
+      { key: "strategy-brief", title: "Strategy Brief",
+        desc: "The paid-media game plan: objectives, offers, and creative angles.",
+        resolve: () => exact(P.clientFile(slug, "strategy_brief.html"), "Open Strategy") },
+      { key: "audience-map", title: "Audience Map",
+        desc: "Targeting plan — audience clusters, interests, and lookalikes.",
+        resolve: () => exact(P.clientFile(slug, "audience_map.html"), "Open Audience Map") },
+      { key: "ad-creative", title: "Ad Creative",
+        desc: "Scored, voice-checked ad copy package ready to launch.",
+        resolve: () => exact(P.clientFile(slug, "ad_copy.html"), "Open Ad Copy") },
+    ]
+  },
+  {
+    group: "Content & Execution",
+    icon: "📝",
+    phases: [
+      { key: "content-plan", title: "Content Plan",
+        desc: "Your organic content pillars and the Reels-first calendar.",
+        resolve: () => exact(P.clientFile(slug, "content_plan.html"), "Open Content Plan") },
+      { key: "content-sops", title: "Content Creation SOPs",
+        desc: "The per-platform production playbook — media specs, copy limits, algorithm signals, and publish paths for every channel.",
+        resolve: () => { const p = renderContentSops(); return p ? [{ srcPath: p, label: "Open SOPs" }] : []; } },
+      { key: "reports", title: "Performance Reports", group: true,
+        desc: "Ongoing results — weekly, monthly, and before/after reviews.",
+        resolve: () => scanReports(/^(weekly|monthly[-_]review|before[-_]after)$/, (date, stem) => {
+          const pretty = REPORT_TYPE[stem.replace(/-/g, "_")] || stem.replace(/[-_]/g, " ");
+          return date ? `${pretty} · ${date}` : pretty;
+        }) },
+    ]
+  }
 ];
+
+// Flatten for backward compatibility
+const PHASES = PHASE_GROUPS.flatMap(g => g.phases);
 
 // ── Resolve + copy ──────────────────────────────────────────────────────────
 if (!existsSync(publicDir)) mkdirSync(publicDir, { recursive: true });
@@ -268,14 +258,55 @@ const progressHtml = `<div class="ds-progress ds-anim" style="animation-delay:.0
     </div>`;
 
 function menuHtml(pos) {
-  const home = `<button class="ds-hubnav__btn is-active" data-src="_roadmap.html"><span class="n">&#8962;</span> Overview</button>`;
-  const items = menuItems.map((m) => m.disabled
-    ? `<span class="ds-hubnav__btn is-disabled" aria-disabled="true"><span class="n">${m.num}</span> ${esc(m.title)}</span>`
-    : `<button class="ds-hubnav__btn" data-src="${esc(m.src)}"><span class="n">${m.num}</span> ${esc(m.title)}</button>`
-  ).join("\n      ");
+  const home = `<button class="ds-hubnav__btn is-active" data-src="_roadmap.html" title="Overview & roadmap"><span class="icon">🏠</span><span class="label">Overview</span></button>`;
+
+  // Build grouped items
+  let groupedItems = '';
+  let itemIndex = 0;
+
+  for (const group of PHASE_GROUPS) {
+    const groupPhases = group.phases;
+    const groupDelivered = menuItems
+      .slice(itemIndex, itemIndex + groupPhases.length)
+      .filter(m => !m.disabled).length;
+    const groupTotal = groupPhases.length;
+
+    groupedItems += `
+      <div class="ds-hubnav__group">
+        <div class="ds-hubnav__group-header">
+          <span class="icon">${group.icon}</span>
+          <span class="title">${esc(group.group)}</span>
+          <span class="progress">${groupDelivered}/${groupTotal}</span>
+        </div>`;
+
+    for (let i = 0; i < groupPhases.length; i++) {
+      const m = menuItems[itemIndex + i];
+      if (m.disabled) {
+        groupedItems += `
+        <span class="ds-hubnav__btn is-disabled" aria-disabled="true" title="Coming soon">
+          <span class="status">🔒</span>
+          <span class="label">${esc(m.title)}</span>
+        </span>`;
+      } else {
+        groupedItems += `
+        <button class="ds-hubnav__btn" data-src="${esc(m.src)}">
+          <span class="status">✓</span>
+          <span class="label">${esc(m.title)}</span>
+        </button>`;
+      }
+    }
+
+    groupedItems += `\n      </div>`;
+    itemIndex += groupPhases.length;
+  }
+
   return `<nav class="ds-hubnav${pos === "bottom" ? " ds-hubnav--bottom" : ""}" aria-label="Report navigation (${pos})">
-      ${home}
-      ${items}
+      <div class="ds-hubnav__top">
+        ${home}
+      </div>
+      <div class="ds-hubnav__groups">
+        ${groupedItems}
+      </div>
     </nav>`;
 }
 
@@ -287,8 +318,139 @@ const extraHead = `<meta name="description" content="${esc(clientName)} — enga
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,${encodeURIComponent(faviconSvg)}">`;
 
+const bundleStyles = `<style>
+/* ── Bundle Phase 1 Redesign: Grouped Navigation ─────────────────────── */
+
+/* Grouped navigation container */
+.ds-hubnav__top {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ds-shell-line);
+  margin-bottom: 12px;
+}
+
+.ds-hubnav__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Phase group section */
+.ds-hubnav__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ds-hubnav__group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ds-shell-mut);
+}
+
+.ds-hubnav__group-header .icon {
+  font-size: 14px;
+}
+
+.ds-hubnav__group-header .progress {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ds-shell-ink);
+}
+
+/* Updated button styles for groups */
+.ds-hubnav__group .ds-hubnav__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  text-align: left;
+}
+
+.ds-hubnav__group .ds-hubnav__btn .status {
+  flex-shrink: 0;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.ds-hubnav__group .ds-hubnav__btn.is-active .status {
+  opacity: 1;
+}
+
+.ds-hubnav__group .ds-hubnav__btn .label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-hubnav__group .ds-hubnav__btn .n {
+  display: none;
+}
+
+/* Improved disabled state */
+.ds-hubnav__btn.is-disabled {
+  opacity: 0.6;
+  background: var(--ds-shell-2);
+  border-color: var(--ds-shell-line);
+  cursor: default;
+}
+
+.ds-hubnav__btn.is-disabled:hover {
+  background: var(--ds-shell-2);
+  transform: none;
+}
+
+.ds-hubnav__btn.is-disabled .status {
+  color: var(--ds-shell-mut);
+}
+
+/* Mobile: Vertical layout */
+@media (max-width: 768px) {
+  .ds-hubnav {
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 60vh;
+  }
+
+  .ds-hubnav__group {
+    gap: 4px;
+  }
+
+  .ds-hubnav__btn {
+    font-size: 14px;
+  }
+
+  .ds-hubnav__group-header {
+    position: sticky;
+    top: 0;
+    background: var(--ds-shell);
+    z-index: 2;
+    margin-bottom: 4px;
+  }
+}
+
+/* Collapse bottom nav on small screens */
+@media (max-width: 640px) {
+  .ds-hubnav--bottom {
+    display: none;
+  }
+}
+</style>`;
+
 const html = `<!DOCTYPE html>
 <html lang="en">${reportHead({ title: `${clientName} — Engagement Hub`, extraHead })}
+${bundleStyles}
 <body><div class="ds-hub">
   <a class="ds-skip" href="#viewer-main">Skip to report</a>
   <header class="ds-hub__head">
@@ -304,7 +466,6 @@ const html = `<!DOCTYPE html>
     <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
     <div class="ds-viewer__loader" id="loader" aria-hidden="true"><div class="ds-spinner"></div></div>
   </main>
-  ${menuHtml("bottom")}
 </div>
 <script>
   (function () {

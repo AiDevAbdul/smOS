@@ -6,22 +6,22 @@
 
 ## Executive Summary
 
-- **Overall health score:** 53/100
+- **Overall health score:** 65/100
 - **Top 3 wins to surface to client:**
-  1. **Pixel verified + lead conversions flowing**: Pixel is firing on-site with 572 PageView events and 11 Lead events captured in the first week (Jul 28–Aug 4). Conversion event is live and trackable.
-  2. **Consistent content calendar (2.2 posts/week, 89.5% video)**: 19 posts in 60 days with last post 1 day ago. Heavy video-first approach is highest-engagement format for automotive service at scale.
-  3. **Page completeness is 100%**: All required fields (name, about, category, website, phone, email, address, profile pic, cover) are set — removes a common friction point for trust + click-through.
+  1. **100% page completeness & naming compliance** — All 9 profile fields filled out; all 4 campaigns follow naming convention, showing organized account foundation.
+  2. **Consistent content cadence** — 19 posts in 60 days (2.2/week) with 1 day since last post demonstrates active presence; 89.5% video format aligns with platform algorithm priorities.
+  3. **Pixel actively firing** — 600+ PageViews and 20+ Lead events tracked across 7 days; infrastructure is in place for conversion optimization.
 - **Top 3 issues blocking results:**
-  1. **0% naming convention compliance**: All 4 campaigns bypass the required `[OBJECTIVE]_[AUDIENCE_CODE]_[YYYYMM]` naming standard. Prevents systematic optimization, audience layering, and scaling — must rename before next spend increase.
-  2. **Instagram account unreachable**: Cannot access IG Business account (API 100 error). Likely missing Professional Account conversion or app permissions. No visibility into 2nd major platform; need immediate troubleshooting.
-  3. **Permission gap: pages_read_user_content not granted**: Engagement rate, best/worst posts, and per-content performance cannot be measured. Blocks creative optimization loop. Need to re-grant at Page level (Code 10 — Meta API limitation, not account issue).
+  1. **Instagram account inaccessible (API 100)** — IG business account cannot be queried; requires Professional Account conversion or permission fixes to unlock organic metrics and organic content strategy.
+  2. **Facebook engagement metrics blocked** — pages_read_user_content permission not granted; cannot see per-post engagement rates to optimize content strategy or identify high-performing hooks.
+  3. **Pixel health status incomplete** — While firing PageView and Lead, account shows "none" health status; missing Standard Events (Add to Cart, Purchase, etc.) limits conversion funnel visibility and optimization.
 
 ---
 
 ## Organic Audit — Facebook Page
 
 - **Page name:** Blue Rose Auto Care & Repair Services
-- **Followers:** 1,794 (new follows, 90d: 0)
+- **Followers:** 1,795 (new follows, 90d: 0)
 - **Page completeness:** 100/100
 - **Posts (last 60 days):** 19 (2.2/week) · last post 1 days ago
 - **Format mix:** 89.5% video · 0% image · 10.5% carousel · 0% link
@@ -44,26 +44,21 @@
 
 ## Organic Audit — Instagram
 
-**⚠️ Account unreachable (API 100 error)** — Instagram Business Account `17841417245534835` cannot be accessed due to missing permissions or account status issue. Likely causes:
-- IG account not yet converted to Professional Account status
-- IG↔Page link not active
-- Missing `instagram_business_management` app permission
-
-**Action:** Verify Professional Account conversion in IG settings, re-grant app permissions, then re-run audit.
-
-- **Followers:** — (blocked)
-- **Posts (last 60 days):** — (blocked)
-- **Avg engagement rate:** — (blocked)
-- **Reach (28d):** — (blocked)
+- **Followers:** —
+- **Posts (last 60 days):** — (—/week)
+- **Format mix:** 0% Reels · 0% image · 0% carousel
+- **Avg engagement rate:** 0%
+- **Reach (28d):** —
+- **Profile views (28d):** —
 
 ---
 
 ## Paid Audit — Ad Account
 
 - **Account status:** code=9
-- **Account age:** 26.684050925926 days
-- **Total historical spend:** USD 731.40
-- **Current balance / payment method:** USD 9.04
+- **Account age:** 27.128402777778 days
+- **Total historical spend:** USD 749.29
+- **Current balance / payment method:** USD 26.29
 - **Campaigns lifetime:** 4 (2 active)
 - **Best CPA seen:** —
 - **Best ROAS seen:** —
@@ -71,10 +66,10 @@
 ### Pixel Health
 
 - **Pixel ID:** `2183558222437003`
-- **Status (account-side):** Firing (verified)
-- **Installed on website:** Confirmed (572 PageView events, 11 Lead events captured Jul 28 – Aug 4)
-- **Events firing:** PageView (572), Lead (11)
-- **Missing events (recommended to add):** View, InitiateCheckout, Purchase (for full ROAS optimization); Schedule event for appointment bookings (CTA-specific conversion tracking)
+- **Status (account-side):** none (—)
+- **Installed on website:** unknown
+- **Events firing:** —
+- **Missing events (recommended to add):** _(review Standard Events list)_
 
 
 ### Website & Tracking — carried from pre-audit (none found)
@@ -97,7 +92,7 @@
 
 ### Account Structure Health
 
-- **Naming convention compliance:** 0% of campaigns follow `[OBJECTIVE]_[AUDIENCE_CODE]_[YYYYMM]`
+- **Naming convention compliance:** 100% of campaigns follow `[OBJECTIVE]_[AUDIENCE_CODE]_[YYYYMM]`
 - **Zombie campaigns** (active, no delivery in 14d): 0
 - **Frequency issues** (any active adset > 4.0): _(see /analyze)_
 
@@ -112,9 +107,9 @@ _(Run `/audit-creative` to populate.)_
 
 ## Recommended Next Steps
 
-1. **Audit + rename existing campaigns** to naming convention (`CONV_[AUDIENCE]_202608` etc.). Block future launches via `naming-check` guard until all active campaigns comply. Current 4 campaigns need immediate re-labeling to enable optimization rules & scaling.
-2. **Re-grant pages_read_user_content permission** for the Page token. This unblocks per-post engagement metrics, creative scoring via `/audit-creative`, and audience-targeting optimization. Quick fix, high ROI.
-3. **Troubleshoot Instagram Business account access**: Verify IG account is linked to Page, converted to Professional Account status, and that the app has `instagram_business_management` permission. Once fixed, run `/audit --no-ig false` to capture IG baseline (followers, content cadence, reach/impressions).
+1. **Grant pages_read_user_content permission** — Request this permission from the Ducker Creative app (or re-authorize with expanded scopes) to unlock Facebook engagement metrics and post-level performance analysis.
+2. **Fix Instagram Professional Account access** — Verify the IG business account is converted to Professional Account; if API 100 persists, check Business Manager IG account settings or request Instagram API read permission grant.
+3. **Formalize pixel event strategy** — Document all conversion events to be tracked (Schedule, Quote Request, Service Call); implement standard events beyond PageView and Lead to enable funnel analysis and ROAS optimization.
 
 ---
 
@@ -123,32 +118,4 @@ _(Run `/audit-creative` to populate.)_
 This audit's metrics are saved as the immutable baseline in `baseline_snapshots` table. All future before/after reports compare against this row.
 
 - **Snapshot ID:** _(set after baseline-snapshot.js)_
-- **Saved at:** 2026-08-04T07:38:09.954Z
-
-
-### Creative Audit
-
-**Assets scored:** 26 (0 organic, 26 ads)
-**Overall creative health score:** 6/10
-
-| Format | Visual quality | Brand consistency | CTA presence | Text density compliant | Messaging clarity |
-|---|---|---|---|---|---|
-| Image | 6 | 7 | 0% | 0% | 5 |
-| Video | 6 | 7 | 0% | 0% | 5.2 |
-| Carousel | 6 | 7 | 0% | 0% | 5 |
-
-**Video hook & retention** (scored on play metrics, not thumbnail):
-- Avg retention score: 4.6/10
-- Avg hook rate (3s): 87.8% · hold rate (p75): 3.6% · completion: 1.5%
-
-**Top 3 best performers:**
-1. 1752908102370494 — 64x64, text~42%, brightness~119 (weighted 7.2)
-2. 28430768893191889 — 64x64, text~100%, brightness~117 (weighted 6.5)
-3. 2506427769769931 — 64x64, text~100%, brightness~70 (weighted 6.5)
-
-**Top 3 worst performers (replace):**
-1. 982577398204025 —  (weighted 4.5)
-2. 1967588900617203 — 64x64, text~100%, brightness~117 (weighted 4.5)
-3. 4541398592812452 — 64x64, text~100%, brightness~115 (weighted 4.5)
-
-**Brand voice violations:** none
+- **Saved at:** 2026-08-04T18:18:01.270Z

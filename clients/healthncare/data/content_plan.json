@@ -1,0 +1,453 @@
+{
+  "client_slug": "healthncare",
+  "period": {
+    "start": "2026-08-10",
+    "weeks": 4
+  },
+  "pillars": [
+    {
+      "id": "educate",
+      "name": "Educate",
+      "intent": "educate",
+      "cadence_per_week": 2,
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ]
+    },
+    {
+      "id": "proof",
+      "name": "Social Proof",
+      "intent": "convert",
+      "cadence_per_week": 1,
+      "keywords": [
+        "local",
+        "affiliate"
+      ]
+    },
+    {
+      "id": "behind",
+      "name": "Behind the Scenes",
+      "intent": "community",
+      "cadence_per_week": 1,
+      "keywords": [
+        "tips",
+        "affiliate"
+      ]
+    },
+    {
+      "id": "offer",
+      "name": "Offer / CTA",
+      "intent": "convert",
+      "cadence_per_week": 1,
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "healthncare-2026-08-10-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-08-10T13:00:00.000Z",
+      "message": "Affiliate — Educate: affiliate. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ],
+      "alt_text": "reels of Educate: affiliate (affiliate) by Health & Care",
+      "hashtags": [
+        "#affiliate",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-12-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-08-12T13:00:00.000Z",
+      "message": "Local — Social Proof: local. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "local",
+        "affiliate"
+      ],
+      "alt_text": "carousel of Social Proof: local (local) by Health & Care",
+      "hashtags": [
+        "#local",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-14-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-08-14T13:00:00.000Z",
+      "message": "Tips — Behind the Scenes: tips. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "tips",
+        "affiliate"
+      ],
+      "alt_text": "reels of Behind the Scenes: tips (tips) by Health & Care",
+      "hashtags": [
+        "#tips",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-17-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-08-17T13:00:00.000Z",
+      "message": "Affiliate — Offer / CTA: affiliate. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ],
+      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Health & Care",
+      "hashtags": [
+        "#affiliate",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-19-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-08-19T13:00:00.000Z",
+      "message": "Affiliate — Educate: affiliate. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ],
+      "alt_text": "reels of Educate: affiliate (affiliate) by Health & Care",
+      "hashtags": [
+        "#affiliate",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-21-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-08-21T13:00:00.000Z",
+      "message": "Local — Social Proof: local. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "local",
+        "affiliate"
+      ],
+      "alt_text": "carousel of Social Proof: local (local) by Health & Care",
+      "hashtags": [
+        "#local",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-24-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-08-24T13:00:00.000Z",
+      "message": "Tips — Behind the Scenes: tips. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "tips",
+        "affiliate"
+      ],
+      "alt_text": "reels of Behind the Scenes: tips (tips) by Health & Care",
+      "hashtags": [
+        "#tips",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-26-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-08-26T13:00:00.000Z",
+      "message": "Affiliate — Offer / CTA: affiliate. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ],
+      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Health & Care",
+      "hashtags": [
+        "#affiliate",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-28-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-08-28T13:00:00.000Z",
+      "message": "Affiliate — Educate: affiliate. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ],
+      "alt_text": "reels of Educate: affiliate (affiliate) by Health & Care",
+      "hashtags": [
+        "#affiliate",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-31-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-08-31T13:00:00.000Z",
+      "message": "Local — Social Proof: local. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "local",
+        "affiliate"
+      ],
+      "alt_text": "carousel of Social Proof: local (local) by Health & Care",
+      "hashtags": [
+        "#local",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-09-02-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-09-02T13:00:00.000Z",
+      "message": "Tips — Behind the Scenes: tips. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "tips",
+        "affiliate"
+      ],
+      "alt_text": "reels of Behind the Scenes: tips (tips) by Health & Care",
+      "hashtags": [
+        "#tips",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-09-04-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-09-04T13:00:00.000Z",
+      "message": "Affiliate — Offer / CTA: affiliate. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate",
+        "affiliate"
+      ],
+      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Health & Care",
+      "hashtags": [
+        "#affiliate",
+        "#affiliate"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    }
+  ]
+}

@@ -1,0 +1,695 @@
+{
+  "client_slug": "healthncare",
+  "strategy_version": "1.0",
+  "generated_at": "2026-08-05T17:00:00.000Z",
+  "overview": {
+    "goal": "Own the 'science-backed supplement' space through transparent, searchable content that builds authority and captures affiliate conversions via organic search.",
+    "positioning": "We are the thinking person's supplement marketplace—education-first, proof-driven, no fluff.",
+    "voice_alignment": "Educational (explain the science), bold (confident in results), urgent (energy/weight are quality-of-life), transparent (honest about what works).",
+    "primary_channels": ["organic search (blog)", "social proof (testimonials/before-afters)", "email nurture (education → product)"],
+    "content_preferences_mode": "ai_assisted"
+  },
+  "content_pillars": [
+    {
+      "pillar_id": "PILLAR_WEIGHT_LOSS_SCIENCE",
+      "title": "Weight-Loss Science & Strategy",
+      "rationale": "Capture 'how to lose weight' intent at scale. Our curation story differentiates us from generic supplement sites.",
+      "subtopic_clusters": [
+        {
+          "cluster": "Fundamentals",
+          "topics": [
+            "How to lose weight sustainably (guide to realistic timelines, expectations)",
+            "Weight loss myths debunked (calorie myth, detox myth, spot reduction, etc.)",
+            "The science behind why supplements help weight loss (mechanism of action primer)"
+          ]
+        },
+        {
+          "cluster": "Supplement Categories",
+          "topics": [
+            "Best supplements for weight loss (buyer's guide, ranked by clinical evidence)",
+            "GLP-1 alternatives: do they work? (emerging medicines, efficacy overview)",
+            "Thermogenic supplements: science vs. hype (what actually works)",
+            "Appetite suppressants: natural vs. prescription"
+          ]
+        },
+        {
+          "cluster": "Strategy & Implementation",
+          "topics": [
+            "How to stack supplements for weight loss (layering strategy)",
+            "Supplement timing: when to take them for max efficacy",
+            "Diet + supplements: how to combine them for results"
+          ]
+        }
+      ]
+    },
+    {
+      "pillar_id": "PILLAR_ENERGY_VITALITY",
+      "title": "Energy & Vitality",
+      "rationale": "Complement weight loss with energy/mood positioning. High intent ('why am I tired,' 'how to boost energy') + natural product tie-in.",
+      "subtopic_clusters": [
+        {
+          "cluster": "Root Causes",
+          "topics": [
+            "Why you're always tired: 7 real reasons (and what supplements can fix)",
+            "Energy crashes explained (blood sugar, dopamine, sleep debt)",
+            "Nutrition for sustained energy (micronutrient gaps, supplementation)"
+          ]
+        },
+        {
+          "cluster": "Solutions",
+          "topics": [
+            "Best supplements for energy and focus (ranked by mechanism, not marketing)",
+            "B vitamins for energy: which ones actually work",
+            "Adaptogens for stress and energy (ashwagandha, rhodiola, etc.—with studies)"
+          ]
+        },
+        {
+          "cluster": "Performance Angle",
+          "topics": [
+            "Recovery supplements for active people (post-workout, DOMS, sleep)",
+            "Supplements for athletic performance (creatine, beta-alanine, tested formulas)"
+          ]
+        }
+      ]
+    },
+    {
+      "pillar_id": "PILLAR_TRANSPARENCY_CURATION",
+      "title": "Transparency & Curation (Brand Differentiation)",
+      "rationale": "This pillar is unique to us. It builds trust and justifies premium affiliate conversions.",
+      "subtopic_clusters": [
+        {
+          "cluster": "How We Work",
+          "topics": [
+            "How we choose supplements (our curation framework—efficacy-first, no marketing BS)",
+            "Why we exclude supplements (our rejection criteria)",
+            "Supplement quality: what actually matters (GMP, third-party testing, transparency)"
+          ]
+        },
+        {
+          "cluster": "Comparisons & Alternatives",
+          "topics": [
+            "Supplements vs. prescription weight-loss medicines (trade-offs, when each makes sense)",
+            "Brand comparison: supplement marketplace A vs. B vs. Health & Care (honest benchmarking)",
+            "Natural vs. synthetic supplements (efficacy, safety, evidence)"
+          ]
+        },
+        {
+          "cluster": "Education & Literacy",
+          "topics": [
+            "Reading a supplement label: what to look for (ingredients, dosing, certifications)",
+            "Understanding clinical studies (how to read research, spotting marketing claims)",
+            "Supplement safety: interactions, contraindications, when to ask a doctor"
+          ]
+        }
+      ]
+    },
+    {
+      "pillar_id": "PILLAR_SOCIAL_PROOF_RESULTS",
+      "title": "Real Results & Community (Social Proof)",
+      "rationale": "Decision-stage content. Before/afters, testimonials, case studies create trust and drive conversions.",
+      "subtopic_clusters": [
+        {
+          "cluster": "Transformation Stories",
+          "topics": [
+            "Customer transformations (before/afters with specific timelines, products used, habits)",
+            "How long does weight loss take? (realistic expectations, graphed progress)",
+            "Energy transformation stories (from 'exhausted' to 'energized')"
+          ]
+        },
+        {
+          "cluster": "FAQ & Objection Handling",
+          "topics": [
+            "Common questions about Health & Care (why us, how we work, guarantees)",
+            "Will supplements work for me? (honest assessment of who sees results)",
+            "Supplement side effects: what to expect and when to pause"
+          ]
+        },
+        {
+          "cluster": "Community & Engagement",
+          "topics": [
+            "Success stories from our community (monthly highlights, featured customers)",
+            "Supplement reviews from users (aggregated, honest, with ratings)"
+          ]
+        }
+      ]
+    },
+    {
+      "pillar_id": "PILLAR_ACTION_IMPLEMENTATION",
+      "title": "Start Here: Implementation & Onboarding",
+      "rationale": "Conversion-stage content. 'How to start' articles bridge research to purchase.",
+      "subtopic_clusters": [
+        {
+          "cluster": "Getting Started",
+          "topics": [
+            "Your first supplement: which to choose (persona-matched recommendations)",
+            "How to start supplements (setup guide, dosing, tracking progress)",
+            "Supplement storage & safety (how to keep them effective)"
+          ]
+        },
+        {
+          "cluster": "Optimization & Troubleshooting",
+          "topics": [
+            "Not seeing results? Here's why (and how to adjust)",
+            "Supplement stacking for weight loss (layering multiple products safely)",
+            "30-day supplement challenge (with tracking sheet)"
+          ]
+        },
+        {
+          "cluster": "Long-term Integration",
+          "topics": [
+            "Supplements + diet: how to layer them (macros, meal timing, synergy)",
+            "Supplements + exercise: what to take when (pre/intra/post-workout)",
+            "Sustaining results: the long game (cycling, maintenance, prevention)"
+          ]
+        }
+      ]
+    }
+  ],
+  "priority_content_pieces": [
+    {
+      "rank": 1,
+      "title": "Best Supplements for Weight Loss: Science-Backed Guide (2026)",
+      "pillar": "PILLAR_WEIGHT_LOSS_SCIENCE",
+      "content_type": "Use-case guide + buyer's guide (searchable, commercial intent)",
+      "target_keyword": "best supplements for weight loss",
+      "search_intent": "commercial + informational",
+      "buyer_stage": "consideration",
+      "monthly_search_volume_estimate": "8,900+",
+      "competition": "high (HubSpot, WebMD, Amazon ranking)",
+      "angle": "Rank by clinical evidence, not marketing. Include mechanism of action, studies, real user expectations. Natural differentiation: our curation story.",
+      "content_structure": "intro + weight-loss mechanism primer + top 5 supplements (ranked by evidence) + comparison table + FAQ + CTA to shop",
+      "searchable_yes_shareable_no": "Highly searchable (long-tail versions: 'best supplement for weight loss for women,' 'best supplement for weight loss over 50'); some shareable (surprising findings about myths)"
+    },
+    {
+      "rank": 2,
+      "title": "Why You're Always Tired: 7 Real Reasons (+ How Supplements Can Help)",
+      "pillar": "PILLAR_ENERGY_VITALITY",
+      "content_type": "Awareness-stage guide (searchable + shareable)",
+      "target_keyword": "why am I always tired, why am I so tired",
+      "search_intent": "informational (people are searching for diagnosis)",
+      "buyer_stage": "awareness",
+      "monthly_search_volume_estimate": "12,100+",
+      "competition": "medium (health.com, Mayo Clinic rank, but fragmented)",
+      "angle": "Diagnose fatigue (iron deficiency, B12, sleep debt, stress). For each, show the supplement solution. Human-centered, not product-first.",
+      "content_structure": "Intro (relatable frustration) + 7 root causes (each with symptoms + science + supplement solution) + 'when to see a doctor' gating + FAQ + CTA",
+      "searchable_yes_shareable_yes": "Highly searchable. Also shareable: people will send to friends ('this explains why I'm tired')"
+    },
+    {
+      "rank": 3,
+      "title": "How We Choose Supplements: Our Curation Framework (Transparency Report)",
+      "pillar": "PILLAR_TRANSPARENCY_CURATION",
+      "content_type": "Thought leadership + brand differentiation (shareable + SEO supporting)",
+      "target_keyword": "Health & Care supplement curation, why choose Health & Care",
+      "search_intent": "brand + informational",
+      "buyer_stage": "consideration → decision",
+      "monthly_search_volume_estimate": "low (branded/long-tail), but high conversion if reached",
+      "competition": "none (proprietary to us)",
+      "angle": "Transparent process. 'Here's why we sell Product X but not Product Y.' Shows rigor, builds trust, justifies our position.",
+      "content_structure": "Our criteria (efficacy-first, 3rd party testing, no proprietary blends) + case studies (2 we accept, 2 we reject with reasons) + FAQ + methodology PDF downloadable",
+      "searchable_yes_shareable_yes": "Searchable for brand/trust queries. Highly shareable: thought leadership, unique insight. LinkedIn/industry credibility."
+    },
+    {
+      "rank": 4,
+      "title": "Weight Loss Myths Debunked: What Actually Works (Science Edition)",
+      "pillar": "PILLAR_WEIGHT_LOSS_SCIENCE",
+      "content_type": "Thought leadership (searchable + highly shareable)",
+      "target_keyword": "weight loss myths, does [myth] work for weight loss",
+      "search_intent": "informational + consideration",
+      "buyer_stage": "awareness → consideration",
+      "monthly_search_volume_estimate": "5,500+",
+      "competition": "medium",
+      "angle": "Challenge BS (calorie myth, detox myth, spot reduction, carbs bad, etc.). Each myth gets a study-backed breakdown. No hype.",
+      "content_structure": "Intro + 8-10 myths (each: claim + why it's wrong + actual science + supplement relevance) + conclusion + CTA to our guides",
+      "searchable_yes_shareable_yes": "Searchable. Highly shareable: people will post 'finally someone said it' on social."
+    },
+    {
+      "rank": 5,
+      "title": "Customer Transformations: Real Before/Afters + Timeline (Monthly Feature)",
+      "pillar": "PILLAR_SOCIAL_PROOF_RESULTS",
+      "content_type": "Case study + testimonial (shareable, decision-stage)",
+      "target_keyword": "Health & Care reviews, weight loss results with supplements, customer testimonials",
+      "search_intent": "social proof + decision",
+      "buyer_stage": "decision",
+      "monthly_search_volume_estimate": "low search, but high conversion",
+      "competition": "brand-only",
+      "angle": "Feature 1 customer per month. 'Jane lost 22 lbs in 12 weeks using [2-3 products] + diet + exercise. Here's her timeline, what she did, what surprised her.'",
+      "content_structure": "Hero before/after image + customer quote + 'here's what Jane did' (products, diet, exercise, timeline) + metric callouts + customer's own words (video or quote) + CTA to shop",
+      "searchable_yes_shareable_yes": "Searchable for brand/review queries. Highly shareable: Instagram, Pinterest, community groups."
+    },
+    {
+      "rank": 6,
+      "title": "GLP-1 Alternatives: Do Over-the-Counter Supplements Actually Work?",
+      "pillar": "PILLAR_WEIGHT_LOSS_SCIENCE",
+      "content_type": "Comparison + analysis (searchable + consideration-stage)",
+      "target_keyword": "GLP-1 alternatives, does ozempic work without medication, supplement alternatives to GLP-1",
+      "search_intent": "commercial + informational",
+      "buyer_stage": "consideration",
+      "monthly_search_volume_estimate": "2,200+ (emerging, fast-growing)",
+      "competition": "low (few affiliate sites cover this well)",
+      "angle": "Honest: 'GLP-1 meds are clinically proven. Supplements can support but won't replicate. Here's what the research says.' Builds trust by not overpromising.",
+      "content_structure": "Intro + how GLP-1s work + supplement options (berberine, semaglutide alternatives, appetite suppressants) + evidence comparison table + 'when to see a doctor' + honest CTA",
+      "searchable_yes_shareable_no": "Highly searchable (commercial intent). Less shareable."
+    },
+    {
+      "rank": 7,
+      "title": "Reading a Supplement Label: What to Actually Look For",
+      "pillar": "PILLAR_TRANSPARENCY_CURATION",
+      "content_type": "Educational guide (searchable, implementation-stage)",
+      "target_keyword": "how to read supplement labels, what to look for in supplements",
+      "search_intent": "informational",
+      "buyer_stage": "awareness → consideration",
+      "monthly_search_volume_estimate": "1,100+",
+      "competition": "medium",
+      "angle": "Empower customers. 'Don't be fooled by marketing. Here's how to spot quality.' Builds brand authority.",
+      "content_structure": "Intro + label anatomy (with annotated screenshots) + key indicators (GMP, 3rd party tested, ingredient transparency, dosing) + red flags to avoid + Health & Care examples + downloadable label checklist",
+      "searchable_yes_shareable_yes": "Searchable. Moderately shareable (pinnable, email-friendly resource)."
+    },
+    {
+      "rank": 8,
+      "title": "How to Start Supplements: Your First 30 Days (Setup Guide)",
+      "pillar": "PILLAR_ACTION_IMPLEMENTATION",
+      "content_type": "Implementation guide (searchable, conversion-stage)",
+      "target_keyword": "how to start taking supplements, supplement starter guide",
+      "search_intent": "informational (high purchase intent)",
+      "buyer_stage": "decision → implementation",
+      "monthly_search_volume_estimate": "2,200+",
+      "competition": "medium",
+      "angle": "De-risk the decision. 'Here's exactly what to do your first 30 days.' Builds confidence, reduces refund risk.",
+      "content_structure": "Step-by-step (day 1-7, week 2-3, week 4) + what to expect (side effects, timeline to results) + tracking sheet template (downloadable) + FAQ + when to adjust + CTA to shop bundle",
+      "searchable_yes_shareable_no": "Highly searchable. Not shareable (personal guide)."
+    },
+    {
+      "rank": 9,
+      "title": "Supplement Stacking for Weight Loss: Science-Backed Combinations",
+      "pillar": "PILLAR_ACTION_IMPLEMENTATION",
+      "content_type": "Advanced guide (searchable + shareable)",
+      "target_keyword": "supplement stacking for weight loss, how to layer supplements",
+      "search_intent": "informational (high intent, engaged audience)",
+      "buyer_stage": "implementation / advanced",
+      "monthly_search_volume_estimate": "680+",
+      "competition": "low",
+      "angle": "For customers ready to optimize. '3 synergistic supplement combos (with studies).' Increases average order value.",
+      "content_structure": "Intro + stacking rules (don't mix X and Y) + 3 tested combinations (each: purpose + ingredients + mechanism + expected results + safety notes) + custom combo builder + CTA to shop stacks",
+      "searchable_yes_shareable_yes": "Searchable (niche, engaged audience). Moderately shareable (Reddit, fitness communities)."
+    },
+    {
+      "rank": 10,
+      "title": "Best Supplements for Energy and Focus: Ranked by Mechanism",
+      "pillar": "PILLAR_ENERGY_VITALITY",
+      "content_type": "Buyer's guide (searchable, commercial intent)",
+      "target_keyword": "best supplements for energy, best supplements for focus",
+      "search_intent": "commercial + informational",
+      "buyer_stage": "consideration",
+      "monthly_search_volume_estimate": "6,600+ (combined variants)",
+      "competition": "high",
+      "angle": "Category breakdown by mechanism (caffeine + L-theanine, B vitamins, adaptogens, nootropics). Rank by evidence, not marketing.",
+      "content_structure": "Intro + mechanism primer + top 3 per category (ranked by study evidence) + comparison table + 'stacking for focus' + FAQ + CTA",
+      "searchable_yes_shareable_no": "Highly searchable. Low shareability."
+    },
+    {
+      "rank": 11,
+      "title": "Understanding Clinical Studies: How to Read Research (Not Marketing)",
+      "pillar": "PILLAR_TRANSPARENCY_CURATION",
+      "content_type": "Educational thought leadership (shareable + brand authority)",
+      "target_keyword": "how to read clinical studies, supplement research, spotting marketing claims",
+      "search_intent": "informational",
+      "buyer_stage": "awareness",
+      "monthly_search_volume_estimate": "1,100+",
+      "competition": "low",
+      "angle": "Teach critical thinking. 'Here's how supplement companies manipulate studies.' Builds brand as trustworthy, expert-led.",
+      "content_structure": "Study anatomy + red flags (small sample, short duration, funded by the company) + case studies (one legit study, one BS study, annotated) + key questions to ask + downloadable study checklist",
+      "searchable_yes_shareable_yes": "Searchable. Highly shareable: critical thinking angle, thought leadership."
+    },
+    {
+      "rank": 12,
+      "title": "Not Seeing Results? Here's Why (+ 5 Ways to Adjust)",
+      "pillar": "PILLAR_ACTION_IMPLEMENTATION",
+      "content_type": "Troubleshooting guide (searchable, retention/upsell)",
+      "target_keyword": "why aren't my supplements working, supplements not working",
+      "search_intent": "problem-solving (high intent)",
+      "buyer_stage": "implementation (existing customers + prospects)",
+      "monthly_search_volume_estimate": "1,800+",
+      "competition": "low",
+      "angle": "Reduce refunds. Address buyer's remorse before it happens. Show you care about results.",
+      "content_structure": "5 common reasons (dosing, timing, diet, sleep, product choice) + how to diagnose each + fix for each + when to escalate + CTA to free consultation",
+      "searchable_yes_shareable_no": "Highly searchable. Not shareable."
+    },
+    {
+      "rank": 13,
+      "title": "Thermogenic Supplements: Science vs. Hype (Which Actually Boost Metabolism?)",
+      "pillar": "PILLAR_WEIGHT_LOSS_SCIENCE",
+      "content_type": "Category analysis (searchable + consideration-stage)",
+      "target_keyword": "thermogenic supplements, do fat burning supplements work, metabolism boosting supplements",
+      "search_intent": "commercial + informational",
+      "buyer_stage": "consideration",
+      "monthly_search_volume_estimate": "3,600+",
+      "competition": "medium",
+      "angle": "Debunk the hype. 'Metabolism boosters exist but are modest. Here's the real science.' Builds credibility.",
+      "content_structure": "Thermogenesis primer + top 3 ingredients (caffeine, green tea, capsaicin, etc.) + efficacy ranking (what actually works) + realistic expectations (2-5% boost) + best formulas + CTA",
+      "searchable_yes_shareable_yes": "Searchable. Moderately shareable (fitness communities)."
+    },
+    {
+      "rank": 14,
+      "title": "Supplements vs. Prescription Weight-Loss Medicines: Trade-Offs (Honest Comparison)",
+      "pillar": "PILLAR_TRANSPARENCY_CURATION",
+      "content_type": "Comparison + positioning (searchable + consideration-stage)",
+      "target_keyword": "supplements vs GLP-1, supplements vs weight loss medication, when to use supplements vs medicine",
+      "search_intent": "commercial + informational",
+      "buyer_stage": "consideration",
+      "monthly_search_volume_estimate": "2,900+",
+      "competition": "low",
+      "angle": "Honest broker. 'Here's when supplements make sense and when you need a doctor.' Builds trust, reduces liability.",
+      "content_structure": "Comparison table (efficacy, cost, side effects, timeline) + when each makes sense + combination approach + 'when to see a doctor' gating + CTA to guides",
+      "searchable_yes_shareable_yes": "Searchable. Moderately shareable (healthcare angle)."
+    },
+    {
+      "rank": 15,
+      "title": "Common Questions About Health & Care (FAQ + How We Differ)",
+      "pillar": "PILLAR_SOCIAL_PROOF_RESULTS",
+      "content_type": "FAQ + brand messaging (searchable, decision-stage)",
+      "target_keyword": "Health & Care, Health & Care reviews, Health & Care affiliate, how Health & Care works",
+      "search_intent": "brand + decision",
+      "buyer_stage": "decision",
+      "monthly_search_volume_estimate": "low search, high conversion",
+      "competition": "brand-only",
+      "angle": "Close the deal. 'Here's who we are, how we work, what we promise.' Address objections (cost, risk, efficacy).",
+      "content_structure": "Brand story + 10 FAQs (what we are, why us vs competitors, guarantees, shipping, refunds, support, safety) + customer testimonial + 30-day guarantee summary + CTA to shop",
+      "searchable_yes_shareable_no": "Searchable for brand queries. Not shareable."
+    },
+    {
+      "rank": 16,
+      "title": "Recovery Supplements for Active People: What Actually Works Post-Workout",
+      "pillar": "PILLAR_ENERGY_VITALITY",
+      "content_type": "Use-case guide (searchable, commercial intent)",
+      "target_keyword": "recovery supplements, best post workout supplements, muscle recovery supplements",
+      "search_intent": "commercial + informational",
+      "buyer_stage": "consideration",
+      "monthly_search_volume_estimate": "4,400+",
+      "competition": "high (fitness influencers, supplement brands)",
+      "angle": "For the active segment of our audience (25-70 includes gym-goers). Rank by evidence, address the 'is whey enough?' question.",
+      "content_structure": "Recovery primer + post-workout timeline + supplements ranked (whey protein, creatine, BCAAs, omega-3, magnesium) + stacking for recovery + nutrition integration + CTA",
+      "searchable_yes_shareable_yes": "Searchable. Moderately shareable (fitness communities, Reddit)."
+    },
+    {
+      "rank": 17,
+      "title": "Natural vs. Synthetic Supplements: Which Are More Effective? (Evidence-Based)",
+      "pillar": "PILLAR_TRANSPARENCY_CURATION",
+      "content_type": "Educational analysis (searchable + consideration-stage)",
+      "target_keyword": "natural vs synthetic supplements, are natural supplements better, natural vs chemical supplements",
+      "search_intent": "informational",
+      "buyer_stage": "awareness → consideration",
+      "monthly_search_volume_estimate": "2,800+",
+      "competition": "medium",
+      "angle": "Bust the 'natural is always better' myth. 'Some synthetic supplements are more bioavailable. Here's the evidence.' Contrarian, trusted.",
+      "content_structure": "Definition (natural vs synthetic) + 5 examples (each with efficacy evidence) + bioavailability primer + when natural matters, when synthetic wins + our selection approach + CTA",
+      "searchable_yes_shareable_yes": "Searchable. Shareable (thought leadership angle)."
+    }
+  ],
+  "content_clusters_by_pillar": {
+    "PILLAR_WEIGHT_LOSS_SCIENCE": [
+      {
+        "cluster": "How to lose weight (foundation)",
+        "pieces": ["Best Supplements for Weight Loss (rank 1)", "Why You're Always Tired (rank 2)", "Weight Loss Myths (rank 4)"],
+        "internal_links": "Best → Myths; Myths → Setup Guide"
+      },
+      {
+        "cluster": "Emerging medicines & alternatives",
+        "pieces": ["GLP-1 Alternatives (rank 6)", "Thermogenic Supplements (rank 13)", "Supplements vs Prescription (rank 14)"],
+        "internal_links": "All link to each other for comparison clarity"
+      }
+    ],
+    "PILLAR_ENERGY_VITALITY": [
+      {
+        "cluster": "Why am I tired? (diagnosis + solutions)",
+        "pieces": ["Why You're Always Tired (rank 2)", "Best Supplements for Energy (rank 10)", "Recovery Supplements (rank 16)"],
+        "internal_links": "Why Tired → Energy Guide → Recovery (if active)"
+      }
+    ],
+    "PILLAR_TRANSPARENCY_CURATION": [
+      {
+        "cluster": "How we differ (brand + trust)",
+        "pieces": ["How We Choose (rank 3)", "Reading Labels (rank 7)", "Understanding Studies (rank 11)", "Natural vs Synthetic (rank 17)"],
+        "internal_links": "All link to: How We Choose (root of trust)"
+      },
+      {
+        "cluster": "Comparisons & decision support",
+        "pieces": ["Supplements vs Prescription (rank 14)", "GLP-1 Alternatives (rank 6)"],
+        "internal_links": "Both link to: Honest, compare-and-contrast positioning"
+      }
+    ],
+    "PILLAR_SOCIAL_PROOF_RESULTS": [
+      {
+        "cluster": "Decision-stage social proof",
+        "pieces": ["Customer Transformations (rank 5)", "FAQ (rank 15)"],
+        "internal_links": "Transformations → FAQ → Shop CTA"
+      }
+    ],
+    "PILLAR_ACTION_IMPLEMENTATION": [
+      {
+        "cluster": "Getting started (first-time buyers)",
+        "pieces": ["How to Start (rank 8)", "Not Seeing Results (rank 12)"],
+        "internal_links": "Start → 30-day milestone → Not Seeing Results (retention)"
+      },
+      {
+        "cluster": "Optimization (advanced)",
+        "pieces": ["Supplement Stacking (rank 9)", "Supplements + Diet (advanced topic)"],
+        "internal_links": "Start → Stacking (upsell path)"
+      }
+    ]
+  },
+  "keyword_map_by_buyer_stage": {
+    "awareness": [
+      {
+        "keyword": "why am I always tired",
+        "volume": "12,100+",
+        "target_piece": "Why You're Always Tired (rank 2)",
+        "cta": "learn more → energy guide"
+      },
+      {
+        "keyword": "weight loss myths",
+        "volume": "5,500+",
+        "target_piece": "Weight Loss Myths (rank 4)",
+        "cta": "learn what works → best supplements"
+      },
+      {
+        "keyword": "how to read supplement labels",
+        "volume": "1,100+",
+        "target_piece": "Reading Labels (rank 7)",
+        "cta": "trusted sources → our picks"
+      },
+      {
+        "keyword": "natural vs synthetic supplements",
+        "volume": "2,800+",
+        "target_piece": "Natural vs Synthetic (rank 17)",
+        "cta": "evidence-based guide → our philosophy"
+      }
+    ],
+    "consideration": [
+      {
+        "keyword": "best supplements for weight loss",
+        "volume": "8,900+",
+        "target_piece": "Best Supplements for Weight Loss (rank 1)",
+        "cta": "compare & shop"
+      },
+      {
+        "keyword": "best supplements for energy",
+        "volume": "6,600+",
+        "target_piece": "Best Supplements for Energy (rank 10)",
+        "cta": "compare & shop"
+      },
+      {
+        "keyword": "GLP-1 alternatives",
+        "volume": "2,200+",
+        "target_piece": "GLP-1 Alternatives (rank 6)",
+        "cta": "honest comparison → shop"
+      },
+      {
+        "keyword": "supplements vs GLP-1",
+        "volume": "2,900+",
+        "target_piece": "Supplements vs Prescription (rank 14)",
+        "cta": "decide & shop"
+      },
+      {
+        "keyword": "thermogenic supplements",
+        "volume": "3,600+",
+        "target_piece": "Thermogenic Supplements (rank 13)",
+        "cta": "best brands → shop"
+      },
+      {
+        "keyword": "recovery supplements",
+        "volume": "4,400+",
+        "target_piece": "Recovery Supplements (rank 16)",
+        "cta": "best stacks → shop"
+      },
+      {
+        "keyword": "Health & Care reviews",
+        "volume": "low, high conversion",
+        "target_piece": "Customer Transformations (rank 5) + FAQ (rank 15)",
+        "cta": "see results → shop"
+      }
+    ],
+    "decision": [
+      {
+        "keyword": "Health & Care",
+        "volume": "branded, high conversion",
+        "target_piece": "FAQ (rank 15)",
+        "cta": "answers → shop"
+      },
+      {
+        "keyword": "supplement startups",
+        "volume": "long-tail",
+        "target_piece": "How to Start (rank 8)",
+        "cta": "setup guide → first order"
+      },
+      {
+        "keyword": "customer testimonials supplements",
+        "volume": "low, high conversion",
+        "target_piece": "Customer Transformations (rank 5)",
+        "cta": "results proof → buy"
+      }
+    ],
+    "implementation": [
+      {
+        "keyword": "how to start supplements",
+        "volume": "2,200+",
+        "target_piece": "How to Start (rank 8)",
+        "cta": "step-by-step setup"
+      },
+      {
+        "keyword": "supplement stacking",
+        "volume": "680+",
+        "target_piece": "Supplement Stacking (rank 9)",
+        "cta": "recipes & combos"
+      },
+      {
+        "keyword": "why aren't my supplements working",
+        "volume": "1,800+",
+        "target_piece": "Not Seeing Results (rank 12)",
+        "cta": "troubleshoot & optimize"
+      }
+    ]
+  },
+  "publishing_cadence": {
+    "month_1": [
+      "Best Supplements for Weight Loss (rank 1)",
+      "Why You're Always Tired (rank 2)",
+      "Weight Loss Myths Debunked (rank 4)"
+    ],
+    "month_2": [
+      "How We Choose Supplements (rank 3)",
+      "Best Supplements for Energy (rank 10)",
+      "Reading Supplement Labels (rank 7)"
+    ],
+    "month_3": [
+      "GLP-1 Alternatives (rank 6)",
+      "How to Start (rank 8)",
+      "Customer Transformations (rank 5 — monthly ongoing)"
+    ],
+    "month_4": [
+      "Supplement Stacking (rank 9)",
+      "Thermogenic Supplements (rank 13)",
+      "Understanding Clinical Studies (rank 11)"
+    ],
+    "month_5": [
+      "Supplements vs Prescription (rank 14)",
+      "Recovery Supplements (rank 16)",
+      "Natural vs Synthetic (rank 17)"
+    ],
+    "month_6_onwards": [
+      "Monthly customer transformation features (rank 5 — ongoing)",
+      "Not Seeing Results (rank 12 — evergreen, promoted to existing customer email list)",
+      "FAQ updates & new topics from customer research"
+    ],
+    "notes": "Publish 3 major pieces per month. Interlink aggressively. Promote via email (nurture) and social (Instagram, Facebook). Monitor search rankings monthly; optimize underperforming pieces at month 3 and 6."
+  },
+  "content_differentiation": [
+    {
+      "what_competitors_do": "List '10 Best Supplements' with surface-level claims and affiliate links.",
+      "what_we_do_instead": "Explain the science, rank by clinical evidence, and show the mechanism of action. Include what we DON'T recommend and why. Builds authority."
+    },
+    {
+      "what_competitors_do": "Vague language ('This supplement changed my life').",
+      "what_we_do_instead": "Transparent metrics and timelines. 'Jane lost 22 lbs in 12 weeks using [specific stack] + diet + exercise.' Includes the diet/exercise part (honest)."
+    },
+    {
+      "what_competitors_do": "Ignore contradictions ('Natural is always better').",
+      "what_we_do_instead": "Challenge myths directly. 'The natural supplement is actually less bioavailable. Here's the study.' Bold, trusted, contrarian."
+    },
+    {
+      "what_competitors_do": "Hide curation process (just list bestsellers).",
+      "what_we_do_instead": "Transparency pillar shows HOW we choose, why we reject products, what our standards are. Unique to us, builds differentiation."
+    },
+    {
+      "what_competitors_do": "Target one audience (young gym-goers).",
+      "what_we_do_instead": "Inclusive 25-70 positioning. Content for busy professionals (energy), active people (recovery), and weight-loss seekers. Broader TAM."
+    }
+  ],
+  "promotion_channels": {
+    "organic_search": {
+      "tactic": "SEO — target keywords across all 5 pillars. Build internal link structure (hub/spoke). Publish at 3/month cadence.",
+      "goal": "Rank for 10-15 primary keywords + 20+ long-tail variants within 6 months."
+    },
+    "email_nurture": {
+      "tactic": "Segment by stage. Awareness (send educational pieces: Myths, Why Tired). Consideration (send buyer's guides: Best For Weight Loss, Best For Energy). Decision (send testimonials, FAQ, How to Start).",
+      "goal": "Nurture 80%+ of email list to purchase within 90 days."
+    },
+    "social_proof": {
+      "tactic": "Instagram & Facebook: post transformation stories, carousel guides, myth-busting graphics, quotes from guides.",
+      "goal": "Link to blog pieces. Build community engagement. Monthly customer feature."
+    },
+    "paid_social": {
+      "tactic": "Meta ads (Facebook/Instagram) + budget coordinated with /strategy-brief campaigns. Target awareness-stage content (Myths, Why Tired) to cold audiences. Testimonial/How to Start to warm audiences.",
+      "goal": "Blend organic + paid: organic search captures the 'high intent' buyer; paid amplifies awareness-stage content to build funnel."
+    },
+    "partnerships_collaborations": {
+      "tactic": "Guest post on fitness/health blogs (contribute 'Best Supplements' guide with backlinks to ours). Interview fitness influencers (link to our content). Reddit AMAs in r/fitness, r/loseit.",
+      "goal": "Build backlinks, referral traffic, authority signals."
+    }
+  },
+  "metrics_to_track": {
+    "organic_search": [
+      "keyword rankings (10 primary keywords, 20+ long-tail, monthly)",
+      "organic traffic to blog (monthly)",
+      "organic conversion rate (organic visitor → email signup or affiliate click, weekly)",
+      "average time on page per piece (engagement signal, monthly)"
+    ],
+    "email": [
+      "open rate by segment (awareness/consideration/decision, weekly)",
+      "click-through rate to blog pieces (weekly)",
+      "conversion rate from email → affiliate link click (weekly)",
+      "email subscriber growth (monthly)"
+    ],
+    "content_performance": [
+      "piece ranking by traffic (monthly)",
+      "piece ranking by affiliate conversions (monthly)",
+      "piece ranking by shareability (social shares + comments, monthly)",
+      "top exit pages (identify drop-off points, monthly)"
+    ],
+    "brand_authority": [
+      "mentions in health/fitness publications (quarterly)",
+      "backlinks to blog (monthly via Ahrefs/SEMrush)",
+      "social media mentions & sentiment (monthly via social listening)"
+    ]
+  },
+  "tools_required": [
+    "blog platform (Webflow, Ghost, or custom Next.js + Supabase)",
+    "SEO tool (Ahrefs, SEMrush, or Moz for keyword research + ranking tracking)",
+    "email platform (Klaviyo, ConvertKit, or Mailchimp for segmented nurture)",
+    "social content scheduling (Buffer, Later, or Meta's native scheduler)",
+    "analytics (Google Analytics 4 + Supabase for conversion tracking)"
+  ],
+  "content_production_workflow": {
+    "step_1_planning": "Define pillar + keyword + buyer stage + angle (1-2 hours)",
+    "step_2_research": "Gather studies, competitive benchmarks, customer insights (2-4 hours)",
+    "step_3_outline": "Create detailed outline with h2s, internal links, data visualizations (1 hour)",
+    "step_4_draft": "Write or AI-assist draft (using /creative skill) (2-3 hours)",
+    "step_5_science_check": "Verify claims against studies, fact-check (1 hour)",
+    "step_6_brand_voice_polish": "Ensure educational + bold + urgent + transparent tone (1 hour)",
+    "step_7_internal_linking": "Map to other pieces, craft CTAs (30 minutes)",
+    "step_8_publication": "Upload to blog, set publish date, schedule social/email (30 minutes)",
+    "step_9_tracking": "Set up GA4 goal, add to tracking spreadsheet (15 minutes)",
+    "total_time_per_piece": "9-13 hours",
+    "frequency_goal": "3 pieces/month = 27-39 hours/month = 6-10 hours/week for one writer + 2-3 hours/week for brand oversight"
+  },
+  "content_calendar_template": "Use template at clients/healthncare/data/content_calendar.csv (will be generated by /publish skill)"
+}

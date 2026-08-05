@@ -1,0 +1,2406 @@
+{
+  "client_slug": "healthncare",
+  "generated_at": "2026-08-05T18:36:39.868Z",
+  "brief_ref": "strategy_brief.json",
+  "voice_check": {
+    "restricted_words_screened": []
+  },
+  "scoring_rubric": "clarity / specificity / emotional_trigger / cta_strength on 0-10 each; composite is the average",
+  "limits": {
+    "hook": 60,
+    "primary_text": 500,
+    "primary_text_truncate": 125,
+    "headline": 40,
+    "description": 30
+  },
+  "valid_ctas": [
+    "SHOP_NOW",
+    "LEARN_MORE",
+    "SIGN_UP",
+    "GET_OFFER",
+    "BOOK_TRAVEL",
+    "BOOK_NOW",
+    "BUY_NOW",
+    "CONTACT_US",
+    "DOWNLOAD",
+    "GET_QUOTE",
+    "SUBSCRIBE",
+    "WATCH_MORE",
+    "APPLY_NOW",
+    "BUY_TICKETS",
+    "ORDER_NOW",
+    "GET_SHOWTIMES",
+    "SEE_MENU",
+    "CALL_NOW",
+    "MESSAGE_PAGE",
+    "DONATE_NOW",
+    "GET_DIRECTIONS",
+    "WHATSAPP_MESSAGE",
+    "SEND_MESSAGE",
+    "NO_BUTTON",
+    "REQUEST_TIME",
+    "INSTALL_MOBILE_APP",
+    "USE_APP",
+    "INSTALL_APP",
+    "PLAY_GAME",
+    "LISTEN_MUSIC",
+    "OPEN_LINK"
+  ],
+  "angles": [
+    {
+      "angle_id": "PAIN",
+      "name": "Problem-Agitate-Solve (PAS)",
+      "hook_archetype": "pain-led question",
+      "format": "single_image",
+      "direction": "Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Health & Care.",
+      "hooks": [
+        {
+          "hook": {
+            "text": "Tried every diet and still stuck?",
+            "length": 33,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 5,
+              "cta_strength": 5,
+              "overall": 5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "You've tried everything. Restrictive diets. Expensive gym memberships. Pills that don't work. It's exhausting. Health & Care supplements are clinically proven to work where others fail. Real weight loss. Real energy. No gimmicks.",
+              "length": 229,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Diet after diet, the scale doesn't budge. You're tired of wasted money and false promises. Health & Care uses science-backed ingredients that actually deliver results. Join thousands who finally got real weight loss results.",
+              "length": 224,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "Tired of being tired? Your weight isn't just about appearance—it's draining your energy, your confidence, your life. Health & Care changes that. Proven supplements. Affordable prices. Real transformation starts now.",
+              "length": 215,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 6,
+                "cta_strength": 6,
+                "overall": 5.8
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Stop Wasting Money on Fake Supplements",
+              "length": 38,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "The Supplement That Actually Works",
+              "length": 34,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Real Results. No Hype.",
+              "length": 22,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Diet after diet, the scale doesn't budge. You're tired of wasted money and false promises. Health & Care uses science-backed ingredients that actually deliver results. Join thousands who finally got real weight loss results.",
+            "headline": "Stop Wasting Money on Fake Supplements",
+            "cta": "SHOP_NOW",
+            "overall": 5.5
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "Supplements don't work for you?",
+            "length": 31,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 6,
+              "cta_strength": 5,
+              "overall": 5.3
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Most supplements are 90% filler. Health & Care is different. Every product is selected for clinical efficacy. Transparent ingredients. Real before/afters. Affordable prices that don't sacrifice quality.",
+              "length": 202,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 9,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "You've been burned before by supplements that promised everything and delivered nothing. Health & Care is built on research, not marketing. See the science. See the results. See the difference.",
+              "length": 193,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "The weight won't budge. Your energy is gone. You're skeptical of supplements—and rightfully so. But what if one actually worked? Health & Care proves it's possible.",
+              "length": 164,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 6,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Clinically Proven Supplements",
+              "length": 29,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "Science Over Hype",
+              "length": 17,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Finally, A Supplement That Works",
+              "length": 32,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Most supplements are 90% filler. Health & Care is different. Every product is selected for clinical efficacy. Transparent ingredients. Real before/afters. Affordable prices that don't sacrifice quality.",
+            "headline": "Science Over Hype",
+            "cta": "LEARN_MORE",
+            "overall": 5.6
+          },
+          "top_pick": true
+        },
+        {
+          "hook": {
+            "text": "Spending hundreds on weight loss with no results?",
+            "length": 49,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 6,
+              "specificity": 3,
+              "emotional_trigger": 5,
+              "cta_strength": 5,
+              "overall": 4.8
+            }
+          },
+          "primary_text": [
+            {
+              "text": "You've spent thousands. On programs. On products. On false hope. Health & Care brings scientific proof and affordability together. Lose weight without losing your savings.",
+              "length": 171,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "The weight-loss industry is built on empty promises and premium prices. Health & Care breaks the mold. Effective ingredients at prices that make sense. No miracle claims. Just real science.",
+              "length": 189,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "Your friends lost weight. Your family members have more energy. Why not you? Because you haven't found the right supplement yet. Health & Care changes everything.",
+              "length": 162,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 6,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Expensive Doesn't Mean Better",
+              "length": 29,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Affordable Health Transformation",
+              "length": 32,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "Premium Results. Honest Price",
+              "length": 29,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Your friends lost weight. Your family members have more energy. Why not you? Because you haven't found the right supplement yet. Health & Care changes everything.",
+            "headline": "Expensive Doesn't Mean Better",
+            "cta": "SHOP_NOW",
+            "overall": 5.4
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "Fed up with empty promises?",
+            "length": 27,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 5,
+              "cta_strength": 5,
+              "overall": 5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Supplement companies lie. Health & Care doesn't. Every claim backed by clinical research. Every product selected for efficacy. Your weight loss doesn't require marketing magic—it requires science.",
+              "length": 196,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "You deserve transparency. You deserve results. Health & Care delivers both. Clinically proven weight-loss supplements at honest prices. See the evidence. Try the difference.",
+              "length": 173,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "The diet industry profits from your failure. Health & Care profits from your success. Real supplements. Real results. Real transformation.",
+              "length": 138,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Proven By Science, Not Marketing",
+              "length": 32,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Transparent. Effective. Affordable.",
+              "length": 35,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "The Honest Supplement Brand",
+              "length": 27,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Supplement companies lie. Health & Care doesn't. Every claim backed by clinical research. Every product selected for efficacy. Your weight loss doesn't require marketing magic—it requires science.",
+            "headline": "The Honest Supplement Brand",
+            "cta": "SIGN_UP",
+            "overall": 5.5
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "Your energy shouldn't cost a fortune?",
+            "length": 37,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 6,
+              "cta_strength": 5,
+              "overall": 5.3
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Premium health doesn't have to mean premium price. Health & Care brings clinical-grade supplements to everyone. Lose weight. Gain energy. Reclaim your life—without breaking the bank.",
+              "length": 182,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Energy is everything. Confidence. Motivation. Quality time with family. But expensive supplements drain your wallet. Health & Care proves you don't have to choose between health and affordability.",
+              "length": 196,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+              "length": 182,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 9,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 6
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Health That's Affordable",
+              "length": 24,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Premium Supplements. Honest Prices.",
+              "length": 35,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Reclaim Your Energy—Affordably",
+              "length": 30,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 5,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+            "headline": "Health That's Affordable",
+            "cta": "SHOP_NOW",
+            "overall": 5.6
+          },
+          "top_pick": false
+        }
+      ],
+      "design_brief": {
+        "sizes": [
+          "1080x1080",
+          "1080x1920",
+          "1200x628"
+        ],
+        "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
+        "visual_direction": "Lead with the pain-led question. Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Health & Care."
+      }
+    },
+    {
+      "angle_id": "ASPIRATION",
+      "name": "Before & After Transformation",
+      "hook_archetype": "outcome-led visual",
+      "format": "single_image",
+      "direction": "Show the outcome from Before & After Transformation. Feature real customer results; focus on the emotional payoff (confidence, energy, freedom).",
+      "hooks": [
+        {
+          "hook": {
+            "text": "She lost 40 lbs and got her life back",
+            "length": 37,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 5,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 5.3
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Sarah tried everything. Then she found Health & Care. In 90 days: 40 lbs gone. Energy returned. Confidence transformed. This isn't a miracle—it's science. Clinically proven supplements. Real results. Your transformation starts now.",
+              "length": 231,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 8,
+                "emotional_trigger": 5,
+                "cta_strength": 6,
+                "overall": 6
+              }
+            },
+            {
+              "text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+              "length": 221,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 4,
+                "specificity": 8,
+                "emotional_trigger": 7,
+                "cta_strength": 7,
+                "overall": 6.5
+              }
+            },
+            {
+              "text": "One supplement changed everything. Not because of hype or gimmicks—because of clinical research and real ingredients. Join thousands of customers who transformed their bodies and reclaimed their lives.",
+              "length": 201,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.3
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Real Results. Real People.",
+              "length": 26,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "See What's Possible",
+              "length": 19,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "From Exhausted to Energized",
+              "length": 27,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+            "headline": "See What's Possible",
+            "cta": "SHOP_NOW",
+            "overall": 5.9
+          },
+          "top_pick": true
+        },
+        {
+          "hook": {
+            "text": "3 months. 35 lbs. One decision.",
+            "length": 31,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 6,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 5.5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Mark was skeptical. He'd tried everything. Then he gave Health & Care 90 days. The results: 35 lbs down, energy up, life transformed. Thousands of before/afters prove this works. Will you be next?",
+              "length": 196,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 8,
+                "emotional_trigger": 6,
+                "cta_strength": 5,
+                "overall": 6
+              }
+            },
+            {
+              "text": "The transformation is real. Not filtered. Not exaggerated. Just clinically proven supplements delivering clinically proven results. Your before/after could be next.",
+              "length": 164,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Energy was his biggest win. Not just weight loss—the ability to keep up with his kids, to feel confident again, to live fully. That's what Health & Care delivers.",
+              "length": 162,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Real Transformation in 90 Days",
+              "length": 30,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 7,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "See the Proof",
+              "length": 13,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 4,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "Results You Can Feel",
+              "length": 20,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.8
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Mark was skeptical. He'd tried everything. Then he gave Health & Care 90 days. The results: 35 lbs down, energy up, life transformed. Thousands of before/afters prove this works. Will you be next?",
+            "headline": "Results You Can Feel",
+            "cta": "SIGN_UP",
+            "overall": 5.8
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "She didn't just lose weight—she gained her confidence back",
+            "length": 58,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 6,
+              "specificity": 3,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 4.5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Jessica's before/after tells the story. 42 lbs gone. But the real transformation? Finally feeling comfortable in her own skin. Health & Care made it possible through clinically proven supplements and honest support.",
+              "length": 215,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 8,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "Weight is the symptom. Low confidence is the real problem. Health & Care addresses both. See how real customers transformed not just their bodies, but their lives.",
+              "length": 163,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "The journey from 'I can't' to 'I did' is powerful. Health & Care supplements deliver the science; your effort delivers the transformation. Together, they work.",
+              "length": 159,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Confidence Returns With Results",
+              "length": 31,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "The Real Transformation",
+              "length": 23,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Proven Results. Proven People.",
+              "length": 30,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Jessica's before/after tells the story. 42 lbs gone. But the real transformation? Finally feeling comfortable in her own skin. Health & Care made it possible through clinically proven supplements and honest support.",
+            "headline": "Confidence Returns With Results",
+            "cta": "SHOP_NOW",
+            "overall": 5.4
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "48 lbs down. Energy at an all-time high.",
+            "length": 40,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 6,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 5.5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Before: Exhausted, stuck, hopeless. After: 48 lbs lighter, energized, living fully. Health & Care supplements delivered the science. Michael delivered the commitment. Together: transformation.",
+              "length": 192,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 4,
+                "specificity": 8,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "These aren't filtered influencers—they're real customers with real results. Clinically proven supplements. Before/afters you can trust. Transformations you can replicate.",
+              "length": 170,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 4,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "The weight is gone. The energy is back. The life is better. That's the Health & Care promise, backed by thousands of proven transformations.",
+              "length": 140,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Real Results From Real People",
+              "length": 29,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Your Transformation Awaits",
+              "length": 26,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "See the Science in Action",
+              "length": 25,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Before: Exhausted, stuck, hopeless. After: 48 lbs lighter, energized, living fully. Health & Care supplements delivered the science. Michael delivered the commitment. Together: transformation.",
+            "headline": "See the Science in Action",
+            "cta": "SIGN_UP",
+            "overall": 5.6
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "She went from struggling to thriving",
+            "length": 36,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 6,
+              "cta_strength": 5,
+              "overall": 5.3
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Emma's journey: from 'I've tried everything' to 'I finally found what works.' 38 lbs gone. Energy restored. Life reclaimed. Health & Care made the difference. Your story could be next.",
+              "length": 184,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 8,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "Real before/afters prove it works. Not miracle results. Real, sustainable weight loss backed by clinical research and thousands of proven transformations.",
+              "length": 154,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 4.8
+              }
+            },
+            {
+              "text": "The pounds came off. The energy came back. The confidence returned. That's the Health & Care transformation. Ready to join thousands of success stories?",
+              "length": 152,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "From Struggling to Thriving",
+              "length": 27,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 6,
+                "cta_strength": 5,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "Real People. Real Results.",
+              "length": 26,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "Your Transformation Starts Here",
+              "length": 31,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Emma's journey: from 'I've tried everything' to 'I finally found what works.' 38 lbs gone. Energy restored. Life reclaimed. Health & Care made the difference. Your story could be next.",
+            "headline": "From Struggling to Thriving",
+            "cta": "SHOP_NOW",
+            "overall": 5.7
+          },
+          "top_pick": false
+        }
+      ],
+      "design_brief": {
+        "sizes": [
+          "1080x1080",
+          "1080x1920",
+          "1200x628"
+        ],
+        "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
+        "visual_direction": "Lead with the outcome-led visual. Show the outcome from Before & After Transformation. Feature real customer results; focus on the emotional payoff (confidence, energy, freedom)."
+      }
+    },
+    {
+      "angle_id": "PROOF",
+      "name": "Scientific Proof / Clinical Research",
+      "hook_archetype": "authority / social proof",
+      "format": "single_image",
+      "direction": "Establish credibility via Scientific Proof / Clinical Research. Lead with clinical backing, ingredient efficacy, research citations.",
+      "hooks": [
+        {
+          "hook": {
+            "text": "Clinically proven to work",
+            "length": 25,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 4.8
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Every Health & Care supplement is backed by clinical research. Not marketing hype—peer-reviewed studies. Proven ingredients. Transparent results. This is science, not sales.",
+              "length": 173,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+              "length": 216,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 9,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 6.3
+              }
+            },
+            {
+              "text": "Too many supplements hide behind vague claims. Health & Care shows the research. Read the studies. Understand the science. Make an informed decision based on evidence, not hype.",
+              "length": 177,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Backed by Clinical Research",
+              "length": 27,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "The Science of Weight Loss",
+              "length": 26,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "Evidence-Based Supplements",
+              "length": 26,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 4,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+            "headline": "The Science of Weight Loss",
+            "cta": "LEARN_MORE",
+            "overall": 5.6
+          },
+          "top_pick": true
+        },
+        {
+          "hook": {
+            "text": "The ingredients competitors won't show you",
+            "length": 42,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 5,
+              "cta_strength": 5,
+              "overall": 5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Proprietary blends hide the truth. Health & Care doesn't. See every ingredient. See the research. See why it works. Transparency builds trust. Trust builds results.",
+              "length": 164,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "Study after study proves these ingredients work. But most brands bury them in 'proprietary blends.' Health & Care shows you everything. Full transparency. Full efficacy. Full trust.",
+              "length": 181,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Clinical trials show: ingredient A delivers 12% body-weight reduction; ingredient B increases energy by 18%; ingredient C improves metabolism by 9%. Health & Care puts all three in every serving at research-backed doses.",
+              "length": 220,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 8,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Transparent Ingredients. Proven Results.",
+              "length": 40,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "See What's Really Inside",
+              "length": 24,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 6
+              }
+            },
+            {
+              "text": "No Proprietary Blends. Just Science.",
+              "length": 36,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Proprietary blends hide the truth. Health & Care doesn't. See every ingredient. See the research. See why it works. Transparency builds trust. Trust builds results.",
+            "headline": "See What's Really Inside",
+            "cta": "LEARN_MORE",
+            "overall": 5.6
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "Research-backed, not marketing-driven",
+            "length": 37,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 4.8
+            }
+          },
+          "primary_text": [
+            {
+              "text": "The supplement industry spends billions on marketing. Health & Care spends it on research. Every formula tested. Every ingredient verified. Every result documented. This is science.",
+              "length": 181,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "Peer-reviewed studies prove it. Transparent results prove it. Real before/afters prove it. Health & Care supplements work—backed by the research competitors won't show you.",
+              "length": 172,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Marketing claims fade. Scientific evidence lasts. Health & Care invests in the latter. Clinically proven supplements. Research-backed results. No hype.",
+              "length": 151,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Proven by Science. Tested. Verified.",
+              "length": 36,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "The Research Behind the Results",
+              "length": 31,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Clinical Backing. Real Results.",
+              "length": 31,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Peer-reviewed studies prove it. Transparent results prove it. Real before/afters prove it. Health & Care supplements work—backed by the research competitors won't show you.",
+            "headline": "Proven by Science. Tested. Verified.",
+            "cta": "SHOP_NOW",
+            "overall": 5.3
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "The weight-loss ingredient doctors recommend",
+            "length": 44,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 6,
+              "specificity": 3,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 4.5
+            }
+          },
+          "primary_text": [
+            {
+              "text": "When doctors recommend weight-loss supplements, they point to clinical research. Health & Care formulas use the same ingredients, at the same studied doses, with the same proven results. Doctor-approved science.",
+              "length": 211,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "You want results. You also want to know it's safe and effective. Clinical research on every ingredient. Documentation of every study. Transparency on every claim. That's the Health & Care difference.",
+              "length": 199,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "The studies are clear. This ingredient delivers measurable weight loss and sustained energy. Most brands cut corners on the dose. Health & Care doesn't. Research-backed quantities. Research-backed results.",
+              "length": 205,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Doctor-Recommended Ingredients",
+              "length": 30,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 4,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 4.8
+              }
+            },
+            {
+              "text": "The Research Proves It",
+              "length": 22,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Clinically Dosed for Results",
+              "length": 28,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "You want results. You also want to know it's safe and effective. Clinical research on every ingredient. Documentation of every study. Transparency on every claim. That's the Health & Care difference.",
+            "headline": "The Research Proves It",
+            "cta": "LEARN_MORE",
+            "overall": 5.4
+          },
+          "top_pick": false
+        },
+        {
+          "hook": {
+            "text": "Clinically superior to the competition",
+            "length": 38,
+            "limit": 60,
+            "over_limit": false,
+            "compliant": true,
+            "restricted_hits": [],
+            "scores": {
+              "clarity": 7,
+              "specificity": 3,
+              "emotional_trigger": 4,
+              "cta_strength": 5,
+              "overall": 4.8
+            }
+          },
+          "primary_text": [
+            {
+              "text": "Head-to-head studies show it: Health & Care ingredients outperform the competition. Higher efficacy. Better safety profile. Same price. This is what research-backed transparency delivers.",
+              "length": 187,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5
+              }
+            },
+            {
+              "text": "Most brands won't show you the studies. Health & Care does. Compare the research. See why our formulas win on efficacy, safety, and value.",
+              "length": 138,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 5,
+                "specificity": 6,
+                "emotional_trigger": 5,
+                "cta_strength": 7,
+                "overall": 5.8
+              }
+            },
+            {
+              "text": "Clinical trials don't lie. In every category—weight loss, energy, metabolism, safety—Health & Care formulas deliver superior results backed by peer-reviewed research. See the evidence.",
+              "length": 184,
+              "limit": 500,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 4,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 7,
+                "overall": 5
+              }
+            }
+          ],
+          "headlines": [
+            {
+              "text": "Clinically Superior Formula",
+              "length": 27,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 5,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            },
+            {
+              "text": "Proven Better Than the Rest",
+              "length": 27,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 7,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.5
+              }
+            },
+            {
+              "text": "The Research Speaks for Itself",
+              "length": 30,
+              "limit": 40,
+              "over_limit": false,
+              "compliant": true,
+              "restricted_hits": [],
+              "scores": {
+                "clarity": 6,
+                "specificity": 6,
+                "emotional_trigger": 4,
+                "cta_strength": 5,
+                "overall": 5.3
+              }
+            }
+          ],
+          "ctas": [
+            {
+              "type": "SHOP_NOW",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "LEARN_MORE",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            },
+            {
+              "type": "SIGN_UP",
+              "valid": true,
+              "scores": {
+                "clarity": 7,
+                "specificity": 3,
+                "emotional_trigger": 4,
+                "cta_strength": 9,
+                "overall": 5.8
+              }
+            }
+          ],
+          "best_combo": {
+            "primary": "Most brands won't show you the studies. Health & Care does. Compare the research. See why our formulas win on efficacy, safety, and value.",
+            "headline": "Proven Better Than the Rest",
+            "cta": "SHOP_NOW",
+            "overall": 5.5
+          },
+          "top_pick": false
+        }
+      ],
+      "design_brief": {
+        "sizes": [
+          "1080x1080",
+          "1080x1920",
+          "1200x628"
+        ],
+        "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
+        "visual_direction": "Lead with the authority / social proof. Establish credibility via Scientific Proof / Clinical Research. Lead with clinical backing, ingredient efficacy, research citations."
+      }
+    }
+  ],
+  "summary": {
+    "total_variants": 105,
+    "non_compliant": 0,
+    "over_limit": 0,
+    "issues": []
+  }
+}

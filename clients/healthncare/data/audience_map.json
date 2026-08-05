@@ -1,0 +1,332 @@
+{
+  "client_slug": "healthncare",
+  "generated_at": "2026-08-05T16:10:05.712Z",
+  "mode": "live",
+  "geo": {
+    "primary": "US",
+    "targets": [
+      "US",
+      "Canada"
+    ],
+    "radius": null,
+    "center": null
+  },
+  "age_gender": {
+    "age_min": 25,
+    "age_max": 70,
+    "genders": [
+      "all"
+    ]
+  },
+  "seed_terms_used": [
+    "supplements",
+    "weight-loss",
+    "medicines",
+    "affiliate",
+    "maxweb",
+    "clickbank",
+    "supplements weight-loss",
+    "supplements weight-loss medicines",
+    "weight-loss medicines",
+    "weight-loss medicines affiliate",
+    "medicines affiliate",
+    "medicines affiliate via",
+    "affiliate via",
+    "affiliate via maxweb",
+    "via maxweb",
+    "via maxweb clickbank",
+    "maxweb clickbank",
+    "none",
+    "generic",
+    "reseller",
+    "none generic",
+    "none generic reseller",
+    "generic reseller",
+    "struggling",
+    "weight"
+  ],
+  "interest_clusters": [
+    {
+      "id": "INT_SUPPLEMENTS",
+      "label": "supplements",
+      "interest_stack": [
+        "supplements"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "supplements",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 0
+    },
+    {
+      "id": "INT_WEIGHT_LOSS",
+      "label": "weight-loss",
+      "interest_stack": [
+        "weight-loss"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "weight-loss",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 1
+    },
+    {
+      "id": "INT_MEDICINES",
+      "label": "medicines",
+      "interest_stack": [
+        "medicines"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "medicines",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 2
+    },
+    {
+      "id": "INT_AFFILIATE",
+      "label": "affiliate",
+      "interest_stack": [
+        "affiliate"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "affiliate",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 3
+    },
+    {
+      "id": "INT_MAXWEB",
+      "label": "maxweb",
+      "interest_stack": [
+        "maxweb"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "maxweb",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 4
+    }
+  ],
+  "behavior_segments": [
+    {
+      "name": "Engaged Shoppers",
+      "rationale": "Default — general purchase intent"
+    }
+  ],
+  "retargeting_layers": [
+    {
+      "name": "RT_PIX_30D",
+      "source": "pixel",
+      "source_id": null,
+      "window_days": 30,
+      "rationale": "Recent site visitors — highest warm intent",
+      "verified": false
+    },
+    {
+      "name": "RT_PIX_90D",
+      "source": "pixel",
+      "source_id": null,
+      "window_days": 90,
+      "rationale": "Mid-cycle warm pool",
+      "verified": false
+    },
+    {
+      "name": "RT_PIX_180D",
+      "source": "pixel",
+      "source_id": null,
+      "window_days": 180,
+      "rationale": "Long-cycle re-engagement",
+      "verified": false
+    },
+    {
+      "name": "RT_PAGE_365D",
+      "source": "page_and_ig_engagers",
+      "source_id": {
+        "page": null,
+        "ig": null
+      },
+      "window_days": 365,
+      "rationale": "Organic engagement → paid retarget",
+      "verified": false
+    },
+    {
+      "name": "RT_ATC_30D_NONPURCH",
+      "source": "pixel_atc_minus_purchase",
+      "source_id": null,
+      "window_days": 30,
+      "rationale": "High-intent cart abandoners",
+      "verified": false
+    }
+  ],
+  "lookalike_strategy": {
+    "seed": null,
+    "health": "skipped_offline",
+    "fallback_note": "offline mode",
+    "sizes_pct": [
+      1,
+      3,
+      5
+    ],
+    "countries": [
+      "US",
+      "Canada"
+    ]
+  },
+  "exclusions": [
+    {
+      "type": "custom_audience",
+      "name": "all_time_purchasers",
+      "rationale": "Avoid re-prospecting buyers in cold campaigns"
+    },
+    {
+      "type": "custom_audience",
+      "name": "employees_and_insiders",
+      "rationale": "Exclude staff if available (skip if profile doesn't specify)"
+    }
+  ],
+  "diagnostics": {
+    "seed_count": 25,
+    "cluster_count": 5,
+    "custom_audiences_found": null,
+    "issues": [
+      "ad_account_id is TBD — ran in offline mode; rerun once real ID is set"
+    ]
+  },
+  "clusters": [
+    {
+      "id": "INT_SUPPLEMENTS",
+      "label": "supplements",
+      "interest_stack": [
+        "supplements"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "supplements",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 0,
+      "behavioral_add_ons": []
+    },
+    {
+      "id": "INT_WEIGHT_LOSS",
+      "label": "weight-loss",
+      "interest_stack": [
+        "weight-loss"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "weight-loss",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 1,
+      "behavioral_add_ons": []
+    },
+    {
+      "id": "INT_MEDICINES",
+      "label": "medicines",
+      "interest_stack": [
+        "medicines"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "medicines",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 2,
+      "behavioral_add_ons": []
+    },
+    {
+      "id": "INT_AFFILIATE",
+      "label": "affiliate",
+      "interest_stack": [
+        "affiliate"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "affiliate",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 3,
+      "behavioral_add_ons": []
+    },
+    {
+      "id": "INT_MAXWEB",
+      "label": "maxweb",
+      "interest_stack": [
+        "maxweb"
+      ],
+      "interests": [
+        {
+          "id": null,
+          "name": "maxweb",
+          "size_lower": null,
+          "size_upper": null
+        }
+      ],
+      "size_estimate_lower": null,
+      "size_estimate_upper": null,
+      "structure_only": true,
+      "anchor_index": 4,
+      "behavioral_add_ons": []
+    }
+  ]
+}

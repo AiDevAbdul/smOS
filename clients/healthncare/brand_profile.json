@@ -1,0 +1,194 @@
+{
+  "client_slug": "healthncare",
+  "status": "complete",
+  "strategy": {
+    "purpose": "To help busy adults reclaim their energy and confidence through accessible, science-backed wellness solutions.",
+    "mission": "We curate and provide effective supplements and weight-loss medicines to help people transform their health affordably.",
+    "vision": "A world where proven, effective wellness products are accessible to everyone seeking sustainable health transformation.",
+    "values": [
+      "Efficacy — results matter more than marketing",
+      "Accessibility — affordable, fast, and available to all",
+      "Transparency — science-backed, no false promises",
+      "Empowerment — we help people take control of their health",
+      "Trust — reliable products people can depend on"
+    ],
+    "persona": {
+      "demographics": "Age 25–70, US and Canada, balanced gender, health/fitness conscious",
+      "psychographics": {
+        "motivation": "Regain energy, lose weight sustainably, feel confident again",
+        "primary_fear": "Wasting money on products that don't work or making false promises",
+        "buying_trigger": "Social proof (testimonials, before/afters), scientific evidence, affordable price point",
+        "job_to_be_done": "Transform my body and energy without the guesswork or the hype"
+      }
+    },
+    "archetype": {
+      "primary": "magician",
+      "secondary": "hero"
+    },
+    "value_proposition": "Skip the supplement trial-and-error hunt. Our science-backed, curated selection gets you real energy and weight-loss results affordably—backed by research, not marketing.",
+    "differentiation": "In a crowded affiliate space, we win on curation (efficacy-first selection), transparency (no miracle claims), and affordability ($100–$300 price point). We are the thinking person's weight-loss marketplace.",
+    "positioning_statement": "For busy adults aged 25–70 seeking sustained energy and weight loss, Health & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization.",
+    "messaging_pillars": [
+      "Science-Backed Selection — We choose supplements backed by clinical research, not marketing noise",
+      "Real Transformation — Proven results via testimonials and before/afters from real customers",
+      "Affordable Access — Effective health solutions at $100–$300, not $500+ markup",
+      "Transparent Promises — No miracle claims, no hype—just honest, science-backed efficacy",
+      "Reclaim Your Energy — Lose the weight, reclaim your life, your confidence, your power"
+    ],
+    "essence": "Proven. Accessible. Real.",
+    "promise": "We guarantee measurable energy and weight-loss results, or your money back within 30 days.",
+    "positioning_approved_at": "2026-08-05T15:30:43.831Z"
+  },
+  "verbal": {
+    "name": "Health & Care",
+    "name_candidates": [
+      {
+        "name": "Health & Care",
+        "domain_com_available": false,
+        "domain": "healthcare.com",
+        "trademark_knockout_clear": null,
+        "trademark_note": "no USPTO_ODP_API_KEY — verify manually at https://tmsearch.uspto.gov (set USPTO_ODP_API_KEY to automate)",
+        "handles_available": {
+          "tiktok": null,
+          "facebook": null,
+          "instagram": null,
+          "linkedin": null,
+          "x": null
+        },
+        "attorney_clearance_flagged": true
+      }
+    ],
+    "name_screening": {
+      "domain_com_available": false,
+      "trademark_knockout_clear": null,
+      "handles_available": {
+        "tiktok": null,
+        "facebook": null,
+        "instagram": null,
+        "linkedin": null,
+        "x": null
+      },
+      "attorney_clearance_flagged": true
+    },
+    "name_approved_at": "2026-08-05T15:35:17.664Z",
+    "tagline": "Proven. Accessible. Real.",
+    "voice": {
+      "traits": [
+        "Educational — explain the science, no hype",
+        "Bold — confident in results, unafraid of bold claims backed by data",
+        "Urgent — time is of the essence; energy and weight are quality-of-life issues",
+        "Transparent — honest about what works, what doesn't, why"
+      ],
+      "spectrums": null,
+      "do": [
+        "Lead with science and research",
+        "Use before/afters and testimonials as proof",
+        "Acknowledge pain points (tired, struggling, frustrated)",
+        "Promise transformation backed by efficacy",
+        "Use 'you' language (you'll feel, you'll transform)",
+        "Emphasize affordability vs. alternatives"
+      ],
+      "dont": [
+        "Never say 'miracle,' 'guaranteed,' 'cure,' 'best ever'",
+        "Never use fake urgency ('only 3 spots left')",
+        "Never claim to treat or diagnose medical conditions",
+        "Never disparage competitors or other brands",
+        "Never use vague wellness language ('life-changing' without proof)",
+        "Never oversell — stick to what the products deliver"
+      ]
+    },
+    "messaging_house": {
+      "roof": null,
+      "walls": [],
+      "foundation": []
+    },
+    "elevator_pitch": "Health & Care is the curated marketplace for weight-loss and energy supplements. We choose products backed by clinical research, not marketing hype. Real results, affordable prices, proven by thousands of happy customers.",
+    "boilerplate": "Health & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically proven products at $100–$300, with a 30-day money-back guarantee. Available in the US and Canada."
+  },
+  "visual": {
+    "moodboard_url": null,
+    "logo": {
+      "primary_url": "clients/healthncare/brand/logo_primary.jpeg",
+      "mark_url": null,
+      "wordmark_url": null,
+      "mono_url": null,
+      "reverse_url": null,
+      "svg_url": null,
+      "clear_space": "20px minimum on all sides",
+      "min_size": "64px"
+    },
+    "logo_approved_at": "2026-08-05T15:45:01.008Z",
+    "colors": {
+      "primary": "#0066CC",
+      "secondary": "#20B2AA",
+      "accent": "#34C759",
+      "neutrals": [
+        "#1D1D1F",
+        "#636366",
+        "#F5F5F7",
+        "#FFFFFF"
+      ]
+    },
+    "typography": {
+      "heading": "Poppins Bold (48-36px for display/H1, 24px for H2, 600-700 weight)",
+      "body": "Inter Regular (16-18px body, 14px small, 1.5-1.6 line height)",
+      "scale": {
+        "display": "48px, bold, 1.1 line-height",
+        "h1": "36px, bold, 1.2 line-height",
+        "h2": "24px, 600, 1.3 line-height",
+        "body_lg": "18px, 400, 1.5 line-height",
+        "body": "16px, 400, 1.6 line-height",
+        "body_sm": "14px, 400, 1.5 line-height",
+        "caption": "12px, 500, 1.4 line-height"
+      }
+    },
+    "imagery_style": "Real people, authentic before/afters, diverse (25-70 age range). Warm lighting, no stock clichés. Color grading: warm saturation on skin tones, complements blue+teal palette. Layout: clean, spacious, medical authority without coldness.",
+    "iconography": "Minimal stroke-based icons (Feather/Lucide style, modified). Rounded corners, 2px consistent stroke. Energy bolt (green #34C759), leaf (teal #20B2AA), checkmark & shield (blue #0066CC).",
+    "ai_generated": false
+  },
+  "guidelines": {
+    "doc_url": "/Users/apple/abdul/smOS/clients/healthncare/brand_book.html",
+    "pdf_url": "/Users/apple/abdul/smOS/clients/healthncare/brand_book.pdf",
+    "version": "2026-08-05",
+    "generated_at": "2026-08-05T15:55:13.926Z"
+  },
+  "social": {
+    "profile_picture_url": "clients/healthncare/brand/social/profile_picture.png",
+    "fb_cover_url": "clients/healthncare/brand/social/cover_photo.png",
+    "ig_highlight_covers": [
+      {
+        "category": "About",
+        "url": "clients/healthncare/brand/social/highlight_about.png"
+      },
+      {
+        "category": "Products",
+        "url": "clients/healthncare/brand/social/highlight_products.png"
+      },
+      {
+        "category": "Results",
+        "url": "clients/healthncare/brand/social/highlight_results.png"
+      },
+      {
+        "category": "Science",
+        "url": "clients/healthncare/brand/social/highlight_science.png"
+      },
+      {
+        "category": "FAQ",
+        "url": "clients/healthncare/brand/social/highlight_faq.png"
+      }
+    ],
+    "templates": [
+      "quote: Pull-quote in brand voice (Poppins Bold, 36-48px on gradient blue-to-teal background)",
+      "tip: Educational carousel cover (1080×1350) with header, stat, and teal CTA",
+      "promo: Product image + price + Shop Now CTA button in primary blue",
+      "testimonial: Before/after image + quote, blue frame with teal accent",
+      "story-cta: Vertical story (1080×1920) with safe margins (top 250px, bottom 310px)"
+    ],
+    "link_in_bio": "https://healthncare.com",
+    "bios": {
+      "instagram": "Health & Care · Science-Backed Supplements\nClinically proven weight loss & energy.\nNo hype. No fluff. Just results.\nShop now →",
+      "facebook": "Tired of supplements that don't work? Health & Care is the curated marketplace of science-backed weight-loss and energy solutions at prices that actually make sense. Real results backed by research."
+    },
+    "branded_hashtag": "#RealTransformation"
+  }
+}

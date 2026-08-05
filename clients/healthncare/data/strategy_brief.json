@@ -1,0 +1,203 @@
+{
+  "slug": "healthncare",
+  "generated_at": "2026-08-05T16:11:45.307Z",
+  "inputs_used": {
+    "profile": true,
+    "audit": false,
+    "competitor_intel": true,
+    "audience_map": true
+  },
+  "campaign_type": "manual",
+  "asc": null,
+  "campaign_type_reason": "not an e-commerce business — manual audience-tree campaign structure",
+  "objective_hierarchy": [
+    {
+      "phase": "A",
+      "start_day": 0,
+      "objective": "OUTCOME_TRAFFIC",
+      "reason": "pixel learning — start lighter-funnel, graduate after 200+ events"
+    },
+    {
+      "phase": "B",
+      "start_day": 14,
+      "objective": "OUTCOME_SALES",
+      "reason": "promote to conversion objective once pixel has signal"
+    },
+    {
+      "phase": "C",
+      "start_day": 21,
+      "objective": "OUTCOME_SALES",
+      "reason": "scale into lookalike + second cluster"
+    }
+  ],
+  "budget_allocation": {
+    "monthly_budget": 1000,
+    "daily_total": 33.33,
+    "split": {
+      "cold_pct": 0.6,
+      "warm_pct": 0.25,
+      "lal_pct": 0.15
+    },
+    "adsets": [
+      {
+        "audience_id": "BROAD",
+        "audience_label": "BROAD",
+        "role": "cold",
+        "daily_budget": 6.67,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "INT_SUPPLEMENTS",
+        "audience_label": "supplements",
+        "role": "cold",
+        "daily_budget": 6.67,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "INT_WEIGHT_LOSS",
+        "audience_label": "weight-loss",
+        "role": "cold",
+        "daily_budget": 6.67,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "RT_PIX_30D",
+        "audience_label": "RT_PIX_30D",
+        "role": "warm",
+        "daily_budget": 4.17,
+        "needs_approval": false
+      },
+      {
+        "audience_id": "RT_PIX_90D",
+        "audience_label": "RT_PIX_90D",
+        "role": "warm",
+        "daily_budget": 4.17,
+        "needs_approval": false
+      }
+    ]
+  },
+  "audience_priority": [
+    {
+      "priority": 1,
+      "id": "BROAD",
+      "source": "broad",
+      "reason": "no-interest baseline"
+    },
+    {
+      "priority": 2,
+      "id": "INT_SUPPLEMENTS",
+      "source": "interest_cluster",
+      "label": "supplements"
+    },
+    {
+      "priority": 3,
+      "id": "INT_WEIGHT_LOSS",
+      "source": "interest_cluster",
+      "label": "weight-loss"
+    },
+    {
+      "priority": 4,
+      "id": "RT_PIX_30D",
+      "source": "retargeting",
+      "label": "RT_PIX_30D"
+    },
+    {
+      "priority": 5,
+      "id": "RT_PIX_90D",
+      "source": "retargeting",
+      "label": "RT_PIX_90D"
+    }
+  ],
+  "creative_angles": [
+    {
+      "angle_id": "PAIN",
+      "name": "PAIN",
+      "angle": "Problem-Agitate-Solve (PAS)",
+      "hook_archetype": "Problem-led question",
+      "format": "single_image",
+      "prompt": "Lead with the pain in 'Problem-Agitate-Solve (PAS)'. "
+    },
+    {
+      "angle_id": "ASPIRATION",
+      "name": "ASPIRATION",
+      "angle": "Before & After Transformation",
+      "hook_archetype": "Outcome-led visual",
+      "format": "single_image",
+      "prompt": "Show the outcome from 'Before & After Transformation'. "
+    },
+    {
+      "angle_id": "PROOF",
+      "name": "PROOF",
+      "angle": "Scientific Proof / Clinical Research",
+      "hook_archetype": "Authority / social proof",
+      "format": "single_image",
+      "prompt": "Establish credibility via 'Scientific Proof / Clinical Research'. "
+    }
+  ],
+  "success_metrics": {
+    "cold": {
+      "ctr_target": 0.01,
+      "cpm_ceiling": 30,
+      "cpa_target": 50,
+      "roas_target": 1.5
+    },
+    "warm": {
+      "cpa_target": 30,
+      "roas_target": 3
+    },
+    "scale_gate": {
+      "rule": "3 consecutive days ROAS > target before any budget increase",
+      "consecutive_days": 3,
+      "target_metric": "roas"
+    },
+    "pause_floors": {
+      "cpa_multiplier": 3,
+      "ctr_floor": 0.005,
+      "frequency_ceiling": 4
+    }
+  },
+  "calendar": [
+    {
+      "week": 1,
+      "actions": [
+        "Launch Phase A — OUTCOME_TRAFFIC",
+        "3 creatives × 2 audiences",
+        "Daily monitoring; no scaling decisions"
+      ]
+    },
+    {
+      "week": 2,
+      "actions": [
+        "Kill underperformers per pause thresholds",
+        "Refresh worst-performing creative",
+        "Begin reviewing audience-level signals"
+      ]
+    },
+    {
+      "week": 3,
+      "actions": [
+        "Begin Phase B — OUTCOME_SALES",
+        "Continue cold prospecting",
+        "Evaluate scaling gate (3-day ROAS > target)"
+      ]
+    },
+    {
+      "week": 4,
+      "actions": [
+        "Begin Phase C — OUTCOME_SALES",
+        "Launch LAL 1% if gate passed",
+        "Plan month-2 budget and creative refresh"
+      ]
+    }
+  ],
+  "assumptions": [
+    "No audit_raw.json found — running with profile-only assumptions; audit signals not factored in."
+  ],
+  "excluded_angles": [],
+  "approval": {
+    "status": "approved",
+    "approved_by": "user",
+    "approved_at": "2026-08-05T18:40:00.000Z",
+    "discord_message_id": null
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Health & Care",
+  "tagline": "Proven. Accessible. Real.",
+  "voice": {
+    "traits": [
+      "Educational — explain the science, no hype",
+      "Bold — confident in results, unafraid of bold claims backed by data",
+      "Urgent — time is of the essence; energy and weight are quality-of-life issues",
+      "Transparent — honest about what works, what doesn't, why"
+    ],
+    "tone_spectrum": {
+      "formal_casual": "Casual-to-mid (friendly but credible, not stuffy)",
+      "serious_playful": "Serious (health transformation is serious business)",
+      "expert_approachable": "Expert (science-backed, but explain simply so anyone gets it)",
+      "emotional_rational": "Rational with emotional payoff (lead with science, land on 'feel great again')"
+    },
+    "do": [
+      "Lead with science and research",
+      "Use before/afters and testimonials as proof",
+      "Acknowledge pain points (tired, struggling, frustrated)",
+      "Promise transformation backed by efficacy",
+      "Use 'you' language (you'll feel, you'll transform)",
+      "Emphasize affordability vs. alternatives"
+    ],
+    "dont": [
+      "Never say 'miracle,' 'guaranteed,' 'cure,' 'best ever'",
+      "Never use fake urgency ('only 3 spots left')",
+      "Never claim to treat or diagnose medical conditions",
+      "Never disparage competitors or other brands",
+      "Never use vague wellness language ('life-changing' without proof)",
+      "Never oversell — stick to what the products deliver"
+    ]
+  },
+  "messaging_house": {
+    "headline_theme": "Transform Your Energy, Reclaim Your Life",
+    "subheading_theme": "Science-Backed Supplements. Real Results. Affordable.",
+    "social_opener": "Tired of supplements that don't work? Science proves ours do.",
+    "email_subject_theme": "Get your energy back [specific benefit]",
+    "cta_primary": "Shop Now",
+    "cta_secondary": "See Results"
+  },
+  "elevator_pitch": "Health & Care is the curated marketplace for weight-loss and energy supplements. We choose products backed by clinical research, not marketing hype. Real results, affordable prices, proven by thousands of happy customers.",
+  "boilerplate": "Health & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically proven products at $100–$300, with a 30-day money-back guarantee. Available in the US and Canada.",
+  "positioning_tie": "For busy adults aged 25–70 seeking sustained energy and weight loss, Health & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization."
+}

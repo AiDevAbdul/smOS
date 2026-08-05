@@ -1,0 +1,39 @@
+{
+  "purpose": "To help busy adults reclaim their energy and confidence through accessible, science-backed wellness solutions.",
+  "mission": "We curate and provide effective supplements and weight-loss medicines to help people transform their health affordably.",
+  "vision": "A world where proven, effective wellness products are accessible to everyone seeking sustainable health transformation.",
+  "values": [
+    "Efficacy — results matter more than marketing",
+    "Accessibility — affordable, fast, and available to all",
+    "Transparency — science-backed, no false promises",
+    "Empowerment — we help people take control of their health",
+    "Trust — reliable products people can depend on"
+  ],
+  "persona": {
+    "demographics": "Age 25–70, US and Canada, balanced gender, health/fitness conscious",
+    "psychographics": {
+      "motivation": "Regain energy, lose weight sustainably, feel confident again",
+      "primary_fear": "Wasting money on products that don't work or making false promises",
+      "buying_trigger": "Social proof (testimonials, before/afters), scientific evidence, affordable price point",
+      "job_to_be_done": "Transform my body and energy without the guesswork or the hype"
+    }
+  },
+  "archetype": {
+    "primary": "magician",
+    "primary_rationale": "The customer's deepest desire in the weight-loss category is transformation and results. The Magician archetype (transformation, make dreams real) captures this — people want visible, tangible change in their body and energy. Secondary Hero energy (mastery, empowerment) reinforces personal agency.",
+    "secondary": "hero",
+    "secondary_rationale": "The Hero archetype adds the element of personal mastery — customers want to feel in control of their health transformation, not passive consumers."
+  },
+  "positioning_statement": "For busy adults aged 25–70 seeking sustained energy and weight loss, Health & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization.",
+  "value_proposition": "Skip the supplement trial-and-error hunt. Our science-backed, curated selection gets you real energy and weight-loss results affordably—backed by research, not marketing.",
+  "differentiation": "In a crowded affiliate space, we win on curation (efficacy-first selection), transparency (no miracle claims), and affordability ($100–$300 price point). We are the thinking person's weight-loss marketplace.",
+  "messaging_pillars": [
+    "Science-Backed Selection — We choose supplements backed by clinical research, not marketing noise",
+    "Real Transformation — Proven results via testimonials and before/afters from real customers",
+    "Affordable Access — Effective health solutions at $100–$300, not $500+ markup",
+    "Transparent Promises — No miracle claims, no hype—just honest, science-backed efficacy",
+    "Reclaim Your Energy — Lose the weight, reclaim your life, your confidence, your power"
+  ],
+  "essence": "Proven. Accessible. Real.",
+  "promise": "We guarantee measurable energy and weight-loss results, or your money back within 30 days."
+}
