@@ -501,22 +501,9 @@ const bundleStyles = `<style>
   color: var(--ds-line);
 }
 
-/* Mobile: Vertical layout */
+/* Mobile: sidebar collapses to a capped, independently-scrolling top drawer
+   (base sizing/height rules live in smos-design-system.css @760px). */
 @media (max-width: 768px) {
-  .ds-hubnav {
-    flex-direction: column;
-    overflow-y: auto;
-    max-height: 60vh;
-  }
-
-  .ds-hubnav__group {
-    gap: 4px;
-  }
-
-  .ds-hubnav__btn {
-    font-size: 14px;
-  }
-
   .ds-hubnav__group-header {
     position: sticky;
     top: 0;
@@ -525,14 +512,11 @@ const bundleStyles = `<style>
     margin-bottom: 4px;
   }
 
-  .ds-viewer-breadcrumb {
-    display: none;
+  .ds-hubnav__btn {
+    font-size: 14px;
   }
-}
 
-/* Collapse bottom nav on small screens */
-@media (max-width: 640px) {
-  .ds-hubnav--bottom {
+  .ds-viewer-breadcrumb {
     display: none;
   }
 }
@@ -551,6 +535,7 @@ ${bundleStyles}
     </div>
     ${progressHtml}
   </header>
+  <div class="ds-hub__body">
   ${menuHtml("top")}
   <main class="ds-viewer-wrap ds-anim" id="viewer-main" tabindex="-1" style="animation-delay:.1s">
     <div class="ds-viewer-breadcrumb">
@@ -559,6 +544,7 @@ ${bundleStyles}
     <iframe class="ds-viewer" id="viewer" title="Report viewer" src="_roadmap.html"></iframe>
     <div class="ds-viewer__loader" id="loader" aria-hidden="true"><div class="ds-spinner"></div></div>
   </main>
+  </div>
 </div>
 <script>
   (function () {
