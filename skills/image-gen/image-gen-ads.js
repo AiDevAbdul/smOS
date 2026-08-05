@@ -117,7 +117,7 @@ function isTargetable(angle) {
   return !angle.image_url && !isCarouselFormat(angle);
 }
 
-async function generateForAngle(angle, { slug, profile, brand, model, promptOverride, dryRun, copySource }) {
+async function generateForAngle(angle, { slug, profile, brand, model, promptOverride, dryRun, copySource, localOnly }) {
   const prompt = promptOverride || buildPrompt(angle, profile);
   const sizes = angle.design_brief?.sizes?.length ? angle.design_brief.sizes : ["1080x1080"];
   const [primarySize, ...skippedSizes] = sizes;
@@ -131,7 +131,7 @@ async function generateForAngle(angle, { slug, profile, brand, model, promptOver
 
   if (dryRun) return { angle_id: angle.angle_id, prompt, size: primarySize, skipped_sizes: skippedSizes, copy, dry_run: true };
 
-  const { image_url, local_path, brand_kit } = await generateBrandedPoster({
+  const { image_url, local_path, brand_kit, hosted } = await generateBrandedPoster({
     slug,
     prompt,
     idTag: `${angle.angle_id}-ad`,
@@ -143,15 +143,20 @@ async function generateForAngle(angle, { slug, profile, brand, model, promptOver
     height,
     tags: [angle.angle_id].filter(Boolean),
     altText: `${angle.name || angle.angle_id} ad creative`,
+    localOnly,
   });
 
-  angle.image_url = image_url;
+  // Only record image_url when actually hosted — leaving it unset when
+  // localOnly means isTargetable() still picks this angle up for a real run
+  // once Storage is reachable again, instead of a stale local-only marker
+  // making it look done.
+  if (image_url) angle.image_url = image_url;
   angle.local_path = local_path;
   angle.ai_generated = true;
   angle.ai_disclosed = true;
   angle.brand_kit = brand_kit;
 
-  return { angle_id: angle.angle_id, prompt, size: primarySize, skipped_sizes: skippedSizes, image_url, local_path };
+  return { angle_id: angle.angle_id, prompt, size: primarySize, skipped_sizes: skippedSizes, image_url, local_path, hosted };
 }
 
 /** Multi-ratio path (--ratios). Backfills `angle.images` from a pre-existing
@@ -168,14 +173,14 @@ function missingRatiosForAngle(angle, requestedRatios) {
   return requestedRatios.filter((r) => !have[r]);
 }
 
-async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride, dryRun, copySource }) {
+async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride, dryRun, copySource, localOnly }) {
   const prompt = promptOverride || buildPrompt(angle, profile);
   const { width, height } = RATIOS[ratio];
   const copy = posterCopyFromAngle(copySource || angle, { brandName: brand?.verbal?.name });
 
   if (dryRun) return { angle_id: angle.angle_id, ratio, prompt, width, height, copy, dry_run: true };
 
-  const { image_url, local_path, brand_kit } = await generateBrandedPoster({
+  const { image_url, local_path, brand_kit, hosted } = await generateBrandedPoster({
     slug,
     prompt,
     idTag: `${angle.angle_id}-ad-${ratioSlug(ratio)}`,
@@ -187,13 +192,14 @@ async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model
     height,
     tags: [angle.angle_id].filter(Boolean),
     altText: `${angle.name || angle.angle_id} ad creative (${ratio})`,
+    localOnly,
   });
 
   angle.images = angle.images || {};
   angle.images[ratio] = { image_url, local_path };
   // Keep the legacy flat fields pointing at a real creative for /launch's
   // readAssetRef() — prefer 1:1 as the canonical default when nothing is set yet.
-  if (!angle.image_url || ratio === "1:1") {
+  if (image_url && (!angle.image_url || ratio === "1:1")) {
     angle.image_url = image_url;
     angle.local_path = local_path;
   }
@@ -201,14 +207,14 @@ async function generateForAngleRatio(angle, ratio, { slug, profile, brand, model
   angle.ai_disclosed = true;
   angle.brand_kit = brand_kit;
 
-  return { angle_id: angle.angle_id, ratio, prompt, width, height, image_url, local_path };
+  return { angle_id: angle.angle_id, ratio, prompt, width, height, image_url, local_path, hosted };
 }
 
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
   if (!slug || slug.startsWith("--")) {
-    console.error("Usage: node skills/image-gen/image-gen-ads.js <slug> [--angle <angle_id>] [--ratios 1:1,9:16,4:5] [--prompt \"...\"] [--model bfl/flux-1-dev] [--dry-run]");
+    console.error("Usage: node skills/image-gen/image-gen-ads.js <slug> [--angle <angle_id>] [--ratios 1:1,9:16,4:5] [--prompt \"...\"] [--model bfl/flux-1-dev] [--dry-run] [--local-only]");
     process.exit(1);
   }
   const angleIdx = args.indexOf("--angle");
@@ -218,6 +224,11 @@ async function main() {
   const modelIdx = args.indexOf("--model");
   const model = modelIdx >= 0 ? args[modelIdx + 1] : undefined;
   const dryRun = args.includes("--dry-run");
+  // Skip the Supabase Storage upload — save the composited PNG locally only.
+  // For when Storage is unreachable/misconfigured but you still want to review
+  // the creative now. Not a substitute for hosting: /launch and /publish need
+  // a real image_url, so re-run without this flag once Storage is back.
+  const localOnly = args.includes("--local-only");
   const ratiosIdx = args.indexOf("--ratios");
   const ratios = ratiosIdx >= 0 ? args[ratiosIdx + 1].split(",").map((r) => r.trim()) : null;
   if (ratios) {
@@ -247,8 +258,8 @@ async function main() {
       console.error("KREA_API_KEY is required (krea.ai/settings/api-tokens). Set it and re-run.");
       process.exit(4);
     }
-    if (!storageConfigured()) {
-      console.error("SUPABASE_URL + SUPABASE_SERVICE_KEY (or SUPABASE_SECRET_KEY) are required to host generated images.");
+    if (!localOnly && !storageConfigured()) {
+      console.error("SUPABASE_URL + SUPABASE_SERVICE_KEY (or SUPABASE_SECRET_KEY) are required to host generated images (or pass --local-only to save PNGs without hosting).");
       process.exit(4);
     }
     const posterCheck = checkPosterInputs(brand, profile);
@@ -291,7 +302,7 @@ async function main() {
     for (const angle of targets) {
       for (const ratio of missingRatiosForAngle(angle, ratios)) {
         try {
-          generated.push(await generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun, copySource: normByAngleId.get(angle.angle_id) }));
+          generated.push(await generateForAngleRatio(angle, ratio, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun, copySource: normByAngleId.get(angle.angle_id), localOnly }));
         } catch (e) {
           errors.push({ angle_id: angle.angle_id, ratio, error: e.message });
           angle.error = e.message;
@@ -301,7 +312,7 @@ async function main() {
   } else {
     for (const angle of targets) {
       try {
-        generated.push(await generateForAngle(angle, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun, copySource: normByAngleId.get(angle.angle_id) }));
+        generated.push(await generateForAngle(angle, { slug, profile, brand, model, promptOverride: angleId ? promptOverride : null, dryRun, copySource: normByAngleId.get(angle.angle_id), localOnly }));
       } catch (e) {
         errors.push({ angle_id: angle.angle_id, error: e.message });
         angle.error = e.message;
@@ -314,6 +325,8 @@ async function main() {
   console.log(JSON.stringify({
     slug,
     mode: dryRun ? "DRY_RUN" : "LIVE",
+    local_only: localOnly || undefined,
+    note: localOnly && !dryRun ? "Saved locally only — no image_url; not usable by /launch until re-run without --local-only once Storage is reachable." : undefined,
     skipped_carousel_format: skippedCarousel.map((a) => ({ angle_id: a.angle_id, format: a.design_brief.primary_format, reason: "carousel design_brief — single-image generation not supported by /image-gen v1, needs an explicit --prompt or a carousel-aware path" })),
     generated,
     errors,

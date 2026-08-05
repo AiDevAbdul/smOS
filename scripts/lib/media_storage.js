@@ -7,6 +7,12 @@
  * than silently degrading, because /publish hard-requires a real URL.
  */
 
+import { readFile } from "node:fs/promises";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+
 const URL_ENV = () => process.env.SUPABASE_URL;
 const KEY_ENV = () => process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SECRET_KEY;
 const BUCKET_ENV = () => process.env.SMOS_ASSETS_BUCKET || "smos-assets";
@@ -15,8 +21,17 @@ export function storageConfigured() {
   return !!(URL_ENV() && KEY_ENV());
 }
 
-/** Download an arbitrary URL (e.g. a Krea job's temporary output) as a Buffer. */
+/**
+ * Download an arbitrary URL (e.g. a Krea job's temporary output) as a Buffer.
+ * Also accepts a repo-relative local path (e.g. brand.visual.logo.primary_url
+ * recorded as "clients/{slug}/brand/logo.jpeg" before that asset was ever
+ * uploaded to Storage) — reads it straight off disk instead of failing with
+ * Node fetch's "Failed to parse URL" on a non-absolute string.
+ */
 export async function fetchBuffer(url) {
+  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(String(url))) {
+    return readFile(resolve(ROOT, url));
+  }
   const res = await fetch(url);
   if (!res.ok) throw new Error(`fetchBuffer ${url} -> ${res.status}`);
   return Buffer.from(await res.arrayBuffer());

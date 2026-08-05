@@ -19,7 +19,13 @@ import { resolve } from "node:path";
  * copy under clients/{slug}/generated/ (fast local review, no network round
  * trip needed to eyeball a creative) -> register in the client's DAM.
  *
- * Returns { image_url, local_path, brand_kit, dam_asset_id }.
+ * `localOnly: true` skips the Storage upload (e.g. Supabase unreachable) and
+ * returns `image_url: null, hosted: false` — the local PNG still gets written
+ * and registered in the DAM (uri = local_path), but callers/downstream skills
+ * (`/launch`, `/publish`) can't ship it until it's re-uploaded once hosting is
+ * back; this is for reviewing the creative now, not a substitute for hosting.
+ *
+ * Returns { image_url, local_path, brand_kit, dam_asset_id, hosted }.
  */
 export async function generateBrandedPoster({
   slug,
@@ -34,6 +40,7 @@ export async function generateBrandedPoster({
   tags = [],
   altText = null,
   theme = "dark",
+  localOnly = false,
 } = {}) {
   const { urls } = await generateImage({ prompt, model, width, height });
   const backgroundBuffer = await fetchBuffer(urls[0]);
@@ -42,12 +49,16 @@ export async function generateBrandedPoster({
   // Theme-suffix the remote/local filenames so a light-mode re-run doesn't
   // clobber the dark-mode original — callers can generate and keep both.
   const idFile = theme === "light" ? `${idTag}-light` : idTag;
-  const remotePath = `clients/${slug}/generated/${idFile}.png`;
-  const image_url = await uploadPublicAsset(composited, remotePath, { contentType: "image/png" });
 
   const local_path = resolve(clientRoot(slug), "generated", `${idFile}.png`);
   ensureParent(local_path);
   writeFileSync(local_path, composited);
+
+  let image_url = null;
+  if (!localOnly) {
+    const remotePath = `clients/${slug}/generated/${idFile}.png`;
+    image_url = await uploadPublicAsset(composited, remotePath, { contentType: "image/png" });
+  }
 
   const brand_kit = {
     colors: brand?.visual?.colors || null,
@@ -59,7 +70,7 @@ export async function generateBrandedPoster({
   const dam = register(slug, {
     asset_id: `img_${idFile}`,
     media_type: "image",
-    uri: image_url,
+    uri: image_url || local_path,
     hash: hashBytes(composited),
     tags,
     alt_text: altText,
@@ -68,5 +79,5 @@ export async function generateBrandedPoster({
     created_at: new Date().toISOString(),
   });
 
-  return { image_url, local_path, brand_kit, dam_asset_id: dam.asset_id };
+  return { image_url, local_path, brand_kit, dam_asset_id: dam.asset_id, hosted: !localOnly };
 }
