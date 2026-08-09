@@ -48,15 +48,32 @@ function classifyEvent(stats) {
   return "missing"; // pixel firing but no CAPI
 }
 
-async function getPixelStats(graph, pixelId) {
-  // Default /stats — gives event_name + count + last fire time
-  return graph.get(`/${pixelId}/stats`, { start_time: isoDaysAgo(7) }).catch((e) => ({ error: e.message, data: [] }));
+// Meta's /stats endpoint returns hourly buckets, each with its own nested
+// `data` array: { start_time, aggregation, data: [{ value, count }] }.
+// This flattens that into a flat list of { time (epoch seconds), name, count }.
+function flattenBuckets(raw) {
+  const rows = [];
+  for (const bucket of raw.data || []) {
+    const time = Math.floor(new Date(bucket.start_time).getTime() / 1000);
+    for (const row of bucket.data || []) {
+      rows.push({ time, name: row.value, count: row.count || 0 });
+    }
+  }
+  return rows;
 }
 
-async function getSourceBreakdown(graph, pixelId) {
-  // aggregation=event_name_and_method buckets by source (browser/server/app)
+async function getPixelStats(graph, pixelId) {
+  // aggregation=event buckets counts per event name (row.value = event name)
   return graph
-    .get(`/${pixelId}/stats`, { start_time: isoDaysAgo(7), aggregation: "event_name_and_method" })
+    .get(`/${pixelId}/stats`, { start_time: isoDaysAgo(7), aggregation: "event" })
+    .catch((e) => ({ error: e.message, data: [] }));
+}
+
+async function getSourceBreakdown(graph, pixelId, eventName) {
+  // aggregation=event_source only splits BROWSER/SERVER for ALL events combined,
+  // so it must be filtered to one event at a time via the `event` param.
+  return graph
+    .get(`/${pixelId}/stats`, { start_time: isoDaysAgo(7), aggregation: "event_source", event: eventName })
     .catch((e) => ({ error: e.message, data: [] }));
 }
 
@@ -86,45 +103,38 @@ async function fireTestEvent(graph, datasetId, testEventCode) {
   return { fired: true, event_id: eventId, response: res };
 }
 
-function buildEventStats(rawStats, sourceBreakdown, requiredEvents) {
-  // /stats returns: { data: [{ value: N, event: 'Purchase', last_fire_time: <unix> }, ...] }
-  // (Schema has shifted over versions — handle both `value` and `count`, both `event` and `event_name`.)
+function buildEventStats(rawStats, sourceBreakdownByEvent, requiredEvents) {
+  // rawStats is the raw /stats?aggregation=event response: hourly buckets, each
+  // with a nested data array of { value: <event name>, count }. Flatten first.
+  const rows = flattenBuckets(rawStats);
   const counts = {};
-  for (const row of rawStats.data || []) {
-    const name = row.event || row.event_name;
-    const v = row.value ?? row.count ?? 0;
+  for (const { time, name, count } of rows) {
     if (!name) continue;
     counts[name] = counts[name] || { count: 0, last_fired: null };
-    counts[name].count += v;
-    const lf = row.last_fire_time || row.last_fired_time;
-    if (lf && (!counts[name].last_fired || lf > counts[name].last_fired)) counts[name].last_fired = lf;
-  }
-
-  // Source breakdown: same shape but with `method` ∈ { 'browser','server','app' }
-  const bySource = {};
-  for (const row of sourceBreakdown.data || []) {
-    const name = row.event || row.event_name;
-    const method = (row.method || row.source || "").toLowerCase();
-    const v = row.value ?? row.count ?? 0;
-    if (!name) continue;
-    bySource[name] = bySource[name] || { browser: 0, server: 0, app: 0 };
-    if (method === "server" || method === "s2s") bySource[name].server += v;
-    else if (method === "app") bySource[name].app += v;
-    else bySource[name].browser += v;
+    counts[name].count += count;
+    if (count > 0 && (!counts[name].last_fired || time > counts[name].last_fired)) {
+      counts[name].last_fired = time;
+    }
   }
 
   const events = requiredEvents.map((name) => {
     const c = counts[name] || {};
-    const s = bySource[name] || { browser: 0, server: 0 };
-    const total = (s.browser || 0) + (s.server || 0);
-    const serverShare = total ? s.server / total : 0;
+    // sourceBreakdownByEvent[name] is a flattened { data: [{start_time, aggregation, data:[{value:'SERVER'|'BROWSER', count}]}] } response
+    const srcRows = flattenBuckets(sourceBreakdownByEvent[name] || { data: [] });
+    let browser = 0, server = 0;
+    for (const { name: source, count } of srcRows) {
+      if (source === "SERVER") server += count;
+      else if (source === "BROWSER") browser += count;
+    }
+    const total = browser + server;
+    const serverShare = total ? server / total : 0;
     const stat = {
       name,
       firing: !!c.count,
       count_7d: c.count || 0,
       last_fired: c.last_fired || null,
-      client_count_7d: s.browser || 0,
-      server_count_7d: s.server || 0,
+      client_count_7d: browser,
+      server_count_7d: server,
       server_share: Math.round(serverShare * 1000) / 1000,
     };
     stat.status = classifyEvent(stat);
@@ -198,13 +208,14 @@ async function main() {
   const graph = createGraph();
   console.error(`[capi-setup] ${slug} — inspecting pixel ${pixelId}…`);
 
-  const [stats, sourceBreakdown, dataset] = await Promise.all([
+  const [stats, dataset, sourceBreakdownList] = await Promise.all([
     getPixelStats(graph, pixelId),
-    getSourceBreakdown(graph, pixelId),
     getDatasetInfo(graph, pixelId),
+    Promise.all(requiredEvents.map((name) => getSourceBreakdown(graph, pixelId, name))),
   ]);
+  const sourceBreakdownByEvent = Object.fromEntries(requiredEvents.map((name, i) => [name, sourceBreakdownList[i]]));
 
-  const events = buildEventStats(stats, sourceBreakdown, requiredEvents);
+  const events = buildEventStats(stats, sourceBreakdownByEvent, requiredEvents);
 
   let testEvent = { fired: false, event_id: null };
   if (testEventCode) {
