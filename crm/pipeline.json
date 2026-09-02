@@ -322,12 +322,12 @@
     "slug": "blue-rose-auto",
     "company_name": "Blue Rose Auto Care & Repair Services",
     "created_at": "2026-07-14T05:27:41.652Z",
-    "updated_at": "2026-07-14T05:28:30.654Z",
-    "stage": "negotiating",
+    "updated_at": "2026-08-09T07:32:32.352Z",
+    "stage": "won",
     "source": "pre-audit",
     "links": {
       "pre_audit": null,
-      "proposal": null,
+      "proposal": "clients/blue-rose-auto/",
       "contract": null,
       "client_profile": "clients/blue-rose-auto/profile.json"
     },
@@ -344,7 +344,7 @@
       "currency": "USD",
       "addons": []
     },
-    "probability": 75,
+    "probability": 100,
     "expected_close": "2026-07-14",
     "owner": null,
     "next_action": "Run /proposal to backfill artifact, then /crm stage blue-rose-auto won",
@@ -354,9 +354,14 @@
         "at": "2026-07-14T05:28:30.462Z",
         "type": "stage",
         "note": "Engagement started 2026-06-18 outside the formal /proposal flow (onboarded directly); planning mode, no live Meta accounts yet. Run /proposal to backfill the artifact if it should be marked won."
+      },
+      {
+        "at": "2026-08-09T07:32:32.352Z",
+        "type": "stage",
+        "note": "Onboarded directly on 2026-06-18 outside the formal /proposal flow (planning mode, no live Meta accounts yet). Marked won to reflect reality; links.proposal set to client dir placeholder since no formal proposal artifact exists."
       }
     ],
-    "won_at": null,
+    "won_at": "2026-08-09T07:32:32.350Z",
     "lost_at": null,
     "lost_reason": null
   },
@@ -595,6 +600,73 @@
     "next_action": null,
     "next_action_due": null,
     "won_at": null,
+    "lost_at": null,
+    "lost_reason": null
+  },
+  {
+    "slug": "healthncare",
+    "company_name": "Wellness & Care",
+    "contact": {
+      "name": null,
+      "email": "wellness.healthncare@gmail.com",
+      "phone": null
+    },
+    "stage": "won",
+    "source": "intake",
+    "deal": {
+      "monthly_retainer": 300,
+      "setup_fee": 0,
+      "currency": "USD",
+      "addons": []
+    },
+    "owner": null,
+    "created_at": "2026-08-06T08:32:21.633Z",
+    "updated_at": "2026-08-06T09:03:42.589Z",
+    "activities": [
+      {
+        "at": "2026-08-06T08:32:21.634Z",
+        "type": "stage",
+        "note": "created at stage lead"
+      },
+      {
+        "at": "2026-08-06T08:32:28.633Z",
+        "type": "proposal",
+        "note": "proposed Starter (USD 1500/mo)"
+      },
+      {
+        "at": "2026-08-06T08:32:35.385Z",
+        "type": "contract",
+        "note": "agreement generated (Starter)"
+      },
+      {
+        "at": "2026-08-06T09:01:23.524Z",
+        "type": "contract",
+        "note": "agreement generated (Starter)"
+      },
+      {
+        "at": "2026-08-06T09:03:26.685Z",
+        "type": "contract",
+        "note": "agreement signed"
+      },
+      {
+        "at": "2026-08-06T09:03:36.277Z",
+        "type": "note",
+        "note": "invoice INV-healthncare-2026-08 issued (USD 1000)"
+      }
+    ],
+    "id": "healthncare",
+    "services": [],
+    "probability": 10,
+    "expected_close": null,
+    "next_action": null,
+    "next_action_due": null,
+    "links": {
+      "pre_audit": null,
+      "proposal": "proposals/healthncare/proposal.pdf",
+      "contract": "contracts/healthncare/agreement.pdf",
+      "client_profile": null
+    },
+    "won_at": "2026-08-06T09:03:26.684Z",
     "lost_at": null,
     "lost_reason": null
   }

@@ -32,7 +32,6 @@ import benchmarks as _bench  # noqa: E402 — sourced, dated industry benchmarks
 
 # White-label-ready agency identity — overridable so the report isn't hardwired
 # to one agency's email/byline. Defaults preserve today's behavior.
-AGENCY_NAME  = os.environ.get("SMOS_AGENCY_NAME", "Abdul")
 AGENCY_EMAIL = os.environ.get("SMOS_AGENCY_EMAIL", "abdul@duckercreative.com")
 
 
@@ -467,7 +466,7 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
         '<div class="status">Signal locked · public data</div>\n'
         "</div>\n"
         f"<h1>{e(business)}</h1>\n"
-        f'<div class="hero-meta">{e(timestamp)} · Prepared by {e(AGENCY_NAME)}</div>\n'
+        f'<div class="hero-meta">{e(timestamp)} · Prepared by smOS</div>\n'
         '<div class="readout">\n'
         f'<div class="ring" style="--pct:{score}" role="img" '
         f'aria-label="Growth readiness {score} of 100 — {upside} points of upside available">\n'
@@ -1040,7 +1039,7 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
 </div>
 
 <div class="footer">
-  {e(business)} &nbsp;·&nbsp; Pre-Audit &nbsp;·&nbsp; {timestamp} &nbsp;·&nbsp; Public-data analysis &nbsp;·&nbsp; {e(AGENCY_NAME)}
+  {e(business)} &nbsp;·&nbsp; Pre-Audit &nbsp;·&nbsp; {timestamp} &nbsp;·&nbsp; Public-data analysis &nbsp;·&nbsp; Prepared by smOS
 </div>
 
 <script>

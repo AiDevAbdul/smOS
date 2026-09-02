@@ -1,0 +1,780 @@
+{
+  "client_slug": "blue-rose-auto",
+  "month": "2026-08",
+  "days_window": 31,
+  "window": {
+    "since": "2026-08-01",
+    "until": "2026-08-31"
+  },
+  "trends": {
+    "spend": {
+      "slope": 0.605,
+      "direction": "improving",
+      "mean": 87.67,
+      "first_7d_avg": 53.33,
+      "last_7d_avg": 73.28
+    },
+    "impressions": {
+      "slope": -148.883,
+      "direction": "declining",
+      "mean": 6769.81,
+      "first_7d_avg": 7042.29,
+      "last_7d_avg": 4444.86
+    },
+    "ctr": {
+      "slope": 0.009,
+      "direction": "improving",
+      "mean": 1.38,
+      "first_7d_avg": 1.28,
+      "last_7d_avg": 1.42
+    },
+    "cpm": {
+      "slope": 0.363,
+      "direction": "improving",
+      "mean": 13.88,
+      "first_7d_avg": 9.2,
+      "last_7d_avg": 17.09
+    },
+    "frequency": {
+      "slope": 0.001,
+      "direction": "flat",
+      "mean": 1.28,
+      "first_7d_avg": 1.2,
+      "last_7d_avg": 1.25
+    },
+    "conversions": {
+      "slope": -0.017,
+      "direction": "declining",
+      "mean": 1.58,
+      "first_7d_avg": 1.71,
+      "last_7d_avg": 1
+    },
+    "revenue": {
+      "slope": 0,
+      "direction": "flat",
+      "mean": 0,
+      "first_7d_avg": 0,
+      "last_7d_avg": 0
+    },
+    "roas": {
+      "slope": 0,
+      "direction": "flat",
+      "mean": 0,
+      "first_7d_avg": 0,
+      "last_7d_avg": 0
+    },
+    "cpa": {
+      "slope": -0.143,
+      "direction": "declining",
+      "mean": 31.73,
+      "first_7d_avg": 26.91,
+      "last_7d_avg": 20.53
+    }
+  },
+  "fatigue": [
+    {
+      "adset_id": "120253850895460161",
+      "adset_name": "PPF Broad Audience – Leads From_web",
+      "frequency": 2.81,
+      "ctr": 2.247697,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253383278900161",
+      "adset_name": "PPF Broad Audience – Leads From",
+      "frequency": 2.58,
+      "ctr": 2.61436,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120254028392440161",
+      "adset_name": "New Leads Ad Set",
+      "frequency": 2.02,
+      "ctr": 2.31888,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120254169619570161",
+      "adset_name": "New Leads Ad Set",
+      "frequency": 1.9,
+      "ctr": 1.257771,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120254472642790161",
+      "adset_name": "New Leads Ad Set",
+      "frequency": 1.89,
+      "ctr": 1.610708,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253900211080161",
+      "adset_name": "PPF - Transformation UGC Content",
+      "frequency": 1.88,
+      "ctr": 4.281831,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120254391899900161",
+      "adset_name": "Awareness Campaign Restore Your Car – Copy",
+      "frequency": 1.79,
+      "ctr": 0.114112,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253868835600161",
+      "adset_name": "Awareness Campaign Restore Your Car",
+      "frequency": 1.74,
+      "ctr": 0.162185,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253536865490161",
+      "adset_name": "Get Pampered– Leads From 2",
+      "frequency": 1.71,
+      "ctr": 1.712753,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253290295460161",
+      "adset_name": "Awareness Campaign PPF Coating Video",
+      "frequency": 1.68,
+      "ctr": 0.214392,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120254026561900161",
+      "adset_name": "PPF Broad Audience – Leads From_web – Copy",
+      "frequency": 1.63,
+      "ctr": 2.610442,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253552916470161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 08 – Copy",
+      "frequency": 1.44,
+      "ctr": 0.532522,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253219689770161",
+      "adset_name": "PPF Broad Audience - Leads Form + Web",
+      "frequency": 1.41,
+      "ctr": 4.307432,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253382106970161",
+      "adset_name": "PPF Broad Audience – Custom Conversion",
+      "frequency": 1.38,
+      "ctr": 4.783599,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253210059910161",
+      "adset_name": "PPF Lookalike Audience",
+      "frequency": 1.35,
+      "ctr": 3.56212,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120252727123780161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 03",
+      "frequency": 1.33,
+      "ctr": 0.073896,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120252956147570161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 06- : Awareness Video",
+      "frequency": 1.1,
+      "ctr": 0.058355,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253869650470161",
+      "adset_name": "PPF Broad Audience – Leads From – 02 – Copy",
+      "frequency": 1.09,
+      "ctr": 12.5,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120253085003140161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 08",
+      "frequency": 1.05,
+      "ctr": 0,
+      "fatigue": "ok",
+      "needs_refresh": false
+    },
+    {
+      "adset_id": "120252905396860161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 05 - : Free Tint",
+      "frequency": 1.02,
+      "ctr": 0,
+      "fatigue": "ok",
+      "needs_refresh": false
+    }
+  ],
+  "lifecycle": [
+    {
+      "ad_id": "120252905396870161",
+      "ad_name": "AutoBlueRose-Awareness_Campaign",
+      "days_active": 3,
+      "peak_ctr": 0,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 2,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120252956147580161",
+      "ad_name": "AutoBlueRose-Awareness_Campaign",
+      "days_active": 4,
+      "peak_ctr": 0.087,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 2,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253085003150161",
+      "ad_name": "AutoBlueRose-Awareness_Campaign",
+      "days_active": 6,
+      "peak_ctr": 0,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 5,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253383278910161",
+      "ad_name": "New Leads ad",
+      "days_active": 23,
+      "peak_ctr": 5.18,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 22,
+      "stage": "expired"
+    },
+    {
+      "ad_id": "120252727123770161",
+      "ad_name": "AutoBlueRose-Awareness_Campaign",
+      "days_active": 10,
+      "peak_ctr": 0.197,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 1,
+      "stage": "expired"
+    },
+    {
+      "ad_id": "120253552916480161",
+      "ad_name": "AutoBlueRose-Awareness_Campaign",
+      "days_active": 8,
+      "peak_ctr": 1.294,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 6,
+      "stage": "expired"
+    },
+    {
+      "ad_id": "120254028392890161",
+      "ad_name": "New Leads Ad",
+      "days_active": 9,
+      "peak_ctr": 3.223,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 8,
+      "stage": "expired"
+    },
+    {
+      "ad_id": "120254169619560161",
+      "ad_name": "New Leads Ad",
+      "days_active": 7,
+      "peak_ctr": 1.695,
+      "current_ctr": 0,
+      "pct_of_peak": 0,
+      "days_since_peak": 1,
+      "stage": "expired"
+    },
+    {
+      "ad_id": "120253210059900161",
+      "ad_name": "New Leads ad",
+      "days_active": 5,
+      "peak_ctr": 5.789,
+      "current_ctr": 3.136,
+      "pct_of_peak": 54,
+      "days_since_peak": 4,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253850895570161",
+      "ad_name": "PPF Broad Audience_ web_form",
+      "days_active": 23,
+      "peak_ctr": 3.056,
+      "current_ctr": 2.381,
+      "pct_of_peak": 78,
+      "days_since_peak": 12,
+      "stage": "declining"
+    },
+    {
+      "ad_id": "120253290295470161",
+      "ad_name": "New Awareness ad",
+      "days_active": 17,
+      "peak_ctr": 0.49,
+      "current_ctr": 0.397,
+      "pct_of_peak": 81,
+      "days_since_peak": 16,
+      "stage": "declining"
+    },
+    {
+      "ad_id": "120253536865500161",
+      "ad_name": "New Leads ad",
+      "days_active": 4,
+      "peak_ctr": 1.915,
+      "current_ctr": 1.605,
+      "pct_of_peak": 84,
+      "days_since_peak": 3,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253382106980161",
+      "ad_name": "New Leads ad",
+      "days_active": 5,
+      "peak_ctr": 5.38,
+      "current_ctr": 5.222,
+      "pct_of_peak": 97,
+      "days_since_peak": 3,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253900211090161",
+      "ad_name": "PPF - Transformation UGC Content",
+      "days_active": 4,
+      "peak_ctr": 5.144,
+      "current_ctr": 5.011,
+      "pct_of_peak": 97,
+      "days_since_peak": 3,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253219689780161",
+      "ad_name": "New Leads ad",
+      "days_active": 5,
+      "peak_ctr": 6.897,
+      "current_ctr": 6.897,
+      "pct_of_peak": 100,
+      "days_since_peak": 0,
+      "stage": "ramping"
+    },
+    {
+      "ad_id": "120253868835590161",
+      "ad_name": "New Awareness ad",
+      "days_active": 10,
+      "peak_ctr": 0.501,
+      "current_ctr": 0.501,
+      "pct_of_peak": 100,
+      "days_since_peak": 0,
+      "stage": "peak"
+    },
+    {
+      "ad_id": "120254391899910161",
+      "ad_name": "New Awareness ad",
+      "days_active": 12,
+      "peak_ctr": 1.136,
+      "current_ctr": 1.136,
+      "pct_of_peak": 100,
+      "days_since_peak": 0,
+      "stage": "peak"
+    },
+    {
+      "ad_id": "120254472642780161",
+      "ad_name": "New Leads Ad",
+      "days_active": 8,
+      "peak_ctr": 2.857,
+      "current_ctr": 2.857,
+      "pct_of_peak": 100,
+      "days_since_peak": 0,
+      "stage": "peak"
+    }
+  ],
+  "adset_ranking": [
+    {
+      "adset_id": "120252727123780161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 03",
+      "cluster": null,
+      "spend": 9.14,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0.07
+    },
+    {
+      "adset_id": "120252905396860161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 05 - : Free Tint",
+      "cluster": null,
+      "spend": 3.18,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0
+    },
+    {
+      "adset_id": "120252956147570161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 06- : Awareness Video",
+      "cluster": null,
+      "spend": 31.61,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0.06
+    },
+    {
+      "adset_id": "120253085003140161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 08",
+      "cluster": null,
+      "spend": 5.94,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0
+    },
+    {
+      "adset_id": "120253210059910161",
+      "adset_name": "PPF Lookalike Audience",
+      "cluster": null,
+      "spend": 17.7,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 3.56
+    },
+    {
+      "adset_id": "120253219689770161",
+      "adset_name": "PPF Broad Audience - Leads Form + Web",
+      "cluster": null,
+      "spend": 17.09,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 4.31
+    },
+    {
+      "adset_id": "120253290295460161",
+      "adset_name": "Awareness Campaign PPF Coating Video",
+      "cluster": null,
+      "spend": 76.76,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0.21
+    },
+    {
+      "adset_id": "120253382106970161",
+      "adset_name": "PPF Broad Audience – Custom Conversion",
+      "cluster": null,
+      "spend": 18.06,
+      "conversions": 1,
+      "roas": 0,
+      "cpa": 18.06,
+      "ctr": 4.78
+    },
+    {
+      "adset_id": "120253383278900161",
+      "adset_name": "PPF Broad Audience – Leads From",
+      "cluster": null,
+      "spend": 728.2,
+      "conversions": 18,
+      "roas": 0,
+      "cpa": 40.46,
+      "ctr": 2.61
+    },
+    {
+      "adset_id": "120253536865490161",
+      "adset_name": "Get Pampered– Leads From 2",
+      "cluster": null,
+      "spend": 123.1,
+      "conversions": 1,
+      "roas": 0,
+      "cpa": 123.1,
+      "ctr": 1.71
+    },
+    {
+      "adset_id": "120253552916470161",
+      "adset_name": "AutoBlueRose-Awareness_Campaign – 08 – Copy",
+      "cluster": null,
+      "spend": 18.19,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0.53
+    },
+    {
+      "adset_id": "120253850895460161",
+      "adset_name": "PPF Broad Audience – Leads From_web",
+      "cluster": null,
+      "spend": 963.18,
+      "conversions": 20,
+      "roas": 0,
+      "cpa": 48.16,
+      "ctr": 2.25
+    },
+    {
+      "adset_id": "120253868835600161",
+      "adset_name": "Awareness Campaign Restore Your Car",
+      "cluster": null,
+      "spend": 47.4,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0.16
+    },
+    {
+      "adset_id": "120253869650470161",
+      "adset_name": "PPF Broad Audience – Leads From – 02 – Copy",
+      "cluster": null,
+      "spend": 0.64,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 12.5
+    },
+    {
+      "adset_id": "120253900211080161",
+      "adset_name": "PPF - Transformation UGC Content",
+      "cluster": null,
+      "spend": 104.22,
+      "conversions": 1,
+      "roas": 0,
+      "cpa": 104.22,
+      "ctr": 4.28
+    },
+    {
+      "adset_id": "120254026561900161",
+      "adset_name": "PPF Broad Audience – Leads From_web – Copy",
+      "cluster": null,
+      "spend": 86.42,
+      "conversions": 1,
+      "roas": 0,
+      "cpa": 86.42,
+      "ctr": 2.61
+    },
+    {
+      "adset_id": "120254028392440161",
+      "adset_name": "New Leads Ad Set",
+      "cluster": null,
+      "spend": 147.19,
+      "conversions": 3,
+      "roas": 0,
+      "cpa": 49.06,
+      "ctr": 2.32
+    },
+    {
+      "adset_id": "120254169619570161",
+      "adset_name": "New Leads Ad Set",
+      "cluster": null,
+      "spend": 147.88,
+      "conversions": 2,
+      "roas": 0,
+      "cpa": 73.94,
+      "ctr": 1.26
+    },
+    {
+      "adset_id": "120254391899900161",
+      "adset_name": "Awareness Campaign Restore Your Car – Copy",
+      "cluster": null,
+      "spend": 48.95,
+      "conversions": 0,
+      "roas": 0,
+      "cpa": 0,
+      "ctr": 0.11
+    },
+    {
+      "adset_id": "120254472642790161",
+      "adset_name": "New Leads Ad Set",
+      "cluster": null,
+      "spend": 122.84,
+      "conversions": 3,
+      "roas": 0,
+      "cpa": 40.95,
+      "ctr": 1.61
+    }
+  ],
+  "placement_ranking": [
+    {
+      "placement": "facebook/facebook_reels_overlay",
+      "spend": 20.85,
+      "ctr": 0.945626,
+      "cpm": 9.858301,
+      "conversions": 1,
+      "cpa": 20.85
+    },
+    {
+      "placement": "instagram/feed",
+      "spend": 96.25,
+      "ctr": 1.487079,
+      "cpm": 23.464509,
+      "conversions": 3,
+      "cpa": 32.08
+    },
+    {
+      "placement": "facebook/facebook_notification",
+      "spend": 141.82,
+      "ctr": 5.385897,
+      "cpm": 78.746301,
+      "conversions": 4,
+      "cpa": 35.46
+    },
+    {
+      "placement": "facebook/feed",
+      "spend": 1234.77,
+      "ctr": 2.567991,
+      "cpm": 17.833935,
+      "conversions": 30,
+      "cpa": 41.16
+    },
+    {
+      "placement": "facebook/facebook_reels",
+      "spend": 777.71,
+      "ctr": 1.426219,
+      "cpm": 20.655249,
+      "conversions": 10,
+      "cpa": 77.77
+    },
+    {
+      "placement": "instagram/instagram_reels",
+      "spend": 85.52,
+      "ctr": 0.968905,
+      "cpm": 19.270225,
+      "conversions": 1,
+      "cpa": 85.52
+    },
+    {
+      "placement": "audience_network/an_classic",
+      "spend": 1.39,
+      "ctr": 6.629834,
+      "cpm": 7.679671,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "audience_network/rewarded_video",
+      "spend": 1.44,
+      "ctr": 8.121827,
+      "cpm": 7.309752,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "facebook/facebook_profile_feed",
+      "spend": 2.95,
+      "ctr": 2.631579,
+      "cpm": 19.40818,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "facebook/facebook_stories",
+      "spend": 69.15,
+      "ctr": 3.872217,
+      "cpm": 66.941934,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "facebook/instream_video",
+      "spend": 25.94,
+      "ctr": 1.754386,
+      "cpm": 30.339628,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "facebook/marketplace",
+      "spend": 201.16,
+      "ctr": 0.093338,
+      "cpm": 2.438457,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "facebook/search",
+      "spend": 2.71,
+      "ctr": 0.212615,
+      "cpm": 1.920652,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "instagram/instagram_explore_grid_home",
+      "spend": 0.05,
+      "ctr": 0,
+      "cpm": 2.94122,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "instagram/instagram_search",
+      "spend": 0,
+      "ctr": 0,
+      "cpm": 0,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "instagram/instagram_stories",
+      "spend": 49.39,
+      "ctr": 1.168699,
+      "cpm": 25.096914,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "threads/threads_feed",
+      "spend": 2.66,
+      "ctr": 0.089127,
+      "cpm": 2.370801,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "unknown/unknown",
+      "spend": 2.91,
+      "ctr": 2.222222,
+      "cpm": 21.555873,
+      "conversions": 0,
+      "cpa": null
+    },
+    {
+      "placement": "whatsapp/status",
+      "spend": 1.03,
+      "ctr": 0.21097,
+      "cpm": 1.086514,
+      "conversions": 0,
+      "cpa": null
+    }
+  ],
+  "counts": {
+    "daily_rows": 31,
+    "adsets": 20,
+    "ads": 166,
+    "placements": 19
+  }
+}

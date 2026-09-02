@@ -15,6 +15,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 |---|---|
 | Pre-sale prospect audit (no client API access) | `/pre-audit` |
 | **Agency sales/client pipeline (CRM)** | `/crm` |
+| **Client status — what's done, what's remaining** | `/smos-status` |
 | **Generate a client proposal / pitch** | `/proposal` |
 | **Generate service agreement + e-sign** | `/contract` |
 | **Issue retainer invoices (Stripe)** | `/billing` |
@@ -256,29 +257,39 @@ All client-facing reports (`/pre-audit`, `/audit`, `/before-after`, `/report`, `
 - PDF conversion is handled by the shared helper `scripts/render_pdf.py` (headless Chromium via Playwright). Every report skill calls it after writing the HTML.
 - First-time setup: `pip install playwright && python -m playwright install chromium`.
 
-### Design system — "Cupertino" (the one visual standard)
+### Design system — "Ledger" (the one visual standard)
 
-Every client-facing report and template uses **one** Apple/iOS design system. Single
-source of truth: **`design-system/smos-design-system.css`** (tokens + base + `ds-*`
-components). Spec & component reference: **`design-system/MASTER.md`**.
+Every client-facing report and template uses **one** design system: the language of a
+precision work order / inspection sheet. Single source of truth:
+**`design-system/smos-design-system.css`** (tokens + base + `ds-*` components). Spec &
+component reference: **`design-system/MASTER.md`**.
 
 - **Never inline raw hex or fork styles per report.** Renderers read the CSS at render
   time via `scripts/lib/design_system.js` (Node) and `scripts/lib/design_system.py`
-  (Python) and inline it (self-contained HTML, works offline + in PDF). Edit the CSS
-  once → every deliverable inherits it.
+  (Python) and inline it (self-contained HTML; fonts are the one external link, with
+  system fallbacks, and `render_pdf.py` waits for them). Edit the CSS once → every
+  deliverable inherits it.
 - Loaders expose `designSystemCss()`/`design_system_css()`, `reportHead`/`report_head`,
   `heroHeader`/`hero_header`, `reportFooter`, and (Python) `CHART_PALETTE` + `CHART_THEME`.
 - Wired renderers: `md_to_html.js` (/report, /analyze, /before-after, /monthly-review),
   `audit_report_html.js` (/audit, /audit-creative), `pre_audit_report.py` (/pre-audit),
   `report.py` (/research). Any new report skill MUST import a loader and reuse `ds-*`
   classes — do not hand-roll CSS.
-- Aesthetic: SF Pro system type (no web fonts), `#f5f5f7` canvas, `#1d1d1f` ink, iOS
-  semantic colors (`#0071e3`/`#34c759`/`#ff9f0a`/`#ff3b30`), soft elevation, 14px radii,
-  tabular numerals. **Evolved 2026-06-30 (bolder, still ONE system):** report heroes and
-  all accents use the signature **aurora gradient** `--ds-grad-brand` (blue→indigo→violet);
-  the `/bundle` hub is a dark "operating-system console" (`--ds-shell*`) framing bright
-  report windows, with a clamped display scale (`--ds-fs-display`) and motion tokens.
-  Maintained with the `frontend-design` + `ui-ux-pro-max` skills.
+- Aesthetic (**adopted 2026-09-02** from the approved Blue Rose "August Inspection"
+  prototype, replacing "Cupertino" — all token/class names kept contract-stable):
+  steel-blue palette (`#f3f5f7` canvas, `#17222e` ink, `#1d5dbf` accent), semantic
+  pass/caution/action status (`#1d8a4e`/`#b57a0a`/`#c0392f`) kept separate from the
+  accent, hairline rules, type trio **Barlow Semi Condensed** (display) / **Barlow**
+  (body) / **IBM Plex Mono** (data, labels, eyebrows), tabular numerals. The hero is a
+  bordered work-order **masthead** with a `--ds-grad-brand` spine. New components for
+  the canonical report anatomy: `ds-verdict` (lede), `ds-sheet` (inspection rows),
+  `ds-wo` (numbered work order with $ impact). The `/bundle` hub stays a dark
+  "operating-system console" (`--ds-shell*`) framing bright report windows.
+- **Attribution: every report footer/prepared-by line says "Prepared by smOS"** — never
+  the agency name (that stays only in contractual/legal copy and contact email lines).
+- Reports quote **audited numbers**: platform-reported metrics a client will act on are
+  labeled as platform-reported until reconciled against the CRM (see the /analyze +
+  monthly-review lead-audit pattern established for blue-rose-auto, Sep 2026).
 
 ---
 
@@ -295,4 +306,4 @@ components). Spec & component reference: **`design-system/MASTER.md`**.
 
 - [Blue Rose Auto Care & Repair Services](clients/blue-rose-auto/CLAUDE.md) · Status: Planning mode (no live Meta accounts yet) · Engagement start: 2026-06-18
 - [HOPE'87](clients/hope87/CLAUDE.md) · Status: Active — expanded scope (Astro EN/DE website rebuild + donation landing page + content/creative production + Meta retainer); ad account & pixel still TBD · Engagement start: 2026-07-31
-- [Health & Care](clients/healthncare/CLAUDE.md) · Status: Zero-start (wellness/fitness affiliate) · Engagement start: 2026-08-05
+- [Wellness & Care](clients/healthncare/CLAUDE.md) · Status: Zero-start (wellness/fitness affiliate) · Engagement start: 2026-08-05

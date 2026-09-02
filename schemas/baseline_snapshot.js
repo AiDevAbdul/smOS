@@ -53,18 +53,39 @@ export function normalize(raw) {
   };
 }
 
-/** Validate the snapshot is COMPLETE and LOCKED — what before-after requires. */
-export function validate(obj, { requireLock = true } = {}) {
+/**
+ * Validate the snapshot is COMPLETE and LOCKED — what before-after requires.
+ *
+ * `surfaces` selects which halves of the snapshot must be complete. The default
+ * (`["organic"]`) is the historical gate and is unchanged: a full before/after
+ * needs the organic baseline, and paid rows degrade to "—" on their own. A
+ * caller deliberately reporting on the paid surface only (e.g.
+ * `/before-after --paid-only`, when the Page scopes needed for organic
+ * engagement were never granted) passes `["paid"]`, which swaps the organic
+ * checks for a paid one so a null organic half does not block a paid
+ * comparison that has real data on both sides.
+ *
+ * The immutable lock is ALWAYS required, whatever the surfaces.
+ */
+export function validate(obj, { requireLock = true, surfaces = ["organic"] } = {}) {
   const errors = [];
   if (!obj || typeof obj !== "object") return result(["baseline_snapshot is not an object"]);
+  const want = new Set(surfaces);
   if (requireLock && !isNonEmptyString(obj.immutable_locked_at)) {
     errors.push("baseline_snapshot.immutable_locked_at is not set (snapshot is not frozen)");
   }
-  if (!isFiniteNumber(obj.facebook?.engagement_rate_30d)) {
-    errors.push("baseline_snapshot.facebook.engagement_rate_30d is missing/non-numeric");
+  if (want.has("organic")) {
+    if (!isFiniteNumber(obj.facebook?.engagement_rate_30d)) {
+      errors.push("baseline_snapshot.facebook.engagement_rate_30d is missing/non-numeric");
+    }
+    if (!isFiniteNumber(obj.facebook?.posts_per_week_30d)) {
+      errors.push("baseline_snapshot.facebook.posts_per_week_30d is missing/non-numeric");
+    }
   }
-  if (!isFiniteNumber(obj.facebook?.posts_per_week_30d)) {
-    errors.push("baseline_snapshot.facebook.posts_per_week_30d is missing/non-numeric");
+  if (want.has("paid")) {
+    if (!isNonEmptyString(obj.paid?.account_id)) {
+      errors.push("baseline_snapshot.paid.account_id is missing (no paid baseline to compare against)");
+    }
   }
   return result(errors);
 }

@@ -89,7 +89,7 @@
           "cluster": "Comparisons & Alternatives",
           "topics": [
             "Supplements vs. prescription weight-loss medicines (trade-offs, when each makes sense)",
-            "Brand comparison: supplement marketplace A vs. B vs. Health & Care (honest benchmarking)",
+            "Brand comparison: supplement marketplace A vs. B vs. Wellness & Care (honest benchmarking)",
             "Natural vs. synthetic supplements (efficacy, safety, evidence)"
           ]
         },
@@ -119,7 +119,7 @@
         {
           "cluster": "FAQ & Objection Handling",
           "topics": [
-            "Common questions about Health & Care (why us, how we work, guarantees)",
+            "Common questions about Wellness & Care (why us, how we work, guarantees)",
             "Will supplements work for me? (honest assessment of who sees results)",
             "Supplement side effects: what to expect and when to pause"
           ]
@@ -199,7 +199,7 @@
       "title": "How We Choose Supplements: Our Curation Framework (Transparency Report)",
       "pillar": "PILLAR_TRANSPARENCY_CURATION",
       "content_type": "Thought leadership + brand differentiation (shareable + SEO supporting)",
-      "target_keyword": "Health & Care supplement curation, why choose Health & Care",
+      "target_keyword": "Wellness & Care supplement curation, why choose Wellness & Care",
       "search_intent": "brand + informational",
       "buyer_stage": "consideration → decision",
       "monthly_search_volume_estimate": "low (branded/long-tail), but high conversion if reached",
@@ -227,7 +227,7 @@
       "title": "Customer Transformations: Real Before/Afters + Timeline (Monthly Feature)",
       "pillar": "PILLAR_SOCIAL_PROOF_RESULTS",
       "content_type": "Case study + testimonial (shareable, decision-stage)",
-      "target_keyword": "Health & Care reviews, weight loss results with supplements, customer testimonials",
+      "target_keyword": "Wellness & Care reviews, weight loss results with supplements, customer testimonials",
       "search_intent": "social proof + decision",
       "buyer_stage": "decision",
       "monthly_search_volume_estimate": "low search, but high conversion",
@@ -261,7 +261,7 @@
       "monthly_search_volume_estimate": "1,100+",
       "competition": "medium",
       "angle": "Empower customers. 'Don't be fooled by marketing. Here's how to spot quality.' Builds brand authority.",
-      "content_structure": "Intro + label anatomy (with annotated screenshots) + key indicators (GMP, 3rd party tested, ingredient transparency, dosing) + red flags to avoid + Health & Care examples + downloadable label checklist",
+      "content_structure": "Intro + label anatomy (with annotated screenshots) + key indicators (GMP, 3rd party tested, ingredient transparency, dosing) + red flags to avoid + Wellness & Care examples + downloadable label checklist",
       "searchable_yes_shareable_yes": "Searchable. Moderately shareable (pinnable, email-friendly resource)."
     },
     {
@@ -364,10 +364,10 @@
     },
     {
       "rank": 15,
-      "title": "Common Questions About Health & Care (FAQ + How We Differ)",
+      "title": "Common Questions About Wellness & Care (FAQ + How We Differ)",
       "pillar": "PILLAR_SOCIAL_PROOF_RESULTS",
       "content_type": "FAQ + brand messaging (searchable, decision-stage)",
-      "target_keyword": "Health & Care, Health & Care reviews, Health & Care affiliate, how Health & Care works",
+      "target_keyword": "Wellness & Care, Wellness & Care reviews, Wellness & Care affiliate, how Wellness & Care works",
       "search_intent": "brand + decision",
       "buyer_stage": "decision",
       "monthly_search_volume_estimate": "low search, high conversion",
@@ -522,7 +522,7 @@
         "cta": "best stacks → shop"
       },
       {
-        "keyword": "Health & Care reviews",
+        "keyword": "Wellness & Care reviews",
         "volume": "low, high conversion",
         "target_piece": "Customer Transformations (rank 5) + FAQ (rank 15)",
         "cta": "see results → shop"
@@ -530,7 +530,7 @@
     ],
     "decision": [
       {
-        "keyword": "Health & Care",
+        "keyword": "Wellness & Care",
         "volume": "branded, high conversion",
         "target_piece": "FAQ (rank 15)",
         "cta": "answers → shop"

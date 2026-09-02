@@ -126,6 +126,8 @@ export function posterCopyFromItem(item, { brandName } = {}) {
     headline,
     subhead: "",
     benefits: [],
-    cta: PILLAR_CTA[item.pillar_id] || "Learn More",
+    // An item may name its own button (e.g. a shop-now brand whose pillar map
+    // would otherwise say "Get a Quote"); the pillar default is the fallback.
+    cta: item.cta ? humanizeCta(item.cta) : PILLAR_CTA[item.pillar_id] || "Learn More",
   };
 }

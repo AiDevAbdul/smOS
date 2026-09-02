@@ -1,6 +1,6 @@
 ## Overview
 
-**Health & Care** — organic content plan for **4 weeks** starting **2026-08-10**. 4 content pillars, 12 scheduled posts (Reels-first, Mon/Wed/Fri). Captions are strategic hooks; the client's in-house team produces final media.
+**Wellness & Care** — organic content plan for **4 weeks** starting **2026-08-10**. 4 content pillars, 12 scheduled posts (Reels-first, Mon/Wed/Fri). Captions are strategic hooks; the client's in-house team produces final media.
 
 ## Content Pillars
 

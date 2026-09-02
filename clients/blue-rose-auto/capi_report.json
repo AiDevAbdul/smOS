@@ -1,17 +1,17 @@
 {
   "slug": "blue-rose-auto",
-  "generated_at": "2026-08-04T16:36:33.558Z",
-  "pixel_id": "2183558222437003",
+  "generated_at": "2026-08-31T15:59:38.362Z",
+  "pixel_id": "1798280031363662",
   "events": [
     {
       "name": "Lead",
-      "firing": false,
-      "count_7d": 0,
-      "last_fired": null,
+      "firing": true,
+      "count_7d": 32,
+      "last_fired": 1788166800,
       "client_count_7d": 0,
-      "server_count_7d": 0,
-      "server_share": 0,
-      "status": "never_fired"
+      "server_count_7d": 32,
+      "server_share": 1,
+      "status": "healthy"
     },
     {
       "name": "Schedule",
@@ -25,9 +25,9 @@
     }
   ],
   "dataset": {
-    "id": "2183558222437003",
-    "name": "Blue Rose Auto's Pixel",
-    "last_fired_time": "2026-08-04T04:42:28+0500",
+    "id": "1798280031363662",
+    "name": "Blue Rose Auto",
+    "last_fired_time": "2026-08-28T07:07:36+0500",
     "first_party_cookie_status": "first_party_cookie_enabled",
     "enable_automatic_matching": true,
     "automatic_matching_fields": [
@@ -43,14 +43,13 @@
       "country",
       "external_id"
     ],
-    "creation_time": "2026-05-20T00:47:10+0500"
+    "creation_time": "2026-08-06T18:33:13+0500"
   },
   "test_event": {
     "fired": false,
     "event_id": null
   },
   "gaps": [
-    "'Lead' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Lead'))",
     "'Schedule' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Schedule'))"
   ],
   "next_steps": [

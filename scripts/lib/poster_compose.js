@@ -282,6 +282,25 @@ async function scrimBuffer(width, height, theme = "dark") {
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
+/** Left-to-right scrim so the marketing text block (always laid out in the
+ *  left ~65% of the frame by poster_text_layer.js) stays legible regardless of
+ *  what's directly behind it — chrome highlights, a light-colored car panel, a
+ *  hand/tool mid-frame, etc. The bottom-to-top scrim alone leaves the upper
+ *  portion of the text block (headline sits well above the very bottom edge)
+ *  under-covered; this covers the same zone independent of vertical position. */
+async function leftScrimBuffer(width, height, theme = "dark", reach = 0.66) {
+  const c = theme === "light" ? "#fff" : "#000";
+  const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="l" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="${c}" stop-opacity="0.5"/>
+      <stop offset="${Math.round(reach * 70)}%" stop-color="${c}" stop-opacity="0.22"/>
+      <stop offset="${Math.round(reach * 100)}%" stop-color="${c}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <rect width="${width}" height="${height}" fill="url(#l)"/>
+  </svg>`;
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
 /** Top-band scrim so the top-left logo always separates from a busy/bright
  *  photo behind it, regardless of theme. Transparent below the band so the
  *  middle of the photo is untouched. */
@@ -300,23 +319,23 @@ async function topScrimBuffer(width, height, theme = "dark") {
 }
 
 /**
- * Build a soft drop shadow from a logo's own alpha: a blurred black silhouette,
- * so a bare (chip-less) logo still separates cleanly from a busy photo. Returns
- * { shadow, width, height } — shadow is a PNG buffer sized to the padded canvas.
+ * Build a soft drop shadow from a logo's own alpha (a blurred black
+ * silhouette) so a bare logo — no background plate — still separates from a
+ * busy/bright photo. Returns { shadow, pad } — shadow is a PNG buffer sized to
+ * the padded canvas; pad is how far the shadow buffer's origin sits outside
+ * the logo's own top-left, for positioning.
  */
-async function logoShadowBuffer(logoResized, lw, lh, blur = 7) {
+async function logoShadowBuffer(logoResized, lw, lh, blur = 8) {
   const pad = Math.ceil(blur * 2);
   const canvasW = lw + pad * 2;
   const canvasH = lh + pad * 2;
-  // Black canvas masked by the logo's alpha (dest-in keeps black only where the
-  // logo is opaque), then blurred → a soft shadow shaped like the logo.
   const shadow = await sharp({ create: { width: canvasW, height: canvasH, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
     .composite([{ input: await sharp({ create: { width: lw, height: lh, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 1 } } }).png().toBuffer(), left: pad, top: pad }])
     .composite([{ input: logoResized, left: pad, top: pad, blend: "dest-in" }])
     .blur(blur)
     .png()
     .toBuffer();
-  return { shadow, pad, canvasW, canvasH };
+  return { shadow, pad };
 }
 
 /**
@@ -351,14 +370,17 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
     composites.push({ input: await colorWashBuffer(width, height, washColor, 0.14), blend: "soft-light" });
   }
   composites.push({ input: await scrimBuffer(width, height, theme), top: 0, left: 0 });
+  composites.push({ input: await leftScrimBuffer(width, height, theme), top: 0, left: 0 });
   // Top-band scrim so the logo separates cleanly from whatever is behind it.
   composites.push({ input: await topScrimBuffer(width, height, theme), top: 0, left: 0 });
 
   const adLayer = await renderAdLayer({ width, height, brand, copy, contact, theme });
   composites.push({ input: adLayer, top: 0, left: 0 });
 
-  // Logo: crisp Lanczos downscale of the original + soft shadow, top-left inside
-  // the same safe-zone padding the text layer uses (0.083 of the short edge).
+  // Logo: crisp Lanczos downscale of the original, bare (no background plate
+  // — a plate read as a sticker at this size) top-left inside the same
+  // safe-zone padding the text layer uses (0.083 of the short edge). A soft
+  // alpha-shaped drop shadow keeps it separated from busy backgrounds instead.
   if (logoUrl) {
     let logoBuffer;
     try {
@@ -366,14 +388,17 @@ async function composeAdPoster({ backgroundBuffer, brand, contact, copy, width, 
     } catch (e) {
       throw new PosterComposeError(`Failed to fetch logo from ${logoUrl}: ${e.message}`);
     }
-    const pad = Math.round(Math.min(width, height) * 0.083);
+    // Sitting close to the corner (~1.7% pad) rather than inset with the same
+    // margin as the text block below it.
+    const pad = Math.round(Math.min(width, height) * 0.017);
     // Cap BOTH height and width: a wide wordmark sized by height alone bleeds
     // across the poster into the subject. `fit: inside` scales it to sit inside
-    // the top-left box (short-edge-proportional height, ~4.8% of width max),
-    // leaving clear space so it never collides with a centered subject/face.
-    // (Reduced 60% from the original 0.12/0.44 — that size read as oversized.)
-    const logoH = Math.round(Math.min(width, height) * 0.048);
-    const logoMaxW = Math.round(width * 0.176);
+    // the top-left box, leaving clear space so it never collides with a
+    // centered subject/face. Sized as a corner trust-mark (~15% of the short
+    // edge) rather than a focal element — smaller than the previous 22% so it
+    // doesn't compete with the headline stack directly below it.
+    const logoH = Math.round(Math.min(width, height) * 0.15);
+    const logoMaxW = Math.round(width * 0.18);
     const logoResized = await sharp(logoBuffer)
       .resize({ height: logoH, width: logoMaxW, fit: "inside", kernel: "lanczos3" })
       .png()

@@ -1,4 +1,4 @@
-# Strategy Brief — Health & Care
+# Strategy Brief — Wellness & Care
 
 **Generated:** 2026-08-05T16:11:45.307Z
 **Monthly budget:** 1000

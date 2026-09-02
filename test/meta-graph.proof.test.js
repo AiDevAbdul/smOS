@@ -3,6 +3,11 @@ import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { appsecretProof } from "../scripts/lib/meta-graph.js";
 
+// Hermetic: the first test passes `undefined`, which falls back to
+// process.env.META_APP_SECRET by design — clear it so a secret exported in the
+// developer's shell can't flip the "no secret configured" expectation.
+delete process.env.META_APP_SECRET;
+
 test("appsecretProof: returns null when no app secret is configured", () => {
   assert.equal(appsecretProof("tok", undefined), null);
   assert.equal(appsecretProof("tok", ""), null);

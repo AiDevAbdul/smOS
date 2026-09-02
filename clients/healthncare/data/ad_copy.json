@@ -52,7 +52,7 @@
       "name": "Problem-Agitate-Solve (PAS)",
       "hook_archetype": "pain-led question",
       "format": "single_image",
-      "direction": "Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Health & Care.",
+      "direction": "Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Wellness & Care.",
       "hooks": [
         {
           "hook": {
@@ -72,7 +72,7 @@
           },
           "primary_text": [
             {
-              "text": "You've tried everything. Restrictive diets. Expensive gym memberships. Pills that don't work. It's exhausting. Health & Care supplements are clinically proven to work where others fail. Real weight loss. Real energy. No gimmicks.",
+              "text": "You've tried everything. Restrictive diets. Expensive gym memberships. Pills that don't work. It's exhausting. Wellness & Care supplements are clinically proven to work where others fail. Real weight loss. Real energy. No gimmicks.",
               "length": 229,
               "limit": 500,
               "over_limit": false,
@@ -87,7 +87,7 @@
               }
             },
             {
-              "text": "Diet after diet, the scale doesn't budge. You're tired of wasted money and false promises. Health & Care uses science-backed ingredients that actually deliver results. Join thousands who finally got real weight loss results.",
+              "text": "Diet after diet, the scale doesn't budge. You're tired of wasted money and false promises. Wellness & Care uses science-backed ingredients that actually deliver results. Join thousands who finally got real weight loss results.",
               "length": 224,
               "limit": 500,
               "over_limit": false,
@@ -102,7 +102,7 @@
               }
             },
             {
-              "text": "Tired of being tired? Your weight isn't just about appearance—it's draining your energy, your confidence, your life. Health & Care changes that. Proven supplements. Affordable prices. Real transformation starts now.",
+              "text": "Tired of being tired? Your weight isn't just about appearance—it's draining your energy, your confidence, your life. Wellness & Care changes that. Proven supplements. Affordable prices. Real transformation starts now.",
               "length": 215,
               "limit": 500,
               "over_limit": false,
@@ -200,7 +200,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Diet after diet, the scale doesn't budge. You're tired of wasted money and false promises. Health & Care uses science-backed ingredients that actually deliver results. Join thousands who finally got real weight loss results.",
+            "primary": "Diet after diet, the scale doesn't budge. You're tired of wasted money and false promises. Wellness & Care uses science-backed ingredients that actually deliver results. Join thousands who finally got real weight loss results.",
             "headline": "Stop Wasting Money on Fake Supplements",
             "cta": "SHOP_NOW",
             "overall": 5.5
@@ -225,7 +225,7 @@
           },
           "primary_text": [
             {
-              "text": "Most supplements are 90% filler. Health & Care is different. Every product is selected for clinical efficacy. Transparent ingredients. Real before/afters. Affordable prices that don't sacrifice quality.",
+              "text": "Most supplements are 90% filler. Wellness & Care is different. Every product is selected for clinical efficacy. Transparent ingredients. Real before/afters. Affordable prices that don't sacrifice quality.",
               "length": 202,
               "limit": 500,
               "over_limit": false,
@@ -240,7 +240,7 @@
               }
             },
             {
-              "text": "You've been burned before by supplements that promised everything and delivered nothing. Health & Care is built on research, not marketing. See the science. See the results. See the difference.",
+              "text": "You've been burned before by supplements that promised everything and delivered nothing. Wellness & Care is built on research, not marketing. See the science. See the results. See the difference.",
               "length": 193,
               "limit": 500,
               "over_limit": false,
@@ -255,7 +255,7 @@
               }
             },
             {
-              "text": "The weight won't budge. Your energy is gone. You're skeptical of supplements—and rightfully so. But what if one actually worked? Health & Care proves it's possible.",
+              "text": "The weight won't budge. Your energy is gone. You're skeptical of supplements—and rightfully so. But what if one actually worked? Wellness & Care proves it's possible.",
               "length": 164,
               "limit": 500,
               "over_limit": false,
@@ -353,7 +353,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Most supplements are 90% filler. Health & Care is different. Every product is selected for clinical efficacy. Transparent ingredients. Real before/afters. Affordable prices that don't sacrifice quality.",
+            "primary": "Most supplements are 90% filler. Wellness & Care is different. Every product is selected for clinical efficacy. Transparent ingredients. Real before/afters. Affordable prices that don't sacrifice quality.",
             "headline": "Science Over Hype",
             "cta": "LEARN_MORE",
             "overall": 5.6
@@ -378,7 +378,7 @@
           },
           "primary_text": [
             {
-              "text": "You've spent thousands. On programs. On products. On false hope. Health & Care brings scientific proof and affordability together. Lose weight without losing your savings.",
+              "text": "You've spent thousands. On programs. On products. On false hope. Wellness & Care brings scientific proof and affordability together. Lose weight without losing your savings.",
               "length": 171,
               "limit": 500,
               "over_limit": false,
@@ -393,7 +393,7 @@
               }
             },
             {
-              "text": "The weight-loss industry is built on empty promises and premium prices. Health & Care breaks the mold. Effective ingredients at prices that make sense. No miracle claims. Just real science.",
+              "text": "The weight-loss industry is built on empty promises and premium prices. Wellness & Care breaks the mold. Effective ingredients at prices that make sense. No miracle claims. Just real science.",
               "length": 189,
               "limit": 500,
               "over_limit": false,
@@ -408,7 +408,7 @@
               }
             },
             {
-              "text": "Your friends lost weight. Your family members have more energy. Why not you? Because you haven't found the right supplement yet. Health & Care changes everything.",
+              "text": "Your friends lost weight. Your family members have more energy. Why not you? Because you haven't found the right supplement yet. Wellness & Care changes everything.",
               "length": 162,
               "limit": 500,
               "over_limit": false,
@@ -506,7 +506,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Your friends lost weight. Your family members have more energy. Why not you? Because you haven't found the right supplement yet. Health & Care changes everything.",
+            "primary": "Your friends lost weight. Your family members have more energy. Why not you? Because you haven't found the right supplement yet. Wellness & Care changes everything.",
             "headline": "Expensive Doesn't Mean Better",
             "cta": "SHOP_NOW",
             "overall": 5.4
@@ -531,7 +531,7 @@
           },
           "primary_text": [
             {
-              "text": "Supplement companies lie. Health & Care doesn't. Every claim backed by clinical research. Every product selected for efficacy. Your weight loss doesn't require marketing magic—it requires science.",
+              "text": "Supplement companies lie. Wellness & Care doesn't. Every claim backed by clinical research. Every product selected for efficacy. Your weight loss doesn't require marketing magic—it requires science.",
               "length": 196,
               "limit": 500,
               "over_limit": false,
@@ -546,7 +546,7 @@
               }
             },
             {
-              "text": "You deserve transparency. You deserve results. Health & Care delivers both. Clinically proven weight-loss supplements at honest prices. See the evidence. Try the difference.",
+              "text": "You deserve transparency. You deserve results. Wellness & Care delivers both. Clinically proven weight-loss supplements at honest prices. See the evidence. Try the difference.",
               "length": 173,
               "limit": 500,
               "over_limit": false,
@@ -561,7 +561,7 @@
               }
             },
             {
-              "text": "The diet industry profits from your failure. Health & Care profits from your success. Real supplements. Real results. Real transformation.",
+              "text": "The diet industry profits from your failure. Wellness & Care profits from your success. Real supplements. Real results. Real transformation.",
               "length": 138,
               "limit": 500,
               "over_limit": false,
@@ -659,7 +659,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Supplement companies lie. Health & Care doesn't. Every claim backed by clinical research. Every product selected for efficacy. Your weight loss doesn't require marketing magic—it requires science.",
+            "primary": "Supplement companies lie. Wellness & Care doesn't. Every claim backed by clinical research. Every product selected for efficacy. Your weight loss doesn't require marketing magic—it requires science.",
             "headline": "The Honest Supplement Brand",
             "cta": "SIGN_UP",
             "overall": 5.5
@@ -684,7 +684,7 @@
           },
           "primary_text": [
             {
-              "text": "Premium health doesn't have to mean premium price. Health & Care brings clinical-grade supplements to everyone. Lose weight. Gain energy. Reclaim your life—without breaking the bank.",
+              "text": "Premium health doesn't have to mean premium price. Wellness & Care brings clinical-grade supplements to everyone. Lose weight. Gain energy. Reclaim your life—without breaking the bank.",
               "length": 182,
               "limit": 500,
               "over_limit": false,
@@ -699,7 +699,7 @@
               }
             },
             {
-              "text": "Energy is everything. Confidence. Motivation. Quality time with family. But expensive supplements drain your wallet. Health & Care proves you don't have to choose between health and affordability.",
+              "text": "Energy is everything. Confidence. Motivation. Quality time with family. But expensive supplements drain your wallet. Wellness & Care proves you don't have to choose between health and affordability.",
               "length": 196,
               "limit": 500,
               "over_limit": false,
@@ -714,7 +714,7 @@
               }
             },
             {
-              "text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+              "text": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Wellness & Care gets it. Effective supplements at $100-$300 instead of $500+.",
               "length": 182,
               "limit": 500,
               "over_limit": false,
@@ -812,7 +812,7 @@
             }
           ],
           "best_combo": {
-            "primary": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Health & Care gets it. Effective supplements at $100-$300 instead of $500+.",
+            "primary": "You're frustrated. You're exhausted. And you're skeptical of solutions that cost as much as a car payment. Wellness & Care gets it. Effective supplements at $100-$300 instead of $500+.",
             "headline": "Health That's Affordable",
             "cta": "SHOP_NOW",
             "overall": 5.6
@@ -827,9 +827,9 @@
           "1200x628"
         ],
         "copy_zones": "Center-safe for 1:1; bottom-third for 9:16; left-third for 1.91:1 (CTA bug area).",
-        "visual_direction": "Lead with the pain-led question. Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Health & Care."
+        "visual_direction": "Lead with the pain-led question. Lead with the pain in Problem-Agitate-Solve (PAS). Use audience's frustration to hook; agitate the consequence; solve with Wellness & Care."
       },
-      "error": "fetch failed",
+      "error": "Supabase Storage upload -> 500: {\"statusCode\":\"500\",\"error\":\"Internal\",\"message\":\"Internal Server Error\",\"code\":\"InternalError\"}",
       "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/PAIN-ad.png",
       "ai_generated": true,
       "ai_disclosed": true,
@@ -845,8 +845,9 @@
             "#FFFFFF"
           ]
         },
-        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
-      }
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/PAIN-ad.png"
     },
     {
       "angle_id": "ASPIRATION",
@@ -873,7 +874,7 @@
           },
           "primary_text": [
             {
-              "text": "Sarah tried everything. Then she found Health & Care. In 90 days: 40 lbs gone. Energy returned. Confidence transformed. This isn't a miracle—it's science. Clinically proven supplements. Real results. Your transformation starts now.",
+              "text": "Sarah tried everything. Then she found Wellness & Care. In 90 days: 40 lbs gone. Energy returned. Confidence transformed. This isn't a miracle—it's science. Clinically proven supplements. Real results. Your transformation starts now.",
               "length": 231,
               "limit": 500,
               "over_limit": false,
@@ -888,7 +889,7 @@
               }
             },
             {
-              "text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+              "text": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Wellness & Care difference. See real before/afters from customers like you.",
               "length": 221,
               "limit": 500,
               "over_limit": false,
@@ -1001,7 +1002,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Health & Care difference. See real before/afters from customers like you.",
+            "primary": "Before: Exhausted, struggling with weight, losing confidence. After: 40 lbs lighter, energy to match her ambitions, ready to live again. That's the Wellness & Care difference. See real before/afters from customers like you.",
             "headline": "See What's Possible",
             "cta": "SHOP_NOW",
             "overall": 5.9
@@ -1026,7 +1027,7 @@
           },
           "primary_text": [
             {
-              "text": "Mark was skeptical. He'd tried everything. Then he gave Health & Care 90 days. The results: 35 lbs down, energy up, life transformed. Thousands of before/afters prove this works. Will you be next?",
+              "text": "Mark was skeptical. He'd tried everything. Then he gave Wellness & Care 90 days. The results: 35 lbs down, energy up, life transformed. Thousands of before/afters prove this works. Will you be next?",
               "length": 196,
               "limit": 500,
               "over_limit": false,
@@ -1056,7 +1057,7 @@
               }
             },
             {
-              "text": "Energy was his biggest win. Not just weight loss—the ability to keep up with his kids, to feel confident again, to live fully. That's what Health & Care delivers.",
+              "text": "Energy was his biggest win. Not just weight loss—the ability to keep up with his kids, to feel confident again, to live fully. That's what Wellness & Care delivers.",
               "length": 162,
               "limit": 500,
               "over_limit": false,
@@ -1154,7 +1155,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Mark was skeptical. He'd tried everything. Then he gave Health & Care 90 days. The results: 35 lbs down, energy up, life transformed. Thousands of before/afters prove this works. Will you be next?",
+            "primary": "Mark was skeptical. He'd tried everything. Then he gave Wellness & Care 90 days. The results: 35 lbs down, energy up, life transformed. Thousands of before/afters prove this works. Will you be next?",
             "headline": "Results You Can Feel",
             "cta": "SIGN_UP",
             "overall": 5.8
@@ -1179,7 +1180,7 @@
           },
           "primary_text": [
             {
-              "text": "Jessica's before/after tells the story. 42 lbs gone. But the real transformation? Finally feeling comfortable in her own skin. Health & Care made it possible through clinically proven supplements and honest support.",
+              "text": "Jessica's before/after tells the story. 42 lbs gone. But the real transformation? Finally feeling comfortable in her own skin. Wellness & Care made it possible through clinically proven supplements and honest support.",
               "length": 215,
               "limit": 500,
               "over_limit": false,
@@ -1194,7 +1195,7 @@
               }
             },
             {
-              "text": "Weight is the symptom. Low confidence is the real problem. Health & Care addresses both. See how real customers transformed not just their bodies, but their lives.",
+              "text": "Weight is the symptom. Low confidence is the real problem. Wellness & Care addresses both. See how real customers transformed not just their bodies, but their lives.",
               "length": 163,
               "limit": 500,
               "over_limit": false,
@@ -1209,7 +1210,7 @@
               }
             },
             {
-              "text": "The journey from 'I can't' to 'I did' is powerful. Health & Care supplements deliver the science; your effort delivers the transformation. Together, they work.",
+              "text": "The journey from 'I can't' to 'I did' is powerful. Wellness & Care supplements deliver the science; your effort delivers the transformation. Together, they work.",
               "length": 159,
               "limit": 500,
               "over_limit": false,
@@ -1307,7 +1308,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Jessica's before/after tells the story. 42 lbs gone. But the real transformation? Finally feeling comfortable in her own skin. Health & Care made it possible through clinically proven supplements and honest support.",
+            "primary": "Jessica's before/after tells the story. 42 lbs gone. But the real transformation? Finally feeling comfortable in her own skin. Wellness & Care made it possible through clinically proven supplements and honest support.",
             "headline": "Confidence Returns With Results",
             "cta": "SHOP_NOW",
             "overall": 5.4
@@ -1332,7 +1333,7 @@
           },
           "primary_text": [
             {
-              "text": "Before: Exhausted, stuck, hopeless. After: 48 lbs lighter, energized, living fully. Health & Care supplements delivered the science. Michael delivered the commitment. Together: transformation.",
+              "text": "Before: Exhausted, stuck, hopeless. After: 48 lbs lighter, energized, living fully. Wellness & Care supplements delivered the science. Michael delivered the commitment. Together: transformation.",
               "length": 192,
               "limit": 500,
               "over_limit": false,
@@ -1362,7 +1363,7 @@
               }
             },
             {
-              "text": "The weight is gone. The energy is back. The life is better. That's the Health & Care promise, backed by thousands of proven transformations.",
+              "text": "The weight is gone. The energy is back. The life is better. That's the Wellness & Care promise, backed by thousands of proven transformations.",
               "length": 140,
               "limit": 500,
               "over_limit": false,
@@ -1460,7 +1461,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Before: Exhausted, stuck, hopeless. After: 48 lbs lighter, energized, living fully. Health & Care supplements delivered the science. Michael delivered the commitment. Together: transformation.",
+            "primary": "Before: Exhausted, stuck, hopeless. After: 48 lbs lighter, energized, living fully. Wellness & Care supplements delivered the science. Michael delivered the commitment. Together: transformation.",
             "headline": "See the Science in Action",
             "cta": "SIGN_UP",
             "overall": 5.6
@@ -1485,7 +1486,7 @@
           },
           "primary_text": [
             {
-              "text": "Emma's journey: from 'I've tried everything' to 'I finally found what works.' 38 lbs gone. Energy restored. Life reclaimed. Health & Care made the difference. Your story could be next.",
+              "text": "Emma's journey: from 'I've tried everything' to 'I finally found what works.' 38 lbs gone. Energy restored. Life reclaimed. Wellness & Care made the difference. Your story could be next.",
               "length": 184,
               "limit": 500,
               "over_limit": false,
@@ -1515,7 +1516,7 @@
               }
             },
             {
-              "text": "The pounds came off. The energy came back. The confidence returned. That's the Health & Care transformation. Ready to join thousands of success stories?",
+              "text": "The pounds came off. The energy came back. The confidence returned. That's the Wellness & Care transformation. Ready to join thousands of success stories?",
               "length": 152,
               "limit": 500,
               "over_limit": false,
@@ -1613,7 +1614,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Emma's journey: from 'I've tried everything' to 'I finally found what works.' 38 lbs gone. Energy restored. Life reclaimed. Health & Care made the difference. Your story could be next.",
+            "primary": "Emma's journey: from 'I've tried everything' to 'I finally found what works.' 38 lbs gone. Energy restored. Life reclaimed. Wellness & Care made the difference. Your story could be next.",
             "headline": "From Struggling to Thriving",
             "cta": "SHOP_NOW",
             "overall": 5.7
@@ -1646,8 +1647,9 @@
             "#FFFFFF"
           ]
         },
-        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
-      }
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/ASPIRATION-ad.png"
     },
     {
       "angle_id": "PROOF",
@@ -1674,7 +1676,7 @@
           },
           "primary_text": [
             {
-              "text": "Every Health & Care supplement is backed by clinical research. Not marketing hype—peer-reviewed studies. Proven ingredients. Transparent results. This is science, not sales.",
+              "text": "Every Wellness & Care supplement is backed by clinical research. Not marketing hype—peer-reviewed studies. Proven ingredients. Transparent results. This is science, not sales.",
               "length": 173,
               "limit": 500,
               "over_limit": false,
@@ -1689,7 +1691,7 @@
               }
             },
             {
-              "text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+              "text": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Wellness & Care uses these proven ingredients at effective doses. See the science.",
               "length": 216,
               "limit": 500,
               "over_limit": false,
@@ -1704,7 +1706,7 @@
               }
             },
             {
-              "text": "Too many supplements hide behind vague claims. Health & Care shows the research. Read the studies. Understand the science. Make an informed decision based on evidence, not hype.",
+              "text": "Too many supplements hide behind vague claims. Wellness & Care shows the research. Read the studies. Understand the science. Make an informed decision based on evidence, not hype.",
               "length": 177,
               "limit": 500,
               "over_limit": false,
@@ -1802,7 +1804,7 @@
             }
           ],
           "best_combo": {
-            "primary": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Health & Care uses these proven ingredients at effective doses. See the science.",
+            "primary": "The research is clear. Caffeine boosts energy by 15-20%. Key weight-loss compounds show 8-12% body-weight reduction in clinical trials. Wellness & Care uses these proven ingredients at effective doses. See the science.",
             "headline": "The Science of Weight Loss",
             "cta": "LEARN_MORE",
             "overall": 5.6
@@ -1827,7 +1829,7 @@
           },
           "primary_text": [
             {
-              "text": "Proprietary blends hide the truth. Health & Care doesn't. See every ingredient. See the research. See why it works. Transparency builds trust. Trust builds results.",
+              "text": "Proprietary blends hide the truth. Wellness & Care doesn't. See every ingredient. See the research. See why it works. Transparency builds trust. Trust builds results.",
               "length": 164,
               "limit": 500,
               "over_limit": false,
@@ -1842,7 +1844,7 @@
               }
             },
             {
-              "text": "Study after study proves these ingredients work. But most brands bury them in 'proprietary blends.' Health & Care shows you everything. Full transparency. Full efficacy. Full trust.",
+              "text": "Study after study proves these ingredients work. But most brands bury them in 'proprietary blends.' Wellness & Care shows you everything. Full transparency. Full efficacy. Full trust.",
               "length": 181,
               "limit": 500,
               "over_limit": false,
@@ -1857,7 +1859,7 @@
               }
             },
             {
-              "text": "Clinical trials show: ingredient A delivers 12% body-weight reduction; ingredient B increases energy by 18%; ingredient C improves metabolism by 9%. Health & Care puts all three in every serving at research-backed doses.",
+              "text": "Clinical trials show: ingredient A delivers 12% body-weight reduction; ingredient B increases energy by 18%; ingredient C improves metabolism by 9%. Wellness & Care puts all three in every serving at research-backed doses.",
               "length": 220,
               "limit": 500,
               "over_limit": false,
@@ -1955,7 +1957,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Proprietary blends hide the truth. Health & Care doesn't. See every ingredient. See the research. See why it works. Transparency builds trust. Trust builds results.",
+            "primary": "Proprietary blends hide the truth. Wellness & Care doesn't. See every ingredient. See the research. See why it works. Transparency builds trust. Trust builds results.",
             "headline": "See What's Really Inside",
             "cta": "LEARN_MORE",
             "overall": 5.6
@@ -1980,7 +1982,7 @@
           },
           "primary_text": [
             {
-              "text": "The supplement industry spends billions on marketing. Health & Care spends it on research. Every formula tested. Every ingredient verified. Every result documented. This is science.",
+              "text": "The supplement industry spends billions on marketing. Wellness & Care spends it on research. Every formula tested. Every ingredient verified. Every result documented. This is science.",
               "length": 181,
               "limit": 500,
               "over_limit": false,
@@ -1995,7 +1997,7 @@
               }
             },
             {
-              "text": "Peer-reviewed studies prove it. Transparent results prove it. Real before/afters prove it. Health & Care supplements work—backed by the research competitors won't show you.",
+              "text": "Peer-reviewed studies prove it. Transparent results prove it. Real before/afters prove it. Wellness & Care supplements work—backed by the research competitors won't show you.",
               "length": 172,
               "limit": 500,
               "over_limit": false,
@@ -2010,7 +2012,7 @@
               }
             },
             {
-              "text": "Marketing claims fade. Scientific evidence lasts. Health & Care invests in the latter. Clinically proven supplements. Research-backed results. No hype.",
+              "text": "Marketing claims fade. Scientific evidence lasts. Wellness & Care invests in the latter. Clinically proven supplements. Research-backed results. No hype.",
               "length": 151,
               "limit": 500,
               "over_limit": false,
@@ -2108,7 +2110,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Peer-reviewed studies prove it. Transparent results prove it. Real before/afters prove it. Health & Care supplements work—backed by the research competitors won't show you.",
+            "primary": "Peer-reviewed studies prove it. Transparent results prove it. Real before/afters prove it. Wellness & Care supplements work—backed by the research competitors won't show you.",
             "headline": "Proven by Science. Tested. Verified.",
             "cta": "SHOP_NOW",
             "overall": 5.3
@@ -2133,7 +2135,7 @@
           },
           "primary_text": [
             {
-              "text": "When doctors recommend weight-loss supplements, they point to clinical research. Health & Care formulas use the same ingredients, at the same studied doses, with the same proven results. Doctor-approved science.",
+              "text": "When doctors recommend weight-loss supplements, they point to clinical research. Wellness & Care formulas use the same ingredients, at the same studied doses, with the same proven results. Doctor-approved science.",
               "length": 211,
               "limit": 500,
               "over_limit": false,
@@ -2148,7 +2150,7 @@
               }
             },
             {
-              "text": "You want results. You also want to know it's safe and effective. Clinical research on every ingredient. Documentation of every study. Transparency on every claim. That's the Health & Care difference.",
+              "text": "You want results. You also want to know it's safe and effective. Clinical research on every ingredient. Documentation of every study. Transparency on every claim. That's the Wellness & Care difference.",
               "length": 199,
               "limit": 500,
               "over_limit": false,
@@ -2163,7 +2165,7 @@
               }
             },
             {
-              "text": "The studies are clear. This ingredient delivers measurable weight loss and sustained energy. Most brands cut corners on the dose. Health & Care doesn't. Research-backed quantities. Research-backed results.",
+              "text": "The studies are clear. This ingredient delivers measurable weight loss and sustained energy. Most brands cut corners on the dose. Wellness & Care doesn't. Research-backed quantities. Research-backed results.",
               "length": 205,
               "limit": 500,
               "over_limit": false,
@@ -2261,7 +2263,7 @@
             }
           ],
           "best_combo": {
-            "primary": "You want results. You also want to know it's safe and effective. Clinical research on every ingredient. Documentation of every study. Transparency on every claim. That's the Health & Care difference.",
+            "primary": "You want results. You also want to know it's safe and effective. Clinical research on every ingredient. Documentation of every study. Transparency on every claim. That's the Wellness & Care difference.",
             "headline": "The Research Proves It",
             "cta": "LEARN_MORE",
             "overall": 5.4
@@ -2286,7 +2288,7 @@
           },
           "primary_text": [
             {
-              "text": "Head-to-head studies show it: Health & Care ingredients outperform the competition. Higher efficacy. Better safety profile. Same price. This is what research-backed transparency delivers.",
+              "text": "Head-to-head studies show it: Wellness & Care ingredients outperform the competition. Higher efficacy. Better safety profile. Same price. This is what research-backed transparency delivers.",
               "length": 187,
               "limit": 500,
               "over_limit": false,
@@ -2301,7 +2303,7 @@
               }
             },
             {
-              "text": "Most brands won't show you the studies. Health & Care does. Compare the research. See why our formulas win on efficacy, safety, and value.",
+              "text": "Most brands won't show you the studies. Wellness & Care does. Compare the research. See why our formulas win on efficacy, safety, and value.",
               "length": 138,
               "limit": 500,
               "over_limit": false,
@@ -2316,7 +2318,7 @@
               }
             },
             {
-              "text": "Clinical trials don't lie. In every category—weight loss, energy, metabolism, safety—Health & Care formulas deliver superior results backed by peer-reviewed research. See the evidence.",
+              "text": "Clinical trials don't lie. In every category—weight loss, energy, metabolism, safety—Wellness & Care formulas deliver superior results backed by peer-reviewed research. See the evidence.",
               "length": 184,
               "limit": 500,
               "over_limit": false,
@@ -2414,7 +2416,7 @@
             }
           ],
           "best_combo": {
-            "primary": "Most brands won't show you the studies. Health & Care does. Compare the research. See why our formulas win on efficacy, safety, and value.",
+            "primary": "Most brands won't show you the studies. Wellness & Care does. Compare the research. See why our formulas win on efficacy, safety, and value.",
             "headline": "Proven Better Than the Rest",
             "cta": "SHOP_NOW",
             "overall": 5.5
@@ -2447,8 +2449,9 @@
             "#FFFFFF"
           ]
         },
-        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
-      }
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/PROOF-ad.png"
     }
   ],
   "summary": {

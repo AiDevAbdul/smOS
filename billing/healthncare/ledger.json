@@ -1,0 +1,25 @@
+[
+  {
+    "id": "INV-healthncare-2026-08",
+    "slug": "healthncare",
+    "company": "Wellness & Care",
+    "period": "2026-08",
+    "currency": "USD",
+    "line_items": [
+      {
+        "description": "Starter management retainer — 2026-08",
+        "amount": 400
+      },
+      {
+        "description": "Ad spend pass-through — 2026-08",
+        "amount": 600
+      }
+    ],
+    "subtotal": 1000,
+    "total": 1000,
+    "status": "draft",
+    "issued_at": "2026-08-06T09:03:36.277Z",
+    "due_date": "2026-08-13T09:03:36.277Z",
+    "stripe": null
+  }
+]

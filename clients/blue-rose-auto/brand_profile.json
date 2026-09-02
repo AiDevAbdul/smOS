@@ -12,8 +12,8 @@
   },
   "visual": {
     "logo": {
-      "primary_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png",
-      "reverse_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png",
+      "primary_url": "clients/blue-rose-auto/brand/logo.png",
+      "reverse_url": "clients/blue-rose-auto/brand/logo.png",
       "source": "https://blueroseauto.com/wp-content/uploads/2026/01/Blue-Rose-Auto.webp",
       "clear_space": "0.25x shield height on all sides",
       "min_size": "80px height"

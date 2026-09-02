@@ -1,39 +1,40 @@
 # Performance Analysis — Blue Rose Auto Care & Repair Services
 
-_7-day window · 4 campaigns · 18 adsets · 18 ads_
+_7-day window · 9 campaigns · 28 adsets · 28 ads_
 
-## Opportunity Score: 12/100
+## Opportunity Score: 0/100
 
-- Reclaim $113.37/7d bleeding on 2 pause candidates.
+- No major structural opportunity detected this window — maintain and monitor.
 
 ## Last 7 days
 
 | Metric | Value |
 |---|---|
-| Spend | $338.45 |
-| ROAS | 0 |
-| CPA | 26.03 |
+| Spend | $613.38 |
+| ROAS | 14.6728 |
+| CPA | 25.56 |
 | Link CTR | —% |
-| Conversions | 13 |
+| Conversions | 24 |
 
 ## Account economics
 
 | Metric | Value |
 |---|---|
-| Blended MER | 0× |
+| Blended MER | 14.67× |
 | Breakeven ROAS | — |
 | Target ROAS | — |
 | Gross margin | — |
 | Gross profit (ad-driven) | — |
 | Profit after ad spend | — |
-| New-customer CAC | USD 26.03 _(all conversions)_ |
+| New-customer CAC | USD 25.56 _(all conversions)_ |
 
 ## Flags (4)
 
-- **PAUSE_CANDIDATE_CTR**: 2
 - **ANOMALY_spend_spike**: 1
 - **ANOMALY_attribution**: 1
+- **SCALE_WATCH**: 2
 
 ## Winners
 
-_None yet._
+- New Leads Ad — ROAS —
+- New Leads ad — ROAS —

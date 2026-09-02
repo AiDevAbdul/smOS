@@ -632,14 +632,534 @@
           "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_MECH_TRUST-ad-4x5.png"
         }
       }
+    },
+    {
+      "angle_id": "LEADS_CERAMIC_GLOSS",
+      "campaign": "CONV_LUXCOS_202608",
+      "hook_family": "Ceramic Coating / Showroom Gloss",
+      "design_brief": {
+        "primary_format": "Single image",
+        "sizes": [
+          "1080x1080",
+          "1200x628"
+        ],
+        "shot_list": [
+          "Hero image: freshly ceramic-coated vehicle in the bay, deep gloss reflecting the shop lights, beauty angle on the front quarter panel"
+        ],
+        "text_overlay_pct_max": 15
+      },
+      "hooks": [
+        "Ceramic coating that actually holds up in Oregon rain.",
+        "This is what 9H ceramic gloss looks like on day one — and year three.",
+        "Hand-applied ceramic. No shortcuts, no drive-through wax.",
+        "Springfield's ceramic coating specialists since '95.",
+        "Your paint deserves better than a $20 car wash wax."
+      ],
+      "primary_text": [
+        {
+          "text": "Ceramic coating from Blue Rose Auto means a deep, showroom-level gloss and real protection against Oregon road grime, UV, and rain — hand-applied by ASE-certified technicians with 30+ years in the same Springfield shop. Book a free quote below.",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 8,
+            "cta_strength": 9,
+            "composite": 9
+          }
+        },
+        {
+          "text": "Every ceramic coating job we do gets the same prep: full decontamination wash, paint correction where needed, then a hand-applied 9H coating that holds its gloss for years, not months. Springfield-based, 30+ years hands-on.",
+          "score": {
+            "clarity": 9,
+            "specificity": 10,
+            "emotional_trigger": 7,
+            "cta_strength": 7,
+            "composite": 8.25
+          }
+        }
+      ],
+      "headlines": [
+        {
+          "text": "Ceramic Coating, Done Right",
+          "score": {
+            "clarity": 10,
+            "specificity": 8,
+            "emotional_trigger": 8,
+            "cta_strength": 7,
+            "composite": 8.25
+          }
+        },
+        {
+          "text": "Showroom Gloss That Lasts",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 9,
+            "cta_strength": 7,
+            "composite": 8.25
+          }
+        },
+        {
+          "text": "Get a Free Ceramic Quote",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 7,
+            "cta_strength": 10,
+            "composite": 9
+          }
+        }
+      ],
+      "descriptions": [
+        {
+          "text": "Springfield · 30+ years",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 7,
+            "cta_strength": 6,
+            "composite": 8
+          }
+        },
+        {
+          "text": "Hand-applied 9H ceramic",
+          "score": {
+            "clarity": 9,
+            "specificity": 9,
+            "emotional_trigger": 7,
+            "cta_strength": 6,
+            "composite": 7.75
+          }
+        },
+        {
+          "text": "Book your free quote",
+          "score": {
+            "clarity": 10,
+            "specificity": 8,
+            "emotional_trigger": 6,
+            "cta_strength": 9,
+            "composite": 8.25
+          }
+        }
+      ],
+      "ctas": [
+        "GET_QUOTE",
+        "BOOK_NOW",
+        "LEARN_MORE"
+      ],
+      "error": "fetch failed",
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_GLOSS-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#29ABE2",
+          "secondary": "#939598",
+          "accent": "#29ABE2",
+          "neutrals": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/blue-rose-auto/brand/logo.png"
+      }
+    },
+    {
+      "angle_id": "LEADS_CERAMIC_PROTECT",
+      "campaign": "CONV_LUXCOS_202608",
+      "hook_family": "Ceramic Coating / Practical Protection",
+      "design_brief": {
+        "primary_format": "Single image",
+        "sizes": [
+          "1080x1080",
+          "1200x628"
+        ],
+        "shot_list": [
+          "Beauty shot: technician applying ceramic coating by hand in a clean, well-lit detail bay, close on the panel with visible gloss forming under the applicator"
+        ],
+        "text_overlay_pct_max": 15
+      },
+      "hooks": [
+        "Protect your paint before winter road salt does the damage.",
+        "One coating. Years of protection against UV, rain, and grime.",
+        "Stop rewaxing every month. Get it done once, right.",
+        "Ceramic coating: the difference between a car that ages and one that doesn't.",
+        "Tesla-capable, ASE-certified, and obsessive about paint prep."
+      ],
+      "primary_text": [
+        {
+          "text": "Oregon weather is hard on paint — rain, road salt, UV. A properly applied ceramic coating protects against all three and keeps your car looking newer, longer. Blue Rose has been doing detail work in Springfield for 30+ years. Book your free quote below.",
+          "score": {
+            "clarity": 9,
+            "specificity": 9,
+            "emotional_trigger": 8,
+            "cta_strength": 9,
+            "composite": 8.75
+          }
+        },
+        {
+          "text": "No more monthly waxing. Our ceramic coating is hand-applied after a full paint decontamination, giving you years of hydrophobic protection and a finish that stays glossy. Ask about pricing for your vehicle.",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 8
+          }
+        }
+      ],
+      "headlines": [
+        {
+          "text": "Protect Your Paint, Once",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 8,
+            "cta_strength": 7,
+            "composite": 8
+          }
+        },
+        {
+          "text": "Ceramic Coating Springfield",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 6,
+            "cta_strength": 6,
+            "composite": 7.75
+          }
+        },
+        {
+          "text": "Ask About Ceramic Pricing",
+          "score": {
+            "clarity": 10,
+            "specificity": 8,
+            "emotional_trigger": 6,
+            "cta_strength": 9,
+            "composite": 8.25
+          }
+        }
+      ],
+      "descriptions": [
+        {
+          "text": "Years of protection, not months",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 8,
+            "cta_strength": 6,
+            "composite": 7.75
+          }
+        },
+        {
+          "text": "ASE-certified · Tesla-capable",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 6,
+            "cta_strength": 6,
+            "composite": 7.75
+          }
+        },
+        {
+          "text": "Free quote, no pressure",
+          "score": {
+            "clarity": 9,
+            "specificity": 7,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 7.75
+          }
+        }
+      ],
+      "ctas": [
+        "GET_QUOTE",
+        "LEARN_MORE",
+        "BOOK_NOW"
+      ],
+      "error": "Failed to fetch logo from https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/brand/logo.png: fetch failed",
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#29ABE2",
+          "secondary": "#939598",
+          "accent": "#29ABE2",
+          "neutrals": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/blue-rose-auto/brand/logo.png"
+      }
+    },
+    {
+      "angle_id": "LEADS_TINT_HEAT",
+      "name": "Window Tint / Heat & UV Protection",
+      "campaign": "LEADS_TINT_202608",
+      "hook_family": "Window Tint / Heat & UV Protection",
+      "design_brief": {
+        "primary_format": "Single image",
+        "sizes": [
+          "1080x1080",
+          "1200x628"
+        ],
+        "shot_list": [
+          "Beauty shot: technician precision-applying window tint film to a car's side window in a clean, well-lit detail bay, squeegee mid-stroke, visible reflection/gradient on the glass"
+        ],
+        "text_overlay_pct_max": 15
+      },
+      "hooks": [
+        "Oregon sun is hard on your interior. Tint blocks the heat before it gets in.",
+        "Keep the cabin cooler and the UV out, without giving up visibility.",
+        "Faded dash, cracked seats — sun damage adds up. Tint stops it early.",
+        "Precision-applied window tint, done once, done right.",
+        "Ask about our window tint packages — ASE-certified, Tesla-capable."
+      ],
+      "primary_text": [
+        {
+          "text": "Oregon summers push a lot of UV through your windshield and side glass — that's what fades interiors and heats up the cabin fast. A properly applied window tint cuts the heat and UV load while keeping a clean, factory look. Blue Rose has been doing detail and installs in Springfield for 30+ years. Ask about pricing for your vehicle.",
+          "score": {
+            "clarity": 9,
+            "specificity": 9,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 8.25
+          }
+        },
+        {
+          "text": "Less heat, less glare, less UV damage to your dash and seats. Our window tint is precision-applied and legal-compliant for Oregon. Free quote, no pressure.",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 8
+          }
+        }
+      ],
+      "headlines": [
+        {
+          "text": "Beat the Heat, Keep the View",
+          "score": {
+            "clarity": 8,
+            "specificity": 7,
+            "emotional_trigger": 8,
+            "cta_strength": 6,
+            "composite": 7.25
+          }
+        },
+        {
+          "text": "Window Tint Springfield",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 5,
+            "cta_strength": 6,
+            "composite": 7.5
+          }
+        },
+        {
+          "text": "Ask About Tint Pricing",
+          "score": {
+            "clarity": 10,
+            "specificity": 8,
+            "emotional_trigger": 6,
+            "cta_strength": 9,
+            "composite": 8.25
+          }
+        }
+      ],
+      "descriptions": [
+        {
+          "text": "Blocks heat and UV, keeps visibility",
+          "score": {
+            "clarity": 8,
+            "specificity": 8,
+            "emotional_trigger": 7,
+            "cta_strength": 6,
+            "composite": 7.25
+          }
+        },
+        {
+          "text": "ASE-certified · Tesla-capable",
+          "score": {
+            "clarity": 10,
+            "specificity": 9,
+            "emotional_trigger": 6,
+            "cta_strength": 6,
+            "composite": 7.75
+          }
+        },
+        {
+          "text": "Free quote, no pressure",
+          "score": {
+            "clarity": 9,
+            "specificity": 7,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 7.75
+          }
+        }
+      ],
+      "ctas": [
+        "GET_QUOTE",
+        "LEARN_MORE",
+        "BOOK_NOW"
+      ],
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TINT_HEAT-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#29ABE2",
+          "secondary": "#939598",
+          "accent": "#29ABE2",
+          "neutrals": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/blue-rose-auto/brand/logo.png"
+      }
+    },
+    {
+      "angle_id": "LEADS_TINT_PRIVACY",
+      "name": "Window Tint / Privacy & Style",
+      "campaign": "LEADS_TINT_202608",
+      "hook_family": "Window Tint / Privacy & Style",
+      "design_brief": {
+        "primary_format": "Single image",
+        "sizes": [
+          "1080x1080",
+          "1200x628"
+        ],
+        "shot_list": [
+          "Beauty shot: dark tinted side window of a clean, detailed sedan, close three-quarter angle, glass reflecting soft studio-style light in a well-lit detail bay, no people needed"
+        ],
+        "text_overlay_pct_max": 15
+      },
+      "hooks": [
+        "A cleaner, more finished look — and more privacy every time you park.",
+        "Tint that matches the car, not just the trend.",
+        "Keep valuables out of sight and your cabin more private.",
+        "Factory-clean tint lines, applied by hand.",
+        "Ask about legal tint percentages for your vehicle."
+      ],
+      "primary_text": [
+        {
+          "text": "Window tint isn't just about heat — it finishes the look of the car and keeps what's inside more private. We hand-apply to Oregon's legal limits with clean, bubble-free lines. Ask about pricing for your vehicle.",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 8
+          }
+        },
+        {
+          "text": "A well-tinted car looks finished, not aftermarket. Ours is precision-applied, legal-compliant, and backed by 30+ years of detail work in Springfield. Free quote, no pressure.",
+          "score": {
+            "clarity": 9,
+            "specificity": 8,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 8
+          }
+        }
+      ],
+      "headlines": [
+        {
+          "text": "Finish the Look. Add Privacy.",
+          "score": {
+            "clarity": 8,
+            "specificity": 7,
+            "emotional_trigger": 7,
+            "cta_strength": 6,
+            "composite": 7
+          }
+        },
+        {
+          "text": "Precision Window Tint",
+          "score": {
+            "clarity": 10,
+            "specificity": 8,
+            "emotional_trigger": 5,
+            "cta_strength": 6,
+            "composite": 7.25
+          }
+        },
+        {
+          "text": "Ask About Tint Pricing",
+          "score": {
+            "clarity": 10,
+            "specificity": 8,
+            "emotional_trigger": 6,
+            "cta_strength": 9,
+            "composite": 8.25
+          }
+        }
+      ],
+      "descriptions": [
+        {
+          "text": "Clean lines, more privacy",
+          "score": {
+            "clarity": 8,
+            "specificity": 7,
+            "emotional_trigger": 7,
+            "cta_strength": 6,
+            "composite": 7
+          }
+        },
+        {
+          "text": "Legal-compliant · hand-applied",
+          "score": {
+            "clarity": 9,
+            "specificity": 9,
+            "emotional_trigger": 6,
+            "cta_strength": 6,
+            "composite": 7.5
+          }
+        },
+        {
+          "text": "Free quote, no pressure",
+          "score": {
+            "clarity": 9,
+            "specificity": 7,
+            "emotional_trigger": 7,
+            "cta_strength": 8,
+            "composite": 7.75
+          }
+        }
+      ],
+      "ctas": [
+        "GET_QUOTE",
+        "LEARN_MORE",
+        "BOOK_NOW"
+      ],
+      "local_path": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TINT_PRIVACY-ad.png",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#29ABE2",
+          "secondary": "#939598",
+          "accent": "#29ABE2",
+          "neutrals": [
+            "#000000",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/blue-rose-auto/brand/logo.png"
+      }
     }
   ],
   "summary": {
-    "total_angles": 4,
-    "total_hooks": 20,
-    "total_primary_text": 12,
-    "total_headlines": 12,
-    "total_descriptions": 12,
+    "total_angles": 6,
+    "total_hooks": 30,
+    "total_primary_text": 16,
+    "total_headlines": 18,
+    "total_descriptions": 18,
     "highest_scoring_primary": "Tesla service shouldn't mean a 2-week dealer wait... (9.5)",
     "highest_scoring_headline": "Book a Free Inspection (9.25)",
     "compliance_violations": 0

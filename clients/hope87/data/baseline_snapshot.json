@@ -1,0 +1,22 @@
+{
+  "client_slug": "hope87",
+  "captured_at": "2026-08-12T14:38:21.732Z",
+  "immutable_locked_at": null,
+  "facebook": {
+    "error": "Meta API 100: Unsupported get request. Object with ID '100064328454024' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api (type=GraphMethodException, trace=ADe5f0CCqIUYaOfj2C9F3lr)",
+    "engagement_rate_30d": null,
+    "posts_per_week_30d": null
+  },
+  "instagram": {
+    "skipped": true,
+    "reason": "ig_business_id is TBD",
+    "engagement_rate_30d": null,
+    "posts_per_week_30d": null
+  },
+  "creative_quality": {
+    "score_out_of_10": null
+  },
+  "paid": {
+    "pixel_events_per_month": null
+  }
+}

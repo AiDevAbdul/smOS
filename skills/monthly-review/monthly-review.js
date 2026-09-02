@@ -15,6 +15,7 @@
  * Usage:
  *   node skills/monthly-review/monthly-review.js <slug>
  *   node skills/monthly-review/monthly-review.js <slug> --days 30
+ *   node skills/monthly-review/monthly-review.js <slug> --since 2026-08-01 --until 2026-08-31
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
@@ -69,11 +70,11 @@ function direction(s, ys) {
   return "flat";
 }
 
-async function fetchDailyInsights(graph, adAccountId, days) {
+async function fetchDailyInsights(graph, adAccountId, range) {
   const id = adAccountId.startsWith("act_") ? adAccountId : `act_${adAccountId}`;
   const params = {
     fields: "spend,impressions,clicks,ctr,cpm,frequency,actions,action_values,reach",
-    time_range: JSON.stringify({ since: daysAgoStr(days), until: daysAgoStr(1) }),
+    time_range: JSON.stringify({ since: range.since, until: range.until }),
     time_increment: 1,
     level: "account",
     limit: 500,
@@ -82,22 +83,22 @@ async function fetchDailyInsights(graph, adAccountId, days) {
   return res.data || [];
 }
 
-async function fetchAdsetInsights(graph, adAccountId, days) {
+async function fetchAdsetInsights(graph, adAccountId, range) {
   const id = adAccountId.startsWith("act_") ? adAccountId : `act_${adAccountId}`;
   const res = await graph.get(`/${id}/insights`, {
     fields: "adset_id,adset_name,spend,impressions,clicks,ctr,cpm,frequency,actions,action_values",
-    time_range: JSON.stringify({ since: daysAgoStr(days), until: daysAgoStr(1) }),
+    time_range: JSON.stringify({ since: range.since, until: range.until }),
     level: "adset",
     limit: 500,
   });
   return res.data || [];
 }
 
-async function fetchAdInsights(graph, adAccountId, days) {
+async function fetchAdInsights(graph, adAccountId, range) {
   const id = adAccountId.startsWith("act_") ? adAccountId : `act_${adAccountId}`;
   const res = await graph.get(`/${id}/insights`, {
     fields: "ad_id,ad_name,spend,impressions,clicks,ctr,frequency",
-    time_range: JSON.stringify({ since: daysAgoStr(days), until: daysAgoStr(1) }),
+    time_range: JSON.stringify({ since: range.since, until: range.until }),
     time_increment: 1,
     level: "ad",
     limit: 500,
@@ -105,12 +106,12 @@ async function fetchAdInsights(graph, adAccountId, days) {
   return res.data || [];
 }
 
-async function fetchPlacementBreakdown(graph, adAccountId, days) {
+async function fetchPlacementBreakdown(graph, adAccountId, range) {
   const id = adAccountId.startsWith("act_") ? adAccountId : `act_${adAccountId}`;
   try {
     const res = await graph.get(`/${id}/insights`, {
       fields: "spend,impressions,clicks,ctr,cpm,actions",
-      time_range: JSON.stringify({ since: daysAgoStr(days), until: daysAgoStr(1) }),
+      time_range: JSON.stringify({ since: range.since, until: range.until }),
       breakdowns: "publisher_platform,platform_position",
       level: "account",
       limit: 100,
@@ -265,10 +266,27 @@ async function main() {
   const argv = process.argv.slice(2);
   const slug = argv[0];
   if (!slug) {
-    console.error("Usage: node skills/monthly-review/monthly-review.js <slug> [--days 30]");
+    console.error("Usage: node skills/monthly-review/monthly-review.js <slug> [--days 30 | --since YYYY-MM-DD --until YYYY-MM-DD]");
     process.exit(1);
   }
-  const days = parseInt(argVal(argv, "--days", String(DEFAULT_DAYS)), 10);
+  // Window resolution: an explicit --since/--until calendar range wins; otherwise
+  // fall back to the rolling trailing-N-days window ending yesterday (complete days only).
+  const sinceArg = argVal(argv, "--since", null);
+  const untilArg = argVal(argv, "--until", null);
+  const isYmd = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v || "");
+  if ((sinceArg || untilArg) && !(isYmd(sinceArg) && isYmd(untilArg))) {
+    console.error("--since and --until must both be supplied as YYYY-MM-DD");
+    process.exit(1);
+  }
+  let days, range;
+  if (sinceArg) {
+    range = { since: sinceArg, until: untilArg };
+    days = Math.round((Date.parse(untilArg) - Date.parse(sinceArg)) / 86_400_000) + 1;
+    if (days < 1) { console.error("--until must be on or after --since"); process.exit(1); }
+  } else {
+    days = parseInt(argVal(argv, "--days", String(DEFAULT_DAYS)), 10);
+    range = { since: daysAgoStr(days), until: daysAgoStr(1) };
+  }
 
   const profilePath = P.clientFile(slug, "client_profile.json");
   if (!existsSync(profilePath)) throw new Error(`Profile not found: ${profilePath}`);
@@ -285,12 +303,12 @@ async function main() {
   })();
 
   const graph = createGraph();
-  console.error(`[monthly-review] fetching ${days}d insights for ${slug}…`);
+  console.error(`[monthly-review] fetching ${range.since} → ${range.until} (${days}d) insights for ${slug}…`);
   const [daily, adsets, ads, placements] = await Promise.all([
-    fetchDailyInsights(graph, adAccountId, days),
-    fetchAdsetInsights(graph, adAccountId, days),
-    fetchAdInsights(graph, adAccountId, days),
-    fetchPlacementBreakdown(graph, adAccountId, days),
+    fetchDailyInsights(graph, adAccountId, range),
+    fetchAdsetInsights(graph, adAccountId, range),
+    fetchAdInsights(graph, adAccountId, range),
+    fetchPlacementBreakdown(graph, adAccountId, range),
   ]);
 
   const kpis = normalizeKpis(profile);
@@ -315,7 +333,7 @@ async function main() {
     topPlacement ? { id: 5, action: `Bias placement mix toward ${topPlacement.placement}`, rationale: `lowest CPA $${topPlacement.cpa}`, impact: "compound efficiency", budget_delta: 0, owner: "human" } : null,
   ].filter(Boolean);
 
-  const month = ymd(new Date(Date.now() - 86_400_000)).slice(0, 7);
+  const month = range.until.slice(0, 7);
 
   const recPath = P.clientFile(slug, "strategy_recommendations.json", { forWrite: true });
   writeFileSync(recPath, JSON.stringify({
@@ -331,6 +349,7 @@ async function main() {
     client_slug: slug,
     month,
     days_window: days,
+    window: range,
     trends,
     fatigue,
     lifecycle,
@@ -346,13 +365,13 @@ async function main() {
 
   // Render markdown skeleton (Claude can elaborate)
   const mdPath = P.ensureParent(P.clientReport(slug, month, "monthly-review", "md"));
-  const md = renderMd({ slug, profile, month, days, trends, fatigue, lifecycle, ranking, placementRanked, recommendations: recommendationsSkeleton, daily });
+  const md = renderMd({ slug, profile, month, days, range, trends, fatigue, lifecycle, ranking, placementRanked, recommendations: recommendationsSkeleton, daily });
   writeFileSync(mdPath, md);
 
   // Ship HTML + PDF alongside the markdown.
   const { htmlPath, pdfOk } = writeHtmlAndPdf(mdPath, md, {
     title: `${profile.name || slug} — Monthly Review`,
-    subtitle: `${month} · ${days}-day window`,
+    subtitle: `${range.since} → ${range.until} · ${days}-day window`,
   });
   console.error(`[monthly-review] wrote ${htmlPath}${pdfOk ? " + PDF" : " (PDF skipped)"}`);
 
@@ -377,14 +396,14 @@ async function main() {
   }, null, 2));
 }
 
-function renderMd({ slug, profile, month, days, trends, fatigue, lifecycle, ranking, placementRanked, recommendations, daily }) {
+function renderMd({ slug, profile, month, days, range, trends, fatigue, lifecycle, ranking, placementRanked, recommendations, daily }) {
   const trendLine = (k, label) => {
     const t = trends[k]; if (!t) return "";
     return `- **${label}:** ${t.direction} · mean ${t.mean} · first 7d ${t.first_7d_avg} → last 7d ${t.last_7d_avg}`;
   };
   return `# Monthly Review — ${profile.name || slug}
 
-**Month:** ${month}  ·  **Days analyzed:** ${days}  ·  **Daily rows:** ${daily.length}
+**Window:** ${range.since} → ${range.until}  ·  **Days analyzed:** ${days}  ·  **Daily rows:** ${daily.length}
 
 ## Trend snapshot
 
@@ -423,7 +442,7 @@ ${placementRanked.slice(0, 10).map((p) => `| ${p.placement} | $${p.spend} | ${p.
 ${recommendations.length ? recommendations.map((r) => `${r.id}. **${r.action}** — ${r.rationale}. Impact: ${r.impact}. Budget Δ: ${r.budget_delta}. Owner: ${r.owner}.`).join("\n") : "_No recommendations triggered by heuristics._"}
 
 ---
-*Generated by smOS · raw inputs at \`reports/${month}_monthly_inputs.json\`. Run \`/before-after\` for the comparison block.*
+*Prepared by smOS · raw inputs at \`reports/${month}/monthly-review.raw.json\`.*
 `;
 }
 

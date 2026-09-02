@@ -16,7 +16,7 @@
         "affiliate",
         "affiliate"
       ],
-      "alt_text": "reels of Educate: affiliate (affiliate) by Health & Care",
+      "alt_text": "reels of Educate: affiliate (affiliate) by Wellness & Care",
       "hashtags": [
         "#affiliate",
         "#affiliate"
@@ -57,7 +57,7 @@
         "local",
         "affiliate"
       ],
-      "alt_text": "carousel of Social Proof: local (local) by Health & Care",
+      "alt_text": "carousel of Social Proof: local (local) by Wellness & Care",
       "hashtags": [
         "#local",
         "#affiliate"
@@ -88,7 +88,7 @@
         "tips",
         "affiliate"
       ],
-      "alt_text": "reels of Behind the Scenes: tips (tips) by Health & Care",
+      "alt_text": "reels of Behind the Scenes: tips (tips) by Wellness & Care",
       "hashtags": [
         "#tips",
         "#affiliate"
@@ -119,7 +119,7 @@
         "affiliate",
         "affiliate"
       ],
-      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Health & Care",
+      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Wellness & Care",
       "hashtags": [
         "#affiliate",
         "#affiliate"
@@ -150,7 +150,7 @@
         "affiliate",
         "affiliate"
       ],
-      "alt_text": "reels of Educate: affiliate (affiliate) by Health & Care",
+      "alt_text": "reels of Educate: affiliate (affiliate) by Wellness & Care",
       "hashtags": [
         "#affiliate",
         "#affiliate"
@@ -191,7 +191,7 @@
         "local",
         "affiliate"
       ],
-      "alt_text": "carousel of Social Proof: local (local) by Health & Care",
+      "alt_text": "carousel of Social Proof: local (local) by Wellness & Care",
       "hashtags": [
         "#local",
         "#affiliate"
@@ -222,7 +222,7 @@
         "tips",
         "affiliate"
       ],
-      "alt_text": "reels of Behind the Scenes: tips (tips) by Health & Care",
+      "alt_text": "reels of Behind the Scenes: tips (tips) by Wellness & Care",
       "hashtags": [
         "#tips",
         "#affiliate"
@@ -253,7 +253,7 @@
         "affiliate",
         "affiliate"
       ],
-      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Health & Care",
+      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Wellness & Care",
       "hashtags": [
         "#affiliate",
         "#affiliate"
@@ -284,7 +284,7 @@
         "affiliate",
         "affiliate"
       ],
-      "alt_text": "reels of Educate: affiliate (affiliate) by Health & Care",
+      "alt_text": "reels of Educate: affiliate (affiliate) by Wellness & Care",
       "hashtags": [
         "#affiliate",
         "#affiliate"
@@ -325,7 +325,7 @@
         "local",
         "affiliate"
       ],
-      "alt_text": "carousel of Social Proof: local (local) by Health & Care",
+      "alt_text": "carousel of Social Proof: local (local) by Wellness & Care",
       "hashtags": [
         "#local",
         "#affiliate"
@@ -356,7 +356,7 @@
         "tips",
         "affiliate"
       ],
-      "alt_text": "reels of Behind the Scenes: tips (tips) by Health & Care",
+      "alt_text": "reels of Behind the Scenes: tips (tips) by Wellness & Care",
       "hashtags": [
         "#tips",
         "#affiliate"
@@ -387,7 +387,7 @@
         "affiliate",
         "affiliate"
       ],
-      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Health & Care",
+      "alt_text": "image of Offer / CTA: affiliate (affiliate) by Wellness & Care",
       "hashtags": [
         "#affiliate",
         "#affiliate"
@@ -401,6 +401,475 @@
       "published_at": null,
       "error": null,
       "schedule_native": false
+    },
+    {
+      "id": "healthncare-2026-08-18-launch-ig",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-08-18T13:00:00.000Z",
+      "message": "Tired of supplements that don't work? Welcome to Wellness & Care — the curated marketplace for weight-loss and energy supplements, chosen on published clinical research instead of marketing hype.\n\nWhat we stand for:\n• Every product screened against efficacy research before it earns a spot\n• Straight talk about what works, what doesn't, and why\n• $100–$300, priced against what the science supports\n\nIf you're running on empty by 2pm, the problem usually isn't willpower — it's what you're putting in.\n\nShop now → wellnessncare.com (link in bio). #RealTransformation",
+      "keywords": [
+        "science-backed supplements",
+        "weight loss supplements"
+      ],
+      "alt_text": "Wellness & Care launch post — science-backed weight-loss and energy supplements, US and Canada",
+      "hashtags": [
+        "#RealTransformation",
+        "#ScienceBacked",
+        "#WeightLossJourney",
+        "#EnergyBoost"
+      ],
+      "link": null,
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-ig-4x5.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-2026-08-18-launch-ig-4x5.png",
+      "video_url": null,
+      "items": [],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "SHOP_NOW",
+      "images": {
+        "4:5": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-ig-4x5.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-2026-08-18-launch-ig-4x5.png"
+        }
+      }
+    },
+    {
+      "id": "healthncare-2026-08-18-launch-fb",
+      "pillar_id": "offer",
+      "platform": "facebook",
+      "format": "image",
+      "publish_at": "2026-08-18T13:00:00.000Z",
+      "message": "Tired of supplements that don't work? Wellness & Care is officially open — a curated marketplace of science-backed weight-loss and energy products for busy adults in the US and Canada.\n\nHere's the difference: most supplement shops stock whatever sells. We screen every product against published efficacy research first, then price it honestly ($100–$300). If the research doesn't back it, it doesn't go on the shelf.\n\nNo hype. No vague wellness promises. Just the products research actually supports, explained in plain English so you can decide for yourself.\n\nBrowse the shelf at wellnessncare.com — and follow along, we'll be breaking down the science behind what you're taking, one post at a time.\n\n#RealTransformation",
+      "keywords": [
+        "science-backed supplements",
+        "energy supplements"
+      ],
+      "alt_text": "Wellness & Care launch post — curated marketplace of clinically researched supplements",
+      "hashtags": [
+        "#RealTransformation"
+      ],
+      "link": "https://wellnessncare.com",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-fb-1x1.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-2026-08-18-launch-fb-1x1.png",
+      "video_url": null,
+      "items": [],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "SHOP_NOW",
+      "images": {
+        "1:1": {
+          "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-fb-1x1.png",
+          "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-2026-08-18-launch-fb-1x1.png"
+        }
+      }
+    },
+    {
+      "id": "healthncare-trimology-01-plateau",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "Doing everything right and still not seeing the scale move? You're not doing it wrong — your body might just need more than diet and exercise alone to work with you instead of against you. That's the gap supplements like Trimology are built for: not a replacement for the basics, a backup for when the basics stop being enough on their own. Link in bio if you want to see what's in it. This post contains an affiliate link — we may earn a commission if you purchase. #ad",
+      "link": "https://mwebscout.com/11514/35570/2/?subid=post1",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-01-plateau.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-01-plateau.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "weight loss plateau",
+        "trimology"
+      ],
+      "alt_text": "Frustrated woman on a scale, weight-loss plateau concept, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#weightloss",
+        "#plateau"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "SHOP_NOW"
+    },
+    {
+      "id": "healthncare-trimology-02-energy",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "That 2pm wall isn't just \"needing more sleep.\" Energy dips and cravings later in the day are one of the most common complaints we hear from people trying to lose weight — and it's rarely just about willpower. If you've been fighting the same afternoon slump for months, it might be worth looking at what's actually driving it. Link in bio to check out Trimology. Affiliate link — we may earn a commission on purchases made through it. #ad",
+      "link": "https://mwebscout.com/11514/35570/2/?subid=post2",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-02-energy.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-02-energy.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "afternoon energy crash",
+        "trimology"
+      ],
+      "alt_text": "Tired person at a desk mid-afternoon, energy crash concept, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#energy",
+        "#weightloss"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "LEARN_MORE"
+    },
+    {
+      "id": "healthncare-trimology-05-intro",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "Meet Trimology. A weight-management supplement we've partnered with as an affiliate — not our own product, but one we think is worth putting in front of you if you're looking for support alongside a healthy routine. No miracle promises here. Just one option, full label and details linked below so you can decide for yourself. Link in bio. We're an affiliate partner for Trimology and may earn a commission on purchases made through our link. #ad",
+      "link": "https://mwebscout.com/11514/35570/2/?subid=post5",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-05-intro.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-05-intro.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "trimology",
+        "weight management supplement"
+      ],
+      "alt_text": "Trimology supplement product shot, clean lifestyle background, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#trimology"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "SHOP_NOW"
+    },
+    {
+      "id": "healthncare-trimology-08-relatable",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "POV: you've tried keto, intermittent fasting, the cabbage soup thing, and a gym membership you used twice. We've all been there. No judgment — just sharing what's actually worked for people in our community. Link in bio if you want to see one more option. Affiliate link — we may earn a commission on purchases. #ad",
+      "link": "https://mwebscout.com/11514/35570/2/?subid=post8",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-08-relatable.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-08-relatable.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "fad diets",
+        "weight loss journey"
+      ],
+      "alt_text": "Lighthearted meme-style graphic about trying every fad diet, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#relatable",
+        "#weightloss"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "LEARN_MORE"
+    },
+    {
+      "id": "healthncare-trimology-10-engage",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "Real talk: what's the hardest part of staying consistent for you? Is it cravings? Energy? Motivation after a bad week? Drop it in the comments — we read every one, and it helps us know what to talk about next.",
+      "link": null,
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-10-engage.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-10-engage.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "staying consistent",
+        "weight loss motivation"
+      ],
+      "alt_text": "Text-forward graphic asking a community engagement question, Wellness & Care",
+      "hashtags": [
+        "#community",
+        "#weightloss"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "LEARN_MORE"
+    },
+    {
+      "id": "healthncare-trimology-11-transparency",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "Quick, honest note: some of the links we post — including for Trimology — are affiliate links. That means if you buy through them, we earn a small commission at no extra cost to you. We only partner with things we'd actually recommend to our own community — but we think you deserve to know how this works. Questions about anything we post? Ask away in the comments. This post discloses our affiliate relationship as required. #ad #affiliate",
+      "link": null,
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-11-transparency.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-11-transparency.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "affiliate disclosure",
+        "transparency"
+      ],
+      "alt_text": "Warm, trustworthy graphic disclosing affiliate relationship, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#affiliate",
+        "#transparency"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "LEARN_MORE"
+    },
+    {
+      "id": "healthncare-trimology-12-seasonal",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "Getting back into a routine this month? You're not the only one. Whatever \"back on track\" looks like for you — more consistent meals, more movement, or adding support like Trimology to your routine — small, sustainable changes beat big overnight overhauls every time. Link in bio if you want to see what we're using. Affiliate link — we may earn a commission on purchases. #ad",
+      "link": "https://mwebscout.com/11514/35570/2/?subid=post12",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-12-seasonal.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-12-seasonal.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "back on track",
+        "trimology"
+      ],
+      "alt_text": "Person starting a fresh healthy routine, seasonal reset concept, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#backontrack",
+        "#weightloss"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "SHOP_NOW"
+    },
+    {
+      "id": "healthncare-trimology-15-cta",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": null,
+      "message": "Ready to try it? Link's in bio. No hype, no gimmicks — just an option worth looking at if you're building out your routine and want extra support. Check the label, read the FAQ (see our recent posts), and decide for yourself. Affiliate link — we may earn a commission on purchases made through it. #ad",
+      "link": "https://mwebscout.com/11514/35570/2/?subid=post15",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-15-cta.png",
+      "local_path": "/Users/apple/abdul/smOS/clients/healthncare/generated/healthncare-trimology-15-cta.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "trimology",
+        "weight loss support"
+      ],
+      "alt_text": "Clean direct call-to-action graphic for Trimology, Wellness & Care",
+      "hashtags": [
+        "#ad",
+        "#trimology",
+        "#weightloss"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.png"
+      },
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false,
+      "cta": "SHOP_NOW"
     }
   ]
 }

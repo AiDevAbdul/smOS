@@ -1,6 +1,6 @@
 """smOS design system loader (Python renderers).
 
-The one Apple ("Cupertino") visual language for every client report. Reads
+The one smOS ("Ledger") visual language for every client report. Reads
 design-system/smos-design-system.css at render time — a SINGLE source of truth
 shared with the Node loader (scripts/lib/design_system.js). Edit the .css once;
 the pre-audit and competitor renderers both inherit it.
@@ -69,15 +69,29 @@ def theme_toggle_button() -> str:
     )
 
 
+# The "Ledger" type trio (display / body / data). render_pdf.py waits for
+# networkidle so the real faces land in PDFs; the CSS declares system fallback
+# stacks (Arial Narrow / Helvetica / Menlo) so offline HTML stays legible.
+FONTS_LINK = (
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2'
+    "?family=Barlow+Semi+Condensed:wght@600;700"
+    "&family=Barlow:wght@400;500;600"
+    '&family=IBM+Plex+Mono:wght@400;500;600&display=swap">'
+)
+
+
 def report_head(title: str = "smOS Report", extra_head: str = "") -> str:
-    """Full <head> with the design system inlined, plus any extra tags (fonts/Chart.js).
-    Includes the theme bootstrap script (pre-paint) so there's no flash-of-wrong-theme."""
+    """Full <head> with the design system inlined, plus any extra tags (Chart.js etc.).
+    Includes the fonts link and the theme bootstrap script (pre-paint) so there's
+    no flash-of-wrong-theme."""
     return (
         "<head>\n"
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         f"<title>{_esc(title)}</title>\n"
         f"{THEME_BOOTSTRAP_SCRIPT}\n"
+        f"{FONTS_LINK}\n"
         f"{extra_head}\n"
         f"<style>{design_system_css()}</style>\n"
         "</head>"
@@ -151,15 +165,15 @@ def hero_aside(
     return f"{body}{stat}"
 
 
-# Apple system-color palette for Chart.js datasets (use in order).
+# "Ledger" chart palette for Chart.js datasets (use in order).
 CHART_PALETTE = [
-    "#0071e3",  # blue
-    "#34c759",  # green
-    "#ff9f0a",  # orange
-    "#af52de",  # purple
-    "#5ac8fa",  # teal
-    "#ff375f",  # pink
-    "#5e5ce6",  # indigo
+    "#1d5dbf",  # brand steel blue
+    "#1d8a4e",  # green (pass)
+    "#b57a0a",  # amber (caution)
+    "#c0392f",  # red (action)
+    "#22808d",  # teal
+    "#6d4fa3",  # purple
+    "#8695a5",  # steel gray
 ]
 
 # Shared Chart.js global theming (fonts, grid, ticks) to match the design system.
@@ -172,10 +186,10 @@ if (window.Chart) {
     return v || fallback;
   };
   var applyChartTheme = function() {
-    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif';
+    Chart.defaults.font.family = '"Barlow", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif';
     Chart.defaults.font.size = 12;
-    Chart.defaults.color = dsColor('--ds-muted', '#6e6e73');
-    Chart.defaults.borderColor = dsColor('--ds-line', '#e2e2e7');
+    Chart.defaults.color = dsColor('--ds-muted', '#5a6b7c');
+    Chart.defaults.borderColor = dsColor('--ds-line', '#dde4ea');
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
     Chart.defaults.plugins.legend.labels.boxWidth = 8;
     Chart.defaults.elements.line.tension = 0.35;

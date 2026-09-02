@@ -1,74 +1,78 @@
 {
   "client_slug": "blue-rose-auto",
   "period": {
-    "start": "2026-07-06",
-    "weeks": 4
+    "start": "2026-08-31",
+    "weeks": 12
   },
   "pillars": [
     {
       "id": "educate",
-      "name": "Educate \u2014 Know Your Vehicle",
+      "name": "Educate",
       "intent": "educate",
       "cadence_per_week": 2,
       "keywords": [
-        "auto repair tips",
-        "Tesla EV care"
+        "30+ years",
+        "local service"
       ]
     },
     {
       "id": "proof",
-      "name": "Proof \u2014 Craftsmanship Results",
+      "name": "Social Proof",
       "intent": "convert",
       "cadence_per_week": 1,
       "keywords": [
-        "before and after",
-        "ceramic coating Eugene"
+        "ASE-certified",
+        "local service"
       ]
     },
     {
       "id": "behind",
-      "name": "Behind the Bay \u2014 30+ Years",
+      "name": "Behind the Scenes",
       "intent": "community",
       "cadence_per_week": 1,
       "keywords": [
-        "ASE certified techs",
-        "Springfield auto shop"
+        "Tesla-capable",
+        "local service"
       ]
     },
     {
       "id": "offer",
-      "name": "Book the Work",
+      "name": "Offer / CTA",
       "intent": "convert",
       "cadence_per_week": 1,
       "keywords": [
-        "book auto service Eugene",
-        "get a quote"
+        "precision craftsmanship",
+        "local service"
       ]
     }
   ],
   "items": [
     {
-      "id": "blue-rose-auto-2026-07-06-educate",
+      "id": "blue-rose-auto-2026-08-31-educate",
       "pillar_id": "educate",
       "platform": "instagram",
       "format": "reels",
-      "publish_at": "2026-07-06T13:00:00.000Z",
-      "message": "What that dashboard light actually means \u2014 and when it's safe to keep driving. ASE-certified breakdown, no scare tactics.",
+      "publish_at": "2026-08-31T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "auto repair tips",
-        "Tesla EV care"
+        "30+ years",
+        "local service"
       ],
-      "alt_text": "Educational reel explaining vehicle maintenance from Blue Rose Auto's ASE-certified team",
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#autorepairtips",
-        "#TeslaService",
-        "#EugeneOR",
-        "#ASEcertified"
+        "#30years",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -76,14 +80,16 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-08-proof",
+      "id": "blue-rose-auto-2026-09-02-proof",
       "pillar_id": "proof",
       "platform": "instagram",
       "format": "carousel",
-      "publish_at": "2026-07-08T13:00:00.000Z",
-      "message": "Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines.",
+      "publish_at": "2026-09-02T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [
         {
@@ -97,16 +103,18 @@
         }
       ],
       "keywords": [
-        "before and after",
-        "ceramic coating Eugene"
+        "ASE-certified",
+        "local service"
       ],
-      "alt_text": "Before-and-after of completed work showing Blue Rose Auto craftsmanship",
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#beforeandafter",
-        "#ceramiccoating",
-        "#collisionrepair",
-        "#SpringfieldOR"
+        "#ASEcertified",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -114,27 +122,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-10-behind",
+      "id": "blue-rose-auto-2026-09-04-behind",
       "pillar_id": "behind",
       "platform": "instagram",
       "format": "reels",
-      "publish_at": "2026-07-10T13:00:00.000Z",
-      "message": "30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team.",
+      "publish_at": "2026-09-04T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "ASE certified techs",
-        "Springfield auto shop"
+        "Tesla-capable",
+        "local service"
       ],
-      "alt_text": "Behind-the-scenes look inside the Blue Rose Auto shop and team",
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#behindthescenes",
-        "#mechaniclife",
-        "#ASEcertified",
-        "#EugeneAuto"
+        "#Teslacapable",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -142,27 +154,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-13-offer",
+      "id": "blue-rose-auto-2026-09-07-offer",
       "pillar_id": "offer",
       "platform": "instagram",
       "format": "image",
-      "publish_at": "2026-07-13T13:00:00.000Z",
-      "message": "Due for service or planning a build? Book now or get a quote \u2014 we'll tell you straight what your vehicle actually needs.",
+      "publish_at": "2026-09-07T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "book auto service Eugene",
-        "get a quote"
+        "precision craftsmanship",
+        "local service"
       ],
-      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#booknow",
-        "#autoservice",
-        "#EugeneOR",
-        "#getaquote"
+        "#precisioncraftsmanship",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -170,27 +186,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-15-educate",
+      "id": "blue-rose-auto-2026-09-09-educate",
       "pillar_id": "educate",
       "platform": "instagram",
       "format": "reels",
-      "publish_at": "2026-07-15T13:00:00.000Z",
-      "message": "Tesla-capable doesn't mean guesswork. Here's how EV brake service differs from a gas car \u2014 and why it matters for your range.",
+      "publish_at": "2026-09-09T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "auto repair tips",
-        "Tesla EV care"
+        "30+ years",
+        "local service"
       ],
-      "alt_text": "Educational reel explaining vehicle maintenance from Blue Rose Auto's ASE-certified team",
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#autorepairtips",
-        "#TeslaService",
-        "#EugeneOR",
-        "#ASEcertified"
+        "#30years",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -198,14 +218,16 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-17-proof",
+      "id": "blue-rose-auto-2026-09-11-proof",
       "pillar_id": "proof",
       "platform": "instagram",
       "format": "carousel",
-      "publish_at": "2026-07-17T13:00:00.000Z",
-      "message": "Before / after: full ceramic coating + PPF on a daily driver. Same car \u2014 protected for the next decade.",
+      "publish_at": "2026-09-11T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [
         {
@@ -219,16 +241,18 @@
         }
       ],
       "keywords": [
-        "before and after",
-        "ceramic coating Eugene"
+        "ASE-certified",
+        "local service"
       ],
-      "alt_text": "Before-and-after of completed work showing Blue Rose Auto craftsmanship",
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#beforeandafter",
-        "#ceramiccoating",
-        "#collisionrepair",
-        "#SpringfieldOR"
+        "#ASEcertified",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -236,27 +260,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-20-behind",
+      "id": "blue-rose-auto-2026-09-14-behind",
       "pillar_id": "behind",
       "platform": "instagram",
       "format": "reels",
-      "publish_at": "2026-07-20T13:00:00.000Z",
-      "message": "Meet the techs who treat a Tesla and a '98 pickup with the same standard. This is how precision craftsmanship gets done.",
+      "publish_at": "2026-09-14T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "ASE certified techs",
-        "Springfield auto shop"
+        "Tesla-capable",
+        "local service"
       ],
-      "alt_text": "Behind-the-scenes look inside the Blue Rose Auto shop and team",
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#behindthescenes",
-        "#mechaniclife",
-        "#ASEcertified",
-        "#EugeneAuto"
+        "#Teslacapable",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -264,27 +292,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-22-offer",
+      "id": "blue-rose-auto-2026-09-16-offer",
       "pillar_id": "offer",
       "platform": "instagram",
       "format": "image",
-      "publish_at": "2026-07-22T13:00:00.000Z",
-      "message": "Mechanical, collision, or cosmetic \u2014 one shop, 30+ years, ASE-certified. Get a quote and we'll map the work with you.",
+      "publish_at": "2026-09-16T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "book auto service Eugene",
-        "get a quote"
+        "precision craftsmanship",
+        "local service"
       ],
-      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#booknow",
-        "#autoservice",
-        "#EugeneOR",
-        "#getaquote"
+        "#precisioncraftsmanship",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -292,27 +324,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-24-educate",
+      "id": "blue-rose-auto-2026-09-18-educate",
       "pillar_id": "educate",
       "platform": "instagram",
       "format": "reels",
-      "publish_at": "2026-07-24T13:00:00.000Z",
-      "message": "Ceramic coating vs. a good wax: what 30+ years in the bay has taught us about what actually protects your paint.",
+      "publish_at": "2026-09-18T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "auto repair tips",
-        "Tesla EV care"
+        "30+ years",
+        "local service"
       ],
-      "alt_text": "Educational reel explaining vehicle maintenance from Blue Rose Auto's ASE-certified team",
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#autorepairtips",
-        "#TeslaService",
-        "#EugeneOR",
-        "#ASEcertified"
+        "#30years",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -320,14 +356,16 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-27-proof",
+      "id": "blue-rose-auto-2026-09-21-proof",
       "pillar_id": "proof",
       "platform": "instagram",
       "format": "carousel",
-      "publish_at": "2026-07-27T13:00:00.000Z",
-      "message": "Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines.",
+      "publish_at": "2026-09-21T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [
         {
@@ -341,16 +379,18 @@
         }
       ],
       "keywords": [
-        "before and after",
-        "ceramic coating Eugene"
+        "ASE-certified",
+        "local service"
       ],
-      "alt_text": "Before-and-after of completed work showing Blue Rose Auto craftsmanship",
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#beforeandafter",
-        "#ceramiccoating",
-        "#collisionrepair",
-        "#SpringfieldOR"
+        "#ASEcertified",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -358,27 +398,31 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-29-behind",
+      "id": "blue-rose-auto-2026-09-23-behind",
       "pillar_id": "behind",
       "platform": "instagram",
       "format": "reels",
-      "publish_at": "2026-07-29T13:00:00.000Z",
-      "message": "30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team.",
+      "publish_at": "2026-09-23T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "ASE certified techs",
-        "Springfield auto shop"
+        "Tesla-capable",
+        "local service"
       ],
-      "alt_text": "Behind-the-scenes look inside the Blue Rose Auto shop and team",
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#behindthescenes",
-        "#mechaniclife",
-        "#ASEcertified",
-        "#EugeneAuto"
+        "#Teslacapable",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,
@@ -386,27 +430,859 @@
       "schedule_native": false
     },
     {
-      "id": "blue-rose-auto-2026-07-31-offer",
+      "id": "blue-rose-auto-2026-09-25-offer",
       "pillar_id": "offer",
       "platform": "instagram",
       "format": "image",
-      "publish_at": "2026-07-31T13:00:00.000Z",
-      "message": "Due for service or planning a build? Book now or get a quote \u2014 we'll tell you straight what your vehicle actually needs.",
+      "publish_at": "2026-09-25T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
       "link": null,
+      "cta": null,
       "image_url": null,
+      "local_path": null,
       "video_url": null,
       "items": [],
       "keywords": [
-        "book auto service Eugene",
-        "get a quote"
+        "precision craftsmanship",
+        "local service"
       ],
-      "alt_text": "Call-to-action graphic inviting customers to book service or request a quote",
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
       "hashtags": [
-        "#booknow",
-        "#autoservice",
-        "#EugeneOR",
-        "#getaquote"
+        "#precisioncraftsmanship",
+        "#localservice"
       ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-09-28-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-09-28T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "30+ years",
+        "local service"
+      ],
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#30years",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-09-30-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-09-30T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "ASE-certified",
+        "local service"
+      ],
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#ASEcertified",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-02-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-02T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Tesla-capable",
+        "local service"
+      ],
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#Teslacapable",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-05-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-10-05T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "precision craftsmanship",
+        "local service"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#precisioncraftsmanship",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-07-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-07T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "30+ years",
+        "local service"
+      ],
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#30years",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-09-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-10-09T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "ASE-certified",
+        "local service"
+      ],
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#ASEcertified",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-12-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-12T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Tesla-capable",
+        "local service"
+      ],
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#Teslacapable",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-14-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-10-14T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "precision craftsmanship",
+        "local service"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#precisioncraftsmanship",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-16-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-16T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "30+ years",
+        "local service"
+      ],
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#30years",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-19-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-10-19T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "ASE-certified",
+        "local service"
+      ],
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#ASEcertified",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-21-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-21T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Tesla-capable",
+        "local service"
+      ],
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#Teslacapable",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-23-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-10-23T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "precision craftsmanship",
+        "local service"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#precisioncraftsmanship",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-26-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-26T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "30+ years",
+        "local service"
+      ],
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#30years",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-28-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-10-28T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "ASE-certified",
+        "local service"
+      ],
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#ASEcertified",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-10-30-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-10-30T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Tesla-capable",
+        "local service"
+      ],
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#Teslacapable",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-02-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-11-02T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "precision craftsmanship",
+        "local service"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#precisioncraftsmanship",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-04-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-11-04T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "30+ years",
+        "local service"
+      ],
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#30years",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-06-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-11-06T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "ASE-certified",
+        "local service"
+      ],
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#ASEcertified",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-09-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-11-09T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Tesla-capable",
+        "local service"
+      ],
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#Teslacapable",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-11-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-11-11T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "precision craftsmanship",
+        "local service"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#precisioncraftsmanship",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-13-educate",
+      "pillar_id": "educate",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-11-13T13:00:00.000Z",
+      "message": "30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "30+ years",
+        "local service"
+      ],
+      "alt_text": "reels of Educate: 30+ years (30+ years) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#30years",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-16-proof",
+      "pillar_id": "proof",
+      "platform": "instagram",
+      "format": "carousel",
+      "publish_at": "2026-11-16T13:00:00.000Z",
+      "message": "ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        },
+        {
+          "media_type": "IMAGE"
+        }
+      ],
+      "keywords": [
+        "ASE-certified",
+        "local service"
+      ],
+      "alt_text": "carousel of Social Proof: ASE-certified (ASE-certified) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#ASEcertified",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-18-behind",
+      "pillar_id": "behind",
+      "platform": "instagram",
+      "format": "reels",
+      "publish_at": "2026-11-18T13:00:00.000Z",
+      "message": "Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Tesla-capable",
+        "local service"
+      ],
+      "alt_text": "reels of Behind the Scenes: Tesla-capable (Tesla-capable) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#Teslacapable",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
+      "status": "pending",
+      "published_id": null,
+      "published_at": null,
+      "error": null,
+      "schedule_native": false
+    },
+    {
+      "id": "blue-rose-auto-2026-11-20-offer",
+      "pillar_id": "offer",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-11-20T13:00:00.000Z",
+      "message": "Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_",
+      "link": null,
+      "cta": null,
+      "image_url": null,
+      "local_path": null,
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "precision craftsmanship",
+        "local service"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "hashtags": [
+        "#precisioncraftsmanship",
+        "#localservice"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": false,
+      "ai_disclosed": false,
+      "brand_kit": null,
       "status": "pending",
       "published_id": null,
       "published_at": null,

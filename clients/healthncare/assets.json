@@ -72,6 +72,558 @@
         "roas": null
       },
       "created_at": "2026-08-05T19:55:35.580Z"
+    },
+    {
+      "asset_id": "img_healthncare-2026-08-18-launch-ig-4x5",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-ig-4x5.png",
+      "hash": "00a23cb629bbde5cca0b217f90c76d3ca085eb889ff2c2157b1021fb1bcc6b39",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Wellness & Care launch post — science-backed weight-loss and energy supplements, US and Canada",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-17T16:36:31.171Z"
+    },
+    {
+      "asset_id": "img_healthncare-2026-08-18-launch-fb-1x1",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-fb-1x1.png",
+      "hash": "6680f427668176581a0453daaf285f0c98d4bbda5723489d9d15a47ed1a8f41b",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Wellness & Care launch post — curated marketplace of clinically researched supplements",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-17T16:37:00.072Z"
+    },
+    {
+      "asset_id": "img_healthncare-2026-08-18-launch-fb-1x1_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-2026-08-18-launch-fb-1x1",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-fb-1x1.png",
+      "hash": "46af4143958fd76af5115e49044a381718e35a4d566774aef7a0f2367c517b12",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Wellness & Care launch post — curated marketplace of clinically researched supplements",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-17T16:50:38.138Z"
+    },
+    {
+      "asset_id": "img_healthncare-2026-08-18-launch-ig-4x5_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-2026-08-18-launch-ig-4x5",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-2026-08-18-launch-ig-4x5.png",
+      "hash": "042e73230bd05ea3044195324753f5e1ecd637041a0b9b2a5a39f7e15aa6c1d4",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Wellness & Care launch post — science-backed weight-loss and energy supplements, US and Canada",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-17T16:51:00.814Z"
+    },
+    {
+      "asset_id": "img_ASPIRATION-ad_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_ASPIRATION-ad",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/ASPIRATION-ad.png",
+      "hash": "1886e0704b0befdacc12e0df623e4f58f445af110af1fd21714c5b09b0668bb4",
+      "angle_id": null,
+      "tags": [
+        "ASPIRATION"
+      ],
+      "alt_text": "Before & After Transformation ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T09:09:09.919Z"
+    },
+    {
+      "asset_id": "img_PROOF-ad_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_PROOF-ad",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/PROOF-ad.png",
+      "hash": "daa211a8830553034b3b29ebe4bbbe30a68bdf449567d47d2b2faf0d472d8392",
+      "angle_id": null,
+      "tags": [
+        "PROOF"
+      ],
+      "alt_text": "Scientific Proof / Clinical Research ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T09:09:27.244Z"
+    },
+    {
+      "asset_id": "img_PAIN-ad_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_PAIN-ad",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/PAIN-ad.png",
+      "hash": "774bb5dd10789338c76cbb8463e03bb6bd5665104b5e71670690433aec4fc471",
+      "angle_id": null,
+      "tags": [
+        "PAIN"
+      ],
+      "alt_text": "Problem-Agitate-Solve (PAS) ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T09:09:48.984Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-01-plateau",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-01-plateau.png",
+      "hash": "caeff4b4d7c19bf112ed6267b7163c8554078348a0ae9c04c269d63dc6c72e95",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Frustrated woman on a scale, weight-loss plateau concept, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:33:45.692Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-02-energy",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-02-energy.png",
+      "hash": "c60932fd71e4bc00c2f058b3f0efac7ee3007e5eb270e1d3092a51951d93fdd4",
+      "angle_id": null,
+      "tags": [
+        "educate"
+      ],
+      "alt_text": "Tired person at a desk mid-afternoon, energy crash concept, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:34:00.264Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-05-intro",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-05-intro.png",
+      "hash": "153b6846c7b520300730749bd47296c4f6ef9158544d712441035e322473d790",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Trimology supplement product shot, clean lifestyle background, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:34:18.756Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-08-relatable",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-08-relatable.png",
+      "hash": "0ecbe54ed364725050254dcb05bc9cb678ee01198c933b07a2f6b7bad438eb4f",
+      "angle_id": null,
+      "tags": [
+        "behind"
+      ],
+      "alt_text": "Lighthearted meme-style graphic about trying every fad diet, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:34:31.498Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-10-engage",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-10-engage.png",
+      "hash": "c9861f78d130a497c209bf6389f871e66ba3f90f9625ef13540ae1649af01419",
+      "angle_id": null,
+      "tags": [
+        "behind"
+      ],
+      "alt_text": "Text-forward graphic asking a community engagement question, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:34:45.938Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-11-transparency",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-11-transparency.png",
+      "hash": "392808a3cfe2fa8b735447fc622990d4cdc2fb23924f8c385ff43e5eccd8b99f",
+      "angle_id": null,
+      "tags": [
+        "behind"
+      ],
+      "alt_text": "Warm, trustworthy graphic disclosing affiliate relationship, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:34:58.397Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-12-seasonal",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-12-seasonal.png",
+      "hash": "5f8936239db60e400d824b34d474b36234e5b41aa48be2fe11de069bda8468ef",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Person starting a fresh healthy routine, seasonal reset concept, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:35:11.679Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-15-cta",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-15-cta.png",
+      "hash": "afb24e97647ca9b657d337504d66a9181163a0d82e852521361a67bfad1d8286",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Clean direct call-to-action graphic for Trimology, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:35:23.581Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-01-plateau_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-01-plateau",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-01-plateau.png",
+      "hash": "da1f8fea45b0135ea778a70998d89fe8281cdf2944e5f31397194b9613cbe4fd",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Frustrated woman on a scale, weight-loss plateau concept, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:35:45.117Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-02-energy_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-02-energy",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-02-energy.png",
+      "hash": "e1b0e4d32c6e4e6104c89225e95050d08481873d65fbbba78b3d5e342c0aa9f0",
+      "angle_id": null,
+      "tags": [
+        "educate"
+      ],
+      "alt_text": "Tired person at a desk mid-afternoon, energy crash concept, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:36:11.524Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-05-intro_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-05-intro",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-05-intro.png",
+      "hash": "535d23383b8cb09c7a4a1b252529bee52e551ea796ed8f685bd6f10746232ca1",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Trimology supplement product shot, clean lifestyle background, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:36:25.299Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-08-relatable_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-08-relatable",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-08-relatable.png",
+      "hash": "fdeee90bdcdd2accb716890dbf52f18030ec02101e90fa9e447c29886e869bdd",
+      "angle_id": null,
+      "tags": [
+        "behind"
+      ],
+      "alt_text": "Lighthearted meme-style graphic about trying every fad diet, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:36:37.783Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-10-engage_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-10-engage",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-10-engage.png",
+      "hash": "544a2210b0cc0777f989e027b75ef9f9cdc0fa14aca3c0f84bd18fc4c58f2240",
+      "angle_id": null,
+      "tags": [
+        "behind"
+      ],
+      "alt_text": "Text-forward graphic asking a community engagement question, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:36:51.380Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-11-transparency_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-11-transparency",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-11-transparency.png",
+      "hash": "aa7d2410074373cc6ff0955557a53c8b9639abb439e422515f575bdf736dcd63",
+      "angle_id": null,
+      "tags": [
+        "behind"
+      ],
+      "alt_text": "Warm, trustworthy graphic disclosing affiliate relationship, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:37:04.629Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-12-seasonal_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-12-seasonal",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-12-seasonal.png",
+      "hash": "7835b6f65479f85a976965cf85113d1c2795a93434b9c94f26614feebbfb62e5",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Person starting a fresh healthy routine, seasonal reset concept, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:37:17.455Z"
+    },
+    {
+      "asset_id": "img_healthncare-trimology-15-cta_v2",
+      "client_slug": "healthncare",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_healthncare-trimology-15-cta",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/healthncare/generated/healthncare-trimology-15-cta.png",
+      "hash": "d8b586973825194a45f03406f1d2671410666b961206e11b2764c7fa2fd3297d",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "Clean direct call-to-action graphic for Trimology, Wellness & Care",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-24T10:37:30.687Z"
     }
   ]
 }

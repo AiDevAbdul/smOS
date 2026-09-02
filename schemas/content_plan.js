@@ -34,6 +34,9 @@ export function normalizeItem(raw) {
     publish_at: pick(r, "publish_at", "scheduled_for") ?? null,
     message: pick(r, "message", "caption", "copy") ?? "",
     link: pick(r, "link", "url") ?? null,
+    // optional on-poster button label (Meta CTA enum or plain text); when unset
+    // /image-gen falls back to the pillar's default CTA
+    cta: pick(r, "cta") ?? null,
     image_url: pick(r, "image_url") ?? null,
     // local filesystem copy of image_url, written by /image-gen for fast
     // review without a network round trip — informational only, /publish

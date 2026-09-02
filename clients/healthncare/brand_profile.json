@@ -27,7 +27,7 @@
     },
     "value_proposition": "Skip the supplement trial-and-error hunt. Our science-backed, curated selection gets you real energy and weight-loss results affordably—backed by research, not marketing.",
     "differentiation": "In a crowded affiliate space, we win on curation (efficacy-first selection), transparency (no miracle claims), and affordability ($100–$300 price point). We are the thinking person's weight-loss marketplace.",
-    "positioning_statement": "For busy adults aged 25–70 seeking sustained energy and weight loss, Health & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization.",
+    "positioning_statement": "For busy adults aged 25–70 seeking sustained energy and weight loss, Wellness & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization.",
     "messaging_pillars": [
       "Science-Backed Selection — We choose supplements backed by clinical research, not marketing noise",
       "Real Transformation — Proven results via testimonials and before/afters from real customers",
@@ -40,10 +40,10 @@
     "positioning_approved_at": "2026-08-05T15:30:43.831Z"
   },
   "verbal": {
-    "name": "Health & Care",
+    "name": "Wellness & Care",
     "name_candidates": [
       {
-        "name": "Health & Care",
+        "name": "Wellness & Care",
         "domain_com_available": false,
         "domain": "healthcare.com",
         "trademark_knockout_clear": null,
@@ -102,13 +102,24 @@
       "walls": [],
       "foundation": []
     },
-    "elevator_pitch": "Health & Care is the curated marketplace for weight-loss and energy supplements. We choose products backed by clinical research, not marketing hype. Real results, affordable prices, proven by thousands of happy customers.",
-    "boilerplate": "Health & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically proven products at $100–$300, with a 30-day money-back guarantee. Available in the US and Canada."
+    "elevator_pitch": "Wellness & Care is the curated marketplace for weight-loss and energy supplements. We choose products backed by clinical research, not marketing hype. Real results, affordable prices, proven by thousands of happy customers.",
+    "boilerplate": "Wellness & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically proven products at $100–$300, with a 30-day money-back guarantee. Available in the US and Canada.",
+    "name_history": [
+      {
+        "from": "Health & Care",
+        "to": "Wellness & Care",
+        "changed_at": "2026-08-17",
+        "changed_by": "operator",
+        "reason": "align brand with the live Meta assets (Page/ad account/pixel/BM are all named \"Wellness and Care\")"
+      }
+    ],
+    "name_screening_stale": true,
+    "name_screening_stale_note": "The 3-gate screen (.com availability, USPTO knockout, social handles) in name_screening was run against \"Health & Care\" and does NOT cover \"Wellness & Care\". Re-run /brand-name screening + attorney clearance before any trademark reliance."
   },
   "visual": {
     "moodboard_url": null,
     "logo": {
-      "primary_url": "clients/healthncare/brand/logo_primary.jpeg",
+      "primary_url": "clients/healthncare/brand/logo_primary.png",
       "mark_url": null,
       "wordmark_url": null,
       "mono_url": null,
@@ -184,11 +195,42 @@
       "testimonial: Before/after image + quote, blue frame with teal accent",
       "story-cta: Vertical story (1080×1920) with safe margins (top 250px, bottom 310px)"
     ],
-    "link_in_bio": "https://healthncare.com",
+    "link_in_bio": "https://wellnessncare.com",
     "bios": {
-      "instagram": "Health & Care · Science-Backed Supplements\nClinically proven weight loss & energy.\nNo hype. No fluff. Just results.\nShop now →",
-      "facebook": "Tired of supplements that don't work? Health & Care is the curated marketplace of science-backed weight-loss and energy solutions at prices that actually make sense. Real results backed by research."
+      "instagram": "Wellness & Care · Science-Backed Supplements\nClinically proven weight loss & energy.\nNo hype. No fluff. Just results.\nShop now →",
+      "facebook": "Tired of supplements that don't work? Wellness & Care is the curated marketplace of science-backed weight-loss and energy solutions at prices that actually make sense. Real results backed by research."
     },
-    "branded_hashtag": "#RealTransformation"
+    "branded_hashtag": "#RealTransformation",
+    "assets_generated_at": "2026-08-17",
+    "cover_photo_meta": {
+      "size": "1640x624",
+      "source": "variant C — Krea background + brand text layer, centre-safe layout",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": {
+          "primary": "#0066CC",
+          "secondary": "#20B2AA",
+          "accent": "#34C759",
+          "neutrals": [
+            "#1D1D1F",
+            "#636366",
+            "#F5F5F7",
+            "#FFFFFF"
+          ]
+        },
+        "logo_url": "clients/healthncare/brand/logo_primary.jpeg"
+      }
+    },
+    "profile_picture_meta": {
+      "size": "1080x1080",
+      "ai_generated": false,
+      "note": "deterministic composite: approved logo on brand gradient"
+    },
+    "highlight_covers_meta": {
+      "size": "1080x1920",
+      "ai_generated": false,
+      "note": "deterministic monoline icons on brand gradient"
+    }
   }
 }

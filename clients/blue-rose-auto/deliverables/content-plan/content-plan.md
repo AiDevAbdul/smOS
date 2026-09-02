@@ -1,31 +1,55 @@
 ## Overview
 
-**Blue Rose Auto Care & Repair Services** — organic content plan for **4 weeks** starting **2026-07-06**. 4 content pillars, 12 scheduled posts (Reels-first, Mon/Wed/Fri). Captions are strategic hooks; the client's in-house team produces final media.
+**Blue Rose Auto Care & Repair Services** — organic content plan for **12 weeks** starting **2026-08-31**. 4 content pillars, 36 scheduled posts (Reels-first, Mon/Wed/Fri). Captions are strategic hooks; the client's in-house team produces final media.
 
 ## Content Pillars
 
 | Pillar | Intent | Cadence / wk | Keywords |
 |---|---|---|---|
-| Educate — Know Your Vehicle | educate | 2 | auto repair tips, Tesla EV care |
-| Proof — Craftsmanship Results | convert | 1 | before and after, ceramic coating Eugene |
-| Behind the Bay — 30+ Years | community | 1 | ASE certified techs, Springfield auto shop |
-| Book the Work | convert | 1 | book auto service Eugene, get a quote |
+| Educate | educate | 2 | 30+ years, local service |
+| Social Proof | convert | 1 | ASE-certified, local service |
+| Behind the Scenes | community | 1 | Tesla-capable, local service |
+| Offer / CTA | convert | 1 | precision craftsmanship, local service |
 
 ## Posting Calendar
 
 | Date | Pillar | Format | Caption hook | Hashtags |
 |---|---|---|---|---|
-| Mon, Jul 6 | Educate — Know Your Vehicle | reels | What that dashboard light actually means — and when it's safe to keep driving. ASE-certified breakdown, no scare tactics. | #autorepairtips #TeslaService #EugeneOR #ASEcertified |
-| Wed, Jul 8 | Proof — Craftsmanship Results | carousel | Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines. | #beforeandafter #ceramiccoating #collisionrepair #SpringfieldOR |
-| Fri, Jul 10 | Behind the Bay — 30+ Years | reels | 30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team. | #behindthescenes #mechaniclife #ASEcertified #EugeneAuto |
-| Mon, Jul 13 | Book the Work | image | Due for service or planning a build? Book now or get a quote — we'll tell you straight what your vehicle actually needs. | #booknow #autoservice #EugeneOR #getaquote |
-| Wed, Jul 15 | Educate — Know Your Vehicle | reels | Tesla-capable doesn't mean guesswork. Here's how EV brake service differs from a gas car — and why it matters for your range. | #autorepairtips #TeslaService #EugeneOR #ASEcertified |
-| Fri, Jul 17 | Proof — Craftsmanship Results | carousel | Before / after: full ceramic coating + PPF on a daily driver. Same car — protected for the next decade. | #beforeandafter #ceramiccoating #collisionrepair #SpringfieldOR |
-| Mon, Jul 20 | Behind the Bay — 30+ Years | reels | Meet the techs who treat a Tesla and a '98 pickup with the same standard. This is how precision craftsmanship gets done. | #behindthescenes #mechaniclife #ASEcertified #EugeneAuto |
-| Wed, Jul 22 | Book the Work | image | Mechanical, collision, or cosmetic — one shop, 30+ years, ASE-certified. Get a quote and we'll map the work with you. | #booknow #autoservice #EugeneOR #getaquote |
-| Fri, Jul 24 | Educate — Know Your Vehicle | reels | Ceramic coating vs. a good wax: what 30+ years in the bay has taught us about what actually protects your paint. | #autorepairtips #TeslaService #EugeneOR #ASEcertified |
-| Mon, Jul 27 | Proof — Craftsmanship Results | carousel | Collision repair, panel by panel. Swipe to see the precision craftsmanship that brought this one back to factory lines. | #beforeandafter #ceramiccoating #collisionrepair #SpringfieldOR |
-| Wed, Jul 29 | Behind the Bay — 30+ Years | reels | 30+ years, one philosophy: do it right or don't hand back the keys. A look inside the bay with our ASE-certified team. | #behindthescenes #mechaniclife #ASEcertified #EugeneAuto |
-| Fri, Jul 31 | Book the Work | image | Due for service or planning a build? Book now or get a quote — we'll tell you straight what your vehicle actually needs. | #booknow #autoservice #EugeneOR #getaquote |
+| Mon, Aug 31 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Wed, Sep 2 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Fri, Sep 4 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Mon, Sep 7 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Wed, Sep 9 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Fri, Sep 11 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Mon, Sep 14 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Wed, Sep 16 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Fri, Sep 18 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Mon, Sep 21 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Wed, Sep 23 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Fri, Sep 25 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Mon, Sep 28 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Wed, Sep 30 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Fri, Oct 2 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Mon, Oct 5 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Wed, Oct 7 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Fri, Oct 9 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Mon, Oct 12 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Wed, Oct 14 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Fri, Oct 16 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Mon, Oct 19 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Wed, Oct 21 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Fri, Oct 23 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Mon, Oct 26 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Wed, Oct 28 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Fri, Oct 30 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Mon, Nov 2 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Wed, Nov 4 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Fri, Nov 6 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Mon, Nov 9 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Wed, Nov 11 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
+| Fri, Nov 13 | Educate | reels | 30+ years — Educate: 30+ years. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #30years #localservice |
+| Mon, Nov 16 | Social Proof | carousel | ASE-certified — Social Proof: ASE-certified. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #ASEcertified #localservice |
+| Wed, Nov 18 | Behind the Scenes | reels | Tesla-capable — Behind the Scenes: Tesla-capable. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #Teslacapable #localservice |
+| Fri, Nov 20 | Offer / CTA | image | Precision craftsmanship — Offer / CTA: precision craftsmanship. _(creative agent to finish in brand voice — keep the keyword in the first line)_ | #precisioncraftsmanship #localservice |
 
 _Generated by smOS `/content-plan`. Media URLs are produced by the client team before publishing via `/publish`._

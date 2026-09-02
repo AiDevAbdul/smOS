@@ -1,6 +1,6 @@
 {
   "slug": "healthncare",
-  "name": "Health & Care",
+  "name": "Wellness & Care",
   "business": {
     "product_description": "Supplements and weight-loss medicines (affiliate via Maxweb and Clickbank)",
     "price_low": 100,
@@ -28,20 +28,24 @@
     "cta_style": "direct"
   },
   "accounts": {
-    "ad_account_id": null,
-    "pixel_id": null,
-    "facebook_page_id": null,
-    "instagram_business_id": null,
-    "page_id": null,
-    "ig_account_id": null,
-    "bm_id": null,
-    "currency": null,
-    "timezone": null,
-    "business_id": null,
+    "ad_account_id": "act_1837020087281652",
+    "pixel_id": "1720541425873368",
+    "facebook_page_id": "1250910034777823",
+    "instagram_business_id": "17841440837789960",
+    "page_id": "1250910034777823",
+    "ig_account_id": "17841440837789960",
+    "bm_id": "1036829468944163",
+    "currency": "USD",
+    "timezone": "Asia/Karachi",
+    "business_id": "1036829468944163",
     "system_user_id": null,
     "pixel_installed": false,
-    "website_url": null,
-    "domain": null
+    "website_url": "https://wellnessncare.com",
+    "domain": "wellnessncare.com",
+    "facebook_handle": "wellnessncare",
+    "facebook_page_name": "Wellness and Care",
+    "ids_verified_at": "2026-08-17",
+    "ids_verified_note": "Page, ad account, pixel, business confirmed via Graph API v25.0 (all owned by BM 1036829468944163 \"Wellness and Care\"). Instagram id supplied by operator — NOT verifiable with the current app token (missing instagram_basic/pages_show_list); confirm before /publish."
   },
   "kpis": {
     "target_cpa": 25,
@@ -74,12 +78,7 @@
   },
   "status": "planning",
   "onboarded_at": "2026-08-05",
-  "blockers_before_live": [
-    "facebook_page_id",
-    "instagram_business_id",
-    "ad_account_id",
-    "pixel_id"
-  ],
+  "blockers_before_live": [],
   "setup": {
     "business_verified_at": null,
     "page_created_at": null,
@@ -108,7 +107,7 @@
   },
   "contact": {
     "phone": null,
-    "website_display": "healthncare.com",
+    "website_display": "wellnessncare.com",
     "email": "wellness.healthncare@gmail.com",
     "address": null,
     "social_handles": {

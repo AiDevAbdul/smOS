@@ -1,5 +1,5 @@
-# Content Strategy: Health & Care
-**Health & Care – Science-Backed Supplement Marketplace**  
+# Content Strategy: Wellness & Care
+**Wellness & Care – Science-Backed Supplement Marketplace**  
 Generated: August 5, 2026
 
 ---
@@ -108,7 +108,7 @@ We are the thinking person's supplement marketplace—education-first, proof-dri
 ---
 
 ### Rank 5: Customer Transformations: Real Before/Afters + Timeline (Monthly Feature)
-**Keyword**: "Health & Care reviews, weight loss results with supplements, customer testimonials" | **Search volume**: Low search, high conversion  
+**Keyword**: "Wellness & Care reviews, weight loss results with supplements, customer testimonials" | **Search volume**: Low search, high conversion  
 **Buyer stage**: Decision  
 **Angle**: Feature 1 customer per month. "Jane lost 22 lbs in 12 weeks using [2-3 products] + diet + exercise. Here's her timeline, what she did, what surprised her."  
 **Format**: Hero before/after image + customer quote + "here's what Jane did" (products, diet, exercise, timeline) + metric callouts + video or extended quote  
@@ -197,8 +197,8 @@ We are the thinking person's supplement marketplace—education-first, proof-dri
 
 ---
 
-### Rank 15: Common Questions About Health & Care (FAQ + How We Differ)
-**Keyword**: "Health & Care, Health & Care reviews, how Health & Care works" | **Search volume**: Low, high conversion  
+### Rank 15: Common Questions About Wellness & Care (FAQ + How We Differ)
+**Keyword**: "Wellness & Care, Wellness & Care reviews, how Wellness & Care works" | **Search volume**: Low, high conversion  
 **Buyer stage**: Decision  
 **Angle**: Close the deal. "Here's who we are, how we work, what we promise." Address objections (cost, risk, efficacy).  
 **Format**: Brand story + 10 FAQs (what we are, why us vs competitors, guarantees, shipping, refunds, support, safety) + customer testimonial + 30-day guarantee summary  
@@ -299,12 +299,12 @@ PILLAR: Implementation & Onboarding
 | supplements vs GLP-1 | 2,900+ | Supplements vs Prescription | Decide & shop |
 | thermogenic supplements | 3,600+ | Thermogenic Supplements | Best brands → shop |
 | recovery supplements | 4,400+ | Recovery Supplements | Best stacks → shop |
-| Health & Care reviews | low, high conversion | Customer Transformations + FAQ | See results → shop |
+| Wellness & Care reviews | low, high conversion | Customer Transformations + FAQ | See results → shop |
 
 ### Decision Stage
 | Keyword | Volume | Target Piece | CTA |
 |---------|--------|--------------|-----|
-| Health & Care | branded | FAQ | Answers → shop |
+| Wellness & Care | branded | FAQ | Answers → shop |
 | supplement starter guide | long-tail | How to Start | Setup guide → first order |
 | customer testimonials supplements | low, high conversion | Customer Transformations | Results proof → buy |
 

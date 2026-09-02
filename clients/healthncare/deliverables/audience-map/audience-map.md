@@ -1,6 +1,6 @@
 ## Overview
 
-Targeting plan for **Health & Care** — 5 interest clusters, 5 retargeting layers, 0 lookalikes.
+Targeting plan for **Wellness & Care** — 5 interest clusters, 5 retargeting layers, 0 lookalikes.
 
 ## Geo & Demographics
 

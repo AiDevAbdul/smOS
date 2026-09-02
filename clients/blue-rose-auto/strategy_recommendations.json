@@ -1,0 +1,40 @@
+{
+  "client_slug": "blue-rose-auto",
+  "month": "2026-08",
+  "generated_at": "2026-08-31T10:57:43.125Z",
+  "recommendations": [
+    {
+      "id": 2,
+      "action": "Replace 7 declining/expired ads",
+      "rationale": "current CTR < 60% of peak",
+      "impact": "stabilize CTR, lower CPC",
+      "budget_delta": 0,
+      "owner": "creative"
+    },
+    {
+      "id": 3,
+      "action": "Reallocate budget toward \"AutoBlueRose-Awareness_Campaign – 03\"",
+      "rationale": "top ROAS 0",
+      "impact": "lift account ROAS",
+      "budget_delta": "+20%",
+      "owner": "optimizer"
+    },
+    {
+      "id": 4,
+      "action": "Pause \"New Leads Ad Set\"",
+      "rationale": "ROAS 0 after $122.84",
+      "impact": "free up budget",
+      "budget_delta": "-$122.84",
+      "owner": "optimizer"
+    },
+    {
+      "id": 5,
+      "action": "Bias placement mix toward facebook/facebook_reels_overlay",
+      "rationale": "lowest CPA $20.85",
+      "impact": "compound efficiency",
+      "budget_delta": 0,
+      "owner": "human"
+    }
+  ],
+  "note": "Recommendations are heuristic-generated. Have Claude review + add qualitative actions before sending to client."
+}

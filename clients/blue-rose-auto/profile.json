@@ -94,7 +94,7 @@
     "instagram_handle": "blueroseauto",
     "instagram_business_id": "17841417245534835",
     "ad_account_id": "act_1999616770762846",
-    "pixel_id": "2183558222437003",
+    "pixel_id": "1798280031363662",
     "timezone": "America/Los_Angeles",
     "currency": "USD",
     "instagram_url": "https://www.instagram.com/blueroseauto/",
@@ -105,7 +105,9 @@
     "system_user_id": null,
     "pixel_installed": false,
     "website_url": null,
-    "domain": null
+    "domain": null,
+    "legacy_pixel_id": "2183558222437003",
+    "legacy_pixel_note": "Owned by Ducker Creative BM (863900505982111) — cannot be moved to client BM; retire after migration"
   },
   "contacts": {
     "phone": "(541) 641-8877",

@@ -1,0 +1,191 @@
+{
+  "$meta": {
+    "note": "All copy below is derived from the approved brand_profile.json (verbal + strategy layers) and data/ad_copy.json. It passes the client's voice 'dont' list: no 'miracle', 'guaranteed', 'cure', 'best ever', no fake urgency, no disease claims. Placeholders marked TBD must be filled by the client — do NOT invent testimonials, numbers, or study citations.",
+    "voice": "Educational · Bold · Urgent · Transparent",
+    "brand_name": "Wellness & Care",
+    "tagline": "Proven. Accessible. Real.",
+    "domain": "wellnessncare.com"
+  },
+
+  "nav": {
+    "logo_alt": "Wellness & Care",
+    "links": [
+      { "label": "How It Works", "href": "#how-it-works" },
+      { "label": "The Science", "href": "#science" },
+      { "label": "Results", "href": "#results" },
+      { "label": "Picks", "href": "#picks" },
+      { "label": "FAQ", "href": "#faq" }
+    ],
+    "cta": { "label": "See Our Picks", "href": "#picks" }
+  },
+
+  "hero": {
+    "eyebrow": "Science-backed supplement curation",
+    "h1": "Stop guessing. Start seeing results.",
+    "h1_alt": "The supplements worth your money. Nothing else.",
+    "subhead": "Wellness & Care is a curated marketplace for weight-loss and energy supplements. We select what clinical research supports — and skip everything else. Real results, $100–$300, no hype.",
+    "primary_cta": { "label": "See Our Curated Picks", "href": "#picks" },
+    "secondary_cta": { "label": "How We Choose", "href": "#how-it-works" },
+    "trust_strip": [
+      "Efficacy-first curation",
+      "30-day money-back window",
+      "Ships across US & Canada",
+      "No miracle claims — ever"
+    ],
+    "image": {
+      "src": "/images/hero.jpg",
+      "alt": "Adults aged 25 to 70 in warm natural light, active and energized",
+      "direction": "Real people, authentic, diverse across the 25–70 range. Warm lighting, warm skin-tone saturation against the blue+teal palette. No stock clichés, no gym-bro imagery, no scale-and-tape-measure shots.",
+      "ai_disclosure_required_if_generated": true
+    }
+  },
+
+  "problem": {
+    "eyebrow": "The real problem",
+    "h2": "You've already spent the money. That's the frustrating part.",
+    "body": "Diet after diet. Another bottle that promised everything and delivered nothing. The supplement aisle is built to sell, not to work — and there is no easy way to tell the difference from the label.",
+    "points": [
+      { "title": "Marketing outranks evidence", "body": "The loudest product is rarely the one with research behind it." },
+      { "title": "Trial-and-error is expensive", "body": "Every wrong bottle costs you a month and $60–$120 you don't get back." },
+      { "title": "Energy is the real cost", "body": "This isn't only about the scale. It's the tiredness that follows you into every day." }
+    ]
+  },
+
+  "how_it_works": {
+    "eyebrow": "How we choose",
+    "h2": "Three filters. Everything else gets cut.",
+    "lede": "We're a curation layer, not a manufacturer. Our only job is deciding what makes the shortlist.",
+    "steps": [
+      { "n": "01", "icon": "flask", "title": "Evidence first", "body": "A product only makes the list if its key ingredients have published clinical research behind them at the dose actually used. Proprietary-blend hiding is an automatic no." },
+      { "n": "02", "icon": "shield", "title": "Transparency check", "body": "Full ingredient disclosure, clear dosing, and a real returns policy. If we can't tell you what's in it and what it does, we won't list it." },
+      { "n": "03", "icon": "tag", "title": "Price sanity", "body": "Effective doesn't have to mean $500. Our shortlist sits in the $100–$300 range because that's where evidence and affordability actually overlap." }
+    ],
+    "footnote": "We earn an affiliate commission when you buy through our links. That commission never influences what makes the shortlist — see our disclosure below."
+  },
+
+  "science": {
+    "eyebrow": "The science",
+    "h2": "What research supports — and what it doesn't.",
+    "lede": "We'd rather lose a sale than overstate a study. Here's how we read the evidence.",
+    "claims": [
+      { "supported": true,  "text": "Certain ingredients have clinical support for appetite regulation and energy metabolism at specific doses." },
+      { "supported": true,  "text": "Supplements work alongside nutrition and movement — they are a lever, not a replacement." },
+      { "supported": false, "text": "No supplement treats, diagnoses, or cures any medical condition. Anyone telling you otherwise is selling, not informing." },
+      { "supported": false, "text": "No product produces the same result for everyone. Individual results vary — always." }
+    ],
+    "callout": "If you are pregnant, nursing, managing a medical condition, or taking prescription medication, talk to your doctor before starting any supplement.",
+    "TBD": "Client to supply 3–6 citations (study title, journal, year, URL) if the site is to name specific ingredients. Do not fabricate citations."
+  },
+
+  "proof": {
+    "eyebrow": "Real transformation",
+    "h2": "Results from real customers.",
+    "lede": "Every story below is a real customer, published with permission. Individual results vary.",
+    "TBD": "Client must supply: (a) 3–6 testimonials with name, city, and consent on file; (b) before/after photos with signed written release; (c) any stat used in the stat band. Ship the section with placeholder-free real content or hide the section entirely — never render invented proof.",
+    "stats": [
+      { "value": "TBD", "label": "Customers served", "source_required": true },
+      { "value": "30", "suffix": "-day", "label": "Money-back window", "source_required": false },
+      { "value": "2", "label": "Countries served (US & Canada)", "source_required": false }
+    ],
+    "testimonial_shape": {
+      "quote": "string, 1–3 sentences, customer's own words",
+      "name": "First name + last initial",
+      "location": "City, State/Province",
+      "context": "e.g. 'Using our energy pick for 4 months'",
+      "photo": "optional, requires signed release",
+      "disclaimer_required": "Individual results vary."
+    }
+  },
+
+  "picks": {
+    "eyebrow": "The shortlist",
+    "h2": "What's on the list right now.",
+    "lede": "Two categories. A handful of products. Updated when the evidence changes, not when a commission does.",
+    "categories": [
+      { "key": "weight", "title": "Weight management", "icon": "leaf", "body": "For sustainable, gradual weight loss alongside nutrition and movement." },
+      { "key": "energy", "title": "Energy & vitality", "icon": "bolt", "body": "For the fatigue that shows up before noon and never quite lifts." }
+    ],
+    "card_shape": {
+      "name": "Product name (as listed by the merchant)",
+      "category": "weight | energy",
+      "price_range": "$100–$300 band",
+      "why_listed": "1–2 sentences: the specific reason it passed the three filters",
+      "key_ingredients": "array of strings",
+      "cta_label": "View Product",
+      "cta_href": "Affiliate URL — Maxweb / ClickBank, with UTM appended",
+      "badge": "optional: 'Best evidence' | 'Best value'"
+    },
+    "TBD": "Client to supply the live product list + affiliate URLs. Build the grid to render from an array so products can be swapped without a code change.",
+    "affiliate_note": "Wellness & Care is an affiliate. We earn a commission on purchases made through these links, at no extra cost to you."
+  },
+
+  "guarantee": {
+    "eyebrow": "Low risk",
+    "h2": "30 days to decide.",
+    "body": "Every product on our shortlist carries a 30-day money-back window through the merchant. If it isn't working for you, you send it back. That policy is one of our three filters — a product without it doesn't make the list.",
+    "fine_print": "Refunds are processed by the merchant selling the product, under their published returns policy. Wellness & Care does not process payments or refunds directly. Check the merchant's terms before purchasing."
+  },
+
+  "faq": {
+    "eyebrow": "Straight answers",
+    "h2": "Questions worth asking before you buy.",
+    "items": [
+      { "q": "How do you make money?", "a": "We earn an affiliate commission when you purchase through a link on this site. It costs you nothing extra. Commission rates play no part in what makes our shortlist — evidence, transparency, and price do." },
+      { "q": "Do these supplements actually work?", "a": "The ingredients on our shortlist have published clinical research behind them at the doses used. That's a meaningful bar, and it's not the same as a promise. Supplements support nutrition and movement; they don't replace them, and results vary between people." },
+      { "q": "Are these medications?", "a": "No. The products we list are dietary supplements, not prescription medications. They are not intended to diagnose, treat, cure, or prevent any disease. If you're considering a prescription weight-loss medication, that's a conversation for your doctor." },
+      { "q": "What does it cost?", "a": "Products on our shortlist sit in the $100–$300 range. We deliberately exclude the $500+ tier — in our reading of the evidence, the extra spend doesn't buy extra efficacy." },
+      { "q": "Where do you ship?", "a": "The merchants we link to ship across the United States and Canada. Shipping times and costs are set by each merchant." },
+      { "q": "Can I return something?", "a": "Yes — every product we list carries a 30-day money-back window through the merchant. Refunds go through the merchant, not through us." },
+      { "q": "Should I check with my doctor first?", "a": "Yes, especially if you're pregnant, nursing, managing a health condition, or taking prescription medication. We're a curation service, not a medical provider." },
+      { "q": "How often does the shortlist change?", "a": "When the evidence changes. We review the list quarterly and remove anything that no longer clears the three filters." }
+    ]
+  },
+
+  "final_cta": {
+    "eyebrow": "Proven. Accessible. Real.",
+    "h2": "Reclaim your energy. Start with something that works.",
+    "body": "Skip the trial-and-error. Start with the shortlist we'd give a friend.",
+    "primary_cta": { "label": "See Our Curated Picks", "href": "#picks" },
+    "reassurance": "30-day money-back window · US & Canada · No subscription required"
+  },
+
+  "newsletter": {
+    "enabled": false,
+    "h3": "Get the shortlist updates",
+    "body": "We email when the list changes — roughly once a quarter. No daily blasts.",
+    "cta": "Subscribe",
+    "consent": "By subscribing you agree to our Privacy Policy. Unsubscribe any time.",
+    "TBD": "Only enable if the client has an ESP connected. Otherwise ship the site without it — a dead form is worse than no form."
+  },
+
+  "footer": {
+    "boilerplate": "Wellness & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically researched products at $100–$300, with a 30-day money-back window. Available in the US and Canada.",
+    "email": "wellness.healthncare@gmail.com",
+    "social": {
+      "instagram": { "handle": "@healthncare", "url": "https://instagram.com/healthncare" },
+      "facebook":  { "handle": "@wellnessncare", "url": "https://facebook.com/wellnessncare" },
+      "tiktok":    { "handle": "@healthncare", "url": "https://tiktok.com/@healthncare" }
+    },
+    "columns": [
+      { "title": "Explore", "links": [ { "label": "How It Works", "href": "#how-it-works" }, { "label": "The Science", "href": "#science" }, { "label": "Results", "href": "#results" }, { "label": "Picks", "href": "#picks" }, { "label": "FAQ", "href": "#faq" } ] },
+      { "title": "Legal", "links": [ { "label": "Privacy Policy", "href": "/privacy" }, { "label": "Terms of Use", "href": "/terms" }, { "label": "Affiliate Disclosure", "href": "/disclosure" } ] }
+    ],
+    "affiliate_disclosure": "Affiliate disclosure: Wellness & Care participates in affiliate programs including Maxweb and ClickBank. When you buy through links on this site we may earn a commission, at no additional cost to you. Commissions do not influence which products we list.",
+    "health_disclaimer": "These statements have not been evaluated by the Food and Drug Administration. The products discussed on this site are dietary supplements and are not intended to diagnose, treat, cure, or prevent any disease. Consult your physician before beginning any supplement program, particularly if you are pregnant, nursing, taking medication, or managing a medical condition. Individual results vary.",
+    "copyright": "© 2026 Wellness & Care. All rights reserved."
+  },
+
+  "seo": {
+    "title": "Wellness & Care — Science-Backed Weight Loss & Energy Supplements",
+    "title_max_60": true,
+    "description": "A curated marketplace of clinically researched weight-loss and energy supplements, $100–$300, with a 30-day money-back window. Shipping across the US and Canada. No hype.",
+    "keywords_primary": ["science-backed weight loss supplements", "clinically researched energy supplements", "curated supplement marketplace"],
+    "og_image": "/images/og.jpg (1200×630, brand gradient + logo + tagline)",
+    "canonical": "https://wellnessncare.com/",
+    "locale": "en_US",
+    "schema": ["Organization", "WebSite", "FAQPage", "ItemList (for the picks grid)"]
+  },
+
+  "banned_words": ["miracle", "guaranteed", "guarantee results", "cure", "cures", "best ever", "life-changing", "only 3 spots left", "melts fat", "detox your body", "doctor approved", "FDA approved", "clinically proven to cure"],
+  "banned_patterns": ["countdown timers not tied to a real deadline", "fake stock counters", "invented testimonials", "before/after photos without a signed release", "any claim to treat or diagnose a condition", "disparaging a named competitor"]
+}

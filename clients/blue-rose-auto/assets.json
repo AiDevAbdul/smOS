@@ -601,6 +601,534 @@
         "roas": null
       },
       "created_at": "2026-07-22T15:52:28.058Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_GLOSS-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_GLOSS-ad.png",
+      "hash": "c6d64af8ca2d85fee8b2319c3be04a6d999d6bc3ca6a2008172c718db35e39a7",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_GLOSS"
+      ],
+      "alt_text": "LEADS_CERAMIC_GLOSS ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-08T12:50:33.539Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_PROTECT-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "hash": "7ecc2fcf7a06c009cc9763175cd0cb32568d1f84c005519c90ae9612584990a4",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_PROTECT"
+      ],
+      "alt_text": "LEADS_CERAMIC_PROTECT ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-08T12:50:43.401Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_GLOSS-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_GLOSS-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_GLOSS-ad.png",
+      "hash": "c51037ab420d5c3ceb9a9a0571da9bcccba5ca4fb5b6fe5fbc9e2acbf04d78a7",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_GLOSS"
+      ],
+      "alt_text": "LEADS_CERAMIC_GLOSS ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:27:27.941Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_PROTECT-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_PROTECT-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "hash": "439d01775aeb1b4d359fbd0928484d34f2801bba56f81f25acfa4fc5f8f26aa7",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_PROTECT"
+      ],
+      "alt_text": "LEADS_CERAMIC_PROTECT ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:27:37.605Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_GLOSS-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_GLOSS-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_GLOSS-ad.png",
+      "hash": "ae93c06715ac016b0e621dd783f17f3ff08bf940bd3505f70e14d9651ef9b36f",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_GLOSS"
+      ],
+      "alt_text": "LEADS_CERAMIC_GLOSS ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:34:59.956Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_PROTECT-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_PROTECT-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "hash": "5523ad054939f5894285a0d8c63b274ae73aea9e70b9c2e9e6acad0376b9c53c",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_PROTECT"
+      ],
+      "alt_text": "LEADS_CERAMIC_PROTECT ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:35:09.414Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_GLOSS-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_GLOSS-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_GLOSS-ad.png",
+      "hash": "4bffc8eb852c570d780bb56013d1eaff4e81d91b512e825702bd67f89bc39ad5",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_GLOSS"
+      ],
+      "alt_text": "LEADS_CERAMIC_GLOSS ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:37:43.807Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_PROTECT-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_PROTECT-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "hash": "2a760fb5d0542a4d8bb3d7be4bbc2502c2abf058ec17337449d5198ff498ac41",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_PROTECT"
+      ],
+      "alt_text": "LEADS_CERAMIC_PROTECT ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:37:53.530Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_GLOSS-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_GLOSS-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_GLOSS-ad.png",
+      "hash": "ce2ca722740cde033f1ed6e3ee8c4a6258b73b4c2e1a9bf3422130babe0f9558",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_GLOSS"
+      ],
+      "alt_text": "LEADS_CERAMIC_GLOSS ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:48:36.706Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_PROTECT-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_PROTECT-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "hash": "be6e58a78b19f1d4f47f5ee730de720346edd195e4109a6c939c19301cac86f1",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_PROTECT"
+      ],
+      "alt_text": "LEADS_CERAMIC_PROTECT ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:48:45.762Z"
+    },
+    {
+      "asset_id": "img_LEADS_CERAMIC_PROTECT-ad_v2",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_LEADS_CERAMIC_PROTECT-ad",
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_CERAMIC_PROTECT-ad.png",
+      "hash": "99614cc118c2ac70e2d2d721d1abaa82e73a2868010edbb0a40231e2f7e1b9d9",
+      "angle_id": null,
+      "tags": [
+        "LEADS_CERAMIC_PROTECT"
+      ],
+      "alt_text": "LEADS_CERAMIC_PROTECT ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:55:36.821Z"
+    },
+    {
+      "asset_id": "img_LEADS_TINT_HEAT-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TINT_HEAT-ad.png",
+      "hash": "f20797509bc8ef33db9c03043543b3dbb9fcf68c39d5957f9aa13b168ad2a716",
+      "angle_id": null,
+      "tags": [
+        "LEADS_TINT_HEAT"
+      ],
+      "alt_text": "Window Tint / Heat & UV Protection ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:59:39.371Z"
+    },
+    {
+      "asset_id": "img_LEADS_TINT_PRIVACY-ad",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "/Users/apple/abdul/smOS/clients/blue-rose-auto/generated/LEADS_TINT_PRIVACY-ad.png",
+      "hash": "c71b26b175cae934228cb53abe121155f9575ace75ea93add3d176b23e16f97a",
+      "angle_id": null,
+      "tags": [
+        "LEADS_TINT_PRIVACY"
+      ],
+      "alt_text": "Window Tint / Privacy & Style ad creative",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-09T05:59:53.123Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-09-07-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-09-07-offer.png",
+      "hash": "a6196f56e7573abd6f396c6bd122e212222e8a89efcf73cf6a282feecc95a284",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:14:26.758Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-09-16-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-09-16-offer.png",
+      "hash": "d56d60cab4b93eebd60a38ed5336f389a41b0df3a6fa4cd9f9806626b5e77552",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:14:37.577Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-09-25-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-09-25-offer.png",
+      "hash": "2b254f5a8e9206c6c500e0b68ed794b5f608868edfdb910d20ad09e80f050ae6",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:14:50.623Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-10-05-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-10-05-offer.png",
+      "hash": "7a54cbfa5b6623a789c789c17a6eefea042fefa9f562ac576314d32f7c869594",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:15:02.335Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-10-14-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-10-14-offer.png",
+      "hash": "dc77590b2bf62ca1123bccb96ff8d867f22e9511b1e4dd6bbd28564c1c984f32",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:15:12.870Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-10-23-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-10-23-offer.png",
+      "hash": "4e7d2314586cb4f00203d37aa95e0112a5ef0255291ad4c8b5afc9fdf939af58",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:15:24.003Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-11-02-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-11-02-offer.png",
+      "hash": "7e0b4e44b79f8d0ed939596625c8dc4c83106ad59cf4f4a262d8a0ec30b01d7d",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:15:34.994Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-11-11-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-11-11-offer.png",
+      "hash": "f8f7c0de1ff4f90efa9c8ed31cce3bf41acfb99a15c91531bbd522e1908f7858",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:15:46.530Z"
+    },
+    {
+      "asset_id": "img_blue-rose-auto-2026-11-20-offer",
+      "client_slug": "blue-rose-auto",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/blue-rose-auto/generated/blue-rose-auto-2026-11-20-offer.png",
+      "hash": "d506d5827a549b999e19c4fa38a806b703ba87d9d1a264c3968531151a47020f",
+      "angle_id": null,
+      "tags": [
+        "offer"
+      ],
+      "alt_text": "image of Offer / CTA: precision craftsmanship (precision craftsmanship) by Blue Rose Auto Care & Repair Services",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-08-29T06:15:57.232Z"
     }
   ]
 }

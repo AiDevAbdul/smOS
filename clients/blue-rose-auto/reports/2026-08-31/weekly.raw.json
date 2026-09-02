@@ -1,0 +1,408 @@
+{
+  "slug": "blue-rose-auto",
+  "window": {
+    "week_start": "2026-08-24",
+    "week_end": "2026-08-31",
+    "prior_start": "2026-08-16",
+    "prior_end": "2026-08-23"
+  },
+  "vars": {
+    "blended_mer": 16.25,
+    "breakeven_roas": "—",
+    "econ_target_roas": "—",
+    "gross_profit": "—",
+    "profit_after_ads": "—",
+    "ncac": "$22.79",
+    "client_name": "Blue Rose Auto Care & Repair Services",
+    "week_start": "2026-08-24",
+    "week_end": "2026-08-31",
+    "generated_at": "2026-08-31T10:51:04.367Z",
+    "spend_total": "615.31",
+    "budget_paced_pct": 176,
+    "conversions_total": 27,
+    "roas": "16.25",
+    "cpa": "22.79",
+    "win_headline": "_(Claude to fill — strongest signal in the week)_",
+    "flag_headline": "_(Claude to fill — biggest concern this week)_",
+    "spend_prior": "912.12",
+    "spend_delta_pct": "-32.5",
+    "impressions": "37,428",
+    "impressions_prior": "55,614",
+    "impressions_delta_pct": "-32.7",
+    "reach": "20,083",
+    "reach_prior": "24,645",
+    "reach_delta_pct": "-18.5",
+    "frequency": "1.86",
+    "frequency_prior": "2.26",
+    "frequency_delta": "-0.39",
+    "cpa_target": 35,
+    "roas_target": 1.5,
+    "ctr_target": 1,
+    "ctr": "0.68",
+    "cpa_status": "✓ on target",
+    "roas_status": "✓ on target",
+    "ctr_status": "⚠ off target",
+    "placement_breakdown_rows": "| audience_network · an_classic | 9.09% | 0.2% |\n| audience_network · rewarded_video | 5.94% | 0.1% |\n| facebook · facebook_notification | 5.22% | 6.7% |\n| facebook · facebook_profile_feed | 5.71% | 0.1% |\n| facebook · facebook_reels | 1.33% | 28.9% |\n| facebook · facebook_reels_overlay | 0.67% | 0.7% |\n| facebook · facebook_stories | 5.10% | 3.1% |\n| facebook · feed | 2.18% | 46.1% |\n| facebook · instream_video | 1.13% | 0.7% |\n| facebook · marketplace | 0.09% | 5.2% |\n| facebook · search | 5.41% | 0.1% |\n| instagram · feed | 1.43% | 3.7% |\n| instagram · instagram_reels | 0.12% | 3.1% |\n| instagram · instagram_stories | 1.33% | 1.4% |\n| threads · threads_feed | 0.00% | 0.0% |\n| unknown · unknown | 0.00% | 0.0% |\n| whatsapp · status | 0.00% | 0.0% |",
+    "top_ad_name": "New Leads Ad",
+    "top_ad_format": "New Leads Ad",
+    "top_ad_spend": "122.84",
+    "top_ad_conversions": 13,
+    "top_ad_roas": "48.84",
+    "top_ad_cpa": "9.45",
+    "top_ad_ctr": "1.61",
+    "top_ad_frequency": "1.89",
+    "optimizer_actions_table": "_(No optimizer actions logged this week. Optimizer log will populate once Supabase is wired.)_",
+    "rec_1": "_(Claude to fill — concrete action for next week)_",
+    "rec_2": "_(Claude to fill)_",
+    "rec_3": "_(Claude to fill)_",
+    "baseline_date": "2026-08-04",
+    "before_after_rows": "| Monthly ad spend | — | $2637.04 | — |\n| Best CPA | — | $22.79 | — |\n| Best ROAS | — | 16.25x | — |",
+    "drive_link": "_(set after Drive upload)_"
+  },
+  "metrics": {
+    "now": {
+      "spend": 615.31,
+      "impressions": 37428,
+      "reach": 20083,
+      "clicks": 509,
+      "link_clicks": 256,
+      "conversions": 27,
+      "revenue": 10000,
+      "ctr": 1.3599444266324676,
+      "link_ctr": 0.6839799080901998,
+      "frequency": 1.8636657869840163,
+      "cpa": 22.789259259259257,
+      "roas": 16.251970551429363
+    },
+    "prior": {
+      "spend": 912.12,
+      "impressions": 55614,
+      "reach": 24645,
+      "clicks": 801,
+      "link_clicks": 393,
+      "conversions": 15,
+      "revenue": 2000,
+      "ctr": 1.440284820368972,
+      "link_ctr": 0.7066565972596828,
+      "frequency": 2.2566037735849056,
+      "cpa": 60.808,
+      "roas": 2.1926939437793274
+    }
+  },
+  "economics": {
+    "blended_mer": 16.25,
+    "target_mer": null,
+    "breakeven_roas": null,
+    "target_roas": null,
+    "gross_margin": null,
+    "gross_profit": null,
+    "profit_after_ads": null,
+    "nCAC": 22.79,
+    "target_cac": null,
+    "cac_basis": "all_conversions",
+    "mer_verdict": null,
+    "cac_verdict": null
+  },
+  "placement_breakdown": [
+    {
+      "spend": "1.000065",
+      "impressions": "121",
+      "clicks": "11",
+      "ctr": "9.090909",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "audience_network",
+      "platform_position": "an_classic"
+    },
+    {
+      "spend": "0.790051",
+      "impressions": "101",
+      "clicks": "6",
+      "ctr": "5.940594",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "audience_network",
+      "platform_position": "rewarded_video"
+    },
+    {
+      "spend": "41.042668",
+      "impressions": "441",
+      "clicks": "23",
+      "ctr": "5.21542",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_notification"
+    },
+    {
+      "spend": "0.790051",
+      "impressions": "35",
+      "clicks": "2",
+      "ctr": "5.714286",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_profile_feed"
+    },
+    {
+      "spend": "177.901565",
+      "impressions": "7922",
+      "clicks": "105",
+      "ctr": "1.325423",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_reels"
+    },
+    {
+      "spend": "4.010261",
+      "impressions": "447",
+      "clicks": "3",
+      "ctr": "0.671141",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_reels_overlay"
+    },
+    {
+      "spend": "19.361259",
+      "impressions": "314",
+      "clicks": "16",
+      "ctr": "5.095541",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_stories"
+    },
+    {
+      "spend": "283.368421",
+      "impressions": "14408",
+      "clicks": "314",
+      "ctr": "2.179345",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "feed"
+    },
+    {
+      "spend": "4.090266",
+      "impressions": "177",
+      "clicks": "2",
+      "ctr": "1.129944",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "instream_video"
+    },
+    {
+      "spend": "32.042083",
+      "impressions": "11416",
+      "clicks": "10",
+      "ctr": "0.087596",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "marketplace"
+    },
+    {
+      "spend": "0.440029",
+      "impressions": "37",
+      "clicks": "2",
+      "ctr": "5.405405",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "facebook",
+      "platform_position": "search"
+    },
+    {
+      "spend": "22.731478",
+      "impressions": "767",
+      "clicks": "11",
+      "ctr": "1.434159",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "instagram",
+      "platform_position": "feed"
+    },
+    {
+      "spend": "19.001235",
+      "impressions": "801",
+      "clicks": "1",
+      "ctr": "0.124844",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "instagram",
+      "platform_position": "instagram_reels"
+    },
+    {
+      "spend": "8.360544",
+      "impressions": "225",
+      "clicks": "3",
+      "ctr": "1.333333",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "instagram",
+      "platform_position": "instagram_stories"
+    },
+    {
+      "spend": "0.200013",
+      "impressions": "137",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "threads",
+      "platform_position": "threads_feed"
+    },
+    {
+      "spend": "0.100007",
+      "impressions": "11",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "unknown",
+      "platform_position": "unknown"
+    },
+    {
+      "spend": "0.080005",
+      "impressions": "68",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-08-24",
+      "date_stop": "2026-08-31",
+      "publisher_platform": "whatsapp",
+      "platform_position": "status"
+    }
+  ],
+  "top_ad": {
+    "ad_id": "120254472642780161",
+    "ad_name": "New Leads Ad",
+    "spend": "122.84",
+    "impressions": "4408",
+    "clicks": "71",
+    "ctr": "1.610708",
+    "frequency": "1.892658",
+    "actions": [
+      {
+        "action_type": "offsite_complete_registration_add_meta_leads",
+        "value": "3"
+      },
+      {
+        "action_type": "link_click",
+        "value": "35"
+      },
+      {
+        "action_type": "offsite_search_add_meta_leads",
+        "value": "3"
+      },
+      {
+        "action_type": "post_reaction",
+        "value": "11"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_conversation_replied_7d",
+        "value": "1"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_web_lead",
+        "value": "10"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_conversion.total_messaging_connection",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_unlike",
+        "value": "1"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "1318"
+      },
+      {
+        "action_type": "post_interaction_gross",
+        "value": "11"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "1318"
+      },
+      {
+        "action_type": "post_interaction_net",
+        "value": "12"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_user_depth_2_message_send",
+        "value": "2"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_first_reply",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.post_net_like",
+        "value": "10"
+      },
+      {
+        "action_type": "lead",
+        "value": "13"
+      },
+      {
+        "action_type": "offsite_content_view_add_meta_leads",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.messaging_conversation_started_7d",
+        "value": "3"
+      },
+      {
+        "action_type": "onsite_conversion.lead_grouped",
+        "value": "3"
+      },
+      {
+        "action_type": "video_view",
+        "value": "1272"
+      },
+      {
+        "action_type": "offsite_conversion.fb_pixel_lead",
+        "value": "10"
+      },
+      {
+        "action_type": "offsite_lead_add_20_s_calls",
+        "value": "10"
+      }
+    ],
+    "action_values": [
+      {
+        "action_type": "offsite_conversion.fb_pixel_lead",
+        "value": "6000"
+      },
+      {
+        "action_type": "onsite_web_lead",
+        "value": "6000"
+      },
+      {
+        "action_type": "lead",
+        "value": "6000"
+      }
+    ],
+    "date_start": "2026-08-24",
+    "date_stop": "2026-08-31",
+    "score": 48834.575516869976,
+    "roas": 48.8440247476392,
+    "cpa": 9.44923076923077,
+    "conversions": 13,
+    "format": "New Leads Ad"
+  },
+  "optimizer_actions": [],
+  "errors": []
+}

@@ -677,13 +677,17 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
 /* -------------------------------------------------- Hub (OS console) ------ */
 /* The /bundle deliverables hub is a single-tab "operating system" console: a
-   dark graphite shell (sticky top bar + chip menu + gradient progress spine)
-   frames each report as a bright, elevated "window" (the iframe). Dark chrome
-   around a light document = intentional app framing (no double-hero). */
+   dark graphite shell (fixed header + a persistent grouped sidebar) frames each
+   report as a bright, elevated "window" (the iframe). Dark chrome around a light
+   document = intentional app framing (no double-hero). The header is the only
+   thing that doesn't scroll; sidebar and viewer each own their own scroll region
+   inside a full-viewport-height shell, so there is no long outer page to scroll
+   past and no duplicate nav needed at the bottom. */
 .ds-hub {
-  min-height: 100dvh; display: flex; flex-direction: column;
+  height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
   background: var(--ds-shell); color: var(--ds-shell-ink);
 }
+.ds-hub__body { flex: 1 1 auto; display: flex; min-height: 0; }
 .ds-skip {
   position: absolute; left: 12px; top: -48px; z-index: 100;
   background: var(--ds-shell-2); color: var(--ds-shell-ink);
@@ -723,18 +727,17 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-progress__seg.is-done { background-image: var(--ds-grad-brand); }
 
-/* Chip menu (top + bottom) */
+/* Sidebar nav — persistent left rail on desktop, collapsible top drawer on
+   mobile (see media query below). Scrolls independently of the viewer. */
 .ds-hubnav {
-  display: flex; gap: 8px; align-items: center;
-  padding: 12px 24px; background: rgba(11,11,16,.72);
+  flex: 0 0 264px; width: 264px; display: flex; flex-direction: column; gap: 4px;
+  padding: 16px 14px; background: rgba(11,11,16,.72);
   backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
-  border-bottom: 1px solid var(--ds-shell-line);
-  position: sticky; top: 0; z-index: 10; overflow-x: auto; scrollbar-width: none;
+  border-right: 1px solid var(--ds-shell-line);
+  overflow-y: auto; scrollbar-width: thin;
 }
-.ds-hubnav::-webkit-scrollbar { display: none; }
-.ds-hubnav--bottom { border-bottom: 0; border-top: 1px solid var(--ds-shell-line); position: static; }
 .ds-hubnav__btn {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; flex: none;
+  display: flex; align-items: center; gap: 8px; white-space: nowrap;
   font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
   padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
   background: var(--ds-shell-2); color: var(--ds-shell-ink);
@@ -754,13 +757,14 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 .ds-hubnav__btn.is-disabled { opacity: .4; cursor: default; }
 .ds-hubnav__btn.is-disabled:hover { transform: none; background: var(--ds-shell-2); }
 
-/* Viewer = a bright elevated "window" floating in the dark shell. */
+/* Viewer = a bright elevated "window" floating in the dark shell. Fills the
+   remaining body height so nothing depends on outer-page scroll. */
 .ds-viewer-wrap {
-  flex: 1 1 auto; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
+  flex: 1 1 auto; min-width: 0; position: relative; margin: 18px; border-radius: var(--ds-r-lg);
   overflow: hidden; background: var(--ds-bg);
   box-shadow: 0 0 0 1px var(--ds-shell-line), 0 24px 60px rgba(0,0,0,.5);
 }
-.ds-viewer { display: block; width: 100%; height: 100%; min-height: 70vh; border: 0; background: var(--ds-bg); }
+.ds-viewer { display: block; width: 100%; height: 100%; border: 0; background: var(--ds-bg); }
 .ds-viewer__loader {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   background: var(--ds-bg); opacity: 0; visibility: hidden;
@@ -779,8 +783,13 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 .ds-anim { animation: ds-rise .5s var(--ds-ease-out) both; }
 
 @media (max-width: 760px) {
-  .ds-hubnav--bottom { display: none; }              /* one sticky strip is enough on phones */
-  .ds-viewer-wrap { margin: 12px; border-radius: var(--ds-r); }
+  .ds-hub { height: auto; min-height: 100dvh; overflow: visible; }
+  .ds-hub__body { flex-direction: column; }
+  .ds-hubnav {
+    flex: 0 0 auto; width: auto; max-height: 42vh;
+    border-right: 0; border-bottom: 1px solid var(--ds-shell-line);
+  }
+  .ds-viewer-wrap { flex: 1 1 auto; margin: 12px; border-radius: var(--ds-r); min-height: 60vh; }
   .ds-hub__head { padding: 18px 16px 14px; }
   .ds-progress { flex-basis: 100%; }
 }
@@ -846,22 +855,25 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 </header>
 <script>(function(){function apply(){var b=document.querySelector(".ds-theme-toggle");if(!b)return;b.addEventListener("click",function(){var root=document.documentElement;var current=root.getAttribute("data-theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");var next=current==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{localStorage.setItem("smos-theme",next);}catch(e){}b.setAttribute("aria-pressed",String(next==="dark"));});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply);else apply();})();</script>
 <h1>Performance Analysis — Blue Rose Auto Care &amp; Repair Services</h1>
-<p>_7-day window · 4 campaigns · 18 adsets · 18 ads_</p>
-<h2>Opportunity Score: 12/100</h2>
+<p>_7-day window · 9 campaigns · 28 adsets · 28 ads_</p>
+<h2>Opportunity Score: 0/100</h2>
 <ul>
-<li>Reclaim $113.37/7d bleeding on 2 pause candidates.</li>
+<li>No major structural opportunity detected this window — maintain and monitor.</li>
 </ul>
 <h2>Last 7 days</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Spend</td><td>$338.45</td></tr><tr><td>ROAS</td><td>0</td></tr><tr><td>CPA</td><td>26.03</td></tr><tr><td>Link CTR</td><td>—%</td></tr><tr><td>Conversions</td><td>13</td></tr></tbody></table></div>
+<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Spend</td><td>$613.38</td></tr><tr><td>ROAS</td><td>14.6728</td></tr><tr><td>CPA</td><td>25.56</td></tr><tr><td>Link CTR</td><td>—%</td></tr><tr><td>Conversions</td><td>24</td></tr></tbody></table></div>
 <h2>Account economics</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Blended MER</td><td>0×</td></tr><tr><td>Breakeven ROAS</td><td>—</td></tr><tr><td>Target ROAS</td><td>—</td></tr><tr><td>Gross margin</td><td>—</td></tr><tr><td>Gross profit (ad-driven)</td><td>—</td></tr><tr><td>Profit after ad spend</td><td>—</td></tr><tr><td>New-customer CAC</td><td>USD 26.03 _(all conversions)_</td></tr></tbody></table></div>
+<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Blended MER</td><td>14.67×</td></tr><tr><td>Breakeven ROAS</td><td>—</td></tr><tr><td>Target ROAS</td><td>—</td></tr><tr><td>Gross margin</td><td>—</td></tr><tr><td>Gross profit (ad-driven)</td><td>—</td></tr><tr><td>Profit after ad spend</td><td>—</td></tr><tr><td>New-customer CAC</td><td>USD 25.56 _(all conversions)_</td></tr></tbody></table></div>
 <h2>Flags (4)</h2>
 <ul>
-<li><strong>PAUSE_CANDIDATE_CTR</strong>: 2</li>
 <li><strong>ANOMALY_spend_spike</strong>: 1</li>
 <li><strong>ANOMALY_attribution</strong>: 1</li>
+<li><strong>SCALE_WATCH</strong>: 2</li>
 </ul>
 <h2>Winners</h2>
-<p>_None yet._</p>
-<footer class="ds-footer">Generated by Abdul · 2026-08-04</footer>
+<ul>
+<li>New Leads Ad — ROAS —</li>
+<li>New Leads ad — ROAS —</li>
+</ul>
+<footer class="ds-footer">Generated by Abdul · 2026-08-31</footer>
 </div></body></html>

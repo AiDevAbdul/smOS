@@ -40,6 +40,26 @@ function readableOn(hex) {
   return lum > 0.45 ? "#0A0A0A" : "#ffffff";
 }
 
+// Split a headline into (at most) two visually balanced lines, biased against
+// leaving a single short "orphan" word alone on the last line (e.g. "GET A
+// FREE CERAMIC / QUOTE"). Pure character-count balancing — no font metrics
+// available here — which is enough to fix the orphan case; if the chosen line
+// is still too wide for the box, the container's maxWidth/CSS wrap (below)
+// wraps it further as a safe fallback, so this can never overflow.
+function balancedHeadlineLines(text) {
+  const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+  if (words.length <= 1) return [text];
+  let best = null;
+  for (let i = 1; i < words.length; i++) {
+    const line1 = words.slice(0, i).join(" ");
+    const line2 = words.slice(i).join(" ");
+    const orphanPenalty = words.length - i === 1 && line2.length <= 8 ? 1000 : 0;
+    const score = Math.abs(line1.length - line2.length) + orphanPenalty;
+    if (!best || score < best.score) best = { score, line1, line2 };
+  }
+  return [best.line1, best.line2];
+}
+
 // Footer is intentionally minimal — just the two actionable contact details.
 // Phone is anchored to the LEFT corner and website to the RIGHT corner (rather
 // than one centered run-on line) so each detail reads instantly and the strip
@@ -90,20 +110,30 @@ export async function renderAdLayer({ width, height, brand, copy, contact, theme
   const hasStrip = Boolean(stripPhone || stripWebsite);
 
   // ---- benefit rows ----
+  // A check mark inside the dot (rather than a flat filled circle) gives the
+  // list rhythm/texture at a glance instead of reading as three identical
+  // undifferentiated dots.
   const benefits = (copy.benefits || []).slice(0, 3);
+  const dotSize = Math.round(20 * S);
   const benefitRows = benefits.map((b) =>
     el("div", { display: "flex", alignItems: "center", marginBottom: Math.round(14 * S) }, [
-      el("div", {
-        width: Math.round(16 * S),
-        height: Math.round(16 * S),
-        borderRadius: Math.round(8 * S),
-        backgroundColor: accent,
-        marginRight: Math.round(18 * S),
-        display: "flex",
-        flexShrink: 0,
-        boxShadow: `0 0 0 ${Math.round(5 * S)}px ${hexToRgba(accent, 0.25)}`,
-      }),
-      el("div", { fontFamily: FONT_FAMILIES.body, fontWeight: 500, fontSize: Math.round(33 * S), color: benefitColor }, b),
+      el(
+        "div",
+        {
+          width: dotSize,
+          height: dotSize,
+          borderRadius: Math.round(dotSize / 2),
+          backgroundColor: accent,
+          marginRight: Math.round(18 * S),
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          boxShadow: `0 0 0 ${Math.round(5 * S)}px ${hexToRgba(accent, 0.25)}`,
+        },
+        el("div", { display: "flex", fontFamily: FONT_FAMILIES.body, fontWeight: 700, fontSize: Math.round(dotSize * 0.62), color: ctaText, lineHeight: 1 }, "✓")
+      ),
+      el("div", { fontFamily: FONT_FAMILIES.body, fontWeight: 600, fontSize: Math.round(33 * S), color: benefitColor }, b),
     ])
   );
 
@@ -131,23 +161,32 @@ export async function renderAdLayer({ width, height, brand, copy, contact, theme
       )
     );
   }
+  const headlineLines = balancedHeadlineLines(copy.headline);
+  const headlineLineStyle = {
+    display: "flex",
+    fontFamily: FONT_FAMILIES.display,
+    fontWeight: 600,
+    fontSize: Math.round(86 * S),
+    lineHeight: 1.12,
+    letterSpacing: Math.round(0.4 * S),
+    textTransform: "uppercase",
+    textShadow: headlineShadow,
+    maxWidth: width - PAD * 2,
+  };
+  // Two-tone headline: first line stays the neutral theme color (white on
+  // dark, ink on light), the last line picks up the brand accent — a cheap,
+  // reliable way to inject the brand's second color into the dominant type
+  // element instead of an all-one-color block, without needing to know which
+  // words are "the important ones" semantically.
   block.push(
     el(
       "div",
-      {
-        display: "flex",
-        fontFamily: FONT_FAMILIES.display,
-        fontWeight: 600,
-        fontSize: Math.round(94 * S),
-        lineHeight: 1.02,
-        color: headlineColor,
-        letterSpacing: Math.round(-0.5 * S),
-        textTransform: "uppercase",
-        textShadow: headlineShadow,
-        marginBottom: Math.round(16 * S),
-        maxWidth: width - PAD * 2,
-      },
-      copy.headline
+      { display: "flex", flexDirection: "column", marginBottom: Math.round(16 * S) },
+      headlineLines.map((line, i) => {
+        const isLast = i === headlineLines.length - 1;
+        const color = isLast && headlineLines.length > 1 ? accent : headlineColor;
+        return el("div", { ...headlineLineStyle, color, marginBottom: isLast ? 0 : Math.round(4 * S) }, line);
+      })
     )
   );
   if (copy.subhead) {
@@ -172,6 +211,13 @@ export async function renderAdLayer({ width, height, brand, copy, contact, theme
     block.push(el("div", { display: "flex", flexDirection: "column", marginBottom: Math.round(34 * S) }, benefitRows));
   }
   // ---- CTA button (standard size) ----
+  // Deliberately NOT the same accent fill as the eyebrow badge above it — two
+  // same-color chips on a color-dominant photo (e.g. a blue car under a blue
+  // badge) camouflage the highest-priority conversion element. The CTA gets
+  // the inverse treatment instead (near-white on dark theme, ink on light
+  // theme) so it reads as the one unmissable action regardless of photo color.
+  const ctaBg = isLight ? ink : "#ffffff";
+  const ctaFg = readableOn(ctaBg);
   block.push(
     el(
       "div",
@@ -180,16 +226,15 @@ export async function renderAdLayer({ width, height, brand, copy, contact, theme
         alignSelf: "flex-start",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: accent,
-        color: ctaText,
+        backgroundColor: ctaBg,
+        color: ctaFg,
         fontFamily: FONT_FAMILIES.body,
         fontWeight: 600,
         fontSize: Math.round(27 * S),
         letterSpacing: Math.round(0.3 * S),
         padding: `${Math.round(15 * S)}px ${Math.round(34 * S)}px`,
         borderRadius: Math.round(10 * S),
-        // Tight, low-spread shadow for lift without a dated neon "glow" bloom.
-        boxShadow: `0 6px 16px ${hexToRgba(accent, 0.26)}`,
+        boxShadow: `0 6px 18px rgba(0,0,0,0.32)`,
       },
       copy.cta
     )

@@ -1,5 +1,5 @@
 {
-  "name": "Health & Care",
+  "name": "Wellness & Care",
   "tagline": "Proven. Accessible. Real.",
   "voice": {
     "traits": [
@@ -39,7 +39,7 @@
     "cta_primary": "Shop Now",
     "cta_secondary": "See Results"
   },
-  "elevator_pitch": "Health & Care is the curated marketplace for weight-loss and energy supplements. We choose products backed by clinical research, not marketing hype. Real results, affordable prices, proven by thousands of happy customers.",
-  "boilerplate": "Health & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically proven products at $100–$300, with a 30-day money-back guarantee. Available in the US and Canada.",
-  "positioning_tie": "For busy adults aged 25–70 seeking sustained energy and weight loss, Health & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization."
+  "elevator_pitch": "Wellness & Care is the curated marketplace for weight-loss and energy supplements. We choose products backed by clinical research, not marketing hype. Real results, affordable prices, proven by thousands of happy customers.",
+  "boilerplate": "Wellness & Care is a science-backed supplement marketplace dedicated to helping busy adults achieve sustainable weight loss and reclaim their energy. Our curated selection features only clinically proven products at $100–$300, with a 30-day money-back guarantee. Available in the US and Canada.",
+  "positioning_tie": "For busy adults aged 25–70 seeking sustained energy and weight loss, Wellness & Care is the curated marketplace of science-backed supplements that delivers transformative results without the hype, because our selection is driven by efficacy research, not profit maximization."
 }

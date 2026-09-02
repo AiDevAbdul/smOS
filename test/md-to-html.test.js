@@ -34,5 +34,18 @@ test("mdToHtml produces a self-contained document with inlined styles + title", 
   assert.match(html, /<style>/);
   assert.match(html, /<title>Weekly Report<\/title>/);
   assert.match(html, /Jun 1 → Jun 7/);
-  assert.doesNotMatch(html, /<link |@import|src="http/); // no external assets
+  // Self-contained except the ONE sanctioned external: the design system's
+  // Google Fonts trio (system fallback stacks keep offline HTML legible).
+  const links = html.match(/<link [^>]+>/g) || [];
+  for (const l of links) {
+    assert.match(l, /fonts\.googleapis\.com|fonts\.gstatic\.com/, `unsanctioned external link: ${l}`);
+  }
+  assert.doesNotMatch(html, /@import|src="http/); // no other external assets
+});
+
+test("blockquotes render as fine-print callouts", () => {
+  const f = mdToFragment("> **Read with care.** Modeled, not cash.\n> Second line.");
+  assert.match(f, /<div class="ds-callout ds-callout--warn">/);
+  assert.match(f, /<strong>Read with care\.<\/strong>/);
+  assert.doesNotMatch(f, /&gt; /); // no leaked quote markers
 });
