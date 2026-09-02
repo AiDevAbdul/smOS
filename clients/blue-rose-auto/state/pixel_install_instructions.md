@@ -1,8 +1,15 @@
 # Meta Pixel Installation — Blue Rose Auto
 
+> **⚠ Superseded pixel ID (updated 2026-09-02):** this doc was written against pixel
+> `2183558222437003`, which was owned by the agency's Ducker Creative BM and could not be
+> moved into the client's own BM. The account now runs on **`1798280031363662`**
+> (client-owned) — that is the pixel any developer/GHL work should reference from here
+> forward. `2183558222437003` should be retired once nothing still points at it. Every
+> pixel ID below is the retired one — read it as `1798280031363662`.
+
 **For:** Blue Rose Auto's web developer
 **Site:** https://blueroseauto.com/
-**Pixel (Dataset) ID:** `2183558222437003`
+**Pixel (Dataset) ID:** `1798280031363662` (see notice above — supersedes `2183558222437003` referenced below)
 **Events to track:** `Lead`, `Schedule`
 
 This pixel lets us measure which ads actually produce leads and booked appointments,

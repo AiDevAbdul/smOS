@@ -2,6 +2,13 @@
 **Blue Rose Auto Care & Repair Services**  
 Generated: 2026-08-04
 
+> **⚠ Superseded pixel ID (updated 2026-09-02):** pixel `2183558222437003` referenced
+> below was owned by the agency's Ducker Creative BM; the account has since moved to
+> client-owned pixel **`1798280031363662`**. Note also that `capi_report.json` (2026-08-31)
+> now shows `Lead` firing healthy at 100% server-side share, so the specific symptom this
+> diagnostic describes (0 attributed conversions on GHL-sourced leads) has been resolved
+> for `Lead`; `Schedule` still shows `never_fired` and remains an open gap.
+
 ---
 
 ## The Problem

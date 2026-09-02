@@ -2,8 +2,15 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   checkNaming, checkBudget, checkUtm, checkCompliance, checkDestructive,
-  classifyGraphWrite, guardGraphWrite, GuardError,
+  checkPixel, classifyGraphWrite, guardGraphWrite, GuardError,
 } from "../scripts/lib/guards.js";
+import { flattenStatsBuckets } from "../scripts/lib/meta-stats.js";
+
+// Real Meta /stats shape: hourly buckets, each with its own nested `data`
+// array of {value, count} rows — not a flat array of counts.
+function statsPayload(rows) {
+  return { data: [{ start_time: "2026-08-25T00:00:00-0700", aggregation: "event", data: rows }] };
+}
 
 test("naming: valid campaign name passes", () => {
   assert.equal(checkNaming("create_campaign", { name: "CONV_LAL1PCT_202506" }).ok, true);
@@ -60,6 +67,46 @@ test("destructive: objective change on live entity blocks", () => {
 });
 test("destructive: status pause on live entity passes (this is how the optimizer works)", () => {
   assert.equal(checkDestructive({ method: "POST", path: "/123", data: { status: "PAUSED" } }).ok, true);
+});
+
+test("flattenStatsBuckets: unwraps nested hourly buckets into flat rows", () => {
+  const rows = flattenStatsBuckets(statsPayload([{ value: "Lead", count: 14 }, { value: "Purchase", count: 0 }]));
+  assert.equal(rows.length, 2);
+  assert.equal(rows[0].name, "Lead");
+  assert.equal(rows[0].count, 14);
+});
+
+test("pixel: no pixel_id in profile blocks", async () => {
+  const r = await checkPixel("create_campaign", { objective: "OUTCOME_LEADS" }, { profile: { accounts: {} } });
+  assert.equal(r.ok, false);
+});
+
+test("pixel: real (nested-bucket) firing data passes", async (t) => {
+  process.env.META_ACCESS_TOKEN = "test-token";
+  t.mock.method(global, "fetch", async () => ({
+    json: async () => statsPayload([{ value: "Lead", count: 14 }]),
+  }));
+  const r = await checkPixel(
+    "create_campaign",
+    { objective: "OUTCOME_LEADS" },
+    { profile: { accounts: { pixel_id: "123" } } }
+  );
+  assert.equal(r.ok, true, r.reason);
+  delete process.env.META_ACCESS_TOKEN;
+});
+
+test("pixel: nested-bucket data with all-zero counts blocks (genuinely not firing)", async (t) => {
+  process.env.META_ACCESS_TOKEN = "test-token";
+  t.mock.method(global, "fetch", async () => ({
+    json: async () => statsPayload([{ value: "Lead", count: 0 }]),
+  }));
+  const r = await checkPixel(
+    "create_campaign",
+    { objective: "OUTCOME_LEADS" },
+    { profile: { accounts: { pixel_id: "123" } } }
+  );
+  assert.equal(r.ok, false);
+  delete process.env.META_ACCESS_TOKEN;
 });
 
 test("classify: maps Graph paths to tool intent", () => {

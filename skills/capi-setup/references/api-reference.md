@@ -13,25 +13,41 @@ surfaces token errors (code 190) as a non-retryable `TokenExpiredError`.
 
 ## Endpoints used
 
-### 1. Pixel stats (read) — overall counts
+### 1. Pixel stats (read) — overall counts, per event name
 
 ```
-GET /{pixel_id}/stats?start_time=<unix -7d>
+GET /{pixel_id}/stats?start_time=<unix -7d>&aggregation=event
 ```
-Returns recent event counts + last-fire times. Response shape varies by version; the skill
-handles both `value`/`count` and `event`/`event_name` and `last_fire_time`/`last_fired_time`:
+Returns **hourly buckets**, each with its own nested `data` array — not a flat list of rows:
 
 ```json
-{ "data": [ { "event": "Purchase", "value": 412, "last_fire_time": 1718900000 } ] }
+{ "data": [
+  { "start_time": "2026-08-25T00:00:00-0700", "aggregation": "event",
+    "data": [ { "value": "Lead", "count": 3 }, { "value": "Purchase", "count": 0 } ] }
+] }
 ```
+`scripts/lib/meta-stats.js::flattenStatsBuckets()` unwraps this into flat
+`{ time, name, count }` rows — every caller that touches `/stats` MUST go through it rather
+than re-parsing the nested shape inline (a second, ad-hoc reimplementation of this parsing in
+`scripts/lib/guards.js::checkPixel` once assumed a flat response and always reported
+`firing: false`; fixed 2026-09-02 by switching it to the same shared helper).
 
-### 2. Pixel stats (read) — source breakdown
+There is no combined "aggregation=event_name_and_method" (or `event_name_and_source`) param —
+Meta rejects it as an invalid aggregation value. Getting counts-per-event and the
+browser/server split in the same call is not supported; see endpoint 2.
+
+### 2. Pixel stats (read) — source breakdown, one event at a time
 
 ```
-GET /{pixel_id}/stats?start_time=<unix -7d>&aggregation=event_name_and_method
+GET /{pixel_id}/stats?start_time=<unix -7d>&aggregation=event_source&event=<event_name>
 ```
-Same row shape plus a `method` (or `source`) field ∈ `{ browser, server, s2s, app }`.
-`server`/`s2s` → server bucket; `app` → app bucket; everything else → browser bucket.
+`aggregation=event_source` only splits `BROWSER`/`SERVER` for **all** events combined — it must
+be filtered to one event via the `event` param, so the skill issues **one call per required
+conversion event** (`getSourceBreakdown`) in addition to the single call in endpoint 1 and the
+dataset-metadata call in endpoint 3. For the default 6-event `requiredEvents` list that's up to
+8 Graph API calls per `/capi-setup` run, not 2 — factor that into rate-limit/latency expectations
+for clients with a long custom `conversion_events` list. Same nested-bucket shape as endpoint 1;
+row `value` is `BROWSER` or `SERVER`.
 
 ### 3. Dataset node (read) — CAPI-side metadata
 
@@ -90,4 +106,6 @@ Each read (`getPixelStats`, `getSourceBreakdown`, `getDatasetInfo`) `.catch`es t
 (`{ error, data: [] }` or `{ error }`) so a partial outage still yields a complete report rather
 than a hard crash. Only the missing-`pixel_id` precondition hard-halts (exit 3).
 
-**Last verified:** 2026-06-22 (against `skills/references-shared.md` §5, §11)
+**Last verified:** 2026-09-02 (against `skills/references-shared.md` §5, §11; endpoints 1-2
+updated to match the `aggregation=event` / `aggregation=event_source&event=` fix in
+commit `f7c6f47`, which the doc previously did not reflect)

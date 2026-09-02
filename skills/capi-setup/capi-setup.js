@@ -16,6 +16,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
+import { flattenStatsBuckets } from "../../scripts/lib/meta-stats.js";
 import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -46,20 +47,6 @@ function classifyEvent(stats) {
   if (stats.server_share >= HEALTHY_SERVER_SHARE) return "healthy";
   if (stats.server_share >= PARTIAL_SERVER_SHARE) return "partial";
   return "missing"; // pixel firing but no CAPI
-}
-
-// Meta's /stats endpoint returns hourly buckets, each with its own nested
-// `data` array: { start_time, aggregation, data: [{ value, count }] }.
-// This flattens that into a flat list of { time (epoch seconds), name, count }.
-function flattenBuckets(raw) {
-  const rows = [];
-  for (const bucket of raw.data || []) {
-    const time = Math.floor(new Date(bucket.start_time).getTime() / 1000);
-    for (const row of bucket.data || []) {
-      rows.push({ time, name: row.value, count: row.count || 0 });
-    }
-  }
-  return rows;
 }
 
 async function getPixelStats(graph, pixelId) {
@@ -106,7 +93,7 @@ async function fireTestEvent(graph, datasetId, testEventCode) {
 function buildEventStats(rawStats, sourceBreakdownByEvent, requiredEvents) {
   // rawStats is the raw /stats?aggregation=event response: hourly buckets, each
   // with a nested data array of { value: <event name>, count }. Flatten first.
-  const rows = flattenBuckets(rawStats);
+  const rows = flattenStatsBuckets(rawStats);
   const counts = {};
   for (const { time, name, count } of rows) {
     if (!name) continue;
@@ -120,7 +107,7 @@ function buildEventStats(rawStats, sourceBreakdownByEvent, requiredEvents) {
   const events = requiredEvents.map((name) => {
     const c = counts[name] || {};
     // sourceBreakdownByEvent[name] is a flattened { data: [{start_time, aggregation, data:[{value:'SERVER'|'BROWSER', count}]}] } response
-    const srcRows = flattenBuckets(sourceBreakdownByEvent[name] || { data: [] });
+    const srcRows = flattenStatsBuckets(sourceBreakdownByEvent[name] || { data: [] });
     let browser = 0, server = 0;
     for (const { name: source, count } of srcRows) {
       if (source === "SERVER") server += count;

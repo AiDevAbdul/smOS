@@ -7,7 +7,7 @@ Overrides and extends the global `/Users/apple/abdul/smOS/CLAUDE.md` for this cl
 - **Brand:** Blue Rose Auto Care & Repair Services
 - **Location:** Springfield, OR (serving Eugene + 30mi radius)
 - **Engagement start:** 2026-06-18
-- **Status:** Planning mode (no live Meta accounts yet)
+- **Status:** Active — live Meta accounts, real spend (see `profile.json.accounts`; ~$615/week as of 2026-08-31, see `reports/2026-08-31/weekly.md`)
 
 ## Voice
 
@@ -45,21 +45,20 @@ Tighter frequency cap because the served population is small (30mi radius around
 
 ## Budget Posture
 
-- No confirmed monthly budget yet. Planning assumption: **$1,500–$3,000/mo** (~$50–$100/day split across 2–3 adsets).
+- Confirmed monthly budget: **$1,500/mo** (`profile.json.monthly_budget.client_confirmed`).
 - Any single-day budget increase > $200 requires explicit human approval (tighter than the global $500 default — small-shop budget hygiene).
 
 ## Approvals
 
-- All approvals route to **this planning thread** until a Discord webhook is set up.
+- Approvals route via Discord (`profile.json.approvals.discord_channel_id`, webhook env `DISCORD_APPROVALS_WEBHOOK_BLUE_ROSE_AUTO`).
 - Pre-launch artifacts (strategy brief, ad copy, campaign JSON) require human "approve" before `/launch` is allowed to fire MCP create calls.
 
-## Blockers Before Going Live
+## Accounts (live)
 
-- Facebook Page ID
-- Instagram Business Account ID
-- Ad Account ID (`act_…`)
-- Pixel ID
-- Confirmed monthly ad budget
-- Discord approvals webhook URL (or written confirmation that this thread stays the approval channel)
-
-Until all six land, **no `meta_create_*` calls are permitted**. All output stays as planning artifacts in `clients/blue-rose-auto/`.
+- Page: `1709708972688957` · IG: `17841417245534835` · Ad account: `act_1999616770762846`
+- Pixel: `1798280031363662` (client-owned; see `profile.json.accounts.legacy_pixel_note` — a
+  prior agency-owned pixel `2183558222437003` is being retired, do not point new dev work at it)
+- CAPI status: `clients/blue-rose-auto/capi_report.json` (regenerate via `/capi-setup`) —
+  `Lead` healthy (100% server-side), `Schedule` never fired as of 2026-08-31; the pixel-check
+  guard (`scripts/lib/guards.js::checkPixel`) enforces "pixel firing" before any conversion-
+  objective `create_campaign` call.

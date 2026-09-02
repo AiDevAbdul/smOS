@@ -15,6 +15,7 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { clientFile } from "./paths.js";
+import { flattenStatsBuckets } from "./meta-stats.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -312,7 +313,11 @@ export async function checkPixel(toolName, input, ctx = {}) {
   }
 
   const since = Math.floor(Date.now() / 1000) - 7 * 86400;
-  const url = `https://graph.facebook.com/${API_VERSION}/${pixelId}/stats?start_time=${since}&access_token=${encodeURIComponent(token)}`;
+  // aggregation=event buckets counts per event name; /stats returns hourly
+  // buckets each with a nested data array ({start_time, data:[{value,count}]}),
+  // so it must go through flattenStatsBuckets rather than reading top-level
+  // fields directly (see skills/capi-setup/capi-setup.js for the same shape).
+  const url = `https://graph.facebook.com/${API_VERSION}/${pixelId}/stats?start_time=${since}&aggregation=event&access_token=${encodeURIComponent(token)}`;
   let firing = false;
   let detail = "";
   try {
@@ -321,9 +326,10 @@ export async function checkPixel(toolName, input, ctx = {}) {
     if (json.error) {
       detail = `error ${json.error.code}/${json.error.type}: ${json.error.message} (fbtrace_id=${json.error.fbtrace_id})`;
     } else {
-      const events = json?.data || [];
-      firing = events.some((e) => Number(e?.count || 0) > 0);
-      detail = `${events.length} event types, total ${events.reduce((s, e) => s + Number(e?.count || 0), 0)}`;
+      const rows = flattenStatsBuckets(json);
+      const total = rows.reduce((s, r) => s + Number(r?.count || 0), 0);
+      firing = rows.some((r) => Number(r?.count || 0) > 0);
+      detail = `${new Set(rows.map((r) => r.name)).size} event types, total ${total}`;
     }
   } catch (e) {
     detail = `fetch failed: ${e.message}`;

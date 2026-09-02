@@ -1,8 +1,15 @@
 # Blue Rose Auto — Pixel/CAPI Handoff: Wire Up Lead + Schedule Events
 
+> **⚠ Superseded pixel ID (updated 2026-09-02):** pixel `2183558222437003` below was
+> owned by the agency's Ducker Creative BM and could not be moved into the client's BM.
+> The account now runs on **`1798280031363662`** (client-owned) — wire any new
+> integration to that ID, not the one in this doc. Also since this doc was written,
+> Automatic Advanced Matching has been turned ON (`capi_report.json` confirms it), so
+> the "still separately enable" step below is done — no action needed there anymore.
+
 **For:** whoever manages WordPress (PixelYourSite plugin) and/or the GoHighLevel (GHL) account
 **Date:** 2026-07-22
-**Pixel ID:** `2183558222437003`
+**Pixel ID:** `2183558222437003` (superseded — see notice above)
 **Page tested:** https://promo.blueroseauto.com/car-wraps-color-change/
 
 ## Where things stand

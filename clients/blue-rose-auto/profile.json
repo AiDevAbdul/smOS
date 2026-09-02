@@ -1,7 +1,7 @@
 {
   "slug": "blue-rose-auto",
   "name": "Blue Rose Auto Care & Repair Services",
-  "status": "planning",
+  "status": "active",
   "engagement_start_date": "2026-06-18",
   "business": {
     "product_description": "Full-service automotive facility: mechanical repair, engine diagnostics, collision, detailing, ceramic coating, PPF, window tint, custom paint, wraps, upfitting.",
@@ -103,7 +103,7 @@
     "bm_id": "2016802985574383",
     "business_id": "2016802985574383",
     "system_user_id": null,
-    "pixel_installed": false,
+    "pixel_installed": true,
     "website_url": null,
     "domain": null,
     "legacy_pixel_id": "2183558222437003",
