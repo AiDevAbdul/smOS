@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { PermissionBanner } from "../../components/PermissionBanner";
 
 interface StreamEvent {
   seq: number;
@@ -46,12 +47,19 @@ function summarizeEvent(e: any): { kind: string; text: string } | null {
   return { kind: "raw", text: JSON.stringify(e) };
 }
 
-export function RunConsole({ initialSlug }: { initialSlug: string }) {
+export function RunConsole({
+  initialSlug,
+  initialPrompt,
+}: {
+  initialSlug: string;
+  initialPrompt?: string;
+}) {
   const [slug, setSlug] = useState(initialSlug);
-  const [prompt, setPrompt] = useState(initialSlug ? `/analyze ${initialSlug}` : "");
+  const [prompt, setPrompt] = useState(initialPrompt || (initialSlug ? `/analyze ${initialSlug}` : ""));
   const [runId, setRunId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [status, setStatus] = useState<RunStatus>("idle");
+  const [usePermissionBridge, setUsePermissionBridge] = useState(false);
   const [events, setEvents] = useState<StreamEvent[]>([]);
   const esRef = useRef<EventSource | null>(null);
 
@@ -93,6 +101,7 @@ export function RunConsole({ initialSlug }: { initialSlug: string }) {
         prompt,
         slug: slug || null,
         resumeSessionId: resume ? sessionId : null,
+        usePermissionBridge,
       }),
     });
     const json = await res.json();
@@ -146,7 +155,7 @@ export function RunConsole({ initialSlug }: { initialSlug: string }) {
         />
       </div>
 
-      <div className="ds-form-row">
+      <div className="ds-form-row" style={{ alignItems: "center" }}>
         <button className="ds-btn ds-btn--primary" onClick={() => start(false)} disabled={status === "starting" || status === "running"}>
           Start run
         </button>
@@ -160,7 +169,18 @@ export function RunConsole({ initialSlug }: { initialSlug: string }) {
         <button className="ds-btn ds-btn--danger" onClick={cancel} disabled={status !== "running"}>
           Cancel
         </button>
+        <label className="ds-field__hint" style={{ display: "flex", alignItems: "center", gap: "var(--ds-space-1)" }}>
+          <input
+            type="checkbox"
+            checked={usePermissionBridge}
+            onChange={(e) => setUsePermissionBridge(e.target.checked)}
+            disabled={status === "starting" || status === "running"}
+          />
+          Route tool permissions through this UI (Phase D bridge)
+        </label>
       </div>
+
+      <PermissionBanner runId={runId} active={status === "running"} />
 
       <div className="ds-stream" role="log" aria-live="polite" style={{ marginTop: "var(--ds-space-5)" }}>
         {events.map((e) => {

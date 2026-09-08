@@ -1,0 +1,17 @@
+{
+  "name": "smos-ui-permission-bridge-mcp-server",
+  "version": "1.0.0",
+  "description": "Stdio MCP server implementing --permission-prompt-tool, bridging Claude Code headless permission checks to the smOS operator UI",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -71,14 +71,30 @@ export function startRun(opts: {
   prompt: string;
   slug?: string | null;
   resumeSessionId?: string | null;
+  /**
+   * Opt-in headless permission bridge (Phase D). When true, every tool-use
+   * permission check in this run is routed to the operator UI instead of
+   * being auto-approved/denied by the CLI's default headless behavior: adds
+   * `--permission-prompt-tool mcp__ui-permission-bridge__approve` and sets
+   * `SMOS_UI_RUN_ID` on the child so the bridge (mcp/ui-permission-bridge)
+   * can tag its POSTs to app/api/permissions with this run's id. Defaults to
+   * false/undefined so existing callers (app/api/runs's current POST body)
+   * are unaffected unless they explicitly opt in.
+   */
+  usePermissionBridge?: boolean;
 }): RunRecord {
   const runId = randomUUID();
   const args = ["-p", opts.prompt, "--output-format", "stream-json", "--verbose"];
   if (opts.resumeSessionId) args.push("--resume", opts.resumeSessionId);
+  if (opts.usePermissionBridge) {
+    args.push("--permission-prompt-tool", "mcp__ui-permission-bridge__approve");
+  }
 
   const child = spawn("claude", args, {
     cwd: REPO_ROOT,
-    env: process.env,
+    env: opts.usePermissionBridge
+      ? { ...process.env, SMOS_UI_RUN_ID: runId }
+      : process.env,
     stdio: ["ignore", "pipe", "pipe"],
   });
 

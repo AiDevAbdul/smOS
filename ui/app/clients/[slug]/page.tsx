@@ -1,43 +1,10 @@
-import { notFound } from "next/navigation";
-import { AppShell } from "../../../components/AppShell";
-import { getClientStatus } from "../../../lib/status";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function ClientWorkspace({
+export default async function ClientWorkspaceRedirect({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const status = getClientStatus(slug);
-  if (!status) notFound();
-
-  return (
-    <AppShell breadcrumb={[{ label: "Clients", href: "/" }, { label: slug }]}>
-      <div className="ds-verdict" style={{ marginTop: 0 }}>
-        {status.next_action
-          ? `Next: ${status.next_action.section} — ${status.next_action.step}`
-          : "All pipeline steps complete."}
-      </div>
-      {status.sections.map((section) => (
-        <div key={section.key} className="ds-panel" style={{ marginBottom: "var(--ds-space-6)" }}>
-          <div className="pv-h" style={{ marginBottom: "var(--ds-space-3)" }}>
-            {section.label}
-          </div>
-          <ol className="ds-track">
-            {section.steps.map((step) => (
-              <li key={step.id} className={`ds-step is-${step.status}`}>
-                <span>{step.label}</span>
-                {step.detail && <span className="ds-kv__hint"> — {step.detail}</span>}
-              </li>
-            ))}
-          </ol>
-        </div>
-      ))}
-      <a className="ds-btn ds-btn--primary" href={`/runs?slug=${encodeURIComponent(slug)}`}>
-        Run a skill for {slug}
-      </a>
-    </AppShell>
-  );
+  redirect(`/clients/${encodeURIComponent(slug)}/pipeline`);
 }

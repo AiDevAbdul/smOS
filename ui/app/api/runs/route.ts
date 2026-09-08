@@ -14,8 +14,11 @@ export async function POST(req: NextRequest) {
   }
   const slug = typeof body?.slug === "string" ? body.slug : null;
   const resumeSessionId = typeof body?.resumeSessionId === "string" ? body.resumeSessionId : null;
+  // Opt-in headless permission bridge (Phase D) — default stays false/unset
+  // so existing callers are unaffected unless they explicitly ask for it.
+  const usePermissionBridge = body?.usePermissionBridge === true;
 
-  const run = startRun({ prompt, slug, resumeSessionId });
+  const run = startRun({ prompt, slug, resumeSessionId, usePermissionBridge });
   return NextResponse.json({
     runId: run.runId,
     slug: run.slug,

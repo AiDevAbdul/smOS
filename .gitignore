@@ -38,3 +38,6 @@ test/.tmp/
 # Operator UI (ui/) — Next.js build output, local only, not deployed
 ui/.next/
 ui/next-env.d.ts
+
+# Claude Code isolated worktrees (parallel-agent scratch checkouts)
+.claude/worktrees/

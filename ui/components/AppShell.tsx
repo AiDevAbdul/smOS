@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CommandPalette, OPEN_COMMAND_PALETTE_EVENT } from "./CommandPalette";
 
 const NAV = [
   { href: "/", label: "Clients", icon: "i-home" },
   { href: "/approvals", label: "Approvals", icon: "i-approval" },
   { href: "/runs", label: "Runs", icon: "i-run" },
+  { href: "/settings", label: "Settings", icon: "i-settings" },
 ];
 
 export function AppShell({
@@ -50,9 +52,20 @@ export function AppShell({
           ))}
         </div>
         <div className="ds-topbar__spacer" />
-        <Link className="ds-client-switcher" href="/runs" style={{ height: "var(--ds-control-sm)" }}>
+        <button
+          type="button"
+          className="ds-client-switcher"
+          style={{ height: "var(--ds-control-sm)" }}
+          onClick={() => window.dispatchEvent(new Event(OPEN_COMMAND_PALETTE_EVENT))}
+        >
+          <svg width={14} height={14}>
+            <use href="/icons.svg#i-run" />
+          </svg>
           Run a skill
-        </Link>
+          <span className="ds-palette__cmd" aria-hidden="true">
+            ⌘K
+          </span>
+        </button>
       </header>
       <main className="ds-main">{children}</main>
       <footer className="ds-statusbar">
@@ -61,6 +74,7 @@ export function AppShell({
           &nbsp;smOS Console — local
         </span>
       </footer>
+      <CommandPalette />
     </div>
   );
 }
