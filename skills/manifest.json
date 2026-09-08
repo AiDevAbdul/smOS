@@ -1,0 +1,594 @@
+{
+  "_doc": "Machine-readable index of every LOCAL (bundled) smOS skill, for the operator UI's command-palette/launcher forms. See skills/MANIFEST.md for how this was generated and how to keep it in sync.",
+  "_generated": "2026-09-08",
+  "_shape": "skills: array of { slug, command, description, companion, args, flags }. args = ordered positional CLI args (name/required/description, optional enum). flags = --flag options (name/type/description, optional default).",
+  "skills": [
+    {
+      "slug": "pre-audit",
+      "command": "/pre-audit",
+      "description": "Pre-sale prospect audit (no client API access) — branded HTML+PDF sales artifact scored 0-100 from public data only.",
+      "companion": "skills/pre-audit/pre-audit.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "prospect slug" }
+      ],
+      "flags": [
+        { "name": "--business", "type": "string", "description": "business name (required)" },
+        { "name": "--collect", "type": "boolean", "description": "full run: scrape -> csv -> json -> render" },
+        { "name": "--rebuild", "type": "boolean", "description": "re-derive JSONs from an edited signals.csv, then render" },
+        { "name": "--fb", "type": "string", "description": "Facebook Page URL (with --collect)" },
+        { "name": "--ig", "type": "string", "description": "Instagram handle (with --collect)" },
+        { "name": "--site", "type": "string", "description": "website URL (with --collect)" },
+        { "name": "--competitor", "type": "string", "description": "competitor URL; repeatable (with --collect)" },
+        { "name": "--country", "type": "string", "description": "country code (with --collect)" },
+        { "name": "--days", "type": "number", "description": "lookback days (with --collect)" },
+        { "name": "--niche-html", "type": "string", "description": "path to niche-specific HTML overlay" },
+        { "name": "--no-crm", "type": "boolean", "description": "skip advancing the CRM deal to 'audited'" }
+      ]
+    },
+    {
+      "slug": "crm",
+      "command": "/crm",
+      "description": "Agency sales/client pipeline (CRM) — one deal record per company from lead through won/lost/churned.",
+      "companion": "skills/crm/crm.js",
+      "args": [
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["add", "list", "show", "stage", "log", "set", "sync", "next"] },
+        { "name": "slug", "required": false, "description": "client/prospect slug (required for add/show/stage/log/set)" }
+      ],
+      "flags": [
+        { "name": "--name", "type": "string", "description": "company name (add)" },
+        { "name": "--email", "type": "string", "description": "contact email (add)" },
+        { "name": "--stage", "type": "string", "description": "initial stage (add) or filter (list)" },
+        { "name": "--retainer", "type": "number", "description": "monthly retainer (add)" },
+        { "name": "--currency", "type": "string", "description": "currency code (add)" },
+        { "name": "--source", "type": "string", "description": "lead source (add)" },
+        { "name": "--note", "type": "string", "description": "note text (stage/log)" },
+        { "name": "--force", "type": "boolean", "description": "bypass stage-transition validation (stage)" },
+        { "name": "--type", "type": "string", "description": "activity type (log)" }
+      ]
+    },
+    {
+      "slug": "smos-status",
+      "command": "/smos-status",
+      "description": "Client status — what's done, what's remaining across the pipeline.",
+      "companion": "skills/smos-status/status.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": []
+    },
+    {
+      "slug": "proposal",
+      "command": "/proposal",
+      "description": "Generate a client proposal / pitch — branded HTML+PDF priced from the agency service catalog, advances CRM deal to 'proposed'.",
+      "companion": "skills/proposal/proposal.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "prospect slug" }
+      ],
+      "flags": [
+        { "name": "--package", "type": "string", "description": "service package id (e.g. growth)" },
+        { "name": "--no-crm", "type": "boolean", "description": "skip advancing the CRM deal" }
+      ]
+    },
+    {
+      "slug": "contract",
+      "command": "/contract",
+      "description": "Generate service agreement + e-sign from an accepted proposal; on signature moves the deal to 'won'.",
+      "companion": "skills/contract/contract.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "prospect/client slug" }
+      ],
+      "flags": [
+        { "name": "--package", "type": "string", "description": "service package id" },
+        { "name": "--send", "type": "boolean", "description": "send for e-signature via Dropbox Sign (fail-closed to manual)" },
+        { "name": "--mark-signed", "type": "boolean", "description": "record the signature and move the deal to won" }
+      ]
+    },
+    {
+      "slug": "billing",
+      "command": "/billing",
+      "description": "Issue retainer invoices (Stripe) for a won/active client and track them in a per-client ledger.",
+      "companion": "skills/billing/billing.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["invoice", "list", "mark-paid"] }
+      ],
+      "flags": [
+        { "name": "--period", "type": "string", "description": "billing period, e.g. 2026-06 (invoice/mark-paid)" },
+        { "name": "--ad-spend", "type": "number", "description": "ad-spend pass-through amount (invoice)" },
+        { "name": "--no-setup", "type": "boolean", "description": "omit first-month setup fee (invoice)" },
+        { "name": "--send", "type": "boolean", "description": "send via Stripe (fail-closed to local/manual)" },
+        { "name": "--force", "type": "boolean", "description": "bypass per-period idempotency check" }
+      ]
+    },
+    {
+      "slug": "intake",
+      "command": "/intake",
+      "description": "New client onboarding — conversational Q&A materialized into client_profile.json + per-client CLAUDE.md.",
+      "companion": "skills/intake/intake.js",
+      "args": [
+        { "name": "mode", "required": true, "description": "subcommand", "enum": ["init", "build"] },
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--answers", "type": "string", "description": "path to intake_answers.json (build; default clients/<slug>/intake_answers.json)" }
+      ]
+    },
+    {
+      "slug": "brand-strategy",
+      "command": "/brand-strategy",
+      "description": "Zero-start — brand strategy + positioning (purpose, persona, archetype, positioning statement). Human-owned positioning gate.",
+      "companion": "skills/brand-strategy/brand-strategy.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--in", "type": "string", "description": "path to strategy.json input" },
+        { "name": "--approve-positioning", "type": "boolean", "description": "stamp the human positioning-approval gate" }
+      ]
+    },
+    {
+      "slug": "brand-name",
+      "command": "/brand-name",
+      "description": "Zero-start — name + verbal identity, auto-screened against a 3-gate check (.com, USPTO knockout, social handles).",
+      "companion": "skills/brand-name/brand-name.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--screen", "type": "string", "description": "comma-separated candidate names to screen, e.g. 'A,B'" },
+        { "name": "--in", "type": "string", "description": "path to verbal.json input" },
+        { "name": "--approve-name", "type": "boolean", "description": "stamp the human name-approval gate (requires attorney_clearance_flagged)" }
+      ]
+    },
+    {
+      "slug": "brand-visual",
+      "command": "/brand-visual",
+      "description": "Zero-start — visual identity (moodboard, logo suite, color palette, typography). Human logo-approval gate.",
+      "companion": "skills/brand-visual/brand-visual.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--in", "type": "string", "description": "path to visual.json input" },
+        { "name": "--approve-logo", "type": "boolean", "description": "stamp the human logo-approval gate" }
+      ]
+    },
+    {
+      "slug": "brand-book",
+      "command": "/brand-book",
+      "description": "Zero-start — brand guidelines (HTML+PDF) assembled deterministically from the locked brand_profile.json.",
+      "companion": "skills/brand-book/brand-book.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": []
+    },
+    {
+      "slug": "brand-social",
+      "command": "/brand-social",
+      "description": "Zero-start — social profile assets + bios (profile pic, cover, IG highlight covers, templates, link-in-bio).",
+      "companion": "skills/brand-social/brand-social.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--in", "type": "string", "description": "path to social.json input (required)" }
+      ]
+    },
+    {
+      "slug": "setup-accounts",
+      "command": "/setup-accounts",
+      "description": "Zero-start — Meta account bootstrap (Page/IG/ad account/pixel): manual-gate checklist + API bootstrap.",
+      "companion": "skills/setup-accounts/setup-accounts.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--status", "type": "boolean", "description": "print manual + API setup status" },
+        { "name": "--done", "type": "string", "description": "mark a manual step done, e.g. --done page_created" },
+        { "name": "--set", "type": "string", "description": "set account id, key=value (with --done)" },
+        { "name": "--from-intake", "type": "boolean", "description": "resolve value from intake answers (with --done)" },
+        { "name": "--bootstrap", "type": "boolean", "description": "run the API-creatable structure bootstrap" }
+      ]
+    },
+    {
+      "slug": "setup-web",
+      "command": "/setup-web",
+      "description": "Zero-start — domain + landing page + Meta domain verification.",
+      "companion": "skills/setup-web/setup-web.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--register", "type": "string", "description": "register a domain" },
+        { "name": "--verify-status", "type": "string", "description": "check Meta domain-verification status for a domain" },
+        { "name": "--set-website", "type": "string", "description": "record the deployed landing page URL" }
+      ]
+    },
+    {
+      "slug": "audit",
+      "command": "/audit",
+      "description": "Account + page audit — full FB Page + IG + ad-account snapshot, 0-100 health score, immutable baseline_snapshot.json.",
+      "companion": "skills/audit/audit.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--no-paid", "type": "boolean", "description": "skip ad-account pull" },
+        { "name": "--no-ig", "type": "boolean", "description": "skip Instagram pull" }
+      ]
+    },
+    {
+      "slug": "audit-creative",
+      "command": "/audit-creative",
+      "description": "Creative quality review — collects organic posts + ad creatives for vision scoring, then aggregates results into the audit report.",
+      "companion": "skills/audit-creative/audit-creative.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "mode", "required": true, "description": "stage", "enum": ["collect", "aggregate"] }
+      ],
+      "flags": []
+    },
+    {
+      "slug": "research",
+      "command": "/research",
+      "description": "Competitor research — Ad Library scan, classification, competitor intel.",
+      "companion": "skills/research/research.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--days", "type": "number", "description": "lookback window in days (default 90)" },
+        { "name": "--country", "type": "string", "description": "country code" },
+        { "name": "--skip-classify", "type": "boolean", "description": "skip creative classification pass" },
+        { "name": "--discover", "type": "boolean", "description": "discover additional competitors" }
+      ]
+    },
+    {
+      "slug": "audience-map",
+      "command": "/audience-map",
+      "description": "Audience targeting plan — interest/lookalike/custom-audience map derived from profile + competitor seeds.",
+      "companion": "skills/audience-map/audience-map.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--offline", "type": "boolean", "description": "skip live Meta targeting-search calls" }
+      ]
+    },
+    {
+      "slug": "strategy-brief",
+      "command": "/strategy-brief",
+      "description": "Campaign strategy — pure synthesis of audit/competitor/audience inputs into budget split, audience priority, calendar.",
+      "companion": "skills/strategy-brief/strategy-brief.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": []
+    },
+    {
+      "slug": "creative",
+      "command": "/creative",
+      "description": "Write ad copy — scaffold a draft, then lint/score it (length + restricted-word + heuristic scorer) into ad_copy.json.",
+      "companion": "skills/creative/creative.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "mode", "required": true, "description": "stage", "enum": ["skeleton", "lint"] }
+      ],
+      "flags": [
+        { "name": "--draft", "type": "string", "description": "path to a draft file other than ad_copy_draft.json (lint)" }
+      ]
+    },
+    {
+      "slug": "image-gen",
+      "command": "/image-gen",
+      "description": "Generate branded poster imagery (organic + paid, logo/contact/handles composited in). Organic fills content_calendar.json; ads mode fills ad_copy.json angles for /launch.",
+      "companion": "skills/image-gen/image-gen.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--item", "type": "string", "description": "specific content_calendar item id" },
+        { "name": "--prompt", "type": "string", "description": "override generation prompt" },
+        { "name": "--model", "type": "string", "description": "Krea model id, e.g. bfl/flux-1-dev" },
+        { "name": "--theme", "type": "string", "description": "poster theme", "enum": ["dark", "light"] },
+        { "name": "--dry-run", "type": "boolean", "description": "do not call the generation API" }
+      ]
+    },
+    {
+      "slug": "image-gen-ads",
+      "command": "/image-gen",
+      "description": "Paid-mode companion of /image-gen — fills missing image_url fields on ad_copy.json angles (one size per angle, v1).",
+      "companion": "skills/image-gen/image-gen-ads.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--angle", "type": "string", "description": "specific ad_copy angle id" },
+        { "name": "--prompt", "type": "string", "description": "override generation prompt" },
+        { "name": "--model", "type": "string", "description": "Krea model id, e.g. bfl/flux-1-dev" },
+        { "name": "--dry-run", "type": "boolean", "description": "do not call the generation API" }
+      ]
+    },
+    {
+      "slug": "creative-test",
+      "command": "/creative-test",
+      "description": "Design or evaluate a structured creative test (hook/concept/format).",
+      "companion": "skills/creative-test/creative-test.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--plan", "type": "boolean", "description": "generate a test plan" },
+        { "name": "--evaluate", "type": "boolean", "description": "evaluate results against the plan" },
+        { "name": "--metric", "type": "string", "description": "significance metric", "enum": ["ctr", "cvr"] }
+      ]
+    },
+    {
+      "slug": "launch",
+      "command": "/launch",
+      "description": "Launch a campaign — builds the Meta campaign/adset/ad tree from an approved brief, always PAUSED, behind a fail-closed approval gate.",
+      "companion": "skills/launch/launch.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--execute", "type": "boolean", "description": "actually create objects on Meta (default is dry-run/plan)" },
+        { "name": "--phase", "type": "string", "description": "limit to one launch phase", "enum": ["A", "B", "C"] }
+      ]
+    },
+    {
+      "slug": "analyze",
+      "command": "/analyze",
+      "description": "Check performance — pulls 7/14/30-day insights, segments by placement/age-gender/device, flags pause/scale/fatigue/anomaly, computes Opportunity Score.",
+      "companion": "skills/analyze/analyze.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--no-breakdowns", "type": "boolean", "description": "skip placement/age-gender/device breakdown pulls" }
+      ]
+    },
+    {
+      "slug": "scale",
+      "command": "/scale",
+      "description": "Scale winners / kill losers — applies threshold-based budget/status changes, or rolls back a prior scaling run.",
+      "companion": "skills/scale/scale.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--execute", "type": "boolean", "description": "apply changes on Meta (default is dry-run/plan)" },
+        { "name": "--force", "type": "boolean", "description": "bypass guardrail confirmation" },
+        { "name": "--rollback", "type": "string", "description": "roll back a prior scaling_log.json (optional explicit path)" }
+      ]
+    },
+    {
+      "slug": "report",
+      "command": "/report",
+      "description": "Weekly client report — rolling 7-day window vs prior 7 days and audit baseline, markdown+HTML+PDF+JSON sidecar.",
+      "companion": "skills/report/report.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--week-end", "type": "string", "description": "week-ending date, YYYY-MM-DD" },
+        { "name": "--allow-empty", "type": "boolean", "description": "allow shipping an all-zero week" }
+      ]
+    },
+    {
+      "slug": "before-after",
+      "command": "/before-after",
+      "description": "Show before/after — compares current state against the immutable /audit baseline with percent deltas.",
+      "companion": "skills/before-after/before-after.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--paid-only", "type": "boolean", "description": "compare paid-account metrics only, skip organic" }
+      ]
+    },
+    {
+      "slug": "monthly-review",
+      "command": "/monthly-review",
+      "description": "Full monthly review — ~30 days of insights, trend regression, audience fatigue, creative lifecycle staging, recommendations skeleton.",
+      "companion": "skills/monthly-review/monthly-review.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--days", "type": "number", "description": "trailing-day window (default 30; ignored if --since/--until given)" },
+        { "name": "--since", "type": "string", "description": "calendar range start, YYYY-MM-DD (requires --until)" },
+        { "name": "--until", "type": "string", "description": "calendar range end, YYYY-MM-DD (requires --since)" }
+      ]
+    },
+    {
+      "slug": "publish",
+      "command": "/publish",
+      "description": "Publish / run content calendar — publishes or natively-schedules every due 'pending' item (Facebook + Instagram only).",
+      "companion": "skills/publish/publish.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--dry-run", "type": "boolean", "description": "do not call the Meta API, just report what would publish" }
+      ]
+    },
+    {
+      "slug": "capi-setup",
+      "command": "/capi-setup",
+      "description": "Conversions API (CAPI) setup — verifies pixel/CAPI event-firing redundancy, optionally fires a deduplicated test event.",
+      "companion": "skills/capi-setup/capi-setup.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--test-event", "type": "string", "description": "fire a deduplicated test event with this code, e.g. TEST12345" }
+      ]
+    },
+    {
+      "slug": "catalog",
+      "command": "/catalog",
+      "description": "Product catalog / DPA setup — create/list/sync a catalog, register a feed, manage product sets.",
+      "companion": "skills/catalog/catalog.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "mode", "required": true, "description": "subcommand", "enum": ["list", "create", "sync", "feed", "items", "sets"] }
+      ],
+      "flags": [
+        { "name": "--name", "type": "string", "description": "catalog/set name (create/sets create)" },
+        { "name": "--url", "type": "string", "description": "feed URL (feed)" },
+        { "name": "--schedule", "type": "string", "description": "feed schedule, e.g. daily (feed)" },
+        { "name": "--filter", "type": "string", "description": "JSON filter for a product set (sets create)" }
+      ]
+    },
+    {
+      "slug": "leads",
+      "command": "/leads",
+      "description": "Lead forms + lead retrieval — webhook-first ingestion (real-time) with sync as the backfill/reconciliation poller.",
+      "companion": "skills/leads/leads.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "mode", "required": true, "description": "subcommand", "enum": ["webhook", "sync", "list", "pull"] }
+      ],
+      "flags": [
+        { "name": "--payload", "type": "string", "description": "path to webhook payload file (webhook; can also pipe via stdin)" },
+        { "name": "--since", "type": "string", "description": "ISO date to pull leads since (pull)" }
+      ]
+    },
+    {
+      "slug": "rules",
+      "command": "/rules",
+      "description": "Automated optimizer rules — installs/manages Meta-native automated rules on the client's ad account.",
+      "companion": "skills/rules/rules.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "mode", "required": true, "description": "subcommand", "enum": ["list", "install", "preview", "disable", "enable", "history"] },
+        { "name": "target", "required": false, "description": "rule template name (preview) or installed rule name (disable/enable/history)" }
+      ],
+      "flags": [
+        { "name": "--dry-run", "type": "boolean", "description": "do not create rules on Meta, just report the plan (install)" }
+      ]
+    },
+    {
+      "slug": "creative-intel",
+      "command": "/creative-intel",
+      "description": "Competitor creative intel — pulls competitor creative from the Ad Library, flags refresh briefs behind a human-approval gate.",
+      "companion": "skills/creative-intel/creative-intel.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--window", "type": "number", "description": "lookback window in days (default per script)" },
+        { "name": "--spawn-refresh", "type": "boolean", "description": "spawn a refresh brief for stale creative" },
+        { "name": "--collect-approved", "type": "boolean", "description": "no Meta pull; promote any refresh briefs whose G5 human approval has since been granted" }
+      ]
+    },
+    {
+      "slug": "content-plan",
+      "command": "/content-plan",
+      "description": "Organic content strategy + calendar — content pillars plus a Reels-first, Social-SEO calendar (content_plan.json + content_calendar.json).",
+      "companion": "skills/content-plan/content-plan.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--weeks", "type": "number", "description": "number of weeks to plan (default 4)" },
+        { "name": "--draft", "type": "boolean", "description": "write a draft only, do not finalize" }
+      ]
+    },
+    {
+      "slug": "inbox",
+      "command": "/inbox",
+      "description": "Unified social inbox (comments/DMs/mentions) with SLA tracking.",
+      "companion": "skills/inbox/inbox.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--sla-minutes", "type": "number", "description": "SLA window in minutes (default 60)" }
+      ]
+    },
+    {
+      "slug": "attribution",
+      "command": "/attribution",
+      "description": "Incrementality / conversion lift study setup and results tracking.",
+      "companion": "skills/attribution/attribution.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--method", "type": "string", "description": "lift-study method (default meta_lift_study)" },
+        { "name": "--study-id", "type": "string", "description": "existing study id to check/update" }
+      ]
+    },
+    {
+      "slug": "listening",
+      "command": "/listening",
+      "description": "Social listening + organic competitor benchmark.",
+      "companion": "skills/listening/listening.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": []
+    },
+    {
+      "slug": "assets",
+      "command": "/assets",
+      "description": "Creative asset library (DAM) — register assets, record performance metrics, list top performers.",
+      "companion": "skills/assets/assets.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" },
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["register", "metrics", "top"] },
+        { "name": "extra", "required": false, "description": "asset JSON (register), or asset_id + metrics JSON (metrics)" }
+      ],
+      "flags": [
+        { "name": "--by", "type": "string", "description": "ranking metric for 'top', e.g. hook_rate" }
+      ]
+    },
+    {
+      "slug": "portal",
+      "command": "/portal",
+      "description": "Client-facing white-label dashboard.",
+      "companion": "skills/portal/portal.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": []
+    },
+    {
+      "slug": "bundle",
+      "command": "/bundle",
+      "description": "Bundle all reports into one shareable client hub (single link) — numbered client-journey roadmap with a button per phase.",
+      "companion": "skills/bundle/bundle.js",
+      "args": [
+        { "name": "slug", "required": true, "description": "client slug" }
+      ],
+      "flags": [
+        { "name": "--only-ready", "type": "boolean", "description": "only include phases whose report already exists" }
+      ]
+    }
+  ],
+  "external": {
+    "_doc": "Skills referenced in CLAUDE.md's Strategic Intelligence Layer and Per-Platform Content Production tables that are explicitly marked NOT bundled with smOS (no skills/<slug>/<slug>.js companion exists locally). Listed for completeness; excluded from the launcher index above.",
+    "strategic_intelligence": [
+      "marketing-psychology",
+      "customer-research",
+      "ab-testing",
+      "content-strategy",
+      "competitor-profiling",
+      "social",
+      "firecrawl-deep-research",
+      "keyword-research",
+      "social-media-trends-research",
+      "brave-search (MCP)"
+    ],
+    "per_platform_content_production": [
+      "social",
+      "facebook-posts",
+      "linkedin-posts",
+      "video-shorts",
+      "remotion"
+    ]
+  }
+}
