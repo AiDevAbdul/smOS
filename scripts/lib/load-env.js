@@ -28,7 +28,9 @@ export function loadEnv({ silent = false } = {}) {
     }
     return null;
   }
-  dotenvConfig({ path });
+  // override:true — a stale var exported in the shell must not silently
+  // shadow a value the operator just edited into .env.
+  dotenvConfig({ path, override: true });
   return path;
 }
 
