@@ -367,13 +367,13 @@
   },
   {
     "slug": "gsc-store",
-    "company_name": "gsc-store",
+    "company_name": "GSC Store",
     "created_at": "2026-07-14T05:27:41.652Z",
-    "updated_at": "2026-07-14T05:27:41.652Z",
-    "stage": "lead",
+    "updated_at": "2026-09-07T05:40:51.702Z",
+    "stage": "audited",
     "source": "pre-audit",
     "links": {
-      "pre_audit": null,
+      "pre_audit": "prospects/gsc-store/deliverables/pre-audit/pre-audit.html",
       "proposal": null,
       "contract": null,
       "client_profile": null
@@ -396,7 +396,18 @@
     "owner": null,
     "next_action": null,
     "next_action_due": null,
-    "activities": [],
+    "activities": [
+      {
+        "at": "2026-09-07T05:34:43.759Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-09-07T05:40:51.701Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      }
+    ],
     "won_at": null,
     "lost_at": null,
     "lost_reason": null
@@ -667,6 +678,58 @@
       "client_profile": null
     },
     "won_at": "2026-08-06T09:03:26.684Z",
+    "lost_at": null,
+    "lost_reason": null
+  },
+  {
+    "slug": "ilyas-general-hospital",
+    "company_name": "Ilyas General Hospital",
+    "created_at": "2026-09-08T09:37:29.568Z",
+    "source": "pre-audit",
+    "stage": "audited",
+    "links": {
+      "pre_audit": "prospects/ilyas-general-hospital/deliverables/pre-audit/pre-audit.html",
+      "proposal": null,
+      "contract": null,
+      "client_profile": null
+    },
+    "activities": [
+      {
+        "at": "2026-09-08T09:37:29.566Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-09-08T09:41:54.482Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-09-08T09:42:20.485Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      }
+    ],
+    "deal": {
+      "monthly_retainer": 0,
+      "setup_fee": 0,
+      "currency": "USD",
+      "addons": []
+    },
+    "updated_at": "2026-09-08T09:42:20.488Z",
+    "id": "ilyas-general-hospital",
+    "contact": {
+      "name": null,
+      "email": null,
+      "phone": null
+    },
+    "services": [],
+    "probability": 35,
+    "expected_close": null,
+    "owner": null,
+    "next_action": null,
+    "next_action_due": null,
+    "won_at": null,
     "lost_at": null,
     "lost_reason": null
   }
