@@ -708,6 +708,16 @@
         "at": "2026-09-08T09:42:20.485Z",
         "type": "note",
         "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-09-08T10:18:28.329Z",
+        "type": "note",
+        "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-09-08T10:19:08.359Z",
+        "type": "note",
+        "note": "pre-audit completed"
       }
     ],
     "deal": {
@@ -716,7 +726,7 @@
       "currency": "USD",
       "addons": []
     },
-    "updated_at": "2026-09-08T09:42:20.488Z",
+    "updated_at": "2026-09-08T10:19:08.362Z",
     "id": "ilyas-general-hospital",
     "contact": {
       "name": null,
