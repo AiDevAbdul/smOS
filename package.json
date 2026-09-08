@@ -4,13 +4,15 @@
   "type": "module",
   "version": "1.0.0",
   "description": "smOS — autonomous social media operating system for Meta",
+  "workspaces": ["ui"],
   "scripts": {
     "audit": "node skills/audit/audit.js",
     "report": "node skills/report/report.js",
     "test": "node --test test/*.test.js",
     "render:pre-audit": "node scripts/render-report.js --type pre-audit",
     "render:audit": "node scripts/render-report.js --type audit",
-    "render": "node scripts/render-report.js"
+    "render": "node scripts/render-report.js",
+    "ui": "npm run dev --workspace ui"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

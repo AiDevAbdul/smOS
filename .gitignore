@@ -34,3 +34,7 @@ billing/__*/
 # Test fixture scratch (A3)
 test/.tmp/
 .vscode/
+
+# Operator UI (ui/) — Next.js build output, local only, not deployed
+ui/.next/
+ui/next-env.d.ts
