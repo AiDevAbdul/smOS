@@ -120,8 +120,10 @@ function blankAnswers(slug) {
 }
 
 function hydrateFromProspect(slug, answers) {
-  const prospectPath = resolve(P.prospectRoot(slug), "page_audit.json");
-  const prospect = readJsonIfExists(prospectPath);
+  // The pipeline writes page_audit.json under prospects/{slug}/data/; older runs
+  // left it in the prospect root — check both so either layout resolves.
+  const prospect = readJsonIfExists(P.prospectData(slug, "page_audit.json"))
+    || readJsonIfExists(resolve(P.prospectRoot(slug), "page_audit.json"));
   if (!prospect) return { hydrated: false, fields: [] };
 
   const fields = [];

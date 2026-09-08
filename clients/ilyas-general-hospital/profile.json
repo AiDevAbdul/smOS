@@ -1,0 +1,113 @@
+{
+  "slug": "ilyas-general-hospital",
+  "name": "Ilyas General Hospital",
+  "business": {
+    "product_description": "Onsite hospital specialized only in Gynaecology and Pediatrics — offers the full range of related services, from surgeries to medicines.",
+    "price_low": null,
+    "price_high": null,
+    "business_model": "onsite healthcare / service-based",
+    "usp": "Fully specialized end-to-end Gynae + Pediatric care (surgeries, medicines, and everything in between), unlike general hospitals in the area.",
+    "conversion_event": "WhatsApp click or phone call"
+  },
+  "audience": {
+    "age_low": 25,
+    "age_high": 45,
+    "gender": "mixed",
+    "geo_targets": [
+      "Khyber Pakhtunkhwa, Pakistan"
+    ],
+    "pain_points": [
+      "Trust/safety in gynae care",
+      "Pediatric emergencies",
+      "Access to specialists"
+    ]
+  },
+  "voice": {
+    "tone": "professional and reassuring",
+    "restricted_words": [],
+    "cta_style": "direct action (\"Book now\" / \"Call now\")"
+  },
+  "accounts": {
+    "ad_account_id": "act_461411569038304",
+    "pixel_id": null,
+    "facebook_page_id": "1203509712854716",
+    "instagram_business_id": "17841438014011289",
+    "page_id": "1203509712854716",
+    "ig_account_id": "17841438014011289",
+    "bm_id": null,
+    "currency": "PKR",
+    "timezone": "Asia/Karachi",
+    "ad_account_status": 1,
+    "ad_account_name": "Ilyas General Hospital",
+    "business_id": null,
+    "system_user_id": null,
+    "pixel_installed": false,
+    "website_url": null,
+    "domain": null
+  },
+  "kpis": {
+    "target_cpa": 20,
+    "target_roas": null,
+    "monthly_budget_low": 35000,
+    "monthly_budget_high": 35000
+  },
+  "history": {
+    "previous_spend": "PKR 10,880 on a prior awareness campaign (912K impressions, 701K reach, 0.25% CTR, 6 link clicks, doctor-branded creative: Dr. Bushra Rauft / Dr. Rifayat Ullah), run 2026-08-25 to 2026-09-05 then paused. A WhatsApp-click campaign is live now (started 2026-09-07, PKR 292 spent so far).",
+    "what_worked": "Doctor-branded creative got strong reach; WhatsApp-click format is a natural CTA for a hospital.",
+    "what_failed": "The awareness campaign was optimized for reach, not lead generation — 912K impressions produced only 6 link clicks and zero measurable conversions (no pixel, no CAPI)."
+  },
+  "competitors": [
+    "https://www.facebook.com/hnhpeshawar/",
+    "https://www.facebook.com/pghphase5/",
+    "https://www.facebook.com/peshawarmedicalcenterhayatabad/"
+  ],
+  "assets": {
+    "formats_available": ["logo", "doctor-poster-templates"],
+    "brand_guidelines_url": "clients/ilyas-general-hospital/brand_profile.json",
+    "brand_colors": ["#003F91", "#00959E", "#FFFFFF"]
+  },
+  "approvals": {
+    "channel": "discord",
+    "daily_cap": 5000,
+    "extra_rules": []
+  },
+  "status": "active",
+  "onboarded_at": "2026-09-08",
+  "setup": {
+    "business_verified_at": null,
+    "page_created_at": null,
+    "instagram_created_at": null,
+    "instagram_professional_at": null,
+    "ig_page_linked_at": null,
+    "payment_method_added_at": null,
+    "asset_access_granted_at": null,
+    "ad_account_created_at": null,
+    "pixel_created_at": null,
+    "system_user_token_at": null,
+    "assets_assigned_at": null,
+    "domain_verified_at": null,
+    "landing_deployed_at": null
+  },
+  "unit_economics": {
+    "gross_margin": null,
+    "average_order_value": null,
+    "customer_ltv": null,
+    "target_cac": null,
+    "target_mer": null
+  },
+  "content_preferences": {
+    "mode": "ai_assisted",
+    "ai_captions": true
+  },
+  "contact": {
+    "phone": "+923139661895",
+    "website_display": null,
+    "email": null,
+    "address": "Near Passport Office, 31-A/3, Phase 5, Hayatabad, Peshawar",
+    "social_handles": {
+      "instagram": null,
+      "facebook": null,
+      "tiktok": null
+    }
+  }
+}

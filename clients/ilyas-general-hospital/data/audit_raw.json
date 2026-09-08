@@ -1,0 +1,67 @@
+{
+  "slug": "ilyas-general-hospital",
+  "generated_at": "2026-09-08T12:01:05.736Z",
+  "organic": {
+    "facebook": {
+      "page_id": "1203509712854716",
+      "page_name": "Ilyas General Hospital",
+      "has_page_token": true,
+      "followers": 14,
+      "new_follows_90d": 0,
+      "followers_delta_90d": null,
+      "page_completeness": 67,
+      "page_completeness_table": "| Field | Set |\n|---|---|\n| Name | ✓ |\n| About | ✗ |\n| Category | ✓ |\n| Website | ✗ |\n| Phone | ✓ |\n| Email | ✗ |\n| Address | ✓ |\n| Profile picture | ✓ |\n| Cover photo | ✓ |",
+      "post_count": 7,
+      "posts_per_week": 0.8,
+      "days_since_last_post": 3,
+      "format_mix_pct": {
+        "video": 0,
+        "image": 100,
+        "carousel": 0,
+        "link": 0,
+        "status": 0
+      },
+      "engagement_available": false,
+      "engagement_blocked_reason": "pages_read_user_content not granted (code 10)",
+      "avg_engagement_rate": null,
+      "best_post": null,
+      "worst_post": null,
+      "insights_error": null
+    },
+    "instagram": {
+      "error": "Meta API 100: Unsupported get request. Object with ID '17841438014011289' does not exist, cannot be loaded due to missing permissions, or does not support this operation. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api (type=GraphMethodException, trace=Ahs3wUrbXQ-1BsWdgXIPJo6)"
+    }
+  },
+  "paid": {
+    "account_id": "act_461411569038304",
+    "account_name": "Ilyas General Hospital",
+    "account_status": 1,
+    "account_age_days": 923.19827546296,
+    "currency": "PKR",
+    "timezone": "Asia/Karachi",
+    "total_spend_lifetime": 500568.29,
+    "amount_spent_to_date": 6655.13,
+    "balance": 205.14,
+    "campaign_count_total": 48,
+    "campaign_count_active": 3,
+    "campaign_count_archived": 0,
+    "best_cpa": 15720.04,
+    "best_roas": null,
+    "zombie_count": 0,
+    "naming_compliance_pct": 0,
+    "custom_audience_count": 0,
+    "custom_audience_healthy": 0,
+    "custom_audience_broken": 0,
+    "audience_issues": [],
+    "pixel_health": "none",
+    "pixel_stats": {
+      "skipped": true
+    }
+  },
+  "website_tracking": null,
+  "ad_library_history": null,
+  "pixel_cross_reference": null,
+  "pre_audit_source": null,
+  "creative": null,
+  "health_score": 33
+}

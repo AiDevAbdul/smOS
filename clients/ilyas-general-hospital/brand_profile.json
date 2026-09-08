@@ -1,0 +1,42 @@
+{
+  "client_slug": "ilyas-general-hospital",
+  "status": "complete",
+  "strategy": {
+    "positioning_statement": "Peshawar's fully specialized Gynae + Pediatric hospital — end-to-end care (surgeries to medicines) from a trusted, doctor-led team, without the runaround of a general hospital.",
+    "values": ["care", "compassion", "commitment"],
+    "positioning_approved_at": "2026-09-08T00:00:00.000Z"
+  },
+  "verbal": {
+    "name": "Ilyas General Hospital",
+    "tagline": "Your Health, Our Priority",
+    "name_approved_at": "2026-09-08T00:00:00.000Z"
+  },
+  "visual": {
+    "logo": {
+      "primary_url": "clients/ilyas-general-hospital/brand/logo.png",
+      "reverse_url": "clients/ilyas-general-hospital/brand/logo.png",
+      "source": "client-supplied (Desktop/Ilyas General Hospital/logo.png, background-removed version flattened onto white)",
+      "description": "Circular seal, blue-to-teal gradient ring, 'ILYAS GENERAL HOSPITAL' arced text, monogram (I/G/H) with a navy stethoscope + teal heartbeat line, 'CARE • COMPASSION • COMMITMENT' and 'YOUR HEALTH, OUR PRIORITY'.",
+      "clear_space": "0.2x seal diameter on all sides",
+      "min_size": "64px diameter"
+    },
+    "logo_approved_at": "2026-09-08T00:00:00.000Z",
+    "colors": {
+      "primary": "#003F91",
+      "secondary": "#00959E",
+      "accent": "#00959E",
+      "neutrals": ["#FFFFFF", "#0B2545"]
+    },
+    "typography": {
+      "heading": "serif, condensed caps (arced wordmark style seen in the logo/posters)",
+      "body": "sans-serif, bold/geometric (poster subheads, specialty tags)"
+    },
+    "imagery_style": "clean clinical photography — doctor portraits in white coat/scrubs with stethoscope, soft blue/teal gradient backgrounds, rounded info pills for contact/timing, no stock-generic hospital cliches",
+    "brand_kit_locked": true,
+    "reference_assets": [
+      "clients/ilyas-general-hospital/brand/reference/poster-gynae-doctor.png",
+      "clients/ilyas-general-hospital/brand/reference/poster-pediatric-doctor.jpeg"
+    ],
+    "ai_generated": false
+  }
+}

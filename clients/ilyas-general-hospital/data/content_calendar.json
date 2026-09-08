@@ -1,0 +1,96 @@
+{
+  "items": [
+    {
+      "id": "ilyas-general-hospital-2026-09-08-whatsapp-fb",
+      "pillar_id": "conversion",
+      "platform": "facebook",
+      "format": "image",
+      "publish_at": "2026-09-08T00:00:00.000Z",
+      "message": "Specialist Gynaecology & Pediatric care, one WhatsApp message away.\n\nAt Ilyas General Hospital, our doctor-led team handles everything from routine consultations to surgeries and medicines — all under one roof in Hayatabad, Peshawar.\n\nNear Passport Office, 31-A/3, Phase 5, Hayatabad, Peshawar\nBook your appointment on WhatsApp: +92 313 9661895\n\nYour Health, Our Priority.",
+      "link": null,
+      "cta": "Message Us on WhatsApp",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "local_path": "clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Gynaecology",
+        "Pediatrics",
+        "WhatsApp booking"
+      ],
+      "alt_text": "Ilyas General Hospital WhatsApp booking poster — Expert Care, One WhatsApp Away",
+      "hashtags": [
+        "#IlyasGeneralHospital",
+        "#Gynaecology",
+        "#Pediatrics",
+        "#Peshawar",
+        "#Hayatabad",
+        "#WomensHealth",
+        "#ChildHealth"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": [
+          "#003F91",
+          "#00959E",
+          "#FFFFFF",
+          "#0B2545"
+        ],
+        "logo_url": "clients/ilyas-general-hospital/brand/logo.png"
+      },
+      "status": "error",
+      "published_id": null,
+      "published_at": null,
+      "error": "Meta API 200: (#200) The permission(s) publish_actions are not available. It has been deprecated. If you want to provide a way for your app users to share content to Facebook, we encourage you to use our Sharing products instead. (type=OAuthException, trace=AGe-LAEp2J5OeNbye-wQeY9)",
+      "schedule_native": false
+    },
+    {
+      "id": "ilyas-general-hospital-2026-09-08-whatsapp-ig",
+      "pillar_id": "conversion",
+      "platform": "instagram",
+      "format": "image",
+      "publish_at": "2026-09-08T00:00:00.000Z",
+      "message": "Specialist Gynaecology & Pediatric care, one WhatsApp message away.\n\nAt Ilyas General Hospital, our doctor-led team handles everything from routine consultations to surgeries and medicines — all under one roof in Hayatabad, Peshawar.\n\nNear Passport Office, 31-A/3, Phase 5, Hayatabad, Peshawar\nBook your appointment on WhatsApp: +92 313 9661895\n\nYour Health, Our Priority.",
+      "link": null,
+      "cta": "Message Us on WhatsApp",
+      "image_url": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "local_path": "clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "video_url": null,
+      "items": [],
+      "keywords": [
+        "Gynaecology",
+        "Pediatrics",
+        "WhatsApp booking"
+      ],
+      "alt_text": "Ilyas General Hospital WhatsApp booking poster — Expert Care, One WhatsApp Away",
+      "hashtags": [
+        "#IlyasGeneralHospital",
+        "#Gynaecology",
+        "#Pediatrics",
+        "#Peshawar",
+        "#Hayatabad",
+        "#WomensHealth",
+        "#ChildHealth"
+      ],
+      "produced_by": "smos_ai",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "brand_kit": {
+        "colors": [
+          "#003F91",
+          "#00959E",
+          "#FFFFFF",
+          "#0B2545"
+        ],
+        "logo_url": "clients/ilyas-general-hospital/brand/logo.png"
+      },
+      "status": "error",
+      "published_id": null,
+      "published_at": null,
+      "error": "Meta API 10: (#10) Application does not have permission for this action (type=OAuthException, trace=AqWaUTYZxYuwFWDEzXhtLxp)",
+      "schedule_native": false
+    }
+  ]
+}

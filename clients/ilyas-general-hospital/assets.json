@@ -1,0 +1,109 @@
+{
+  "client_slug": "ilyas-general-hospital",
+  "assets": [
+    {
+      "asset_id": "img_whatsapp-campaign-2026-09",
+      "client_slug": "ilyas-general-hospital",
+      "media_type": "image",
+      "version": 1,
+      "parent_asset_id": null,
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "hash": "b2eeeeb154903aa0d582231c8b29d67226f4551877fe4b859565240d33ac4d6a",
+      "angle_id": null,
+      "tags": [
+        "paid",
+        "whatsapp-campaign",
+        "2026-09"
+      ],
+      "alt_text": "Ilyas General Hospital WhatsApp booking poster",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-09-08T12:11:49.909Z"
+    },
+    {
+      "asset_id": "img_whatsapp-campaign-2026-09_v2",
+      "client_slug": "ilyas-general-hospital",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_whatsapp-campaign-2026-09",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "hash": "3d7254e25199686d4cc47125bb67b69dacf6942c5d64ee766bb783dd5bb3e52f",
+      "angle_id": null,
+      "tags": [
+        "paid",
+        "whatsapp-campaign",
+        "2026-09"
+      ],
+      "alt_text": "Ilyas General Hospital WhatsApp booking poster",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-09-08T12:18:03.935Z"
+    },
+    {
+      "asset_id": "img_whatsapp-campaign-2026-09_v2",
+      "client_slug": "ilyas-general-hospital",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_whatsapp-campaign-2026-09",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "hash": "086756d237104a2ae43d0f3af6f8010ba22b843983e73ea98c323e4eb0a26b2a",
+      "angle_id": null,
+      "tags": [
+        "paid",
+        "whatsapp-campaign",
+        "2026-09"
+      ],
+      "alt_text": "Ilyas General Hospital WhatsApp booking poster",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-09-08T12:20:52.271Z"
+    },
+    {
+      "asset_id": "img_whatsapp-campaign-2026-09_v2",
+      "client_slug": "ilyas-general-hospital",
+      "media_type": "image",
+      "version": 2,
+      "parent_asset_id": "img_whatsapp-campaign-2026-09",
+      "uri": "https://osjuentcijgwkdielifv.supabase.co/storage/v1/object/public/smos-assets/clients/ilyas-general-hospital/generated/whatsapp-campaign-2026-09.png",
+      "hash": "d92038daf48588a6a7651b5e97590b801b4a5d9c04dc324d40becfb0f70cc213",
+      "angle_id": null,
+      "tags": [
+        "paid",
+        "whatsapp-campaign",
+        "2026-09"
+      ],
+      "alt_text": "Ilyas General Hospital WhatsApp booking poster",
+      "ai_generated": true,
+      "ai_disclosed": true,
+      "metrics": {
+        "impressions": 0,
+        "hook_rate": null,
+        "retention_3s": null,
+        "ctr": null,
+        "roas": null
+      },
+      "created_at": "2026-09-08T12:23:14.249Z"
+    }
+  ]
+}

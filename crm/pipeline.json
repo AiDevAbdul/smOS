@@ -686,12 +686,12 @@
     "company_name": "Ilyas General Hospital",
     "created_at": "2026-09-08T09:37:29.568Z",
     "source": "pre-audit",
-    "stage": "audited",
+    "stage": "won",
     "links": {
       "pre_audit": "prospects/ilyas-general-hospital/deliverables/pre-audit/pre-audit.html",
-      "proposal": null,
-      "contract": null,
-      "client_profile": null
+      "proposal": "proposals/ilyas-general-hospital/proposal.pdf",
+      "contract": "contracts/ilyas-general-hospital/agreement.pdf",
+      "client_profile": "clients/ilyas-general-hospital/profile.json"
     },
     "activities": [
       {
@@ -718,15 +718,35 @@
         "at": "2026-09-08T10:19:08.359Z",
         "type": "note",
         "note": "pre-audit completed"
+      },
+      {
+        "at": "2026-09-08T10:35:03.710Z",
+        "type": "proposal",
+        "note": "proposed Growth (USD 3000/mo)"
+      },
+      {
+        "at": "2026-09-08T10:41:09.584Z",
+        "type": "proposal",
+        "note": "proposed Local Starter (PKR 15000/mo)"
+      },
+      {
+        "at": "2026-09-08T10:42:56.762Z",
+        "type": "contract",
+        "note": "agreement generated (Local Starter)"
+      },
+      {
+        "at": "2026-09-08T10:43:02.456Z",
+        "type": "contract",
+        "note": "agreement signed"
       }
     ],
     "deal": {
-      "monthly_retainer": 0,
+      "monthly_retainer": 15000,
       "setup_fee": 0,
-      "currency": "USD",
+      "currency": "PKR",
       "addons": []
     },
-    "updated_at": "2026-09-08T10:19:08.362Z",
+    "updated_at": "2026-09-08T11:59:29.978Z",
     "id": "ilyas-general-hospital",
     "contact": {
       "name": null,
@@ -739,7 +759,7 @@
     "owner": null,
     "next_action": null,
     "next_action_due": null,
-    "won_at": null,
+    "won_at": "2026-09-08T10:43:02.455Z",
     "lost_at": null,
     "lost_reason": null
   }

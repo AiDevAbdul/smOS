@@ -68,8 +68,12 @@ export function pickPackage(catalog, { packageId = null, retainer = 0 } = {}) {
 export function pickTierPair(catalog, pkg) {
   const pkgs = catalog.packages;
   const idx = pkgs.findIndex((p) => p.id === pkg.id);
-  const lower = idx > 0 ? pkgs[idx - 1] : null;
-  const higher = idx >= 0 && idx < pkgs.length - 1 ? pkgs[idx + 1] : null;
+  // Never pair tiers priced in different currencies — the pricing() renderer
+  // applies one display currency to the whole pair, which would mislabel the
+  // neighbor's raw number under the wrong currency.
+  const sameCurrency = (p) => p && p.currency === pkg.currency;
+  const lower = idx > 0 && sameCurrency(pkgs[idx - 1]) ? pkgs[idx - 1] : null;
+  const higher = idx >= 0 && idx < pkgs.length - 1 && sameCurrency(pkgs[idx + 1]) ? pkgs[idx + 1] : null;
   if (lower) return [{ pkg: lower, featured: false }, { pkg, featured: true }];
   if (higher) return [{ pkg, featured: true }, { pkg: higher, featured: false }];
   return [{ pkg, featured: true }];

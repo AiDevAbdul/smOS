@@ -1,0 +1,65 @@
+{
+  "slug": "ilyas-general-hospital",
+  "name": "Ilyas General Hospital",
+  "business": {
+    "product_description": "Onsite hospital specialized only in Gynaecology and Pediatrics — offers the full range of related services, from surgeries to medicines.",
+    "price_low": null,
+    "price_high": null,
+    "business_model": "onsite healthcare / service-based",
+    "usp": "Fully specialized end-to-end Gynae + Pediatric care (surgeries, medicines, and everything in between), unlike general hospitals in the area.",
+    "conversion_event": "WhatsApp click or phone call"
+  },
+  "audience": {
+    "age_low": 25,
+    "age_high": 45,
+    "gender": "mixed",
+    "geo_targets": ["Khyber Pakhtunkhwa, Pakistan"],
+    "pain_points": [
+      "Trust/safety in gynae care",
+      "Pediatric emergencies",
+      "Access to specialists"
+    ]
+  },
+  "voice": {
+    "tone": "professional and reassuring",
+    "restricted_words": [],
+    "cta_style": "direct action (\"Book now\" / \"Call now\")"
+  },
+  "accounts": {
+    "ad_account_id": "act_461411569038304",
+    "pixel_id": null,
+    "facebook_page_id": "1203509712854716",
+    "instagram_business_id": "17841438014011289",
+    "page_id": "1203509712854716",
+    "ig_account_id": "17841438014011289",
+    "bm_id": null,
+    "currency": null,
+    "timezone": null
+  },
+  "kpis": {
+    "target_cpa": 20,
+    "target_roas": null,
+    "monthly_budget_low": 35000,
+    "monthly_budget_high": 35000
+  },
+  "history": {
+    "previous_spend": "PKR 10,880 on a prior awareness campaign (912K impressions, 701K reach, 0.25% CTR, 6 link clicks, doctor-branded creative: Dr. Bushra Rauft / Dr. Rifayat Ullah), run 2026-08-25 to 2026-09-05 then paused. A WhatsApp-click campaign is live now (started 2026-09-07, PKR 292 spent so far).",
+    "what_worked": "Doctor-branded creative got strong reach; WhatsApp-click format is a natural CTA for a hospital.",
+    "what_failed": "The awareness campaign was optimized for reach, not lead generation — 912K impressions produced only 6 link clicks and zero measurable conversions (no pixel, no CAPI)."
+  },
+  "competitors": [
+    "https://www.facebook.com/hnhpeshawar/",
+    "https://www.facebook.com/pghphase5/",
+    "https://www.facebook.com/peshawarmedicalcenterhayatabad/"
+  ],
+  "assets": {
+    "formats_available": [],
+    "brand_guidelines_url": null,
+    "brand_colors": []
+  },
+  "approvals": {
+    "channel": "discord",
+    "daily_cap": 5000,
+    "extra_rules": []
+  }
+}

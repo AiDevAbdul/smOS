@@ -22,6 +22,22 @@
       ]
     },
     {
+      "id": "local",
+      "name": "Local Starter",
+      "monthly_retainer": 15000,
+      "currency": "PKR",
+      "setup_fee": 0,
+      "best_for": "Small local businesses validating Meta ads on a tightly limited monthly budget.",
+      "includes": [
+        "Meta (Facebook + Instagram) ads management",
+        "Migration off a shared/reseller ad account into a dedicated Business Manager",
+        "1 active campaign objective",
+        "Meta Pixel + Conversions API setup",
+        "Up to 2 ad creatives / month",
+        "Monthly optimization + report"
+      ]
+    },
+    {
       "id": "growth",
       "name": "Growth",
       "monthly_retainer": 3000,
