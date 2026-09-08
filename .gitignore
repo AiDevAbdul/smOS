@@ -33,3 +33,4 @@ billing/__*/
 
 # Test fixture scratch (A3)
 test/.tmp/
+.vscode/
