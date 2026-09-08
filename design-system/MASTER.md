@@ -162,6 +162,30 @@ Per-page deviations go in `design-system/pages/<name>.md` and override this Mast
 
 ---
 
+## Application layer (Console)
+
+The smOS operator UI (`ui/`, Next.js, local-only, see
+`docs/ui-plan-design-system.md`) is a second surface built **on top of** Ledger,
+not a fork of it. Reports stay editorial documents; the Console is a dense
+operator app — persistent nav, live agent-run streaming, approvals, forms — and
+needs primitives Ledger never defined (spacing scale, control heights, focus
+rings, toasts, dialogs). Full reference: **[`APP.md`](./APP.md)**. Component
+CSS: **[`smos-app.css`](./smos-app.css)**, loaded after the core stylesheet.
+Living style guide / review gate: **[`preview/index.html`](./preview/index.html)**.
+
+- Same palette, same type trio, same `--ds-shell*` dark-console chrome family
+  `/bundle` already established — extended, never duplicated.
+- Additive tokens only, in `smos-design-system.css`: 4pt spacing scale
+  (`--ds-space-1…10`), control heights (`--ds-control-sm/md/lg`), focus rings
+  (`--ds-focus`, `--ds-focus-shell`), z-layers, run-state colors
+  (`--ds-run-queued/running/done/failed/waiting`), a completed shell family
+  (`--ds-shell-hover/-selected/-accent`), and `[data-density]` (compact default,
+  comfortable alternate).
+- Enforced by `test/ui-no-raw-hex.test.js` (mirrors `hero-uniform.test.js`):
+  no literal hex besides `#fff`, no font-family outside `--ds-font*`.
+- Icon sprite: `icons.svg` (stroke, `currentColor`, 24×24) — status is always
+  color **+** text via `ds-badge`, never icon color alone.
+
 ## Light / dark mode
 
 Every HTML report supports auto (OS `prefers-color-scheme`) **and** a manual

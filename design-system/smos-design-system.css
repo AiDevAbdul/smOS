@@ -105,6 +105,71 @@
   --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
   --ds-dur:        220ms;
   --ds-dur-fast:   140ms;
+
+  /* ================================================================
+     Application layer ("Console") — additive tokens for the smOS
+     operator UI (ui/). Reports never use these; the Console (dense
+     nav, forms, live agent runs) does. Kept in the same file so both
+     layers draw from one palette — never fork a second stylesheet's
+     worth of raw color. See design-system/smos-app.css for components
+     and design-system/APP.md for the reference. ================== */
+
+  /* ---- 4-pt spacing scale ---- */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-7: 32px;
+  --ds-space-8: 40px;
+  --ds-space-9: 48px;
+  --ds-space-10: 64px;
+
+  /* ---- Control metrics (compact density default; see [data-density]) ---- */
+  --ds-control-sm: 28px;
+  --ds-control-md: 36px;
+  --ds-control-lg: 44px;
+  --ds-input-pad: 0 var(--ds-space-3);
+  --ds-icon: 16px;
+  --ds-icon-lg: 20px;
+
+  /* ---- Focus rings (2px accent + 2px offset; shell variant for dark chrome) ---- */
+  --ds-focus: 0 0 0 2px var(--ds-surface), 0 0 0 4px var(--ds-blue);
+  --ds-focus-shell: 0 0 0 2px var(--ds-shell), 0 0 0 4px var(--ds-blue);
+
+  /* ---- Z-layers ---- */
+  --ds-z-rail: 10;
+  --ds-z-panel: 20;
+  --ds-z-overlay: 30;
+  --ds-z-toast: 40;
+  --ds-z-palette: 50;
+
+  /* ---- Run/session state colors (map onto existing semantic hues —
+     no new colors introduced) ---- */
+  --ds-run-queued:  var(--ds-faint);
+  --ds-run-running: var(--ds-blue);
+  --ds-run-done:    var(--ds-green);
+  --ds-run-failed:  var(--ds-red);
+  --ds-run-waiting: var(--ds-amber);
+
+  /* ---- Shell family completions (hover/selected/accent/focus on the
+     dark console chrome; --ds-shell/-2/-3/-ink/-mut/-line already
+     existed for /bundle) ---- */
+  --ds-shell-hover:    #232f3d;
+  --ds-shell-selected: #1d5dbf;
+  --ds-shell-accent:   #5b93e8;
+  --ds-shell-focus:    0 0 0 2px var(--ds-shell), 0 0 0 4px var(--ds-shell-accent);
+}
+
+/* Density: compact is the default (operator console = dense by design).
+   [data-density="comfortable"] widens the same scale for touch/readability. */
+[data-density="comfortable"] {
+  --ds-control-sm: 32px;
+  --ds-control-md: 40px;
+  --ds-control-lg: 48px;
+  --ds-space-3: 14px;
+  --ds-space-4: 20px;
 }
 
 /* ------------------------------------------------------ Dark mode tokens ---
