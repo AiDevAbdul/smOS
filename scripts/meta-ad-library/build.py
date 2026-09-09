@@ -173,6 +173,18 @@ def score(page: dict, comp: dict) -> dict:
     return dims, total, max_comp
 
 
+def read_manifest(data_dir: Path) -> dict:
+    """The collect manifest, if it exists. Carries the Ad Library country code."""
+    path = data_dir / "raw" / "manifest.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text())
+    except ValueError:
+        print("[build] raw/manifest.json unreadable — geo left unresolved")
+        return {}
+
+
 def synthesize(page: dict, comp: dict, scored_at: str) -> dict:
     dims, total, max_comp = score(page, comp)
     fb, ig, site = page.get("facebook", {}), page.get("instagram", {}), page.get("website", {})
@@ -248,6 +260,12 @@ def _default_recs(page: dict, comp: dict) -> list[dict]:
 def main() -> None:
     p = argparse.ArgumentParser(description="Build render-contract JSONs from signals.csv")
     p.add_argument("slug")
+    p.add_argument("--vertical", default=None,
+                   help="Prospect vertical (e.g. auto_repair, apparel, b2b_saas). Tailors the "
+                        "benchmark table; omitted means cross-vertical figures, labeled as such.")
+    p.add_argument("--geo", default=None,
+                   help="Prospect market as an ISO-2 code (e.g. GB, AE, PK). Defaults to the "
+                        "collect manifest's country. Only CPM is geo-adjusted.")
     args = p.parse_args()
 
     data_dir = _root() / "prospects" / args.slug / "data"
@@ -279,6 +297,15 @@ def main() -> None:
 
     syn = synthesize(page, comp, fetched_at)
 
+    # ── Vertical/geo benchmark resolution ──
+    # Resolved once here and carried in synthesis.json so the renderer reads the
+    # previous stage's output instead of re-deriving it (Token Efficiency Rules).
+    # `is_tailored` / per-metric `basis` are what stop the report claiming
+    # vertical-and-country specificity it doesn't have.
+    manifest = read_manifest(data_dir)
+    geo = args.geo or manifest.get("country")
+    syn["benchmarks"] = _bench.resolve(args.vertical, geo)
+
     # ── Minimum-data-quality gate ──
     # A pass is "blocked" when normalize recorded a non-ok _status for it. If
     # ≥2 of the 4 core public passes are blocked, the score rests on too little
@@ -304,9 +331,16 @@ def main() -> None:
     for name, obj in [("page_audit.json", page), ("competitor_summary.json", comp),
                       ("synthesis.json", syn)]:
         (data_dir / name).write_text(json.dumps(obj, indent=2, ensure_ascii=False))
+    bm = syn["benchmarks"]
     print(json.dumps({"slug": args.slug, "score": syn["score"],
                       "dimensions": syn["dimensions"],
                       "data_quality": syn["data_quality"],
+                      "benchmarks": {"vertical": bm["vertical"]["key"],
+                                     "vertical_match": bm["vertical"]["match"],
+                                     "geo": bm["geo"]["key"],
+                                     "geo_match": bm["geo"]["match"],
+                                     "is_tailored": bm["is_tailored"],
+                                     "is_geo_adjusted": bm["is_geo_adjusted"]},
                       "competitors": list(competitors)}, indent=2))
 
 

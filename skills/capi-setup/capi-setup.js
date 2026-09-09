@@ -6,8 +6,27 @@
  * dataset metadata, computes server-side share per event, and writes
  * a gap report. Optionally fires a test CAPI event via --test-event.
  *
+ * E4 (measurement spine) added two things this skill is the natural owner of,
+ * because it is the only skill that talks to the dataset:
+ *
+ *   1. Event Match Quality OVER TIME. Each run captures the Dataset Quality
+ *      API's per-event composite score plus the match-key coverage breakdown
+ *      and appends it to clients/<slug>/data/measurement_spine.json, so the
+ *      question "did the dev's fix actually raise match quality?" has an
+ *      answer. A score Meta does not return is null (unknown) — never 0.
+ *   2. Modeled-vs-observed conversion reconciliation. The platform-reported
+ *      (modeled) count comes from /analyze's performance_analysis.json (or
+ *      --platform-conversions); the observed count is supplied by the operator
+ *      from the CRM / server-side source. Both sides are labeled, and an
+ *      unknown denominator yields null with the reason stated.
+ *
+ * /attribution then READS that spine (JSON handoff) instead of re-deriving it —
+ * one spine, two skills.
+ *
  * Usage:
  *   node skills/capi-setup/capi-setup.js <client_slug> [--test-event TEST12345]
+ *        [--no-emq] [--observed N [--observed-source crm] [--observed-audited]]
+ *        [--platform-conversions N] [--event Purchase] [--window last_7d]
  */
 
 import crypto from "node:crypto";
@@ -17,6 +36,19 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import { flattenStatsBuckets } from "../../scripts/lib/meta-stats.js";
+import {
+  parseDatasetQuality,
+  buildEmqSnapshot,
+  recordEmqSnapshot,
+  emqGaps,
+  matchKeyGaps,
+  reconcileConversions,
+  recordReconciliation,
+  spineSummary,
+  spinePath,
+  persistSpineSnapshot,
+  asCount,
+} from "../../scripts/lib/measurement_spine.js";
 import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -73,6 +105,64 @@ async function getDatasetInfo(graph, datasetId) {
     .catch((e) => ({ error: e.message }));
 }
 
+/**
+ * Dataset Quality API — Event Match Quality.
+ *
+ * GET /dataset_quality?dataset_id=<pixel>&fields=web{event_name,
+ *     event_match_quality{composite_score,match_key_feedback{identifier,coverage}}}
+ *
+ * Docs: https://developers.facebook.com/docs/marketing-api/conversions-api/dataset-quality-api/
+ * Fails soft to an {error} payload: an EMQ read is diagnostic, and losing it
+ * must not cost the client the rest of the gap report.
+ */
+export async function getDatasetQuality(graph, datasetId) {
+  return graph
+    .get(`/dataset_quality`, {
+      dataset_id: datasetId,
+      fields:
+        "web{event_name,event_match_quality{composite_score,match_key_feedback{identifier,coverage,potential_aly_acr_increase}}}",
+    })
+    .catch((e) => ({ error: e.message }));
+}
+
+/** Events with no live data at all: status "unknown", not "never_fired". */
+export function unknownEventStats(requiredEvents) {
+  return requiredEvents.map((name) => ({
+    name,
+    firing: null,
+    count_7d: null,
+    last_fired: null,
+    client_count_7d: null,
+    server_count_7d: null,
+    server_share: null,
+    status: "unknown",
+  }));
+}
+
+/**
+ * The platform-reported (modeled) conversion count for the reconciliation.
+ * Read from /analyze's handoff rather than re-pulled — Token Efficiency Rules.
+ */
+export function platformConversionsFromAnalysis(slug, { window = "last_7d" } = {}) {
+  const p = P.clientFile(slug, "performance_analysis.json");
+  if (!existsSync(p)) {
+    return { value: null, source: null, reason: "no performance_analysis.json — run /analyze first, or pass --platform-conversions" };
+  }
+  try {
+    const a = JSON.parse(readFileSync(p, "utf8"));
+    const totals = a.window_summary?.last_7d_totals || {};
+    const v = asCount(totals.conversions);
+    return {
+      value: v,
+      source: `performance_analysis.json (window_summary.last_7d_totals, generated ${a.generated_at || "unknown"})`,
+      reason: v == null ? "performance_analysis.json has no conversions total for the window" : null,
+      window: window === "last_7d" ? "last_7d" : window,
+    };
+  } catch (e) {
+    return { value: null, source: null, reason: `performance_analysis.json unreadable: ${e.message}` };
+  }
+}
+
 async function fireTestEvent(graph, datasetId, testEventCode) {
   const eventId = `capi-test-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const event = {
@@ -90,7 +180,7 @@ async function fireTestEvent(graph, datasetId, testEventCode) {
   return { fired: true, event_id: eventId, response: res };
 }
 
-function buildEventStats(rawStats, sourceBreakdownByEvent, requiredEvents) {
+export function buildEventStats(rawStats, sourceBreakdownByEvent, requiredEvents) {
   // rawStats is the raw /stats?aggregation=event response: hourly buckets, each
   // with a nested data array of { value: <event name>, count }. Flatten first.
   const rows = flattenStatsBuckets(rawStats);
@@ -131,7 +221,7 @@ function buildEventStats(rawStats, sourceBreakdownByEvent, requiredEvents) {
   return events;
 }
 
-function deriveGaps(events, dataset) {
+export function deriveGaps(events, dataset) {
   const gaps = [];
   for (const e of events) {
     if (e.status === "never_fired") {
@@ -150,7 +240,7 @@ function deriveGaps(events, dataset) {
   return gaps;
 }
 
-function buildNextSteps(events) {
+export function buildNextSteps(events) {
   const hasAnyMissing = events.some((e) => e.status === "missing" || e.status === "never_fired");
   const hasPartial = events.some((e) => e.status === "partial");
   const steps = [];
@@ -165,13 +255,28 @@ function buildNextSteps(events) {
   return steps;
 }
 
+/** Read `--flag value` or `--flag=value`; returns null when absent. */
+export function flagValue(args, name) {
+  const eq = args.find((a) => a.startsWith(`${name}=`));
+  if (eq) return eq.slice(name.length + 1);
+  const i = args.indexOf(name);
+  if (i >= 0 && args[i + 1] && !args[i + 1].startsWith("--")) return args[i + 1];
+  return null;
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
-  const testIdx = args.indexOf("--test-event");
-  const testEventCode = testIdx >= 0 ? args[testIdx + 1] : null;
+  const testEventCode = flagValue(args, "--test-event");
+  const wantEmq = !args.includes("--no-emq");
+  const observedRaw = flagValue(args, "--observed");
+  const observedSource = flagValue(args, "--observed-source") || (observedRaw != null ? "unstated" : null);
+  const observedAudited = args.includes("--observed-audited");
+  const platformOverride = flagValue(args, "--platform-conversions");
+  const reconEvent = flagValue(args, "--event");
+  const reconWindow = flagValue(args, "--window") || "last_7d";
   if (!slug) {
-    console.error("Usage: node skills/capi-setup/capi-setup.js <slug> [--test-event TEST12345]");
+    console.error("Usage: node skills/capi-setup/capi-setup.js <slug> [--test-event TEST12345] [--no-emq] [--observed N --observed-source crm [--observed-audited]] [--platform-conversions N] [--event Purchase] [--window last_7d]");
     process.exit(1);
   }
 
@@ -192,38 +297,112 @@ async function main() {
     ? profile.business.conversion_events
     : ["PageView", "ViewContent", "AddToCart", "InitiateCheckout", "Purchase", "Lead"];
 
-  const graph = createGraph();
-  console.error(`[capi-setup] ${slug} — inspecting pixel ${pixelId}…`);
+  // Offline / no-token discipline (matches the sibling skills): never fabricate
+  // API data. With no live read, every event's status is `unknown` — NOT
+  // `never_fired`, which would be an assertion about a pixel we never queried.
+  const offline = process.env.SMOS_OFFLINE === "1" || !process.env.META_ACCESS_TOKEN;
+  const offlineReason = process.env.SMOS_OFFLINE === "1" ? "SMOS_OFFLINE=1" : "no META_ACCESS_TOKEN resolved";
 
-  const [stats, dataset, sourceBreakdownList] = await Promise.all([
-    getPixelStats(graph, pixelId),
-    getDatasetInfo(graph, pixelId),
-    Promise.all(requiredEvents.map((name) => getSourceBreakdown(graph, pixelId, name))),
-  ]);
-  const sourceBreakdownByEvent = Object.fromEntries(requiredEvents.map((name, i) => [name, sourceBreakdownList[i]]));
-
-  const events = buildEventStats(stats, sourceBreakdownByEvent, requiredEvents);
-
+  let events, dataset, quality;
   let testEvent = { fired: false, event_id: null };
-  if (testEventCode) {
-    try {
-      console.error(`[capi-setup] firing test event with code=${testEventCode}…`);
-      testEvent = await fireTestEvent(graph, pixelId, testEventCode);
-    } catch (e) {
-      testEvent = { fired: false, error: e.message };
+
+  if (offline) {
+    console.error(`[capi-setup] ${slug} — ${offlineReason}: skipping live pixel reads (statuses reported as unknown).`);
+    events = unknownEventStats(requiredEvents);
+    dataset = { error: `not fetched (${offlineReason})` };
+    quality = { ok: false, reason: offlineReason, events: [] };
+  } else {
+    const graph = createGraph();
+    console.error(`[capi-setup] ${slug} — inspecting pixel ${pixelId}…`);
+
+    const [stats, ds, sourceBreakdownList, dq] = await Promise.all([
+      getPixelStats(graph, pixelId),
+      getDatasetInfo(graph, pixelId),
+      Promise.all(requiredEvents.map((name) => getSourceBreakdown(graph, pixelId, name))),
+      wantEmq ? getDatasetQuality(graph, pixelId) : Promise.resolve({ error: "skipped (--no-emq)" }),
+    ]);
+    dataset = ds;
+    const sourceBreakdownByEvent = Object.fromEntries(requiredEvents.map((name, i) => [name, sourceBreakdownList[i]]));
+    events = buildEventStats(stats, sourceBreakdownByEvent, requiredEvents);
+    quality = parseDatasetQuality(dq);
+
+    if (testEventCode) {
+      try {
+        console.error(`[capi-setup] firing test event with code=${testEventCode}…`);
+        testEvent = await fireTestEvent(graph, pixelId, testEventCode);
+      } catch (e) {
+        testEvent = { fired: false, error: e.message };
+      }
     }
   }
 
-  const gaps = deriveGaps(events, dataset);
-  const nextSteps = buildNextSteps(events);
+  // ── EMQ over time (spine) ───────────────────────────────────────────────
+  const snapshot = buildEmqSnapshot({
+    pixel_id: pixelId,
+    events: quality.events,
+    source: quality.ok ? "dataset_quality_api" : offline ? "offline" : "unavailable",
+    unavailable_reason: quality.ok ? null : quality.reason,
+  });
+  const { appended, reason: appendReason, trends } = recordEmqSnapshot(slug, snapshot);
+
+  // ── modeled vs observed reconciliation ─────────────────────────────────
+  const fromAnalysis = platformConversionsFromAnalysis(slug, { window: reconWindow });
+  const platformValue = platformOverride != null ? asCount(platformOverride) : fromAnalysis.value;
+  const platformSource = platformOverride != null ? "--platform-conversions (operator-supplied)" : fromAnalysis.source;
+  const reconciliation = reconcileConversions({
+    platform_reported: platformValue,
+    observed: observedRaw != null ? asCount(observedRaw) : null,
+    platform_source: platformSource || fromAnalysis.reason,
+    observed_source: observedSource,
+    observed_audited: observedAudited,
+    event: reconEvent,
+    window: reconWindow,
+    recorded_by: "capi-setup",
+  });
+  // Only a run that was actually GIVEN an observed number records a
+  // reconciliation — otherwise every run would append a half-empty row and the
+  // spine's reconciliation history would be mostly noise.
+  let reconciliationRecorded = false;
+  if (observedRaw != null) {
+    recordReconciliation(slug, reconciliation);
+    reconciliationRecorded = true;
+  }
+
+  const persisted = await persistSpineSnapshot(slug, {
+    snapshot,
+    reconciliation: reconciliationRecorded ? reconciliation : null,
+  });
+
+  const gaps = [
+    ...(offline ? [`Pixel/CAPI status not verified this run (${offlineReason}) — statuses are unknown, not healthy`] : deriveGaps(events, dataset)),
+    ...emqGaps(trends, snapshot),
+    ...matchKeyGaps(snapshot),
+  ];
+  const nextSteps = offline
+    ? [`Re-run with a token (and without SMOS_OFFLINE) to verify the pixel — this run reported no live data`]
+    : buildNextSteps(events);
 
   const out = {
     slug,
     generated_at: new Date().toISOString(),
     pixel_id: pixelId,
+    data_source: offline ? "offline" : "meta_graph_v25",
     events,
     dataset: dataset.error ? { error: dataset.error } : dataset,
     test_event: testEvent,
+    // Measurement spine (E4): this run's EMQ capture + the trend across the
+    // whole series, and the modeled-vs-observed reconciliation.
+    emq: {
+      captured: quality.ok,
+      unavailable_reason: quality.ok ? null : quality.reason,
+      snapshot,
+      trends,
+      appended_to_series: appended,
+      not_appended_reason: appendReason,
+    },
+    reconciliation: { ...reconciliation, recorded: reconciliationRecorded },
+    spine_path: spinePath(slug),
+    supabase: persisted,
     gaps,
     next_steps: nextSteps,
   };
@@ -235,15 +414,32 @@ async function main() {
   const counts = events.reduce((m, e) => ({ ...m, [e.status]: (m[e.status] || 0) + 1 }), {});
   console.log(JSON.stringify({
     slug,
-    pixel: { firing: counts.healthy || 0, partial: counts.partial || 0, missing: counts.missing || 0, stale: counts.stale || 0, never_fired: counts.never_fired || 0 },
+    data_source: out.data_source,
+    pixel: {
+      firing: counts.healthy || 0, partial: counts.partial || 0, missing: counts.missing || 0,
+      stale: counts.stale || 0, never_fired: counts.never_fired || 0, unknown: counts.unknown || 0,
+    },
+    emq: {
+      dataset_avg_score: snapshot.dataset_avg_score,
+      scored_events: snapshot.scored_events,
+      unknown_events: snapshot.unknown_events,
+      snapshots_in_series: spineSummary(slug).samples.emq_snapshots,
+      declining: trends.filter((t) => t.direction === "declining").map((t) => t.event_name),
+    },
+    reconciliation: reconciliationRecorded
+      ? { coverage_ratio: reconciliation.coverage_ratio, gap: reconciliation.gap, verdict: reconciliation.verdict }
+      : { recorded: false, reason: "no --observed count supplied; conversions in reports remain platform-reported" },
     gaps_count: gaps.length,
     test_event_fired: testEvent.fired,
     path: outPath,
+    spine: out.spine_path,
     next: gaps.length ? "share capi_report.json with the dev to close the gaps" : "CAPI redundancy looks healthy",
   }, null, 2));
 }
 
-main().catch((e) => {
-  console.error("[capi-setup] FATAL:", e.message);
-  process.exit(1);
-});
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main().catch((e) => {
+    console.error("[capi-setup] FATAL:", e.message);
+    process.exit(1);
+  });
+}

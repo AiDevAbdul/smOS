@@ -10,9 +10,36 @@ formulas or thresholds at runtime.
 |---|---|---|
 | Competitor **ads** (creatives, offers, spend signals) | `/research`, `/creative-intel` | Meta Ad Library (`ads_archive`) |
 | Competitor **organic** (followers, growth, cadence, engagement, formats) | **`/listening`** | IG Business Discovery |
-| Brand **mentions / keywords / sentiment** | **`/listening`** | IG `/tags`, optional 3rd-party export |
+| Brand **tagged** mentions | **`/listening`** | IG `/tags` (tagged-only by construction) |
+| Brand **untagged** mentions / keywords / hashtags | **`/listening`** | IG Hashtag Search, FB own-post comments, key-gated web index, optional 3rd-party export |
+| **Share of voice**, **crisis detection** | **`/listening`** | Derived from the above + the per-client time series |
 
 `/listening` is the organic complement. Never duplicate ads analysis here.
+
+## 1b. The coverage discipline (E5)
+
+Third-party listening tools imply full-web coverage. smOS has nothing like it, so every
+number it produces is qualified:
+
+1. **An unreached source is `null`, never `0`.** `0` means "we looked and found nothing".
+   The snapshot schema now *rejects* a non-null count on a source whose status isn't
+   `ok`/`partial`.
+2. **Every total or share off a partial/truncated source is a FLOOR** and carries
+   `is_floor: true` plus the `basis_platforms` it was computed over.
+3. **Unreachable platforms are still listed** (TikTok, X, LinkedIn, YouTube, Reddit) so
+   their absence cannot be read as silence.
+4. **Missing data is removed from the denominator**, never scored as good news — the same
+   rule `/crm health` follows.
+
+## 1c. Tagged vs untagged
+
+| | Definition | Why it matters |
+|---|---|---|
+| **Tagged** | The client's IG account was @-tagged (or the source is tagged-only) | Attributable by construction; the easy half, and the only half IG `/tags` can see |
+| **Untagged** | Surfaced by a keyword / hashtag / web query | Where real reputation lives. Attributable **only** when a `brand_terms` entry appears in the text — otherwise it counts toward a competitor, not the client |
+
+This is why `brand_terms` is the load-bearing watchlist field: with none, the client's own
+share of voice is `null`, not 0.
 
 ## 2. Benchmark formulas (encoded in `scripts/lib/organic_bench.js`)
 
@@ -108,9 +135,42 @@ Followers + real metrics present; growth honestly `null` (not derivable from one
 ```
 Round numbers with no API source and a fabricated 30d growth — forbidden.
 
+## 5. Crisis detection (encoded in `scripts/lib/listening_depth.js`)
+
+Rule-based, no model call. Three weighted signals, each scored **only when its own data
+exists**; a missing signal leaves the denominator, it does not score zero.
+
+| Signal | Weight | Score 1.0 | Score 0.5 | Data needed |
+|---|---|---|---|---|
+| `volume_spike` | 3 | ≥3× the rolling baseline mean (or ≥3 mentions against a flat-zero baseline) | ≥2× | current volume + a sufficient baseline |
+| `negative_skew` | 3 | ≥50% of classified mentions negative | ≥30% | ≥5 mentions with a sentiment verdict |
+| `velocity` | 2 | delta ≥ 2σ of the baseline | doubled vs the prior point | a comparable preceding point |
+
+- **Volume** is the **brand-attributable** mention count, not every matched mention.
+- **Baseline** = trailing `--baseline-window` (default 14) points, prior points only —
+  the current capture is appended *after* detection so it cannot inflate its own baseline.
+- **Minimum baseline: `MIN_BASELINE_POINTS` = 5.** Fewer ⇒ `severity: null`,
+  `status: "insufficient_data"`. Crisis never fires off one datapoint.
+- A **zero baseline yields no ratio** — undefined, not infinite.
+- `score` = Σ(score × weight) / Σ(weight of scored signals).
+  `confidence` = scored weight / total weight (8).
+
+| `score` | `severity` |
+|---|---|
+| ≥ 0.75 | `critical` |
+| ≥ 0.50 | `elevated` |
+| > 0 | `watch` |
+| 0 | `none` |
+
+`severity_provisional: true` when `confidence < 0.5` — a hint, not a finding.
+`requires_human: true` on `elevated`/`critical`: smOS surfaces evidence and **never**
+auto-replies, auto-pauses, or auto-posts in response to a crisis signal.
+
 ## Keeping current
 
 - Engagement/cadence bands are advisory benchmarks; revisit if IG norms shift.
+- Crisis weights/bands are heuristics, not statistics — tune per client only with a
+  recorded reason, and keep §5 and `listening_depth.js` in lockstep.
 - If IG deprecates a Business Discovery field or `/tags`, update `api-reference.md`
   and the formula table here together.
 - **Last verified:** 2026-06-22

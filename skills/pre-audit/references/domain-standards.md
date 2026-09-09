@@ -159,7 +159,13 @@ expected acquisitions per month → extrapolate to quarterly revenue.
 Given revenue goal → work backward using target ROAS (1.86× DTC average) →
 derive required ad spend → gap to current spend.
 
-### Industry benchmarks (Meta, 2025)
+### Benchmarks: vertical + geo, never one flat table
+
+All values live in `scripts/meta-ad-library/benchmarks.json` and are read through
+`benchmarks.py`. Nothing here is hardcoded in a renderer.
+
+**The cross-vertical floor** (`global.metrics`) — the fallback, and the only thing
+shown when no vertical resolves:
 
 | Metric | Value | Notes |
 |---|---|---|
@@ -168,6 +174,40 @@ derive required ad spend → gap to current spend.
 | CPL | $27.66 | 60% cheaper than Google Ads ($70.11) |
 | Carousel ER | 0.55% | Best engagement-rate format on Instagram |
 | Ad survival > 60d | 11.3% | Only 11.3% of ads run past 60 days |
+
+**The vertical table** (`verticals`, 18 rows: insurance → education) carries CPM, CPC,
+CTR and CPA per category, plus `vertical_aliases` so free text (`hvac`, `dental`,
+`shopify`, `pizza`) lands on the right row. **The geo table** (`geos`, 52 countries)
+carries CPM and a `cpm_index` relative to the US base.
+
+`resolve(vertical, geo)` returns a metric set where every figure states its own
+`basis`, because **no public source we have holds an observed vertical-by-geo cell**:
+
+| basis | Meaning | Rendered badge |
+|---|---|---|
+| `vertical_observed` | the source's own figure for this category (mixed-geo blend) | Vertical |
+| `geo_derived` | vertical figure × the market's CPM index — an estimate | Derived |
+| `global_default` | no vertical row applied; the cross-vertical floor | Cross-vertical |
+
+Four rules the code enforces, each with a test:
+
+1. **Only CPM is geo-adjusted.** There is no published CPC or CPA index; scaling them
+   by the CPM index would imply click and conversion behaviour move with impression
+   price. CPC/CTR/CPA keep the source's mixed-country basis and say so.
+2. **An unmeasured market stays unmeasured.** Pakistan, Bangladesh, Nigeria, Turkey and
+   Indonesia are absent from the source table (`geo_gaps`) — the index is `null` and no
+   neighbouring country is substituted. For PKR clients, use first-party account data.
+3. **A vertical with no defensible proxy falls back loudly.** `nonprofit`/`ngo`/`charity`
+   are mapped to `null` on purpose: donation-objective economics are not in the sample,
+   so borrowing a commercial row would be fabrication.
+4. **Untailored is stated, not implied.** With no `--vertical`, the report's scope line
+   reads "Cross-vertical — not tailored to this vertical".
+
+**Source confidence:** every number is a published third-party aggregate, not smOS
+account data (`confidence.tier: third_party_aggregate`). Aggregators disagree materially
+— US CPM is quoted from $16.08 to $23.00 for the same period — so the conflict is
+recorded in `disagreement` and surfaced as a report caveat. Refresh quarterly and bump
+`refreshed`.
 
 ---
 

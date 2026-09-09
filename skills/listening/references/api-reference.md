@@ -50,6 +50,49 @@ Docs:
 
 Docs: Graph API docs root (above). `/tags` is part of the Instagram Platform Graph API.
 
+## 2b. IG Hashtag Search (UNTAGGED mention discovery) — `--hashtag-search`
+
+The only first-party path to a mention that does **not** @-tag the client. Two hops:
+
+- **Resolve:** `GET /ig_hashtag_search?user_id={our-ig-business-id}&q={hashtag}` → `{data:[{id}]}`
+- **Read:** `GET /{ig-hashtag-id}/recent_media?user_id={our-ig-business-id}&fields=id,caption,permalink,timestamp,media_type,like_count,comments_count&limit=25`
+
+Documented ceilings (all reported in the run's `ig_hashtag` coverage row, never hidden):
+
+| Constraint | Effect on coverage |
+|---|---|
+| Public accounts + top-level media only | Private accounts, stories, comments and reels-only-in-DM content are invisible |
+| ~24h recency window on `recent_media` | A run is a *sample of now*, not a historical search — trends come from stacking runs |
+| **30 unique hashtags per IG user per rolling 7 days** | Why `--hashtag-search` is opt-in. Keep the watchlist's hashtag list tight |
+| Only hashtags you queried | A mention with no watched hashtag is unreachable — coverage stays `partial` |
+
+A hashtag that fails to resolve or errors is recorded in the coverage row's `reason`; the
+remaining hashtags still run.
+
+## 2c. FB own-post comments (as far as FB allows) — `--fb-comments`
+
+- **Call:** `GET /{page-id}/feed?fields=id,permalink_url,comments.limit(25){id,message,from,created_time}&limit=15`
+- **Why only this:** the Graph API exposes **no public keyword or mention search on
+  Facebook**. A post on a stranger's Page or in a Group is unreachable, full stop. This
+  edge is the ceiling, and the coverage row says so.
+
+## 2d. Web search (outside Meta, key-gated) — `--web-search`
+
+- **Client:** `scripts/lib/web_search.js` → `POST https://api.tavily.com/search`
+  (Node twin of the `/pre-audit` pipeline's `scripts/meta-ad-library/tavily.py`).
+- **Auth:** `TAVILY_API_KEY`. Missing key ⇒ coverage `unavailable` with the reason —
+  never a silent skip, never a fabricated result.
+- **What it is:** an index of public pages matching the queried brand terms/keywords. It
+  can surface a Reddit thread or a news article that never @-tagged the client.
+- **What it is not:** a per-platform census. It cannot enumerate TikTok, X or LinkedIn
+  mentions, and those platforms remain `unavailable` in the coverage report regardless.
+
+## 2e. Platforms with NO reachable listening API
+
+`NO_API_PLATFORMS` in `scripts/lib/listening_depth.js` — TikTok, X, LinkedIn, YouTube,
+Reddit. Each is emitted every run as `status:"unavailable"`, `mentions:null`, with the
+reason. They are listed *precisely so* their absence cannot be read as zero mentions.
+
 ## 3. Errors & rate limits
 
 | Resource | URL | Use For |
@@ -73,4 +116,10 @@ stubs on persistent failure.
 - Re-confirm v25.0 is current at the Versions list before bumping `API_VERSION`.
 - If Business Discovery field names or limits change, update §1 and
   `domain-standards.md` §2 together.
-- **Last verified:** 2026-06-22
+- If the IG Hashtag Search quota or recency window changes, update §2b **and** the
+  coverage `limitation` strings in `scripts/lib/listening_depth.js` together — the
+  coverage row is what the client actually reads.
+- **Last verified:** 2026-06-22 for §1/§2/§3. §2b–§2e added 2026-09-09 describing the
+  calls `listening.js` makes; their doc pages were **not** re-fetched at that date —
+  re-verify the hashtag quota against the Instagram Platform docs before quoting it to
+  a client.

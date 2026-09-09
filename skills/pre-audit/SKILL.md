@@ -75,6 +75,7 @@ Gather context before acting (do not ask the user for what is discoverable):
    node skills/pre-audit/pre-audit.js {slug} --collect \
      --fb <fb_url> [--ig <handle>] [--site <site_url>] \
      [--competitor <url> …] [--country US] [--days 90] \
+     [--vertical <key>] [--geo <ISO2>] \
      --business "<Name>" [--niche-html <path>]
    ```
    This scrapes → writes `signals.csv` → derives the JSONs (with the 0–100 score) →
@@ -100,7 +101,7 @@ hand-entered rows identically. Never fabricate: mark unreachable signals with a 
 
 ## Input / Output Specification
 
-**Inputs (to the wrapper):** positional `<slug>`; flags `--business "Name"` (default = slug), `--niche-html <path>` (optional), `--no-crm` (skip CRM write). Required files in `prospects/{slug}/`: `page_audit.json`, `competitor_summary.json`, `synthesis.json` — the wrapper exits `2` if any are missing.
+**Inputs (to the wrapper):** positional `<slug>`; flags `--business "Name"` (default = slug), `--niche-html <path>` (optional), `--no-crm` (skip CRM write), `--vertical <key>` + `--geo <ISO2>` (benchmark tailoring, applied on `--collect`/`--rebuild`; `--geo` defaults to `--country`). Required files in `prospects/{slug}/`: `page_audit.json`, `competitor_summary.json`, `synthesis.json` — the wrapper exits `2` if any are missing.
 
 **Outputs:** `prospects/{slug}/pre_audit.html` (interactive sales artifact), `prospects/{slug}/pre_audit.pdf` (shareable; skipped if Playwright absent), CRM deal advanced to `audited` with `links.pre_audit` set, best-effort `prospect_audits` row. The wrapper prints a JSON object (`{slug, business, html, pdf, crm, persisted, next}`).
 
@@ -114,7 +115,8 @@ hand-entered rows identically. Never fabricate: mark unreachable signals with a 
 | Whether IG / niche file / ads exist (each optional, fail-soft) | Scraping headers (mobile UA, `en_US` locale cookie, `X-IG-App-ID`) |
 | Outspend ratio, score, tiered wins/gaps, creative matrix scores | Standardized HTML template (9 sections, warm editorial design) |
 | Tracking stack found (Pixel/GTM/GA4) | CRM transition target = `audited`; output paths under `prospects/{slug}/` |
-| Opportunity sizing inputs (budget, revenue goal) | Industry benchmarks: CPA $38.19, ROAS 1.86×, CPL $27.66 |
+| Opportunity sizing inputs (budget, revenue goal) | Benchmark table + resolution rules in `scripts/meta-ad-library/benchmarks.json` |
+| Benchmark scope (vertical row, geo cost index, or the cross-vertical floor) | Basis labeling: `vertical_observed` / `geo_derived` / `global_default` |
 
 ## Domain Standards
 

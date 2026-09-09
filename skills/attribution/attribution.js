@@ -20,6 +20,15 @@ import { resolveToken } from "../../scripts/lib/tokens.js";
 import { createGraph } from "../../scripts/lib/meta-graph.js";
 import { mapLiftStudy } from "../../scripts/lib/lift_study.js";
 import { insert, clientIdBySlug, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import {
+  spineSummary,
+  spinePath,
+  measurementSpineMarkdown,
+  reconcileConversions,
+  recordReconciliation,
+  persistSpineSnapshot,
+  asCount,
+} from "../../scripts/lib/measurement_spine.js";
 import * as P from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -35,6 +44,56 @@ const dir = resolve(P.clientRoot(slug));
 const profilePath = P.clientFile(slug, "client_profile.json");
 if (!existsSync(profilePath)) { console.error(`HALT: ${profilePath} not found.`); process.exit(3); }
 const profile = JSON.parse(readFileSync(profilePath, "utf8"));
+
+// ── measurement spine (E4) ────────────────────────────────────────────────
+// One spine, two skills: /capi-setup writes Event Match Quality + conversion
+// reconciliation into clients/<slug>/data/measurement_spine.json, and this
+// skill READS it (JSON handoff — it never re-pulls the dataset). An
+// incrementality number published on top of a dataset matching 2/10, or on
+// platform-reported conversions nobody has reconciled, now says so.
+const argv = process.argv.slice(2);
+const flag = (name) => {
+  const eq = argv.find((a) => a.startsWith(`${name}=`));
+  if (eq) return eq.slice(name.length + 1);
+  const i = argv.indexOf(name);
+  if (i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--")) return argv[i + 1];
+  return null;
+};
+
+// `--observed N` records a reconciliation through the SAME writer /capi-setup
+// uses, because CRM-observed conversions usually surface during an
+// incrementality conversation rather than during a pixel check.
+const observedArg = flag("--observed");
+if (observedArg != null) {
+  const rec = reconcileConversions({
+    platform_reported: asCount(flag("--platform-conversions")),
+    observed: asCount(observedArg),
+    platform_source: flag("--platform-conversions") != null ? "--platform-conversions (operator-supplied)" : null,
+    observed_source: flag("--observed-source") || "unstated",
+    observed_audited: argv.includes("--observed-audited"),
+    event: flag("--event"),
+    window: flag("--window") || (periodLabel()),
+    recorded_by: "attribution",
+  });
+  recordReconciliation(slug, rec);
+  await persistSpineSnapshot(slug, { reconciliation: rec });
+  console.error(`attribution: recorded reconciliation (coverage_ratio=${rec.coverage_ratio ?? "null"}, verdict=${rec.verdict}) → ${spinePath(slug)}`);
+}
+
+function periodLabel() {
+  const s = process.env.SMOS_PERIOD_START, e = process.env.SMOS_PERIOD_END;
+  return s || e ? `${s || "?"}→${e || "?"}` : null;
+}
+
+const spine = spineSummary(slug);
+
+// `--spine` is a read-only inspection mode: print what the spine currently
+// holds and exit. Deliberately does NOT require lift data, so measurement
+// quality can be checked before a lift study exists.
+if (argv.includes("--spine")) {
+  console.log(JSON.stringify({ ...spine, spine_path: spinePath(slug) }, null, 2));
+  process.exit(0);
+}
 
 async function pullLiftStudy(studyId, token) {
   const graph = createGraph(token);
@@ -79,7 +138,12 @@ if (!rows.length) {
 }
 
 const report = schema.normalize({ client_slug: slug, method, rows,
-  period_start: periodStart, period_end: periodEnd });
+  period_start: periodStart, period_end: periodEnd,
+  // The measurement context this lift number sits on top of. Carried in the
+  // report (schema.normalize preserves extra keys) so a consumer — /report,
+  // /portal, /bundle — gets the EMQ + reconciliation state with the lift, not
+  // separately, and never has to re-derive either.
+  measurement_spine: { ...spine, spine_path: spinePath(slug) } });
 
 const v = schema.validate(report);
 if (!v.ok) { console.error("attribution_report INVALID:\n  - " + v.errors.join("\n  - ")); process.exit(5); }
@@ -94,6 +158,10 @@ const md = [
   `|---|--:|--:|--:|--:|`,
   ...report.rows.map((r) =>
     `| ${r.entity_name || r.entity_id} | ${r.last_click_conversions} | ${r.incremental_conversions ?? "—"} | ${r.incremental_cpa != null ? "$" + r.incremental_cpa : "—"} | ${r.incrementality_factor ?? "—"} |`),
+  ``,
+  `_Last-click conversions are **platform-reported**. Incremental figures come from the declared method (${report.method})._`,
+  ``,
+  measurementSpineMarkdown(spine),
 ].join("\n");
 
 writeHtmlAndPdf(P.clientFile(slug, "attribution_report.md", { forWrite: true }), md, { title: `Incrementality — ${slug}`, subtitle: report.method });
@@ -104,4 +172,10 @@ if (supabaseConfigured()) {
     await insert("lift_studies", [{ client_id, slug, method: report.method, report }]);
   } catch (e) { console.error("supabase persist skipped:", e.message); }
 }
-console.log(`attribution: ${report.rows.length} rows · method=${report.method} → attribution_report.{json,html,pdf}`);
+const emqNote = spine.emq?.dataset_avg_score != null
+  ? `EMQ ${spine.emq.dataset_avg_score}/10`
+  : "EMQ unknown (run /capi-setup)";
+const recNote = spine.reconciliation?.coverage_ratio != null
+  ? `coverage ${spine.reconciliation.coverage_ratio}`
+  : "conversions unreconciled (platform-reported)";
+console.log(`attribution: ${report.rows.length} rows · method=${report.method} · ${emqNote} · ${recNote} → attribution_report.{json,html,pdf}`);

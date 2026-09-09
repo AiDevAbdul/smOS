@@ -22,6 +22,12 @@
  *   # full run: scrape → csv → json → render
  *   node skills/pre-audit/pre-audit.js <slug> --collect --fb <url> [--ig <h>] [--site <url>] \
  *        [--competitor <url> ...] [--country US] [--days 90] --business "Acme Co"
+ *
+ * Benchmark tailoring (applies on --collect or --rebuild):
+ *   [--vertical auto_repair] [--geo GB]
+ *   --vertical picks the benchmark row (see scripts/meta-ad-library/benchmarks.json
+ *   `verticals` + `vertical_aliases`); --geo cost-indexes CPM and defaults to
+ *   --country. Omit them and every figure is labeled cross-vertical.
  */
 import { existsSync, readFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -74,7 +80,14 @@ async function main() {
   // ── Stage 2+3: NORMALIZE + BUILD (on --collect or --rebuild) ──
   if (has("collect") || has("rebuild")) {
     py("normalize.py", [slug], { code: 5, label: "normalize" });
-    py("build.py", [slug], { code: 6, label: "build" });
+    // --vertical/--geo tailor the benchmark table. Omitting --vertical is safe:
+    // the report then labels every figure cross-vertical rather than implying
+    // it is this category's number. --geo defaults to the collect manifest's
+    // country inside build.py.
+    const bArgs = [slug];
+    if (flag("vertical")) bArgs.push("--vertical", String(flag("vertical")));
+    if (flag("geo") || flag("country")) bArgs.push("--geo", String(flag("geo") || flag("country")));
+    py("build.py", bArgs, { code: 6, label: "build" });
   }
 
   // ── Verify the render inputs exist (data/ is canonical) ──

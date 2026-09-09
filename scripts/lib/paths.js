@@ -129,6 +129,9 @@ export const DATA_FILES = [
   "inbox.json",
   "refresh_briefs.json",
   "monthly_health_report.json",
+  // E4 — the measurement spine: the EMQ time series + modeled-vs-observed
+  // reconciliations that /capi-setup writes and /attribution reads.
+  "measurement_spine.json",
 ];
 
 /** Rendered deliverables: legacy flat basename (no ext) → kebab artifact folder. */

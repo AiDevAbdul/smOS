@@ -289,6 +289,22 @@ CREATE TABLE lift_studies (
 );
 CREATE INDEX idx_lift_studies_client ON lift_studies (client_id, created_at DESC);
 
+-- ─── measurement_snapshots (E4 — measurement spine) ─────────────────────────
+-- One row per /capi-setup EMQ capture and/or modeled-vs-observed
+-- reconciliation. The on-disk clients/<slug>/data/measurement_spine.json stays
+-- the source of record; this table is a best-effort mirror for cross-client
+-- trend queries. Either jsonb column may be null (a run may capture only one).
+CREATE TABLE measurement_snapshots (
+  id             uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  client_id      uuid REFERENCES clients (id) ON DELETE CASCADE,
+  slug           text,
+  captured_at    timestamptz NOT NULL,
+  emq            jsonb,                         -- one emq_series snapshot
+  reconciliation jsonb,                         -- one reconciliation record
+  created_at     timestamptz DEFAULT now()
+);
+CREATE INDEX idx_measurement_snapshots_client ON measurement_snapshots (client_id, captured_at DESC);
+
 -- ─── listening_snapshots (Phase 3.3 — social listening) ─────────────────────
 CREATE TABLE listening_snapshots (
   id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -339,6 +355,7 @@ ALTER TABLE approvals ENABLE ROW LEVEL SECURITY;
 ALTER TABLE inbox_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE content_plans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lift_studies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE measurement_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE listening_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE assets ENABLE ROW LEVEL SECURITY;
 

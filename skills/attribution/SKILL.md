@@ -1,6 +1,6 @@
 ---
 name: attribution
-description: Use this skill to measure incremental conversions and conversion lift for a client's Meta ads — shifting reporting off naive last-click onto sourced incrementality. This skill should be used when the user asks "are the ads actually causing sales", wants conversion-lift / incrementality numbers, or invokes `/attribution {slug}`. Pulls a Meta Conversion Lift study (or a provided lift export), computes incremental conversions, incremental CPA, and the gap vs last-click per campaign, and ships an HTML+PDF report. Fail-closed: refuses to publish a "lift" number with no measurement method attached.
+description: Use this skill to measure incremental conversions and conversion lift for a client's Meta ads — shifting reporting off naive last-click onto sourced incrementality. This skill should be used when the user asks "are the ads actually causing sales", wants conversion-lift / incrementality numbers, or invokes `/attribution {slug}`. Pulls a Meta Conversion Lift study (or a provided lift export), computes incremental conversions, incremental CPA, and the gap vs last-click per campaign, and ships an HTML+PDF report. Reads the shared measurement spine written by `/capi-setup` so every lift number carries the Event Match Quality it was matched at and whether its conversions were reconciled against an audited source; `--spine` inspects that record on its own. Fail-closed: refuses to publish a "lift" number with no measurement method attached.
 ---
 
 # /attribution — Incrementality / Conversion Lift (Phase 3.1)
@@ -18,7 +18,10 @@ back-filled.
 - Pull the study via the shared Graph client and map measurable cells to canonical rows (`scripts/lib/lift_study.js`).
 - Compute, per campaign: last-click conversions, incremental conversions, incremental CPA, lift factor.
 - Normalize + fail-closed validate against `schemas/attribution_report.js`, then write `attribution_report.json` + `.md` + `.html` + `.pdf`.
-- Best-effort persist the report to the Supabase `lift_studies` table.
+- Read the **measurement spine** (`clients/{slug}/data/measurement_spine.json`, written by `/capi-setup`) and embed it in the report as `measurement_spine` + a "Measurement quality" section: current EMQ per event with trend/direction, and the latest modeled-vs-observed reconciliation with each side labeled platform-reported or audited. It is consumed, never re-derived (JSON handoff).
+- `--spine`: print the spine summary and exit — read-only, needs no lift data, so measurement quality can be checked before a study exists.
+- `--observed N` (+ `--observed-source`, `--observed-audited`, `--platform-conversions N`): record a modeled-vs-observed reconciliation into the spine through the same writer `/capi-setup` uses.
+- Best-effort persist the report to the Supabase `lift_studies` table (and a reconciliation to `measurement_snapshots`).
 
 ## What This Skill Does NOT Do
 
@@ -26,6 +29,8 @@ back-filled.
 - Does NOT make scaling/pausing decisions from lift — that is `/scale` / `/rules`.
 - Does NOT design or launch the holdout/test cells of a lift study (done in Meta Experiments UI / Ads Manager — manual).
 - Does NOT set up the pixel/CAPI events that conversions are measured against — that is `/capi-setup`.
+- Does NOT pull Event Match Quality itself, and never invents one: if `/capi-setup` has not captured EMQ, the report says EMQ is **unknown** rather than omitting or assuming it.
+- Does NOT treat the spine as a substitute for measured incrementality — with no lift rows it still HALTs (exit 4).
 
 ## Before Implementation
 
@@ -65,8 +70,8 @@ Run: `node skills/attribution/attribution.js <slug> [--method=M] [--study-id=ID]
 
 ## Input / Output Specification
 
-**Inputs:** arg `<slug>` (required); flags `--method=`, `--study-id=`; env `SMOS_OFFLINE`, `SMOS_LIFT_STUDY_ID`, `SMOS_PERIOD_START`, `SMOS_PERIOD_END`, token vars via `scripts/lib/tokens.js`; files `clients/{slug}/client_profile.json` (required), `clients/{slug}/lift_export.json` (optional fallback).
-**Outputs:** `clients/{slug}/attribution_report.json` (shape: `schemas/attribution_report.js`), `attribution_report.md|html|pdf`, `lift_study_raw.json` (when a live study is pulled); best-effort row in Supabase `lift_studies`.
+**Inputs:** arg `<slug>` (required); flags `--method=`, `--study-id=`, `--spine` (print the measurement spine and exit 0), `--observed=N`, `--observed-source=`, `--observed-audited`, `--platform-conversions=N`, `--event=`, `--window=`; env `SMOS_OFFLINE`, `SMOS_LIFT_STUDY_ID`, `SMOS_PERIOD_START`, `SMOS_PERIOD_END`, token vars via `scripts/lib/tokens.js`; files `clients/{slug}/client_profile.json` (required), `clients/{slug}/lift_export.json` (optional fallback).
+**Outputs:** `clients/{slug}/attribution_report.json` (shape: `schemas/attribution_report.js`, plus a `measurement_spine` block), `attribution_report.md|html|pdf` (with the "Measurement quality" section), `lift_study_raw.json` (when a live study is pulled), appended reconciliations in `clients/{slug}/data/measurement_spine.json` (with `--observed`); best-effort rows in Supabase `lift_studies` / `measurement_snapshots`.
 **Exit codes:** `2` no slug · `3` missing profile · `4` no measured incremental data (HALT) · `5` schema invalid · `0` success.
 (Full schemas, example payloads, edge cases: `references/io-contract.md`.)
 
@@ -88,6 +93,8 @@ Run: `node skills/attribution/attribution.js <slug> [--method=M] [--study-id=ID]
 - [ ] Show last-click side-by-side with incremental so the gap is visible.
 - [ ] Default new entities and any account writes to PAUSED — this skill is read-only on the ad account regardless.
 - [ ] Ship HTML + PDF (per CLAUDE.md every client-facing report does).
+- [ ] Label last-click/conversion counts as **platform-reported** unless a reconciliation against an audited source says otherwise.
+- [ ] State EMQ as `null`/unknown when the spine has no capture — never as a score, never silently dropped.
 
 ### Must Avoid
 - Synthesizing or back-filling an incremental figure from last-click.
@@ -114,10 +121,12 @@ Run: `node skills/attribution/attribution.js <slug> [--method=M] [--study-id=ID]
 | Schema invalid | Print each error, exit 5 |
 | Meta API error | Surfaced by `meta-graph.js` with code/type/`fbtrace_id`; token-expiry (190) is non-retryable |
 | Supabase unconfigured / insert fails | Log "persist skipped", still succeed (report files are the deliverable) |
+| No measurement spine yet | Report says EMQ unknown + "conversions are platform-reported and unreconciled"; run `/capi-setup` to populate it |
+| Corrupt `measurement_spine.json` | Summary carries `corrupt: true`; the report still renders and claims nothing about EMQ |
 
 ## Dependencies & Security
 
-- **Reuses:** `schemas/attribution_report.js`, `scripts/lib/lift_study.js`, `scripts/lib/meta-graph.js` (v25.0, guards + retry), `scripts/lib/tokens.js`, `scripts/lib/md_to_html.js` (→ `scripts/render_pdf.py`), `scripts/lib/supabase.js`, `scripts/lib/load-env.js`.
+- **Reuses:** `schemas/attribution_report.js`, `scripts/lib/measurement_spine.js` (the spine shared with `/capi-setup`), `scripts/lib/lift_study.js`, `scripts/lib/meta-graph.js` (v25.0, guards + retry), `scripts/lib/tokens.js`, `scripts/lib/md_to_html.js` (→ `scripts/render_pdf.py`), `scripts/lib/supabase.js`, `scripts/lib/load-env.js`.
 - **External APIs:** Meta Graph API v25.0 — Conversion Lift study node read only (no account mutations). Rate limits + error codes in `references/api-reference.md`.
 - **Secrets:** access tokens resolved via env / `scripts/lib/tokens.js` (`META_ACCESS_TOKEN_<SLUG>` preferred, global `META_ACCESS_TOKEN` discouraged) — never hardcoded or logged. PDF rendering requires `playwright` + Chromium (`pip install playwright && python -m playwright install chromium`).
 
@@ -135,7 +144,7 @@ Run: `node skills/attribution/attribution.js <slug> [--method=M] [--study-id=ID]
 For patterns not covered here, fetch the official docs above, then apply the same
 conventions. See also `skills/references-shared.md` for the canonical doc-URL map.
 
-**Last verified:** 2026-06-22
+**Last verified:** 2026-09-09
 
 ## Reference Files
 

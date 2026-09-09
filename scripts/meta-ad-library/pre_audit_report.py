@@ -779,20 +779,60 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
             f'</p></div></div>'
         )
 
-    # ── Industry benchmarks table (sourced + dated, from benchmarks.json) ──
+    # ── Benchmarks table (vertical/geo resolved, sourced + dated) ──
+    # build.py resolves this into synthesis.json; we render what it carries and
+    # only fall back to a cross-vertical resolve for a pre-existing synthesis
+    # that predates the vertical/geo table. Each row states its own basis so a
+    # cross-vertical or derived figure can never read as a measured one for the
+    # prospect's vertical and country.
     _bench_data = _bench.load_benchmarks()
+    bm = syn.get("benchmarks") or _bench.resolve(None, None)
+    _BASIS_LABEL = {
+        "vertical_observed": ("Vertical", "good"),
+        "geo_derived": ("Derived", "warn"),
+        "global_default": ("Cross-vertical", "neutral"),
+    }
+
+    def _bench_row(label, display, basis, note, source, source_date):
+        blabel, btone = _BASIS_LABEL.get(basis, ("Cross-vertical", "neutral"))
+        cite = f' <span class="muted small">({e(source)}, {e(str(source_date))})</span>' if source else ""
+        return (f'<tr>'
+                f'<td class="dim-label">{e(label)}</td>'
+                f'<td class="mono" style="font-weight:700">{e(display)}</td>'
+                f'<td class="mono small"><span class="ds-badge ds-badge--{btone}">{e(blabel)}</span></td>'
+                f'<td class="muted small">{e(note)}{cite}</td>'
+                f'</tr>')
+
+    _vsrc = _bench_data.get("verticals", {}).get("_source", {})
     bench_rows = "".join(
-        f'<tr>'
-        f'<td class="dim-label">{e(m.get("label", key))}</td>'
-        f'<td class="mono" style="font-weight:700">{e(m.get("display", ""))}</td>'
-        f'<td class="muted small">{e(m.get("note", ""))} '
-        f'<span class="muted small">({e(m.get("source", ""))}, {e(str(m.get("source_date", "")))})</span>'
-        f'</td>'
-        f'</tr>'
-        for key, m in _bench_data.get("metrics", {}).items()
+        _bench_row(m["label"], m["display"], m["basis"], m.get("note", ""),
+                   _vsrc.get("source"), _vsrc.get("source_date"))
+        for m in bm.get("metrics", {}).values()
     )
-    bench_asof = e(str(_bench_data.get("as_of", "")))
-    bench_refreshed = e(str(_bench_data.get("refreshed", "")))
+    # The cross-vertical block always renders beneath: it is the honest floor,
+    # and for an unmapped vertical it is the ONLY thing shown.
+    bench_rows += "".join(
+        _bench_row(m.get("label", key), m.get("display", ""), "global_default",
+                   m.get("note", ""), m.get("source"), m.get("source_date"))
+        for key, m in bm.get("global", {}).items()
+    )
+
+    _bv, _bg = bm.get("vertical", {}), bm.get("geo", {})
+    if bm.get("is_tailored"):
+        _scope = f'{_bv.get("label")}'
+        if _bv.get("match") == "alias":
+            _scope += f' (closest match for “{_bv.get("input")}”)'
+        _scope += f' · {_bg.get("label")}' if _bg.get("label") else ""
+        if bm.get("is_geo_adjusted"):
+            _scope += f' — CPM cost-indexed ×{_bg.get("cpm_index"):g}'
+        elif _bg.get("match") == "gap":
+            _scope += " — market not covered by the source table, no geo adjustment"
+    else:
+        _scope = "Cross-vertical — not tailored to this vertical"
+    bench_scope = e(_scope)
+    bench_caveats = "".join(f'<li class="muted small">{e(c)}</li>' for c in bm.get("caveats", []))
+    bench_asof = e(str(bm.get("as_of") or _bench_data.get("as_of", "")))
+    bench_refreshed = e(str(bm.get("refreshed") or _bench_data.get("refreshed", "")))
 
     # ── FB about + IG bio snippets ──
     fb_about = (fb.get("about", "") or "")[:120]
@@ -990,14 +1030,16 @@ def build_html(business: str, slug: str, page: dict, comp: dict, syn: dict,
       <h2 class="section-heading">Opportunity Sizing</h2>
       <p class="section-sub">Industry benchmarks anchor the projection. Prospect-specific figures populated from stated budget and revenue goal.</p>
       <div class="card" style="margin-bottom:10px">
-        <div class="card-label">Industry Benchmarks — Meta {bench_asof}</div>
+        <div class="card-label">Benchmarks — Meta {bench_asof}</div>
+        <div class="mono small muted" style="margin-top:4px">Scope: {bench_scope}</div>
         <div class="table-wrap" style="margin-top:12px;box-shadow:none;border:none">
           <table>
-            <thead><tr><th>Metric</th><th>Value</th><th>Source &amp; notes</th></tr></thead>
+            <thead><tr><th>Metric</th><th>Value</th><th>Basis</th><th>Source &amp; notes</th></tr></thead>
             <tbody>{bench_rows}</tbody>
           </table>
         </div>
-        <div class="cta-footnote" style="margin-top:8px">Benchmarks as of {bench_asof} · last refreshed {bench_refreshed}. Each figure is cited to its published source above.</div>
+        <ul class="bullet-list" style="margin-top:10px">{bench_caveats}</ul>
+        <div class="cta-footnote" style="margin-top:8px">Benchmarks as of {bench_asof} · last refreshed {bench_refreshed}. Each figure is cited to its published source above. <strong>Basis</strong>: “Vertical” is the source's own figure for this category; “Derived” is that figure scaled by the market's relative CPM index — an estimate, not a measured figure for this vertical in this country; “Cross-vertical” is the all-industry fallback.</div>
       </div>
       {opp_sizing_grid}
     </div>

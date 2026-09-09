@@ -134,8 +134,8 @@ D5. **Agency ops dashboard** (sibling to `/portal`): MRR, net revenue retention,
 
 ## GROUP E — Brand production, measurement depth, hardening (~3–4 days)
 
-> **Status 2026-09-09: E1, E2, E3 and E6 (the four hardening items) are DONE.** E4, E5 and
-> E6's pre-audit benchmark table remain. Suite 572 → 615 → **645 green**.
+> **Status 2026-09-09: ALL of Group E is DONE** (E1–E5 plus E6's four hardening items and its
+> pre-audit vertical/geo benchmark table). Suite 572 → 615 → 645 → 717 → **735 green**.
 >
 > - **E1 — real brand-asset rendering.** `scripts/lib/brand_render.js` renders an actual
 >   monogram identity system (primary lockup / mark / wordmark / mono / reverse, SVG+PNG)
@@ -179,21 +179,39 @@ E3. ✅ **DONE (2026-09-09). Verify, don't assume, in setup.**
 - Domain screen is multi-TLD (`com,co,io,net`, `--tlds` override) with `.com` still the gate field; handles roll up into one `handle_consistency` verdict (`true` only when every platform 404s).
 - Tests: `test/verify-url.test.js`, `test/phonetics.test.js`, `test/setup-verify.test.js`, `test/setup-web-cli.test.js` (+30 → 645). Note for future CLI tests: use async `spawn`, not `spawnSync`, when the test itself hosts the HTTP server — `spawnSync` blocks the event loop and the child's request never gets accepted.
 
-E4. **Measurement spine:** track Event Match Quality over time in `skills/capi-setup/` and reconcile modeled-vs-observed conversions, linking to `/attribution` as one spine.
+E4. ✅ **DONE (2026-09-09). Measurement spine.** `scripts/lib/measurement_spine.js` is the single module `/capi-setup` writes and `/attribution` reads (JSON handoff at `clients/<slug>/data/measurement_spine.json`; `measurement_snapshots` DDL added to `scripts/schema.sql`, not yet created live — persistence reports `{persisted:false, reason}` until it is).
+- **EMQ over time:** `parseDatasetQuality()` normalizes Meta's Dataset Quality API (v25.0) across its three response shapes and keeps the match-key coverage breakdown **in the API's own unit** rather than guessing between 0–1 and 0–100. `recordEmqSnapshot` dedupes an identical same-day capture so history can't be padded; bands `great≥8/good≥6/ok≥4/poor` with a 0.1 noise floor, 365-entry cap.
+- **Modeled vs observed:** `reconcileConversions()` → `gap`, `gap_pct`, `coverage_ratio`, verdict, each side labeled `platform_reported` vs `audited|observed_unverified`. The observed count is operator-supplied by design (`--observed`, `--observed-source`, `--observed-audited`) — nothing in the Meta API knows the CRM number; the platform side comes from `/analyze`'s existing `performance_analysis.json` per the Token Efficiency Rules.
+- Honesty invariants, each test-covered: an EMQ Meta didn't return is `null` never 0 (and the dataset average averages only scored events); a trend needs two **real** samples and a failed capture is not one; a zero/unknown denominator ⇒ `coverage_ratio: null` **with the reason**, never `1.0`/`Infinity`; a corrupt spine reports `corrupt: true` rather than "no history".
+- *Deliberate behavior change:* offline/token-less `/capi-setup` now reports event status `unknown` + `data_source: "offline"`. It previously marked every event `never_fired` — an assertion about a pixel it never queried.
+- New flags: `/capi-setup --no-emq --observed N --observed-source <label> --observed-audited --platform-conversions N --event <name> --window <label>`; `/attribution --spine` (read-only inspect) plus the same observed flags. `/attribution` still HALTs exit 4 without measured lift rows — the spine is not a substitute.
+- *Not verified:* the live `/dataset_quality` payload shape. The parser is shape-tolerant and degrades to `unknown` with a reason rather than guessing, but the per-key field names come from Meta's docs, not an observed response.
+- Tests: `test/measurement-spine.test.js` (24) + `test/capi-emq.test.js` (10, real CLI runs, offline).
 
-E5. **Listening depth:** untagged-mention monitoring, keyword/hashtag tracking, cross-platform, share-of-voice, crisis detection in `skills/listening/`.
+E5. ✅ **DONE (2026-09-09). Listening depth.** `scripts/lib/listening_depth.js` (pure calculators: source catalog, term matching, mention normalization with a deterministic `mention_id` + tagged/untagged classification, coverage accounting, `shareOfVoice`, `rollingBaseline`/`sentimentSkew`/`detectCrisis`), `scripts/lib/listening_watchlist.js` (persisted per-client watchlist + append-only time series via `paths.js`), `scripts/lib/web_search.js` (Node twin of the existing Tavily helper, key-gated, fail-soft).
+- **The coverage reality, which the spec understated:** IG `/tags` is *structurally* tagged-only and can never be the untagged path. The only first-party untagged path is **IG Hashtag Search** (`/ig_hashtag_search` → `/{id}/recent_media`) — public top-level posts, ~24h recency, **30 unique hashtags per IG user per rolling 7 days**, which is why it's opt-in behind `--hashtag-search`. **Facebook has no public keyword/mention search**; the ceiling is comments on the client's own Page posts, implemented and labelled as the ceiling. TikTok/X/LinkedIn/YouTube/Reddit have no reachable listening API and are emitted every run as `status:"unavailable"`, `mentions: null`, with a reason. The web path is Tavily-backed and its coverage row says it is an index of public pages, **not a per-platform census**.
+- Consequence: `mention_total` and every SoV share carry `is_floor: true` plus `basis_platforms` and `confidence`; `share_of_voice` returns `no_data`/`no_attributable_mentions` with `null` shares rather than a 0/100 split.
+- **Crisis detection:** 3 weighted signals (volume spike 3 / negative skew 3 / velocity 2). Needs **5 prior time-series points** (else `severity: null`, `status:"insufficient_data"`) and 5 sentiment-classified mentions before skew scores at all — an unmeasured signal leaves the denominator instead of scoring 0; `confidence < 0.5` ⇒ `severity_provisional`; a zero baseline yields no ratio (undefined, not infinite). The time series is idempotent per `captured_at`, so a retry can't fabricate a spike. `elevated`/`critical` sets `requires_human`.
+- `schemas/listening_snapshot.js` gained a fail-closed rule: a coverage row whose status isn't `ok`/`partial` may not carry a non-null `mentions` (and one that ran must carry a number). Pre-E5 snapshots still validate.
+- New flags: `--show-watchlist`, `--add-brand-term/-keyword/-hashtag/-competitor` (repeatable), `--remove`, `--hashtag-search`, `--fb-comments`, `--web-search`, `--baseline-window N`, `--no-timeseries` — all 11 registered in `skills/manifest.json` (the listening entry previously had none). New exits: 6 corrupt watchlist, 7 empty watchlist.
+- *Deviation:* no HTML+PDF renderer. `/listening` writes engine JSON only, like `/inbox`, `/attribution` and `/assets`; `/portal` and `/report` are the rendering consumers. Made explicit in the skill's "does NOT do" list rather than left ambiguous.
+- Tests: `test/listening-depth.test.js`, `test/crisis-detect.test.js`, `test/listening-cli.test.js` (38, offline).
 
-E6. **Engineering hardening** — ✅ the four listed items are DONE (2026-09-09); the pre-audit benchmark table below is the remainder: split the DELETE guard by resource class (allow organic comment deletes, keep campaign deletes blocked) in `guards.js`; add idempotency keys + cleanup to the multi-step IG container flow in `mcp/meta-server/tools/publishing.js`; surface `paginate` 500-row truncation in `meta-graph.js`; add correlation IDs to `logError`. Replace `/pre-audit` flat US benchmarks with a vertical/geo benchmark table.
+E6. ✅ **DONE (2026-09-09). Engineering hardening** — all five items: the four listed above (DELETE by resource class, IG container idempotency + cleanup, visible `paginate` truncation, correlation IDs) plus the pre-audit benchmark table:
+- **Vertical/geo benchmark table** replacing the flat US one. `benchmarks.json` grew from 5 flat metrics to three blocks: `global` (the cross-vertical floor, unchanged), `verticals` (18 rows × CPM/CPC/CTR/CPA + ~60 `vertical_aliases` so `hvac`/`dental`/`shopify`/`pizza` land on the right row), and `geos` (52 countries with a `cpm_index` off the US base). `benchmarks.py resolve(vertical, geo)` returns the set **and how close it actually is**; `build.py --vertical/--geo` resolves once into `synthesis.json.benchmarks` and the renderer reads that (Token Efficiency), falling back to `resolve(None, None)` for a pre-existing synthesis.
+- The finding that shaped the design: **no public source we have holds an observed vertical-by-geo cell.** So each metric carries a `basis` — `vertical_observed` (the source's own mixed-geo figure), `geo_derived` (vertical × CPM index, an estimate), `global_default` — and the report badges every row accordingly with a scope line above the table. Four enforced rules: **only CPM is geo-adjusted** (no published CPC/CPA index exists; scaling them would imply clicks and conversions move with impression price); **an unmeasured market stays unmeasured** (PK/BD/NG/TR/ID are in `geo_gaps` → `cpm_index: null`, no neighbour substituted — notable given PKR retainers); **`nonprofit`/`ngo`/`charity` are mapped to `null` on purpose** (no commercial row is a defensible proxy for donation-objective economics); **untailored is stated** ("Cross-vertical — not tailored to this vertical"), never implied.
+- Sources are third-party aggregates, not smOS account data, and they **disagree materially** — US CPM is quoted from $16.08 to $23.00 for the same period. That conflict is recorded in `disagreement`, the tier is `third_party_aggregate`, and both reach the rendered page as caveats.
+- Tests: `test/pre-audit-benchmarks.test.js` (18 — resolver semantics, build wiring, and three renderer assertions incl. the pre-block-synthesis fallback).
 
 ---
 
 ## Suggested order
 A (cleanup) → B1+B2 (ASC + MER, biggest paid wins) → C1+C2 (real content production + publish) → D1+D2+D3 (recurring revenue + retention) → E (brand/measurement/hardening).
 
-**Status 2026-09-09 (end of session):** A, B, C0, **all of D**, and **E1 + E2 + E3 + E6's
-four hardening items** are done; suite **645 green**. C1–C6 stay deferred by client direction
-(AI content is opt-in and nobody has opted in). **What remains: E4, E5, and E6's last item**
-— replacing `/pre-audit`'s flat US benchmarks with a vertical/geo benchmark table. Each task:
+**Status 2026-09-09 (end of session):** A, B, C0, **all of D** and **all of E** are done;
+suite **735 green**. C1–C6 stay deferred by client direction (AI content is opt-in and nobody
+has opted in) — **that deferred Group C spec is the only remaining work in this plan.** Each
+task:
 branch, implement, add tests, run the full suite in a writable copy, keep it green.
 
 ## Definition of done (per task)

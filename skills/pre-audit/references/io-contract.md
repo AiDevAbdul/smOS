@@ -77,6 +77,8 @@ node skills/pre-audit/pre-audit.js <slug> --collect --fb <url> [--ig <h>] [--sit
 | `--country / --days` | no | `US` / `90` | Ad Library window |
 | `--business "Name"` | no | `<slug>` | report title + CRM `company_name` |
 | `--niche-html <path>` | no | — | embeds the niche playbook section |
+| `--vertical <key>` | no | — | benchmark row (`hvac`, `apparel`, `b2b_saas`, …; aliases in `benchmarks.json`). Applies on `--collect`/`--rebuild`. Omitted ⇒ every figure labeled cross-vertical |
+| `--geo <ISO2>` | no | `--country` | cost-indexes the benchmark CPM (`GB`, `AE`, `DE`, …). An uncovered market (e.g. `PK`) gets no index and no substitute |
 | `--no-crm` | no | off | skip the CRM deal write |
 
 ### Exit codes
@@ -194,6 +196,36 @@ a report built from mostly-empty passes never looks confident. `scored_at` drive
 report timestamp (data-derived, not wall-clock). Industry benchmarks that anchor opportunity
 sizing + 2 score dimensions live in `scripts/meta-ad-library/benchmarks.json` (sourced,
 dated, refreshed quarterly) — never hardcoded.
+
+`synthesis.json` also carries a **`benchmarks`** block, resolved once by `build.py` (from
+`--vertical` + `--geo`/manifest country) so the renderer reads it instead of re-deriving:
+
+```json
+{
+  "benchmarks": {
+    "vertical": { "key": "home_services", "input": "hvac", "match": "alias", "label": "Home Services" },
+    "geo": { "key": "GB", "match": "exact", "label": "United Kingdom", "cpm_index": 0.7345, "band": "very_high" },
+    "metrics": {
+      "cpm": { "label": "CPM", "value": 9.84, "display": "$9.84", "basis": "geo_derived",
+               "geo_adjusted": true, "note": "… Derived estimate, not a measured GB Home Services figure." },
+      "cpc": { "…": "basis: vertical_observed, geo_adjusted: false" }
+    },
+    "global": { "meta_cpl": { "…": "the cross-vertical floor, always present" } },
+    "sources": [ { "source": "…", "source_date": "…", "sample_note": "…" } ],
+    "caveats": ["…"],
+    "confidence_tier": "third_party_aggregate",
+    "is_tailored": true,
+    "is_geo_adjusted": true
+  }
+}
+```
+
+`vertical.match` ∈ `exact | alias | unmapped | unknown`; `geo.match` ∈
+`exact | proxy | gap | unknown` (a `gap` carries a `reason` and forces `cpm_index: null`).
+`is_tailored: false` means the report MUST NOT claim vertical specificity — the renderer's
+scope line then reads "Cross-vertical — not tailored to this vertical". A `synthesis.json`
+written before this block existed still renders: the renderer falls back to
+`resolve(None, None)`. See `references/domain-standards.md` for the basis semantics.
 
 ## Wrapper stdout (success)
 

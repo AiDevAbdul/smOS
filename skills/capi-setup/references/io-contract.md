@@ -114,3 +114,82 @@ node skills/capi-setup/capi-setup.js <slug> [--test-event TEST<code>]
 - The dev/client closes the listed `gaps`, then a re-run confirms `healthy`.
 - `/launch` should not start a conversion-objective campaign while the primary conversion event
   is `never_fired` or `missing` — the report is the gate.
+
+---
+
+## `measurement_spine.json` (E4 — the shared spine)
+
+Path: `clients/{slug}/data/measurement_spine.json` (via `paths.clientFile`, bucket `data/`).
+Written by `/capi-setup`, read by `/attribution`. Append-only; the last 365 entries of each
+list are kept.
+
+```jsonc
+{
+  "version": 1,
+  "slug": "acme",
+  "updated_at": "2026-09-09T10:00:00.000Z",
+  "emq_series": [
+    {
+      "captured_at": "2026-09-09T10:00:00.000Z",
+      "pixel_id": "1234567890",
+      "source": "dataset_quality_api",     // | "offline" | "unavailable" | "manual"
+      "unavailable_reason": null,           // set when source != dataset_quality_api
+      "events": [
+        {
+          "event_name": "Purchase",
+          "composite_score": 7.4,           // null = Meta did not return it (UNKNOWN, not 0)
+          "band": "good",                   // great ≥8 · good ≥6 · ok ≥4 · poor · null if unknown
+          "match_keys": [
+            { "identifier": "email", "coverage_pct": 92, "potential_increase": 1.2 },
+            { "identifier": "phone_number", "coverage_pct": 18, "potential_increase": null }
+          ],
+          "match_keys_available": true
+        }
+      ],
+      "dataset_avg_score": 7.4,             // average over SCORED events only; null if none
+      "scored_events": 1,
+      "unknown_events": 0
+    }
+  ],
+  "reconciliations": [
+    {
+      "recorded_at": "2026-09-09T10:00:00.000Z",
+      "recorded_by": "capi-setup",          // | "attribution"
+      "event": "Lead",                      // null = account total
+      "window": "last_7d",
+      "platform_reported": { "value": 100, "source": "performance_analysis.json (…)", "basis": "platform_reported", "audited": false },
+      "observed":          { "value": 80,  "source": "crm", "basis": "audited", "audited": true },
+      "gap": -20,                           // observed − platform; null if either side unknown
+      "gap_pct": -20,                       // null when the denominator is 0/unknown
+      "coverage_ratio": 0.8,                // observed ÷ platform; null when no denominator
+      "verdict": "platform_over_reported",  // aligned | platform_over_reported | platform_under_reported | unknown
+      "notes": ["…why any field above is null / unaudited…"]
+    }
+  ]
+}
+```
+
+### New `capi_report.json` fields
+
+| Field | Meaning |
+|---|---|
+| `data_source` | `"meta_graph_v25"` or `"offline"` (nothing was verified) |
+| `emq.captured` | Whether Meta actually returned EMQ this run |
+| `emq.snapshot` | The snapshot appended to the series (shape above) |
+| `emq.trends[]` | Per event: `current`, `current_band`, `previous`, `delta`, `direction` (`improving`/`declining`/`flat`/`null`), `best`, `worst`, `mean`, `samples`, `note` |
+| `emq.appended_to_series` / `not_appended_reason` | `false` + `"duplicate_snapshot"` on an identical same-day re-run |
+| `reconciliation` | The reconciliation record + `recorded` (false when no `--observed` was given) |
+| `spine_path` | Absolute path to the spine |
+| `supabase` | `{ persisted, reason }` — never claims a persist that did not happen |
+
+### Spine edge cases
+
+| Case | Behavior |
+|------|----------|
+| `SMOS_OFFLINE=1` / no token | Every event `status:"unknown"`; snapshot `source:"offline"`; EMQ gap = one "unknown" line, no per-event claims |
+| `/dataset_quality` error / empty | Snapshot `source:"unavailable"` + `unavailable_reason`; scores stay `null` |
+| Event returned without `composite_score` | `composite_score: null`, `band: null` — it is not a trend sample |
+| Only one sample | `delta`/`direction` `null` with a "single sample" note |
+| Platform-reported = 0 | `coverage_ratio`/`gap_pct` `null` + note "no denominator"; `verdict:"unknown"` |
+| `--observed` omitted | No reconciliation appended (avoids a history of half-empty rows); report shows `recorded:false` |
+| Corrupt spine file | `loadSpine` returns `corrupt: true` and an empty history; the run proceeds |

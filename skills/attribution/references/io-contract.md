@@ -119,3 +119,51 @@ Returns `{ ok, errors[] }`. Fails (and the skill exits 5) when:
 - **Mixed measured/unmeasured cells:** unmeasured cells are silently dropped by the mapper (never zero-filled); only measured cells become rows.
 - **Supabase not configured:** persist skipped with a log line; report files still written, exit 0.
 - **`confidence` absent:** allowed (null); treat the lift as directional in the writeup.
+
+---
+
+## `measurement_spine` block (E4)
+
+`/attribution` reads `clients/{slug}/data/measurement_spine.json` (written by
+`/capi-setup` — full schema in `skills/capi-setup/references/io-contract.md`) via
+`spineSummary()` in `scripts/lib/measurement_spine.js`, and embeds the summary in
+`attribution_report.json` under `measurement_spine`:
+
+```jsonc
+{
+  "slug": "acme",
+  "available": true,                 // false ⇒ nothing captured yet (reported as unknown)
+  "corrupt": false,
+  "updated_at": "2026-09-09T10:00:00.000Z",
+  "emq": {
+    "captured_at": "2026-09-09T10:00:00.000Z",
+    "pixel_id": "1234567890",
+    "source": "dataset_quality_api", // "offline"/"unavailable" ⇒ EMQ is unknown
+    "unavailable_reason": null,
+    "dataset_avg_score": 7.4,        // null = unknown, never 0
+    "scored_events": 2,
+    "unknown_events": 1,
+    "trends": [ { "event_name": "Purchase", "current": 7.4, "current_band": "good",
+                  "previous": 6.9, "delta": 0.5, "direction": "improving", "samples": 4 } ]
+  },
+  "reconciliation": { /* latest record: platform_reported vs observed, gap, coverage_ratio, verdict */ },
+  "samples": { "emq_snapshots": 4, "reconciliations": 1 },
+  "source_of_record": "clients/<slug>/data/measurement_spine.json (written by /capi-setup, read by /attribution)"
+}
+```
+
+The same summary renders the report's **Measurement quality** section
+(`measurementSpineMarkdown`), which is where the platform-reported-vs-audited labels appear.
+Rendering lives in the shared lib so both skills use identical wording.
+
+### Spine-related CLI contract
+
+| Invocation | Effect |
+|---|---|
+| `attribution.js <slug> --spine` | Print the summary JSON (+ `spine_path`) and exit 0. No lift data required, nothing written. |
+| `attribution.js <slug> --observed=55 --observed-source=crm --observed-audited [--platform-conversions=50] [--event=Lead] [--window=last_7d]` | Append a reconciliation to the spine through the shared writer (`recorded_by: "attribution"`), then continue (or exit 0 if combined with `--spine`). |
+| `attribution.js <slug>` (normal run) | Embeds the spine; **still HALTs exit 4** with no measured lift rows — the spine is not a substitute for incrementality. |
+
+Empty-spine wording in the report: "No measurement spine recorded yet … Not reported as
+healthy; reported as unknown." Unreconciled conversions: "the conversion counts in this
+report are **platform-reported** and have not been checked against an audited source."

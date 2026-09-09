@@ -553,12 +553,24 @@
     {
       "slug": "listening",
       "command": "/listening",
-      "description": "Social listening + organic competitor benchmark.",
+      "description": "Social listening + organic competitor benchmark — watchlist, tagged + untagged mentions, cross-platform coverage, share of voice, crisis detection.",
       "companion": "skills/listening/listening.js",
       "args": [
         { "name": "slug", "required": true, "description": "client slug" }
       ],
-      "flags": []
+      "flags": [
+        { "name": "--show-watchlist", "type": "boolean", "description": "print the watchlist and exit (no API calls)" },
+        { "name": "--add-brand-term", "type": "string", "description": "add a brand term to the watchlist (repeatable)" },
+        { "name": "--add-keyword", "type": "string", "description": "add a keyword to the watchlist (repeatable)" },
+        { "name": "--add-hashtag", "type": "string", "description": "add a hashtag to the watchlist (repeatable)" },
+        { "name": "--add-competitor", "type": "string", "description": "add a competitor handle to the watchlist (repeatable)" },
+        { "name": "--remove", "type": "string", "description": "remove a term from every watchlist list" },
+        { "name": "--hashtag-search", "type": "boolean", "description": "untagged IG discovery via Hashtag Search (30 tags / 7 days quota)" },
+        { "name": "--fb-comments", "type": "boolean", "description": "scan the client's own FB Page post comments for watchlist terms" },
+        { "name": "--web-search", "type": "boolean", "description": "key-gated indexed public-page search (TAVILY_API_KEY)" },
+        { "name": "--baseline-window", "type": "string", "description": "rolling-baseline window in time-series points (default 14)" },
+        { "name": "--no-timeseries", "type": "boolean", "description": "do not append this run to the baseline" }
+      ]
     },
     {
       "slug": "assets",
