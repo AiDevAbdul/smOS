@@ -1,0 +1,36 @@
+{
+  "client_slug": "healthncare",
+  "captured_at": "2026-09-09T06:41:21.041Z",
+  "immutable_locked_at": null,
+  "facebook": {
+    "error": "Meta API 100: (#100) The value must be a valid insights metric (type=OAuthException, trace=AZe1Vfwc6PM94RZ9E2YXaQi)",
+    "engagement_rate_30d": null,
+    "posts_per_week_30d": null
+  },
+  "instagram": {
+    "ig_id": "17841440837789960",
+    "username": "wellnessn.care",
+    "followers": 1,
+    "media_count_total": 8,
+    "post_count_60d": 8,
+    "posts_per_week": 0.9,
+    "format_mix_pct": {
+      "reels": 0,
+      "image": 100,
+      "carousel": 0,
+      "video": 0
+    },
+    "avg_engagement_rate": 175,
+    "reach_28d": 0,
+    "profile_views_28d": 0,
+    "insights_error": "Meta API 100: (#100) The following metrics (profile_views,website_clicks) should be specified with parameter metric_type=total_value (type=OAuthException, trace=AAPZmYLLMUMEcvs0iMmn2wy)",
+    "engagement_rate_30d": 175,
+    "posts_per_week_30d": 0.9
+  },
+  "creative_quality": {
+    "score_out_of_10": null
+  },
+  "paid": {
+    "pixel_events_per_month": null
+  }
+}

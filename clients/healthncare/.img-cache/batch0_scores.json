@@ -1,0 +1,33 @@
+{
+  "batch_id": 0,
+  "scores": [
+    {
+      "asset_id": "2900008553682236",
+      "visual_quality": 5,
+      "brand_consistency": 6,
+      "cta_present": true,
+      "text_density_pct": 26,
+      "messaging_clarity": 3,
+      "notes": "Headline truncated mid-sentence ('the cabbage...'); food/meat photo contradicts weight-loss offer; teal logo off green palette."
+    },
+    {
+      "asset_id": "2240826259824853",
+      "visual_quality": 5,
+      "brand_consistency": 6,
+      "cta_present": true,
+      "text_density_pct": 26,
+      "missing": false,
+      "messaging_clarity": 3,
+      "notes": "Byte-identical duplicate of creative 2900008553682236 (same image + same copy) - redundant creative, not a real variant."
+    },
+    {
+      "asset_id": "1078327524568395",
+      "visual_quality": null,
+      "brand_consistency": null,
+      "cta_present": null,
+      "text_density_pct": null,
+      "messaging_clarity": null,
+      "notes": "Unreachable at usable resolution: Meta returned only a 64x64 thumbnail (no image_url); full-res post needs a page token (code 190)."
+    }
+  ]
+}

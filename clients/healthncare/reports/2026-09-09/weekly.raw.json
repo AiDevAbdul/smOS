@@ -1,0 +1,281 @@
+{
+  "slug": "healthncare",
+  "window": {
+    "week_start": "2026-09-02",
+    "week_end": "2026-09-09",
+    "prior_start": "2026-08-25",
+    "prior_end": "2026-09-01"
+  },
+  "vars": {
+    "blended_mer": 0,
+    "breakeven_roas": "—",
+    "econ_target_roas": "—",
+    "gross_profit": "—",
+    "profit_after_ads": "—",
+    "ncac": "—",
+    "client_name": "Wellness & Care",
+    "week_start": "2026-09-02",
+    "week_end": "2026-09-09",
+    "generated_at": "2026-09-09T07:07:12.876Z",
+    "spend_total": "22.23",
+    "budget_paced_pct": "—",
+    "conversions_total": 0,
+    "roas": "0.00",
+    "cpa": "—",
+    "win_headline": "_(Claude to fill — strongest signal in the week)_",
+    "flag_headline": "_(Claude to fill — biggest concern this week)_",
+    "spend_prior": "0.00",
+    "spend_delta_pct": "+∞",
+    "impressions": "23,458",
+    "impressions_prior": "0",
+    "impressions_delta_pct": "+∞",
+    "reach": "16,428",
+    "reach_prior": "0",
+    "reach_delta_pct": "+∞",
+    "frequency": "1.43",
+    "frequency_prior": "0.00",
+    "frequency_delta": "1.43",
+    "cpa_target": 25,
+    "roas_target": 1.5,
+    "ctr_target": "—",
+    "ctr": "0.18",
+    "cpa_status": "—",
+    "roas_status": "⚠ off target",
+    "ctr_status": "—",
+    "placement_breakdown_rows": "| audience_network · an_classic | 0.14% | 14.4% |\n| facebook · facebook_reels | 0.60% | 16.6% |\n| facebook · facebook_stories | 0.00% | 0.3% |\n| facebook · feed | 0.81% | 1.8% |\n| facebook · instream_video | 0.00% | 0.2% |\n| facebook · marketplace | 0.05% | 50.6% |\n| facebook · search | 0.00% | 1.2% |\n| instagram · feed | 0.00% | 0.5% |\n| instagram · instagram_reels | 0.33% | 12.6% |\n| instagram · instagram_search | 0.00% | 0.0% |\n| instagram · instagram_stories | 0.00% | 0.3% |\n| threads · threads_feed | 0.21% | 1.5% |\n| unknown · unknown | 0.00% | 0.0% |",
+    "top_ad_name": "Trimmology",
+    "top_ad_format": "—",
+    "top_ad_spend": "16.24",
+    "top_ad_conversions": 0,
+    "top_ad_roas": "0.00",
+    "top_ad_cpa": "—",
+    "top_ad_ctr": "0.08",
+    "top_ad_frequency": "1.35",
+    "optimizer_actions_table": "_(No optimizer actions logged this week. Optimizer log will populate once Supabase is wired.)_",
+    "rec_1": "_(Claude to fill — concrete action for next week)_",
+    "rec_2": "_(Claude to fill)_",
+    "rec_3": "_(Claude to fill)_",
+    "baseline_date": "—",
+    "before_after_rows": "| Monthly ad spend | — | $95.27 | — |\n| Best ROAS | — | 0.00x | — |",
+    "drive_link": "_(set after Drive upload)_"
+  },
+  "metrics": {
+    "now": {
+      "spend": 22.23,
+      "impressions": 23458,
+      "reach": 16428,
+      "clicks": 36,
+      "link_clicks": 43,
+      "conversions": 0,
+      "revenue": 0,
+      "ctr": 0.15346576860772446,
+      "link_ctr": 0.18330633472589308,
+      "frequency": 1.427927927927928,
+      "cpa": null,
+      "roas": 0
+    },
+    "prior": {
+      "spend": 0,
+      "impressions": 0,
+      "reach": 0,
+      "clicks": 0,
+      "link_clicks": 0,
+      "conversions": 0,
+      "revenue": 0,
+      "ctr": 0,
+      "link_ctr": 0,
+      "frequency": 0,
+      "cpa": null,
+      "roas": null
+    }
+  },
+  "economics": {
+    "blended_mer": 0,
+    "target_mer": null,
+    "breakeven_roas": null,
+    "target_roas": null,
+    "gross_margin": null,
+    "gross_profit": null,
+    "profit_after_ads": null,
+    "nCAC": null,
+    "target_cac": null,
+    "cac_basis": null,
+    "mer_verdict": null,
+    "cac_verdict": null
+  },
+  "placement_breakdown": [
+    {
+      "spend": "3.21",
+      "impressions": "8609",
+      "clicks": "12",
+      "ctr": "0.139389",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "audience_network",
+      "platform_position": "an_classic"
+    },
+    {
+      "spend": "3.69",
+      "impressions": "1674",
+      "clicks": "10",
+      "ctr": "0.597372",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_reels"
+    },
+    {
+      "spend": "0.06",
+      "impressions": "5",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "facebook",
+      "platform_position": "facebook_stories"
+    },
+    {
+      "spend": "0.41",
+      "impressions": "124",
+      "clicks": "1",
+      "ctr": "0.806452",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "facebook",
+      "platform_position": "feed"
+    },
+    {
+      "spend": "0.04",
+      "impressions": "24",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "facebook",
+      "platform_position": "instream_video"
+    },
+    {
+      "spend": "11.24",
+      "impressions": "9892",
+      "clicks": "5",
+      "ctr": "0.050546",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "facebook",
+      "platform_position": "marketplace"
+    },
+    {
+      "spend": "0.27",
+      "impressions": "335",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "facebook",
+      "platform_position": "search"
+    },
+    {
+      "spend": "0.11",
+      "impressions": "136",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "instagram",
+      "platform_position": "feed"
+    },
+    {
+      "spend": "2.79",
+      "impressions": "2124",
+      "clicks": "7",
+      "ctr": "0.329567",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "instagram",
+      "platform_position": "instagram_reels"
+    },
+    {
+      "spend": "0",
+      "impressions": "1",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "instagram",
+      "platform_position": "instagram_search"
+    },
+    {
+      "spend": "0.07",
+      "impressions": "60",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "instagram",
+      "platform_position": "instagram_stories"
+    },
+    {
+      "spend": "0.33",
+      "impressions": "472",
+      "clicks": "1",
+      "ctr": "0.211864",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "threads",
+      "platform_position": "threads_feed"
+    },
+    {
+      "spend": "0.01",
+      "impressions": "2",
+      "clicks": "0",
+      "ctr": "0",
+      "date_start": "2026-09-02",
+      "date_stop": "2026-09-09",
+      "publisher_platform": "unknown",
+      "platform_position": "unknown"
+    }
+  ],
+  "top_ad": {
+    "ad_id": "120252741461890781",
+    "ad_name": "Trimmology",
+    "spend": "16.24",
+    "impressions": "14650",
+    "clicks": "12",
+    "ctr": "0.081911",
+    "frequency": "1.349484",
+    "actions": [
+      {
+        "action_type": "link_click",
+        "value": "10"
+      },
+      {
+        "action_type": "landing_page_view",
+        "value": "3"
+      },
+      {
+        "action_type": "omni_landing_page_view",
+        "value": "3"
+      },
+      {
+        "action_type": "post_engagement",
+        "value": "11"
+      },
+      {
+        "action_type": "page_engagement",
+        "value": "11"
+      },
+      {
+        "action_type": "video_view",
+        "value": "1"
+      }
+    ],
+    "date_start": "2026-09-02",
+    "date_stop": "2026-09-09",
+    "roas": 0,
+    "cpa": null,
+    "conversions": 0,
+    "format": "—"
+  },
+  "optimizer_actions": [],
+  "errors": []
+}

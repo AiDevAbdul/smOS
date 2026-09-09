@@ -1,0 +1,572 @@
+{
+  "slug": "healthncare",
+  "generated_at": "2026-09-09T06:43:51.476Z",
+  "organic": {
+    "facebook": {
+      "error": "Meta API 100: (#100) The value must be a valid insights metric (type=OAuthException, trace=AJ9lEeTxY526KA8bCxNCJWI)"
+    },
+    "instagram": {
+      "ig_id": "17841440837789960",
+      "username": "wellnessn.care",
+      "followers": 1,
+      "media_count_total": 8,
+      "post_count_60d": 8,
+      "posts_per_week": 0.9,
+      "format_mix_pct": {
+        "reels": 0,
+        "image": 100,
+        "carousel": 0,
+        "video": 0
+      },
+      "avg_engagement_rate": 175,
+      "reach_28d": 0,
+      "profile_views_28d": 0,
+      "insights_error": "Meta API 100: (#100) The following metrics (profile_views,website_clicks) should be specified with parameter metric_type=total_value (type=OAuthException, trace=AfCuyiZSyKnEymuJaWanccS)"
+    }
+  },
+  "paid": {
+    "account_id": "act_1837020087281652",
+    "account_name": "Wellness and Care",
+    "account_status": 1,
+    "account_age_days": 7.8743981481481,
+    "currency": "USD",
+    "timezone": "Asia/Karachi",
+    "total_spend_lifetime": 22.16,
+    "amount_spent_to_date": 17.04,
+    "balance": 5.12,
+    "campaign_count_total": 2,
+    "campaign_count_active": 2,
+    "campaign_count_archived": 0,
+    "best_cpa": null,
+    "best_roas": null,
+    "zombie_count": 0,
+    "naming_compliance_pct": 0,
+    "custom_audience_count": 0,
+    "custom_audience_healthy": 0,
+    "custom_audience_broken": 0,
+    "audience_issues": [],
+    "pixel_health": "none",
+    "pixel_stats": {
+      "data": [
+        {
+          "start_time": "2026-09-02T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-02T13:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-02T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-02T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 6
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T16:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-03T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-04T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-04T13:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-04T15:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-04T16:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-05T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-05T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-05T12:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-05T18:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-05T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-06T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-06T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-06T08:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-06T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-07T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-07T02:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-07T04:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-07T11:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "__missing_event",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-07T14:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-07T16:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T12:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T15:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T16:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T17:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            },
+            {
+              "value": "__missing_event",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T19:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T20:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 8
+            },
+            {
+              "value": "ViewContent",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T21:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 9
+            },
+            {
+              "value": "ViewContent",
+              "count": 9
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T22:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            },
+            {
+              "value": "ViewContent",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-08T23:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            },
+            {
+              "value": "ViewContent",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T00:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T01:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 26
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T05:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T06:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T07:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 5
+            },
+            {
+              "value": "__missing_event",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T08:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 4
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T09:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 3
+            }
+          ]
+        },
+        {
+          "start_time": "2026-09-09T10:00:00+0500",
+          "aggregation": "event",
+          "data": [
+            {
+              "value": "PageView",
+              "count": 2
+            }
+          ]
+        }
+      ],
+      "paging": {
+        "cursors": {
+          "before": "MTc4ODMyMTYwMAZDZD",
+          "after": "MTc4ODkzMzYwMAZDZD"
+        },
+        "next": "https://graph.facebook.com/v25.0/1720541425873368/stats?access_token=EAASKl9i9x40BSYP3gwn6q0UZBt3gEJqPdd39hsKMmynUGybhRZCGTnhhYWbiI2ZC9ZCYYRs32pAeUUPmgAHHvYzmQI3j9vmvZBuPZBBXbYhvkA9rK4F9lNvGsWXHpPxr5rN2l0FsFl05tHsdLYzZCC6SzwTtQKlqe2exiLpYmWfhSgKv85v0csR2SKYWZASnROdfZCUtgISBjqwYC&start_time=2026-09-02&limit=25&after=MTc4ODkzMzYwMAZDZD",
+        "previous": "https://graph.facebook.com/v25.0/1720541425873368/stats?access_token=EAASKl9i9x40BSYP3gwn6q0UZBt3gEJqPdd39hsKMmynUGybhRZCGTnhhYWbiI2ZC9ZCYYRs32pAeUUPmgAHHvYzmQI3j9vmvZBuPZBBXbYhvkA9rK4F9lNvGsWXHpPxr5rN2l0FsFl05tHsdLYzZCC6SzwTtQKlqe2exiLpYmWfhSgKv85v0csR2SKYWZASnROdfZCUtgISBjqwYC&start_time=2026-09-02&limit=25&before=MTc4ODMyMTYwMAZDZD"
+      }
+    }
+  },
+  "website_tracking": null,
+  "ad_library_history": null,
+  "pixel_cross_reference": null,
+  "pre_audit_source": null,
+  "creative": null,
+  "health_score": 25
+}

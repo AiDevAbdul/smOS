@@ -1,0 +1,62 @@
+{
+  "client_slug": "healthncare",
+  "generated_at": "2026-09-09T06:56:20.756Z",
+  "overall_score": 4.7,
+  "formats": {
+    "image": {
+      "count": 2,
+      "visual_quality": 5,
+      "brand_consistency": 6,
+      "cta_present_pct": 100,
+      "text_density_compliant_pct": 0,
+      "messaging_clarity": 3
+    },
+    "video": {
+      "count": 0,
+      "visual_quality": null,
+      "brand_consistency": null,
+      "cta_present_pct": null,
+      "text_density_compliant_pct": null,
+      "messaging_clarity": null,
+      "avg_retention_score": null,
+      "avg_hook_rate_pct": null,
+      "avg_hold_rate_pct": null,
+      "avg_completion_pct": null
+    },
+    "carousel": {
+      "count": 0,
+      "visual_quality": null,
+      "brand_consistency": null,
+      "cta_present_pct": null,
+      "text_density_compliant_pct": null,
+      "messaging_clarity": null
+    }
+  },
+  "top3": [
+    {
+      "asset_id": "2900008553682236",
+      "weighted": 5.2,
+      "notes": "Headline truncated mid-sentence ('the cabbage...'); food/meat photo contradicts weight-loss offer; teal logo off green palette."
+    },
+    {
+      "asset_id": "2240826259824853",
+      "weighted": 5.2,
+      "notes": "Byte-identical duplicate of creative 2900008553682236 (same image + same copy) - redundant creative, not a real variant."
+    }
+  ],
+  "bottom3": [
+    {
+      "asset_id": "2240826259824853",
+      "weighted": 5.2,
+      "notes": "Byte-identical duplicate of creative 2900008553682236 (same image + same copy) - redundant creative, not a real variant."
+    },
+    {
+      "asset_id": "2900008553682236",
+      "weighted": 5.2,
+      "notes": "Headline truncated mid-sentence ('the cabbage...'); food/meat photo contradicts weight-loss offer; teal logo off green palette."
+    }
+  ],
+  "violations": [],
+  "scored_count": 2,
+  "total_count": 3
+}

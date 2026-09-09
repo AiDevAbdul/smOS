@@ -1,0 +1,91 @@
+{
+  "client_slug": "healthncare",
+  "generated_at": "2026-09-09T06:52:50.469Z",
+  "brand_colors": [
+    "Dark Green",
+    "Light Green"
+  ],
+  "restricted_words": [],
+  "asset_count": 3,
+  "organic_count": 0,
+  "ad_count": 3,
+  "batches": [
+    {
+      "batch_id": 0,
+      "asset_ids": [
+        "2900008553682236",
+        "2240826259824853",
+        "1078327524568395"
+      ],
+      "image_paths": [
+        "/Users/apple/abdul/smOS/clients/healthncare/.img-cache/2900008553682236.jpg",
+        "/Users/apple/abdul/smOS/clients/healthncare/.img-cache/2240826259824853.jpg",
+        "/Users/apple/abdul/smOS/clients/healthncare/.img-cache/1078327524568395.jpg"
+      ],
+      "vision_prompt": "For each image in this batch, score on:\n1. visual_quality (1-10): composition, clarity, lighting, production value\n2. brand_consistency (1-10): does it match brand colors Dark Green, Light Green?\n3. cta_present (true/false): clear call-to-action visible?\n4. text_density_pct (0-100): % of image covered by overlaid text\n5. messaging_clarity (1-10): is the value prop legible at thumbnail size?\n6. notes (string, <140 chars): one-line observation\n\nRestricted words to flag if visible: none\nReturn JSON array, one object per image, in the same order as provided. asset_ids: 2900008553682236, 2240826259824853, 1078327524568395"
+    }
+  ],
+  "assets": [
+    {
+      "asset_id": "2900008553682236",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t45.1600-4/785748805_2853905064979942_697342031674680883_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=d5bd00&_nc_eui2=AeHY0qXFIna4GpmRwhiEJUbLxzoNnrxHkdbHOg2evEeR1mV73kj6syc9hzGbWkL-FV_hYnEukAUXvk9b4mHMy4q5&_nc_ohc=2DIvAlzHbGQQ7kNvwEliRHg&_nc_oc=AdplA5BuwjZwfJDP85exQc1tzCpwklysWM65KhpigOBazOi4CDbfbxBp4Zr46wGhKng&_nc_zt=1&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=NLs_ODJP_gGvkqsNVX0h2Q&_nc_tpa=Q5bMBQJH7rWSscqZHvFo3aFq6Kpf7TyLtG4Zew9sVtY-7CGD4C18u6rlAFUtxtx9rWJvRopM5wdaofzcGA&oh=00_AQJCrQQSecA_EUfNf7CqBlJ6zlq7mERgI5owWlRxK6swIQ&oe=6AA6D724",
+      "copy": "POV: you've tried keto, intermittent fasting, the cabbage soup thing, and a gym membership you used twice.\nWe've all been there. No judgment — just sharing what's actually worked for people in our community. Link in bio if you want to see one more option.\n\n#KETO",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/healthncare/.img-cache/2900008553682236.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 5,
+        "brand_consistency": 6,
+        "cta_present": true,
+        "text_density_pct": 26,
+        "messaging_clarity": 3,
+        "notes": "Headline truncated mid-sentence ('the cabbage...'); food/meat photo contradicts weight-loss offer; teal logo off green palette."
+      }
+    },
+    {
+      "asset_id": "2240826259824853",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew3-1.fna.fbcdn.net/v/t45.1600-4/785748805_2853905064979942_697342031674680883_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=d5bd00&_nc_eui2=AeHY0qXFIna4GpmRwhiEJUbLxzoNnrxHkdbHOg2evEeR1mV73kj6syc9hzGbWkL-FV_hYnEukAUXvk9b4mHMy4q5&_nc_ohc=2DIvAlzHbGQQ7kNvwEliRHg&_nc_oc=AdplA5BuwjZwfJDP85exQc1tzCpwklysWM65KhpigOBazOi4CDbfbxBp4Zr46wGhKng&_nc_zt=1&_nc_ht=scontent.fpew3-1.fna&edm=ALjApogEAAAA&_nc_gid=NLs_ODJP_gGvkqsNVX0h2Q&_nc_tpa=Q5bMBQJH7rWSscqZHvFo3aFq6Kpf7TyLtG4Zew9sVtY-7CGD4C18u6rlAFUtxtx9rWJvRopM5wdaofzcGA&oh=00_AQJCrQQSecA_EUfNf7CqBlJ6zlq7mERgI5owWlRxK6swIQ&oe=6AA6D724",
+      "copy": "POV: you've tried keto, intermittent fasting, the cabbage soup thing, and a gym membership you used twice.\nWe've all been there. No judgment — just sharing what's actually worked for people in our community. Link in bio if you want to see one more option.\n\n#KETO",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/healthncare/.img-cache/2240826259824853.jpg",
+      "copy_length": 262,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": 5,
+        "brand_consistency": 6,
+        "cta_present": true,
+        "text_density_pct": 26,
+        "messaging_clarity": 3,
+        "notes": "Byte-identical duplicate of creative 2900008553682236 (same image + same copy) - redundant creative, not a real variant."
+      }
+    },
+    {
+      "asset_id": "1078327524568395",
+      "type": "ad",
+      "format": "image",
+      "image_url": "https://scontent.fpew4-1.fna.fbcdn.net/v/t39.30808-6/781153157_122105267157439767_5133293038237647619_n.jpg?_nc_cat=106&ccb=1-7&_nc_eui2=AeHesFbpNo_aksSr4P_kHGQe_LdN555y8dL8t03nnnLx0ij5zoQSARtGwVuBuCNwPuIse7oLioPp1z5rCOdBYWBq&_nc_ohc=YzyFHmtgiOoQ7kNvwHCa9Tl&_nc_oc=Ado7iRnvsdpubH4eYCYXmOcpyC5FgR6IGGIR0gfx5qIwi3pbew6AnjumpWhGepq6hQc&_nc_zt=23&_nc_ht=scontent.fpew4-1.fna&edm=ALjApogEAAAA&_nc_gid=NLs_ODJP_gGvkqsNVX0h2Q&_nc_tpa=Q5bMBQJXP5D2ixxGUWc6WCYgL_4khAsJjMyAe5IopJEJc9RDNTajoXv7RQR4ulxPXrYit0XsS_I8qb5AWA&stp=c0.5000x0.5000f_dst-emg0_p64x64_q75_tt6&ur=8c4ec0&_nc_sid=58080a&oh=00_AQJKFAyqPwhx4pD0DXW8PuWiEJbu80MQH1D2E6Eu5ZEu3w&oe=6AA6BD78",
+      "copy": "Tired of Supplements, that don't work?\n\n#wellnessncare #wellnesscare",
+      "created_at": null,
+      "local_image_path": "/Users/apple/abdul/smOS/clients/healthncare/.img-cache/1078327524568395.jpg",
+      "copy_length": 68,
+      "restricted_word_hits": [],
+      "video_score": null,
+      "vision_scores": {
+        "visual_quality": null,
+        "brand_consistency": null,
+        "cta_present": null,
+        "text_density_pct": null,
+        "messaging_clarity": null,
+        "notes": "Unreachable at usable resolution: Meta returned only a 64x64 thumbnail (no image_url); full-res post needs a page token (code 190)."
+      }
+    }
+  ],
+  "instructions": "For each batch, send the vision_prompt + the batch's local image paths to Claude. Claude returns a JSON array; merge each result into assets[].vision_scores. Then run: node skills/audit-creative/audit-creative.js healthncare aggregate"
+}

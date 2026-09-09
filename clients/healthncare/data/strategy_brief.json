@@ -1,9 +1,9 @@
 {
   "slug": "healthncare",
-  "generated_at": "2026-08-05T16:11:45.307Z",
+  "generated_at": "2026-09-09T07:03:25.789Z",
   "inputs_used": {
     "profile": true,
-    "audit": false,
+    "audit": true,
     "competitor_intel": true,
     "audience_map": true
   },
@@ -191,13 +191,13 @@
     }
   ],
   "assumptions": [
-    "No audit_raw.json found — running with profile-only assumptions; audit signals not factored in."
+    "Pixel health is 'none' per audit — Phase A uses lighter-funnel objective until pixel learns."
   ],
   "excluded_angles": [],
   "approval": {
-    "status": "approved",
-    "approved_by": "user",
-    "approved_at": "2026-08-05T18:40:00.000Z",
+    "status": "pending",
+    "approved_by": null,
+    "approved_at": null,
     "discord_message_id": null
   }
 }
