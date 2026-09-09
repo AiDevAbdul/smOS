@@ -1,0 +1,92 @@
+{
+  "slug": "healthncare",
+  "generated_at": "2026-09-09T03:31:06.235Z",
+  "pixel_id": "1720541425873368",
+  "events": [
+    {
+      "name": "PageView",
+      "firing": true,
+      "count_7d": 123,
+      "last_fired": 1788919200,
+      "client_count_7d": 47,
+      "server_count_7d": 69,
+      "server_share": 0.595,
+      "status": "healthy"
+    },
+    {
+      "name": "ViewContent",
+      "firing": true,
+      "count_7d": 15,
+      "last_fired": 1788890400,
+      "client_count_7d": 7,
+      "server_count_7d": 8,
+      "server_share": 0.533,
+      "status": "healthy"
+    },
+    {
+      "name": "AddToCart",
+      "firing": false,
+      "count_7d": 0,
+      "last_fired": null,
+      "client_count_7d": 0,
+      "server_count_7d": 0,
+      "server_share": 0,
+      "status": "never_fired"
+    },
+    {
+      "name": "InitiateCheckout",
+      "firing": false,
+      "count_7d": 0,
+      "last_fired": null,
+      "client_count_7d": 0,
+      "server_count_7d": 0,
+      "server_share": 0,
+      "status": "never_fired"
+    },
+    {
+      "name": "Purchase",
+      "firing": false,
+      "count_7d": 0,
+      "last_fired": null,
+      "client_count_7d": 0,
+      "server_count_7d": 0,
+      "server_share": 0,
+      "status": "never_fired"
+    },
+    {
+      "name": "Lead",
+      "firing": false,
+      "count_7d": 0,
+      "last_fired": null,
+      "client_count_7d": 0,
+      "server_count_7d": 0,
+      "server_share": 0,
+      "status": "never_fired"
+    }
+  ],
+  "dataset": {
+    "id": "1720541425873368",
+    "name": "Wellness and Care",
+    "last_fired_time": "2026-09-09T01:53:51+0500",
+    "first_party_cookie_status": "first_party_cookie_enabled",
+    "enable_automatic_matching": false,
+    "creation_time": "2026-08-12T21:49:23+0500"
+  },
+  "test_event": {
+    "fired": false,
+    "event_id": null
+  },
+  "gaps": [
+    "'AddToCart' has never fired — pixel may not be installed on the right page (check page source for fbq('track','AddToCart'))",
+    "'InitiateCheckout' has never fired — pixel may not be installed on the right page (check page source for fbq('track','InitiateCheckout'))",
+    "'Purchase' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Purchase'))",
+    "'Lead' has never fired — pixel may not be installed on the right page (check page source for fbq('track','Lead'))",
+    "Automatic Advanced Matching is OFF — turn it on in Events Manager → Settings → Automatic Advanced Matching"
+  ],
+  "next_steps": [
+    "Set up a Conversions API Gateway (Stape, self-host, or Shopify/WooCommerce native) OR add server-side fires from your backend for missing events",
+    "Send the same event_id from pixel + CAPI for each event to enable deduplication (Meta will dedupe automatically)",
+    "Send rich user_data (em, ph, fn, ln, ct, st, zp, country) hashed SHA-256 to maximize match quality",
+    "Re-run /capi-setup in 48h to verify the changes"
+  ]
+}

@@ -40,10 +40,10 @@
         ],
         "logo_url": "clients/ilyas-general-hospital/brand/logo.png"
       },
-      "status": "error",
-      "published_id": null,
-      "published_at": null,
-      "error": "Meta API 200: (#200) The permission(s) publish_actions are not available. It has been deprecated. If you want to provide a way for your app users to share content to Facebook, we encourage you to use our Sharing products instead. (type=OAuthException, trace=AGe-LAEp2J5OeNbye-wQeY9)",
+      "status": "published",
+      "published_id": "122112939285440721",
+      "published_at": "2026-09-08T12:41:15.927Z",
+      "error": null,
       "schedule_native": false
     },
     {
@@ -89,7 +89,7 @@
       "status": "error",
       "published_id": null,
       "published_at": null,
-      "error": "Meta API 10: (#10) Application does not have permission for this action (type=OAuthException, trace=AqWaUTYZxYuwFWDEzXhtLxp)",
+      "error": "Meta API 10: (#10) Application does not have permission for this action (type=OAuthException, trace=AKKZrRUVSBdtdFkojKczl2K)",
       "schedule_native": false
     }
   ]
