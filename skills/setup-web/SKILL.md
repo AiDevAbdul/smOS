@@ -13,7 +13,9 @@ Ads need a destination, and conversion campaigns need a **verified domain**. For
 - Registers the domain to the Meta business (`POST /{business_id}/owned_domains`) through the guarded chokepoint.
 - Surfaces the exact `facebook-domain-verification=...` TXT value to publish via DNS.
 - Reports Meta's **actual** `verification_status` (never fakes success); stamps `setup.domain_verified_at` only when Meta returns `verified`.
-- Records `accounts.website_url`, `accounts.domain`, and `setup.landing_deployed_at` into `client_profile.json`.
+- **GETs the landing URL before recording it** (`--set-website`) and refuses a URL that does not answer 2xx — an unreachable "live site" poisons `/capi-setup`, domain verification and every ad destination downstream. Records the **final** URL after redirects (http→https, apex→www). `--force` records it anyway and marks it unverified in the profile.
+- Probes a URL without writing anything (`--probe [url]`, exit 5 when unreachable).
+- Records `accounts.website_url`, `accounts.domain`, `setup.landing_deployed_at`, `setup.landing_verified_at` (only on a real 2xx) and the full `setup.landing_probe` result into `client_profile.json`.
 
 ## What This Skill Does NOT Do
 
@@ -59,11 +61,14 @@ Gather context before acting (do not ask the user for what is discoverable):
 5. **Poll verification, then record the site:**
    `node skills/setup-web/setup-web.js {slug} --verify-status example.com`
    `node skills/setup-web/setup-web.js {slug} --set-website https://example.com`
+   `--set-website` GETs the URL first; it exits **5** and writes nothing if the page
+   does not answer 2xx. Fix the deploy (or wait for DNS) and re-run — only pass
+   `--force` when you consciously want an unverified URL on record.
 
 ## Input / Output Specification
 
-**Inputs:** `{slug}` (positional) + exactly one mode flag: `--register <domain>`, `--verify-status <domain>`, or `--set-website <url>`. Env: `META_ACCESS_TOKEN` (register/verify modes), `META_APP_SECRET` (optional, for appsecret_proof). Files: `clients/{slug}/client_profile.json`.
-**Outputs:** JSON on stdout per mode; mutates `clients/{slug}/client_profile.json` — sets `accounts.website_url`, `accounts.domain`, `setup.landing_deployed_at` (`--set-website`) and `setup.domain_verified_at` (`--verify-status` only when Meta returns `verified`). A live page on the client's domain.
+**Inputs:** `{slug}` (positional) + exactly one mode flag: `--register <domain>`, `--verify-status <domain>`, `--set-website <url>` (+ optional `--force`), or `--probe [url]`. Env: `META_ACCESS_TOKEN` (register/verify modes), `META_APP_SECRET` (optional, for appsecret_proof), `SMOS_PROBE_TIMEOUT_MS` (optional, default 10000). Files: `clients/{slug}/client_profile.json`.
+**Outputs:** JSON on stdout per mode; mutates `clients/{slug}/client_profile.json` — sets `accounts.website_url` (the post-redirect final URL), `accounts.domain`, `setup.landing_deployed_at`, `setup.landing_verified_at` (only on a real 2xx), `setup.landing_probe` (status/redirects/error/forced) and `setup.domain_verified_at` (`--verify-status` only when Meta returns `verified`). A live page on the client's domain. `--probe` writes nothing.
 (Full schemas + per-mode example payloads + edge cases: `references/io-contract.md`.)
 
 ## Variability Analysis
@@ -74,6 +79,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 | Brand styling of the landing page | DNS-controlled hosting requirement for verification |
 | `business_id`, returned verification code | Graph API v25.0; `owned_domains` register-then-read flow |
 | Whether verification is pending/verified | Never stamp `domain_verified_at` unless Meta says `verified` |
+| Whether the landing page is actually up yet | Never record `website_url` without a 2xx (verify, don't assume) |
 
 ## Domain Standards
 
@@ -82,16 +88,18 @@ Gather context before acting (do not ask the user for what is discoverable):
 - [ ] Register the domain via the guarded `createGraph()` chokepoint (never a raw fetch).
 - [ ] Report Meta's literal `verification_status`; only stamp `domain_verified_at` when it equals `verified`.
 - [ ] Normalize `domain` from the URL host with `www.` stripped (the companion does this).
+- [ ] Let the companion probe the URL — never record `website_url` from the operator's word alone, and never use `--force` to get past a failing probe unless the human explicitly accepts an unverified record.
 
 ### Must Avoid
 - Claiming verification succeeded before Meta returns `verified`.
+- Recording a `website_url` that has never been fetched (a typo or unpropagated DNS then silently breaks `/capi-setup` and every ad link).
 - Running this before `/setup-accounts` has set `accounts.business_id` (the companion halts if TBD).
 - Hardcoding the verification TXT value — read it from the register call / Business Settings.
 
 ### Output Checklist (verify before delivery)
 - [ ] Landing/link-in-bio page is live on the client's domain.
 - [ ] `client_profile.json` has non-TBD `accounts.website_url` + `accounts.domain`.
-- [ ] `setup.landing_deployed_at` set; `setup.domain_verified_at` set iff Meta returned `verified`.
+- [ ] `setup.landing_deployed_at` set; `setup.landing_verified_at` set (non-null = smOS fetched the page itself); `setup.domain_verified_at` set iff Meta returned `verified`.
 - [ ] Handoff stated: `/capi-setup` next to install/verify the pixel.
 
 ## Error Handling
@@ -99,11 +107,12 @@ Gather context before acting (do not ask the user for what is discoverable):
 | Scenario | Action |
 |----------|--------|
 | Missing `client_profile.json` | Companion exits code 2 ("run /intake first") — halt, do not guess |
-| No mode flag given | Companion exits code 1 with usage — supply one of `--register`/`--verify-status`/`--set-website` |
+| No mode flag given | Companion exits code 1 with usage — supply one of `--register`/`--verify-status`/`--set-website`/`--probe` |
 | `business_id` is null/TBD | Companion exits code 3 ("run /setup-accounts") — halt |
 | Domain not registered when polling | Companion exits code 4 ("run --register first") |
 | Meta API error | `meta-graph.js` surfaces code/type/fbtrace_id; transient codes retried with backoff, token errors (190/102/463/467) non-retryable |
 | Verification still `pending` | Report status truthfully; re-poll later — never stamp `domain_verified_at` |
+| Landing URL unreachable (non-2xx, DNS failure, timeout, redirect loop) | Companion exits code **5** and writes nothing; report the probe reason. 401/403 counts as unreachable — a page behind auth is not a landing page |
 
 ## Dependencies & Security
 

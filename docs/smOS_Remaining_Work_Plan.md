@@ -134,8 +134,8 @@ D5. **Agency ops dashboard** (sibling to `/portal`): MRR, net revenue retention,
 
 ## GROUP E — Brand production, measurement depth, hardening (~3–4 days)
 
-> **Status 2026-09-09: E1, E2 and E6 (the four hardening items) are DONE.** E3, E4, E5 and
-> E6's pre-audit benchmark table remain. Suite 572 → 615 green.
+> **Status 2026-09-09: E1, E2, E3 and E6 (the four hardening items) are DONE.** E4, E5 and
+> E6's pre-audit benchmark table remain. Suite 572 → 615 → **645 green**.
 >
 > - **E1 — real brand-asset rendering.** `scripts/lib/brand_render.js` renders an actual
 >   monogram identity system (primary lockup / mark / wordmark / mono / reverse, SVG+PNG)
@@ -172,7 +172,12 @@ E1. ✅ **DONE (2026-09-09). Real brand-asset rendering** in `skills/brand-visua
 
 E2. ✅ **DONE (2026-09-09). Fail-closed WCAG contrast guard:** compute relative luminance on `brand_profile.visual.colors`; reject sub-4.5:1 primary-on-neutral. Add to `scripts/lib/guards.js` + a hook.
 
-E3. **Verify, don't assume, in setup:** `skills/setup-web/` GET the landing URL (expect 200) before recording `website_url`; `skills/setup-accounts/` read-verify the IG↔Page link via the API. Strengthen the trademark knockout in `skills/brand-name/` to phonetic/similar marks; add multi-TLD + handle-consistency to the domain screen.
+E3. ✅ **DONE (2026-09-09). Verify, don't assume, in setup.**
+- `scripts/lib/verify_url.js` (`probeUrl`): manual redirect-following (≤5, chain reported), 2xx-only, 401/403 counted as unreachable, never throws. `/setup-web --set-website` refuses a URL that doesn't answer (exit 5, nothing written), records the **post-redirect final URL**, and writes `setup.landing_verified_at` + `setup.landing_probe`. `--force` records unverified and says so; `--probe` is read-only. `SMOS_PROBE_TIMEOUT_MS` overrides the 10s default. *No parking-page heuristic* — every version of it false-positives on real minimal landers.
+- `scripts/lib/meta_verify.js` (`verifyPage`, `verifyIgPageLink`): `/setup-accounts --done ig_page_linked_at` reads the Page's `instagram_business_account` edge before stamping — exit 6 when absent, and exit 6 on a **mismatch** (Page linked to a different IG than the profile records, which is the case that would otherwise silently break `/publish` + `/inbox`). On success it back-fills the live `instagram_business_id`. New `--verify` mode; `--status` marks each API-verifiable step `api_verified`. A `*_verified_at` timestamp means smOS confirmed it; the gate timestamp alone means a human said so.
+- `scripts/lib/phonetics.js` (soundex / consonant skeleton / Levenshtein / `isConfusable` / `spellingVariants`): the knockout now queries the name **plus its respellings** and scores returned marks for confusability, so "Klaritee" surfaces a live "CLARITY". Fail-open discipline extended: if ANY variant query fails the whole screen is `null` (incomplete), never "clear". With no API key it hands over the exact respelling set to search by hand.
+- Domain screen is multi-TLD (`com,co,io,net`, `--tlds` override) with `.com` still the gate field; handles roll up into one `handle_consistency` verdict (`true` only when every platform 404s).
+- Tests: `test/verify-url.test.js`, `test/phonetics.test.js`, `test/setup-verify.test.js`, `test/setup-web-cli.test.js` (+30 → 645). Note for future CLI tests: use async `spawn`, not `spawnSync`, when the test itself hosts the HTTP server — `spawnSync` blocks the event loop and the child's request never gets accepted.
 
 E4. **Measurement spine:** track Event Match Quality over time in `skills/capi-setup/` and reconcile modeled-vs-observed conversions, linking to `/attribution` as one spine.
 
@@ -185,9 +190,9 @@ E6. **Engineering hardening** — ✅ the four listed items are DONE (2026-09-09
 ## Suggested order
 A (cleanup) → B1+B2 (ASC + MER, biggest paid wins) → C1+C2 (real content production + publish) → D1+D2+D3 (recurring revenue + retention) → E (brand/measurement/hardening).
 
-**Status 2026-09-09 (end of session):** A, B, C0, **all of D**, and **E1 + E2 + E6's four
-hardening items** are done; suite **615 green**. C1–C6 stay deferred by client direction (AI
-content is opt-in and nobody has opted in). **What remains: E3, E4, E5, and E6's last item**
+**Status 2026-09-09 (end of session):** A, B, C0, **all of D**, and **E1 + E2 + E3 + E6's
+four hardening items** are done; suite **645 green**. C1–C6 stay deferred by client direction
+(AI content is opt-in and nobody has opted in). **What remains: E4, E5, and E6's last item**
 — replacing `/pre-audit`'s flat US benchmarks with a vertical/geo benchmark table. Each task:
 branch, implement, add tests, run the full suite in a writable copy, keep it green.
 

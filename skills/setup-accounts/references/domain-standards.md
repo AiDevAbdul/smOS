@@ -17,7 +17,7 @@ Verified against Graph API v25.0. Meta deliberately gates identity/trust behind 
 
 ---
 
-## 2. The 11 step keys (single source of truth: `schemas/client_profile.js → normalizeSetup`)
+## 2. The step keys (single source of truth: `schemas/client_profile.js → normalizeSetup`)
 
 Each key is `null` (not done) or an ISO-8601 timestamp string (done). Do not invent new keys.
 
@@ -28,7 +28,7 @@ Each key is `null` (not done) or an ISO-8601 timestamp string (done). Do not inv
 | `page_created_at` | Created the Facebook Page | `facebook_page_id` |
 | `instagram_created_at` | Created the Instagram account | — |
 | `instagram_professional_at` | Converted IG to a Professional account | `instagram_business_id` |
-| `ig_page_linked_at` | Linked IG ↔ Page (Business Suite / IG app) | — |
+| `ig_page_linked_at` | Linked IG ↔ Page (Business Suite / IG app) — **read-verified against the Page's `instagram_business_account` edge before stamping; exit 6 if absent or a different IG, `--force` to override** | `instagram_business_id` (back-filled from the live link) |
 | `payment_method_added_at` | Added a payment method to the ad account | — |
 | `asset_access_granted_at` | Client accepted the agency's asset-access request | — |
 
@@ -42,7 +42,13 @@ Each key is `null` (not done) or an ISO-8601 timestamp string (done). Do not inv
 | `system_user_token_at` | `POST /{business_id}/system_users` succeeds | `system_user_id` |
 | `assets_assigned_at` | Asset assignment loop runs | — |
 
-> `domain_verified_at` and `landing_deployed_at` also live in the schema but are owned by `/setup-web`, not this skill.
+### Verification bookkeeping (written by the read-verified gate)
+| Key | Meaning |
+|-----|---------|
+| `ig_page_link_verified_at` | Non-null only when smOS itself read the link from the API. `null` after a `--force` — the gate timestamp then means "a human said so", which is a weaker claim and must stay distinguishable. |
+| `ig_page_link_check` | The full last verification result (`ok`, `instagram_business_id`, `username`, `mismatch`, `reason`, `forced`, `checked_at`). |
+
+> `domain_verified_at`, `landing_deployed_at`, `landing_verified_at` and `landing_probe` also live in the schema but are owned by `/setup-web`, not this skill.
 
 ---
 

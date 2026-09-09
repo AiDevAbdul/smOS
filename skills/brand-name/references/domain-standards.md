@@ -41,16 +41,24 @@ Score each candidate 1–5 on:
 The gates are **independent** — a name can pass `.com` and fail trademark, or vice versa.
 All three must look clean (and the attorney must clear) before a name is safe.
 
-### Gate A — `.com` availability (authority signal)
-- Method: `node:dns` `resolveNs` then `resolve`. A resolvable record ⇒ **taken** (`available: false`).
-- No record ⇒ **`null` (unknown)** — DNS absence is a weak signal, not proof of availability.
-  Confirm at a registrar / RDAP before relying on it.
+### Gate A — Domain availability (authority signal)
+- Method: `node:dns` `resolveNs` then `resolve`, per TLD. A resolvable record ⇒ **taken**
+  (`false`). No record ⇒ **`null` (unknown)** — DNS absence is a weak signal, not proof of
+  availability. Confirm at a registrar / RDAP before relying on it.
+- `.com` is the gate field (`domain_com_available`). `co`/`io`/`net` (default set, override
+  with `--tlds`) are reported as context: a name available only on a fallback TLD is weaker,
+  and the row shows `domains` + `domains_taken` so that is visible rather than hidden behind
+  one boolean.
 
 ### Gate B — Trademark knockout (advisory ONLY)
 - A hit rules a name **OUT**. No hit is **NEVER** clearance.
-- `trademark_knockout_clear` semantics: `false` = conflicting live mark(s) found;
-  `true` = no identical live marks in the quick search (still NOT clearance);
-  `null` = could not run (no API key / API error).
+- The screen queries the exact name **and its sound-alike respellings**, because likelihood
+  of confusion turns on sound, not spelling — an exact-string search reports a clean sheet on
+  "Klaritee" while "CLARITY" is live registered. Returned marks are scored for confusability
+  (soundex / consonant skeleton / edit similarity ≥ 0.8) into `trademark_similar_marks[]`.
+- `trademark_knockout_clear` semantics: `false` = conflicting or confusable live mark(s)
+  found; `true` = no hits across every respelling searched (still NOT clearance);
+  `null` = could not run (no API key) **or ran incompletely** (any variant query failed).
 - `attorney_clearance_flagged` is **always `true`**, regardless of the knockout result.
 
 ### Gate C — Social handles (can only PROVE free)
@@ -58,6 +66,9 @@ All three must look clean (and the attorney must clear) before a name is safe.
 - **200 / redirect / block ⇒ `null`** (unknown) — IG/FB/TikTok/X serve a 200 app shell for
   nonexistent handles, so 200 ≠ taken. Never report `false` from an unauthenticated 200.
 - Handles checked: instagram, facebook, x, tiktok, linkedin (company path).
+- `handle_consistency` rolls the five up into one verdict — a brand needs the SAME handle
+  everywhere, and a per-platform suffix is a real cost. `consistent: true` requires all five
+  to 404; anything unknown ⇒ `null`.
 
 **The `null` discipline:** every gate fails OPEN to `null`, never silently to "available".
 A `null` is an instruction to verify manually, not a green light.

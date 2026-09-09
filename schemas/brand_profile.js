@@ -62,6 +62,13 @@ export function normalizeVerbal(raw) {
       trademark_knockout_clear: screening.trademark_knockout_clear ?? null,
       handles_available: screening.handles_available ?? null,
       attorney_clearance_flagged: screening.attorney_clearance_flagged ?? null,
+      // E3 depth: multi-TLD availability, the sound-alike respellings the knockout
+      // actually queried, near marks it found, and the cross-platform handle verdict.
+      domains: screening.domains ?? null,
+      trademark_queried: screening.trademark_queried ?? null,
+      trademark_similar_marks: screening.trademark_similar_marks ?? null,
+      trademark_note: screening.trademark_note ?? null,
+      handle_consistency: screening.handle_consistency ?? null,
     },
     name_approved_at: pick(r, "name_approved_at") ?? null, // GATE 2
     tagline: pick(r, "tagline") ?? null,

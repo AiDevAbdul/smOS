@@ -67,7 +67,7 @@ The companion finds the entry whose `domain_name` matches and reads
 
 - `META_ACCESS_TOKEN` — business/system-user token with Business Manager domain
   permissions. Required for `--register` and `--verify-status`. Not needed for
-  `--set-website` (pure profile writeback).
+  `--set-website` / `--probe` (these call the client's own site, not Meta).
 - `META_APP_SECRET` (optional) — when set, every call includes
   `appsecret_proof = HMAC-SHA256(token)` keyed by the app secret (added by
   `meta-graph.js` `appsecretProof`). Required if the app enables "Require App Secret".

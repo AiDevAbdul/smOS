@@ -152,6 +152,18 @@ resvg, bundled fonts, deterministic, offline). What they generate is an honest *
 starter identity**, not bespoke designed logo art — a client who commissions artwork
 replaces `logo.primary_url` with the designer's file.
 
+**Setup verifies, it does not assume.** `/setup-web --set-website` GETs the landing URL and
+refuses to record one that doesn't answer 2xx (exit 5; `--force` records it and marks it
+unverified) — it stores the post-redirect final URL, since that's what the pixel and ad links
+must use. `/setup-accounts --done ig_page_linked_at` reads the Page's
+`instagram_business_account` edge first and refuses the stamp when the link is absent or
+points at a *different* IG (exit 6); `--verify` runs both read-checks without writing. A
+`setup.*_verified_at` timestamp means **smOS confirmed it**; the gate timestamp alone only
+means a human said so, and the two stay distinguishable. `/brand-name --screen` screens the
+name's **sound-alike respellings**, not just its spelling (`scripts/lib/phonetics.js`), across
+multiple TLDs, and reports one cross-platform handle verdict — a partially-failed knockout is
+`null`, never "clear".
+
 **Three human gates are load-bearing and never auto-cleared:** positioning, final name
 (+ trademark attorney clearance — the knockout screen only rules names *out*), and logo.
 `schemas/brand_profile.js` enforces them fail-closed: a later stage refuses to validate

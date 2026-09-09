@@ -11,6 +11,7 @@ Stand up a brand-new client's Meta stack. The hard rule (verified against Graph 
 
 - Reports setup state as JSON: manual gates done/blocking, API asset ids, and overall readiness via `checkZeroStartPrereqs` (`--status`, the default).
 - Records a manual gate timestamp on operator confirmation, optionally writing the id it produced (`--done <step> [--set k=v]`).
+- **Read-verifies the gates Meta can actually confirm.** `--done ig_page_linked_at` GETs the Page's `instagram_business_account` edge first and refuses the stamp (exit 6) when the link does not exist, or when the Page is linked to a *different* IG than the profile records. On success it stamps `setup.ig_page_link_verified_at` and back-fills the live `instagram_business_id`. `--verify` runs the same read-checks (Page + IG link) without writing.
 - Creates API-creatable assets once `business_id` + verification exist: ad account (`POST /{business_id}/adaccount`), pixel/dataset (`POST /{business_id}/adspixels`), system user (`POST /{business_id}/system_users`), and assigns owned assets (page, ad account) to the system user (`--bootstrap`).
 - Writes every resulting id into `accounts` and every completion into `setup` with `nowIso()` timestamps.
 
@@ -56,6 +57,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 2. **Walk the manual gates** one at a time. After the operator confirms each, record it (and any id it produced):
    `node skills/setup-accounts/setup-accounts.js {slug} --done page_created_at --set facebook_page_id=1234567890`
    Use exact step keys (see `references/domain-standards.md`): `business_verified_at`, `page_created_at`, `instagram_created_at`, `instagram_professional_at`, `ig_page_linked_at`, `payment_method_added_at`, `asset_access_granted_at`.
+   `ig_page_linked_at` is read-verified against the API — if it exits 6, the link genuinely isn't there yet (finish it in Meta Business Suite → Linked accounts and re-run). `--force` records the operator's word instead and marks the gate unverified; use it only when the human explicitly accepts that.
 3. **Bootstrap the API half** once `business_id` + verification are in place:
    `node skills/setup-accounts/setup-accounts.js {slug} --bootstrap`
    Creates ad account + pixel + system user, assigns assets, writes ids + timestamps.
@@ -64,8 +66,8 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ## Input / Output Specification
 
-**Inputs:** `slug` (positional, required); one mode flag (`--status` default | `--done <step>` [`--set k=v`] | `--bootstrap`); env `META_ACCESS_TOKEN` (+ optional `META_APP_SECRET`) for `--bootstrap`.
-**Outputs:** JSON to stdout (status report, recorded-gate echo, or created/errors report) + an updated `clients/{slug}/client_profile.json` (`accounts` ids, `setup` timestamps).
+**Inputs:** `slug` (positional, required); one mode flag (`--status` default | `--verify` | `--done <step>` [`--set k=v`] [`--from-intake`] [`--force`] | `--bootstrap`); env `META_ACCESS_TOKEN` (+ optional `META_APP_SECRET`) for `--bootstrap`, `--verify`, and the read-verified gates.
+**Outputs:** JSON to stdout (status report, verification report, recorded-gate echo, or created/errors report) + an updated `clients/{slug}/client_profile.json` (`accounts` ids, `setup` timestamps, plus `setup.ig_page_link_verified_at` / `setup.ig_page_link_check` for the read-verified gate). `--status` marks each API-verifiable step with `api_verified`.
 (Full schemas, exit codes, and example payloads: `references/io-contract.md`.)
 
 ## Variability Analysis
@@ -81,6 +83,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ### Must Follow
 - [ ] Record a manual gate ONLY on an explicit operator `--done` — never assume a human step happened.
+- [ ] For a gate Meta can see (`ig_page_linked_at`), let the companion read-verify it. The operator's word is the fallback, not the default — `--force` must be a conscious human decision, and it records the gate as unverified.
 - [ ] Run the API half through `createGraph()` so the guard chokepoint executes before every write.
 - [ ] Require `accounts.business_id` before `--bootstrap`; halt with a clear message if absent.
 - [ ] Persist ids to `accounts` and timestamps to `setup` via `clientProfile.normalize` on save.
@@ -88,6 +91,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ### Must Avoid
 - Fabricating manual-gate completion or faking ids.
+- Reporting the IG↔Page link as done when the Page shows no `instagram_business_account`, or when it shows a different IG id than the profile records (that is a mismatch to resolve, not a pass).
 - Printing, logging, or persisting the system-user access token.
 - Activating campaigns, adding budgets, or creating more than the 5-per-business API ad-account cap.
 - Hardcoding a token — always resolve from env.
@@ -105,6 +109,8 @@ Gather context before acting (do not ask the user for what is discoverable):
 | Profile missing | Halt: "run /intake first" (exit 2) — never create the profile here |
 | Missing `slug` arg | Print usage, exit 1 |
 | Unknown `--done` step | List valid step keys, exit 1 |
+| `--done ig_page_linked_at` but the Page has no linked IG (or a different one) | Companion exits **6** with the fix; nothing stamped. Complete the link in Business Suite and re-run, or `--force` to record it unverified |
+| `--verify` finds the Page unreadable or the IG link absent | Exit 6 with the per-check reason — halt and fix before `/publish` or `/inbox` |
 | `--bootstrap` without `accounts.business_id` | Halt: "Set accounts.business_id first" (exit 3) — never guess |
 | `META_ACCESS_TOKEN` missing | `createGraph()` throws "META_ACCESS_TOKEN is required" — surface, do not silent-skip |
 | Token expired/invalid (code 190/102/463/467) | `TokenExpiredError` surfaces (non-retryable) — prompt re-auth |
@@ -138,6 +144,6 @@ conventions. See also `skills/references-shared.md` for the canonical doc-URL ma
 
 | File | When to Read |
 |------|--------------|
-| `references/domain-standards.md` | The manual-vs-API split, the 11 step keys + taxonomy, readiness rules, asset caps, good/bad operator-flow examples |
+| `references/domain-standards.md` | The manual-vs-API split, the step keys + taxonomy, read-verified gates, readiness rules, asset caps, good/bad operator-flow examples |
 | `references/api-reference.md` | Exact Graph v25.0 endpoints, request bodies, asset tasks, rate limits, token handling — all cited |
 | `references/io-contract.md` | Full CLI contract, exit codes, JSON output schemas + example payloads, edge cases |

@@ -26,6 +26,7 @@ import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import * as clientProfile from "../../schemas/client_profile.js";
 import { checkZeroStartPrereqs } from "../../scripts/lib/guards.js";
 import * as P from "../../scripts/lib/paths.js";
+import { verifyIgPageLink, verifyPage } from "../../scripts/lib/meta_verify.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -88,10 +89,31 @@ async function resolveFromIntake(step, profile) {
   return { ok: true, key: rule.accountKey, value: res.id, source: url, resolvedName: res.name };
 }
 
+// Manual gates smOS can read-verify itself (E3). The rest are genuinely invisible
+// to the API (business verification, a card on file) and stay on the operator's word.
+const API_VERIFIABLE_STEPS = new Set(["ig_page_linked_at"]);
+
+/**
+ * Read-verify the IG↔Page link before letting the gate be stamped. Returns the
+ * verification result; the caller decides whether to proceed (--force) or halt.
+ */
+async function verifyStep(step, profile) {
+  if (step !== "ig_page_linked_at") return null;
+  const graph = createGraph(); // throws clearly if META_ACCESS_TOKEN missing
+  return verifyIgPageLink(graph, {
+    pageId: profile.accounts?.facebook_page_id,
+    igId: profile.accounts?.instagram_business_id,
+  });
+}
+
 function printStatus(slug, profile) {
   const setup = profile.setup || {};
   const acc = profile.accounts || {};
-  const manual = MANUAL_STEPS.map((k) => ({ step: k, done: !!setup[k], at: setup[k] || null }));
+  const manual = MANUAL_STEPS.map((k) => ({
+    step: k, done: !!setup[k], at: setup[k] || null,
+    // an API-verifiable step reports whether smOS confirmed it or only recorded it
+    api_verified: API_VERIFIABLE_STEPS.has(k) ? !!setup.ig_page_link_verified_at : null,
+  }));
   const apiAssets = {
     ad_account_id: acc.ad_account_id, pixel_id: acc.pixel_id,
     system_user_id: acc.system_user_id, business_id: acc.business_id,
@@ -170,14 +192,13 @@ async function bootstrap(slug, profile) {
 async function main() {
   const args = process.argv.slice(2);
   const slug = args[0];
-  if (!slug) { console.error("Usage: setup-accounts.js <slug> [--status] [--done <step> [--set k=v]] [--bootstrap]"); process.exit(1); }
+  if (!slug) { console.error("Usage: setup-accounts.js <slug> [--status] [--verify] [--done <step> [--set k=v] [--force]] [--bootstrap]"); process.exit(1); }
   const profile = loadProfile(slug);
   profile.setup = profile.setup || {};
 
   if (args.includes("--done")) {
     const step = args[args.indexOf("--done") + 1];
     if (!MANUAL_STEPS.includes(step)) { console.error(`Unknown step "${step}". One of: ${MANUAL_STEPS.join(", ")}`); process.exit(1); }
-    profile.setup[step] = nowIso();
     const setIdx = args.indexOf("--set");
     let resolvedFromIntake = null;
     if (setIdx >= 0) {
@@ -189,8 +210,49 @@ async function main() {
       profile.accounts[result.key] = result.value;
       resolvedFromIntake = result;
     }
+
+    // Verify, don't assume: for the steps Meta can confirm, read the API before
+    // stamping. --force records the human's word and says so in the profile.
+    let verification = null;
+    if (API_VERIFIABLE_STEPS.has(step)) {
+      const force = args.includes("--force");
+      verification = await verifyStep(step, profile).catch((e) => ({ ok: false, reason: e.message }));
+      if (!verification.ok && !force) {
+        console.error(JSON.stringify({
+          slug, refused: step, reason: verification.reason, verification,
+          fix: "Complete the link in Meta Business Suite and re-run. Pass --force to record it unverified.",
+        }, null, 2));
+        process.exit(6);
+      }
+      if (verification.ok) {
+        profile.setup.ig_page_link_verified_at = nowIso();
+        if (verification.instagram_business_id) profile.accounts.instagram_business_id = verification.instagram_business_id;
+      } else {
+        profile.setup.ig_page_link_verified_at = null;
+      }
+      profile.setup.ig_page_link_check = { ...verification, forced: !verification.ok, checked_at: nowIso() };
+    }
+
+    profile.setup[step] = nowIso();
     saveProfile(slug, profile);
-    console.log(JSON.stringify({ slug, recorded: step, at: profile.setup[step], resolved_from_intake: resolvedFromIntake, accounts: profile.accounts }, null, 2));
+    console.log(JSON.stringify({
+      slug, recorded: step, at: profile.setup[step], resolved_from_intake: resolvedFromIntake,
+      verified: verification ? verification.ok : null,
+      warning: verification && !verification.ok ? `RECORDED UNVERIFIED (--force): ${verification.reason}` : null,
+      accounts: profile.accounts,
+    }, null, 2));
+    return;
+  }
+
+  if (args.includes("--verify")) {
+    const graph = createGraph();
+    const page = await verifyPage(graph, profile.accounts?.facebook_page_id);
+    const igLink = await verifyIgPageLink(graph, {
+      pageId: profile.accounts?.facebook_page_id,
+      igId: profile.accounts?.instagram_business_id,
+    });
+    console.log(JSON.stringify({ slug, page, ig_page_link: igLink }, null, 2));
+    if (!page.ok || !igLink.ok) process.exit(6);
     return;
   }
 

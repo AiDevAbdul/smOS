@@ -11,12 +11,14 @@ Self-contained; mirrors the code exactly.
 ```
 node skills/setup-web/setup-web.js <slug> --register      <domain>
 node skills/setup-web/setup-web.js <slug> --verify-status  <domain>
-node skills/setup-web/setup-web.js <slug> --set-website     <url>
+node skills/setup-web/setup-web.js <slug> --set-website     <url> [--force]
+node skills/setup-web/setup-web.js <slug> --probe            [url]
 ```
 
 - `<slug>` is positional and required (arg 0).
-- Exactly one mode flag must be present. `--set-website` is checked first and
-  short-circuits before any Meta call (no token needed).
+- Exactly one mode flag must be present. `--probe` and `--set-website` are checked
+  first and short-circuit before any Meta call (no Meta token needed) — they do make
+  ONE outbound HTTP GET to the client's own site.
 
 ---
 
@@ -29,6 +31,7 @@ node skills/setup-web/setup-web.js <slug> --set-website     <url>
 | `2` | `client_profile.json` not found (`run /intake first`) |
 | `3` | `accounts.business_id`/`bm_id` is null or TBD (`run /setup-accounts`) |
 | `4` | `--verify-status` domain not registered to the business (`run --register first`) |
+| `5` | The landing URL did not answer 2xx — `--set-website` refused (nothing written), or `--probe` reporting unreachable |
 
 ---
 
@@ -72,25 +75,45 @@ Reads `GET /{business_id}/owned_domains`, finds the matching `domain_name`.
 
 ---
 
-## Mode 3 — `--set-website <url>`
+## Mode 3 — `--set-website <url> [--force]`
 
-Pure profile writeback; no Meta call, no token required.
+Verified profile writeback; no Meta call, no Meta token. The URL is fetched first
+(`probeUrl` in `scripts/lib/verify_url.js`): redirects are followed manually (≤5),
+only a 2xx counts as reachable, and 401/403 counts as unreachable — a page behind
+auth is not a landing page. **Nothing is written unless the probe passes** (exit 5),
+unless `--force` is given.
 
 **Output schema (stdout):**
 ```json
 {
   "slug": "acme",
-  "website_url": "https://example.com",
+  "website_url": "https://www.example.com/",
   "domain": "example.com",
+  "verified": true,
+  "probe_summary": "HTTP 200 (after 1 redirect → https://www.example.com/)",
+  "warning": null,
   "next": "Run /capi-setup to install/verify the pixel on this site"
 }
 ```
 
+On refusal (exit 5) the same shape goes to **stderr** as
+`{ slug, refused, reason, probe, fix }`.
+
 **Writeback to `clients/{slug}/client_profile.json`:**
-- `accounts.website_url` = the URL as given.
+- `accounts.website_url` = the **final** URL after redirects (or the URL as given when `--force`d past a failure).
 - `accounts.domain` = `new URL(url).hostname` with leading `www.` stripped.
   If the URL is unparseable, `domain` is left unchanged (try/catch swallows).
 - `setup.landing_deployed_at` = current ISO timestamp.
+- `setup.landing_verified_at` = the probe timestamp on a 2xx, else `null`.
+- `setup.landing_probe` = `{ url, final_url, status, redirects, https, ok, error, checked_at, forced }`.
+
+---
+
+## Mode 4 — `--probe [url]`
+
+Read-only reachability check (defaults to `accounts.website_url` when no URL is
+given). Prints `{ slug, probe, summary }`, writes nothing, exits 5 when unreachable.
+`SMOS_PROBE_TIMEOUT_MS` overrides the 10s default.
 
 ---
 
@@ -102,12 +125,14 @@ Per `schemas/client_profile.js`, after `normalize()`:
 {
   "accounts": {
     "business_id": "1029384756",   // read (alias: bm_id) — required for Meta modes
-    "website_url": "https://example.com",  // written by --set-website
+    "website_url": "https://example.com",  // written by --set-website (post-redirect)
     "domain": "example.com"                // written by --set-website
   },
   "setup": {
     "domain_verified_at": "2026-06-22T10:00:00.000Z", // written by --verify-status (only if verified)
-    "landing_deployed_at": "2026-06-22T09:30:00.000Z" // written by --set-website
+    "landing_deployed_at": "2026-06-22T09:30:00.000Z", // written by --set-website
+    "landing_verified_at": "2026-06-22T09:30:00.000Z", // 2xx probe only; null when --force'd
+    "landing_probe": { "status": 200, "redirects": 1, "ok": true, "forced": false }
   }
 }
 ```
@@ -124,13 +149,16 @@ Per `schemas/client_profile.js`, after `normalize()`:
 | Profile file absent | "Profile not found … run /intake first", exit 2 |
 | `business_id` null/TBD (`isTbd`) | "Set accounts.business_id first (run /setup-accounts).", exit 3 |
 | `--set-website` without URL | "--set-website needs a URL", exit 1 |
-| Unparseable URL in `--set-website` | `website_url` still written; `domain` left unchanged |
+| Landing URL unreachable (non-2xx, DNS failure, timeout, >5 redirects) | Refusal JSON to stderr, exit 5, profile untouched |
+| Same, with `--force` | Recorded with `landing_verified_at: null`, `landing_probe.forced: true`, and a `warning` in stdout |
+| URL given without a scheme | `https://` is assumed before probing (`normalizeUrl`) |
+| Unparseable URL in `--set-website` | Probe fails with "unparseable URL" → exit 5 (with `--force`, `website_url` written and `domain` left unchanged) |
 | Register node read fails | `.catch(() => ({}))` → status falls back to `"pending"`, txt_record falls back to Business-Settings hint |
 | Domain not registered on `--verify-status` | exit 4 |
 | Verification still pending | `recorded: false`, no `domain_verified_at` stamp |
 | Meta token expired (190/102/463/467) | `TokenExpiredError` from `meta-graph.js`; fatal, exit 1 — re-auth required |
 | Transient Meta/HTTP/network error | Auto-retried (≤4×) with backoff before surfacing |
-| No mode flag at all | "Provide one of --register, --verify-status, --set-website", exit 1 |
+| No mode flag at all | "Provide one of --register, --verify-status, --set-website, --probe", exit 1 |
 
 ---
 

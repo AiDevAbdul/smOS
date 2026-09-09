@@ -35,8 +35,15 @@ node skills/brand-name/brand-name.js <slug> --approve-name
   "name": "Lumina",
   "domain_com_available": null,
   "domain": "lumina.com",
+  "domains": { "com": null, "co": false, "io": null, "net": false },
+  "domains_taken": ["co", "net"],
   "trademark_knockout_clear": false,
-  "trademark_note": "3 potentially conflicting live mark(s) — attorney review required",
+  "trademark_note": "2 sound-alike/near mark(s) across 6 respellings — likely knockout, attorney review required",
+  "trademark_queried": ["lumina", "luminae", "lumyna"],
+  "trademark_similar_marks": [
+    { "mark": "LUMINAH", "matched_query": "lumina", "reasons": ["same soundex (L550)"], "similarity": 0.86 }
+  ],
+  "phonetics": { "soundex": "L550", "consonant_skeleton": "LMN" },
   "handles_available": {
     "instagram": null,
     "facebook": null,
@@ -44,13 +51,24 @@ node skills/brand-name/brand-name.js <slug> --approve-name
     "tiktok": true,
     "linkedin": null
   },
+  "handle_consistency": {
+    "handle": "@lumina",
+    "platforms_checked": 5,
+    "definitely_free": ["x", "tiktok"],
+    "unknown": ["instagram", "facebook", "linkedin"],
+    "consistent": null,
+    "note": "unverified on instagram, facebook, linkedin — these platforms serve 200 for nonexistent handles, so check them signed-in before committing"
+  },
   "attorney_clearance_flagged": true
 }
 ```
 
-Field semantics: `*_available` / `*_clear` ∈ `{true | false | null}` where `null` = unknown
-(verify manually); `true` only when definitively free/clear; `attorney_clearance_flagged`
-always `true`. See `references/api-reference.md` for per-gate mapping.
+Field semantics: `*_available` / `*_clear` / `consistent` ∈ `{true | false | null}` where
+`null` = unknown (verify manually); `true` only when definitively free/clear;
+`attorney_clearance_flagged` always `true`. `trademark_queried` is the respelling set the
+knockout actually searched (or, with no API key, the set to search by hand);
+`trademark_similar_marks` holds sound-alike hits with the reasons they matched. See
+`references/api-reference.md` for per-gate mapping.
 
 ## `--screen` stdout
 
@@ -58,7 +76,7 @@ always `true`. See `references/api-reference.md` for per-gate mapping.
 {
   "slug": "acme",
   "screened": [ { /* screen-row */ } ],
-  "note": "domain/trademark 'null' = unknown, verify manually. Trademark is a knockout only — attorney clearance still required."
+  "note": "domain/trademark/handle 'null' = UNKNOWN, not available — verify manually. The trademark screen covers sound-alike respellings but is a knockout only: attorney clearance is still required."
 }
 ```
 

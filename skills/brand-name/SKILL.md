@@ -10,7 +10,9 @@ Generate brand-name candidates, screen each against three independent legal/avai
 ## What This Skill Does
 
 - Generate 15–30 name candidates across five name types (see `references/domain-standards.md`).
-- Screen shortlisted names via `brand-name.js --screen` against three gates: `.com` (DNS/RDAP), USPTO trademark knockout, social handles (IG/FB/X/TikTok/LinkedIn).
+- Screen shortlisted names via `brand-name.js --screen` against three gates: domains (`.com` decides; `.co/.io/.net` reported for context, override with `--tlds`), USPTO trademark knockout, social handles (IG/FB/X/TikTok/LinkedIn).
+- **Screen the name's sound-alikes, not just its spelling.** The knockout queries the exact name plus its respellings (`spellingVariants` in `scripts/lib/phonetics.js`) and flags returned marks that are confusable by soundex, consonant skeleton, or edit distance — so "Klaritee" surfaces a live "CLARITY" instead of reporting a clean sheet. If any query in the set fails, the whole screen reports `null` (incomplete), never "clear".
+- Report a **handle-consistency verdict** (`handle_consistency`) rather than five loose booleans: one brand should be @thesamething everywhere, and `consistent` can only be `true` when every platform returns a clean 404.
 - Present the screened shortlist with per-name gate results; recommend one but let the **human pick**.
 - Draft tagline, voice (traits + spectrums + do/don't), messaging house, elevator pitch, boilerplate; persist via `--in verbal.json`.
 - Stamp the name gate via `--approve-name` (human-only), advancing `status` to `named` and unblocking `/brand-visual`.
@@ -46,29 +48,32 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 **Optional (ask only if relevant):**
 3. Category-specific naming constraints (e.g. regulated terms, geographic scope, multilingual reach).
-4. Whether a `USPTO_ODP_API_KEY` is available to automate the knockout (else it returns `null`/manual).
+4. Whether a `USPTO_ODP_API_KEY` is available to automate the knockout (else it returns `null`/manual — and hands over the exact respelling set to search by hand).
+5. Any TLDs beyond the default `com,co,io,net` that matter to this client (e.g. a country TLD) — pass via `--tlds`.
 
 ## Workflow
 
 1. Verify `strategy.positioning_approved_at` is set; if not, halt and route to `/brand-strategy`.
 2. Generate 15–30 candidates across name types; bias toward coined/abstract in crowded categories (most trademark-defensible).
 3. Shortlist ~6 on memorability, pronounceability, distinctiveness, cultural soundness.
-4. Run `node skills/brand-name/brand-name.js {slug} --screen "Name1,Name2,..."`; read the per-name gate table.
+4. Run `node skills/brand-name/brand-name.js {slug} --screen "Name1,Name2,..."` (add `--tlds com,co,pk` if the client needs others); read the per-name gate table, including `trademark_similar_marks` and `handle_consistency`.
 5. Present the screened shortlist to the human with gate results; recommend one. The human picks.
 6. Draft the verbal layer for the chosen name into `verbal.json`; persist with `--in verbal.json`.
 7. Confirm attorney clearance with the human, then stamp the gate with `--approve-name`.
 
 ## Input / Output Specification
 
-**Inputs:** `{slug}` (positional); one mode flag — `--screen "A,B,C"`, `--in verbal.json`, or `--approve-name`. Optional env `USPTO_ODP_API_KEY`. Reads `clients/{slug}/brand_profile.json`.
-**Outputs:** updates `clients/{slug}/brand_profile.json` (verbal layer + `name_candidates[]` screen rows + `name_screening` + `name_approved_at`); prints a JSON result to stdout.
+**Inputs:** `{slug}` (positional); one mode flag — `--screen "A,B,C"` (+ optional `--tlds com,co,io`), `--in verbal.json`, or `--approve-name`. Optional env `USPTO_ODP_API_KEY`. Reads `clients/{slug}/brand_profile.json`.
+**Outputs:** updates `clients/{slug}/brand_profile.json` (verbal layer + `name_candidates[]` screen rows + `name_screening` + `name_approved_at`); prints a JSON result to stdout. Each screen row carries `domain_com_available`, `domains` (per-TLD), `domains_taken`, `trademark_knockout_clear`, `trademark_queried` (the respellings actually searched), `trademark_similar_marks`, `phonetics`, `handles_available`, `handle_consistency`, `attorney_clearance_flagged`.
 (Full schemas, exit codes, and example payloads: `references/io-contract.md`.)
 
 ## Variability Analysis
 
 | What VARIES (per client / run) | What's CONSTANT (encoded in skill) |
 |--------------------------------|------------------------------------|
-| Candidate names, category, tone, chosen name | Three-gate screening model (.com / trademark / handles) |
+| Candidate names, category, tone, chosen name | Three-gate screening model (domains / trademark / handles) |
+| Which TLDs matter (`--tlds`) | `.com` is the gate field; other TLDs are context |
+| Which respellings a name generates | Confusability model: soundex + consonant skeleton + edit distance |
 | Voice traits, spectrums, taglines, messaging | Five name-type taxonomy; coined/abstract = defensible |
 | Whether `USPTO_ODP_API_KEY` is set | Fail-open-to-`null` semantics (never silent `true`) |
 | Number of candidates / shortlist size | `attorney_clearance_flagged` always `true`; gate is human-only |
@@ -78,12 +83,15 @@ Gather context before acting (do not ask the user for what is discoverable):
 ### Must Follow
 - [ ] Confirm `positioning_approved_at` is stamped before naming.
 - [ ] Screen every shortlisted name through all three gates before presenting.
+- [ ] Read `trademark_similar_marks` before recommending: a sound-alike live mark is a knockout even when the exact spelling is free.
 - [ ] Report unknown availability as `null`, never as available.
 - [ ] Keep `attorney_clearance_flagged: true` on every candidate; require human ack before `--approve-name`.
 - [ ] Let the human pick the name and stamp the gate — AI only recommends.
 
 ### Must Avoid
 - Treating "no trademark hit" as clearance (it is a knockout only).
+- Treating an exact-spelling miss as a clean sheet — likelihood of confusion turns on sound, and a partially-failed query set is `null`, not clear.
+- Calling handles "consistent" when some platforms are merely unknown.
 - Marking a social handle "taken" from an unauthenticated 200 response.
 - Auto-running `--approve-name`, or stamping without attorney acknowledgement.
 - Generating verbal identity from a cold prompt instead of reusing the strategy layer.
@@ -104,7 +112,8 @@ Gather context before acting (do not ask the user for what is discoverable):
 | `--approve-name` but `attorney_clearance_flagged` not set | Refuse to stamp, exit 4 |
 | `--in` path missing | Halt, exit 2 |
 | RDAP/DNS/handle/USPTO call fails or unparseable | Field set to `null` (unknown) with a manual-verify note — never `true` |
-| No `USPTO_ODP_API_KEY` | `trademark_knockout_clear: null` + manual USPTO search URL |
+| No `USPTO_ODP_API_KEY` | `trademark_knockout_clear: null` + manual USPTO search URL + the respelling set to search by hand |
+| Some USPTO respelling queries fail (429/5xx) | Whole screen reports `knockout_clear: null` with an "incomplete" note — a partial neighbourhood is not a clean sheet |
 | Schema validation fails on `--in` | `saveBrand` throws fail-closed naming each missing field; do not write partial |
 
 ## Dependencies & Security

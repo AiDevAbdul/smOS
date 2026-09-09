@@ -61,6 +61,12 @@ export function normalizeSetup(raw) {
     assets_assigned_at: step("assets_assigned_at"),
     domain_verified_at: step("domain_verified_at"),
     landing_deployed_at: step("landing_deployed_at"),
+    // read-verification (E3): a timestamp here means smOS itself confirmed the
+    // asset, not that a human said so. null while unconfirmed — never assumed.
+    landing_verified_at: step("landing_verified_at"),
+    landing_probe: s.landing_probe ?? null,
+    ig_page_link_verified_at: step("ig_page_link_verified_at"),
+    ig_page_link_check: s.ig_page_link_check ?? null,
   };
 }
 

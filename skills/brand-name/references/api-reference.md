@@ -14,26 +14,43 @@ in credentials.
 | Manual fallback | https://tmsearch.uspto.gov (human knockout + clearance) |
 | Hit count parsed from | `json.count` ?? `json.results.length` ?? `json.total` |
 
+**Query set:** the exact name PLUS its sound-alike respellings — `spellingVariants(name,
+{limit: 6})` from `scripts/lib/phonetics.js` (ph↔f, c↔k, s↔z, i↔y, ee↔ea, qu→kw, x→ks,
+double-letter collapse, trailing-e churn). Exact spelling first, deduped, deterministic.
+One request per variant, sequentially.
+
+**Confusability:** every mark name in a response (`markText` / `mark_identification` /
+`markIdentification` / `name`) is compared to the candidate with `isConfusable` — soundex
+match OR consonant-skeleton match OR normalized edit similarity ≥ 0.8 — and reported in
+`similar_marks[]` with its reasons. This is the case an exact-string search misses:
+"Klaritee" vs a live "CLARITY".
+
 **Result mapping** (`trademarkKnockout`):
-- No key in env ⇒ `{ knockout_clear: null, note: "no USPTO_ODP_API_KEY — verify manually …" }`.
-- Non-2xx ⇒ `{ knockout_clear: null, note: "USPTO returned {status} …" }`.
-- Unparseable hits ⇒ `{ knockout_clear: null, note: "USPTO response unparseable …" }`.
-- `hits === 0` ⇒ `{ knockout_clear: true, hits: 0, note: "no identical live marks (NOT clearance)" }`.
-- `hits > 0` ⇒ `{ knockout_clear: false, hits, note: "{n} potentially conflicting live mark(s) — attorney review required" }`.
+- No key in env ⇒ `{ knockout_clear: null, queried, note: "no USPTO_ODP_API_KEY — knockout NOT run … search these respellings too: …" }`.
+- ANY variant query non-2xx / unparseable ⇒ `{ knockout_clear: null, note: "knockout incomplete ({n}/{m} queries failed …)" }`. A partial neighbourhood is never a clean sheet.
+- 0 hits across every variant ⇒ `{ knockout_clear: true, hits: 0, note: "no hits across {m} respellings (NOT clearance)" }`.
+- Hits but none confusable ⇒ `{ knockout_clear: false, hits, note: "{n} hit(s) … none scoring as confusable — attorney review required" }`.
+- Confusable marks found ⇒ `{ knockout_clear: false, similar_marks: [...], note: "{n} sound-alike/near mark(s) … attorney review required" }`.
+- Every row also carries `phonetics: { soundex, consonant_skeleton }`.
 
 > The legacy public TESS endpoint was retired; `tmsearch.uspto.gov` has no open JSON API.
 > A knockout is advisory; `attorney_clearance_flagged` stays `true` in every case.
 
-## 2. Domain — DNS (`.com`)
+## 2. Domains — DNS (multi-TLD)
 
 | Item | Value |
 |------|-------|
 | Method | `node:dns` `dns.resolveNs(domain)` then fallback `dns.resolve(domain)` |
-| Domain built as | `handleize(name) + ".com"` where `handleize` = lowercase, strip non `[a-z0-9]` |
+| Domains built as | `handleize(name) + "." + tld` for each TLD; `handleize` = lowercase, strip non `[a-z0-9]` |
+| Default TLDs | `com, co, io, net` (`DEFAULT_TLDS`); override with `--tlds com,co,pk` |
 | Authoritative confirm | RDAP — https://www.icann.org/rdap (wire in for definitive answers) |
 
-**Result mapping** (`checkDotCom`): resolvable NS or A record ⇒ `available: false` (taken);
-both throw (no record) ⇒ `available: null` (unknown — confirm at registrar/RDAP). Never `true`.
+**Result mapping** (`checkDomains`): per TLD, a resolvable NS or A record ⇒ `false` (taken);
+both throw ⇒ `null` (unknown — confirm at registrar/RDAP). Never `true`. Returns
+`{ base, domains: {tld: false|null}, domain: "{base}.com", com_available, taken_tlds,
+unknown_tlds }`. `.com` remains the gate field (`domain_com_available`); the other TLDs are
+context — a name whose only options are fallbacks is a weaker name, and that should be
+visible. A TLD that wasn't screened is `null`, not free.
 
 ## 3. Social Handles (unauthenticated)
 
@@ -51,13 +68,21 @@ both throw (no record) ⇒ `available: null` (unknown — confirm at registrar/R
 **any other status / redirect / error ⇒ `null`** (unknown). A 200 is the platform's app
 shell, NOT proof the handle is taken — so `false` is never returned unauthenticated.
 
+**Consistency verdict** (`handleConsistency`): one brand should be @thesamething on every
+platform, so the row also carries `{ handle, platforms_checked, definitely_free[], unknown[],
+consistent, note }`. Because only a 404 proves anything, `consistent` is `true` only when
+EVERY platform 404s, and `null` otherwise — never `false`.
+
 ## 4. Rate Limits & Etiquette
 
 - USPTO ODP: respect per-key quota (see developer.uspto.gov terms); on 429/5xx the field
-  degrades to `null` — do not auto-retry in a tight loop.
+  degrades to `null` — do not auto-retry in a tight loop. The variant fan-out means up to 6
+  requests per candidate, run sequentially; keep the shortlist small.
 - Social GETs are best-effort and may be rate-limited or geo-blocked; `null` is the expected
   degraded result. Keep the shortlist small (~6) to limit fan-out.
-- All screens run with `Promise.all` per name; one gate's failure never blocks the others.
+- The three gates run with `Promise.all` per name (domains fan out across TLDs, handles
+  across platforms, trademark sequentially across variants); one gate's failure never blocks
+  the others.
 
 ## 5. Versions
 

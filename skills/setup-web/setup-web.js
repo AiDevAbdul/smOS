@@ -12,6 +12,12 @@
  *   node skills/setup-web/setup-web.js <slug> --register example.com
  *   node skills/setup-web/setup-web.js <slug> --verify-status example.com
  *   node skills/setup-web/setup-web.js <slug> --set-website https://example.com
+ *   node skills/setup-web/setup-web.js <slug> --probe https://example.com
+ *
+ * --set-website GETs the URL first and refuses to record one that does not answer
+ * with a 2xx (E3 "verify, don't assume") — an unreachable landing page recorded as
+ * live poisons /capi-setup, domain verification and every ad link downstream.
+ * --force records it anyway and says, in the profile, that it was unverified.
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -20,6 +26,7 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { createGraph, isTbd } from "../../scripts/lib/meta-graph.js";
 import * as clientProfile from "../../schemas/client_profile.js";
 import * as P from "../../scripts/lib/paths.js";
+import { probeUrl, describeProbe } from "../../scripts/lib/verify_url.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -57,15 +64,49 @@ async function main() {
   const profile = loadProfile(slug);
   profile.setup = profile.setup || {};
 
+  const probeIdx = args.indexOf("--probe");
+  if (probeIdx >= 0) {
+    const target = args[probeIdx + 1] || profile.accounts.website_url;
+    if (!target) { console.error("--probe needs a URL (or set accounts.website_url first)"); process.exit(1); }
+    const probe = await probeUrl(target);
+    console.log(JSON.stringify({ slug, probe, summary: describeProbe(probe) }, null, 2));
+    if (!probe.ok) process.exit(5);
+    return;
+  }
+
   const setWebIdx = args.indexOf("--set-website");
   if (setWebIdx >= 0) {
     const url = args[setWebIdx + 1];
     if (!url) { console.error("--set-website needs a URL"); process.exit(1); }
-    profile.accounts.website_url = url;
-    try { profile.accounts.domain = new URL(url).hostname.replace(/^www\./, ""); } catch {}
+    const force = args.includes("--force");
+    const probe = await probeUrl(url);
+    if (!probe.ok && !force) {
+      console.error(JSON.stringify({
+        slug, refused: url, reason: describeProbe(probe), probe,
+        fix: "Deploy the landing page (or wait for DNS to propagate) and re-run. Pass --force to record it unverified anyway.",
+      }, null, 2));
+      process.exit(5);
+    }
+    // Record the URL the browser actually lands on — http→https and apex→www
+    // redirects are the norm, and the final URL is what ads and the pixel must use.
+    const recorded = probe.ok ? (probe.final_url || probe.url) : url;
+    profile.accounts.website_url = recorded;
+    try { profile.accounts.domain = new URL(recorded).hostname.replace(/^www\./, ""); } catch {}
     profile.setup.landing_deployed_at = nowIso();
+    profile.setup.landing_verified_at = probe.ok ? probe.checked_at : null;
+    profile.setup.landing_probe = {
+      url, final_url: probe.final_url, status: probe.status,
+      redirects: probe.redirects.length, https: probe.https,
+      ok: probe.ok, error: probe.error, checked_at: probe.checked_at,
+      forced: probe.ok ? false : true,
+    };
     saveProfile(slug, profile);
-    console.log(JSON.stringify({ slug, website_url: url, domain: profile.accounts.domain, next: "Run /capi-setup to install/verify the pixel on this site" }, null, 2));
+    console.log(JSON.stringify({
+      slug, website_url: recorded, domain: profile.accounts.domain,
+      verified: probe.ok, probe_summary: describeProbe(probe),
+      warning: probe.ok ? null : "RECORDED UNVERIFIED (--force): the site did not answer. Downstream pixel/domain-verification steps will fail until it does.",
+      next: "Run /capi-setup to install/verify the pixel on this site",
+    }, null, 2));
     return;
   }
 
@@ -98,7 +139,7 @@ async function main() {
     return;
   }
 
-  console.error("Provide one of --register, --verify-status, --set-website");
+  console.error("Provide one of --register, --verify-status, --set-website, --probe");
   process.exit(1);
 }
 
