@@ -1,51 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PermissionBanner } from "../../components/PermissionBanner";
-
-interface StreamEvent {
-  seq: number;
-  data: any;
-}
+import { RunStream, type StreamEvent } from "../../components/runs/RunStream";
 
 type RunStatus = "idle" | "starting" | "running" | "done" | "failed";
-
-function summarizeEvent(e: any): { kind: string; text: string } | null {
-  if (!e || typeof e !== "object") return null;
-  if (e.type === "system" && e.subtype === "init") {
-    return { kind: "system", text: `session ${e.session_id ?? "?"} · model ${e.model ?? "?"}` };
-  }
-  if (e.type === "assistant" && e.message?.content) {
-    const text = e.message.content
-      .filter((c: any) => c.type === "text")
-      .map((c: any) => c.text)
-      .join("");
-    if (text) return { kind: "assistant", text };
-    const toolUse = e.message.content.find((c: any) => c.type === "tool_use");
-    if (toolUse) return { kind: "tool_use", text: `${toolUse.name}(${JSON.stringify(toolUse.input)})` };
-    return null;
-  }
-  if (e.type === "user" && e.message?.content) {
-    const toolResult = e.message.content.find((c: any) => c.type === "tool_result");
-    if (toolResult) {
-      const text = Array.isArray(toolResult.content)
-        ? toolResult.content.map((c: any) => c.text ?? "").join("")
-        : String(toolResult.content ?? "");
-      return { kind: "tool_result", text: text.slice(0, 2000) };
-    }
-    return null;
-  }
-  if (e.type === "result") {
-    return {
-      kind: "result",
-      text: `${e.subtype ?? "result"} · ${e.num_turns ?? "?"} turns · $${(e.total_cost_usd ?? 0).toFixed(4)} · ${e.duration_ms ?? "?"}ms`,
-    };
-  }
-  if (e.type === "registry_exit") return { kind: "system", text: `process exited (code ${e.code})` };
-  if (e.type === "registry_error") return { kind: "system", text: `error: ${e.message}` };
-  if (e.type === "registry_stderr") return { kind: "system", text: e.stderr };
-  return { kind: "raw", text: JSON.stringify(e) };
-}
 
 export function RunConsole({
   initialSlug,
@@ -62,6 +22,7 @@ export function RunConsole({
   const [usePermissionBridge, setUsePermissionBridge] = useState(false);
   const [events, setEvents] = useState<StreamEvent[]>([]);
   const esRef = useRef<EventSource | null>(null);
+  const router = useRouter();
 
   useEffect(() => () => esRef.current?.close(), []);
 
@@ -76,11 +37,16 @@ export function RunConsole({
       if (data?.type === "registry_exit") {
         setStatus(data.code === 0 ? "done" : "failed");
         es.close();
+        // The run is now in the registry's history; re-render the server
+        // component so it shows up in the run list and the cost charts
+        // without the operator having to reload.
+        router.refresh();
       }
     };
     es.addEventListener("registry-status", (msg: MessageEvent) => {
       setStatus((msg.data as RunStatus) ?? "done");
       es.close();
+      router.refresh();
     });
     es.onerror = () => {
       // Registry closed the stream normally on completion; EventSource
@@ -123,7 +89,7 @@ export function RunConsole({
     <div>
       <div className="ds-run-header">
         <span className="ds-run-header__id">{runId ? runId.slice(0, 8) : "no run yet"}</span>
-        <span className={`ds-badge ${status === "running" ? "ds-badge--info" : status === "done" ? "ds-badge--good" : status === "failed" ? "ds-badge--action" : "ds-badge--neutral"}`}>
+        <span className={`ds-badge ${status === "running" ? "ds-badge--info" : status === "done" ? "ds-badge--good" : status === "failed" ? "ds-badge--bad" : "ds-badge--neutral"}`}>
           {status}
         </span>
         {sessionId && <span className="ds-run-header__id">session {sessionId.slice(0, 8)}</span>}
@@ -182,25 +148,14 @@ export function RunConsole({
 
       <PermissionBanner runId={runId} active={status === "running"} />
 
-      <div className="ds-stream" role="log" aria-live="polite" style={{ marginTop: "var(--ds-space-5)" }}>
-        {events.map((e) => {
-          const summary = summarizeEvent(e.data);
-          if (!summary) return null;
-          if (summary.kind === "tool_use" || summary.kind === "tool_result") {
-            return (
-              <div className="ds-tool-call" key={e.seq}>
-                <div className="ds-tool-call__head">
-                  <span className="ds-tool-call__name">{summary.kind}</span>
-                </div>
-                <div className="ds-tool-call__body">
-                  <pre>{summary.text}</pre>
-                </div>
-              </div>
-            );
+      <div style={{ marginTop: "var(--ds-space-5)" }}>
+        <RunStream
+          events={events}
+          live={status === "running"}
+          emptyHint={
+            status === "starting" ? "Starting the run…" : "No output yet — start a run above."
           }
-          return <p key={e.seq}>{summary.text}</p>;
-        })}
-        {events.length === 0 && <p className="ds-field__hint">No output yet.</p>}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import Sparkline from "./charts/Sparkline";
 import { deltaDir, fmtPercent } from "../lib/format";
 
@@ -19,6 +20,12 @@ export interface MetricCardProps {
   href?: string;
   /** Position in a .ds-stagger group, driving the entrance delay. */
   index?: number;
+  /**
+   * Optional visual to the left of the number — a Ring, typically. Kept as a
+   * slot on this component rather than a hand-built card elsewhere, so a
+   * ring-bearing metric still gets the accent hairline, hover and stagger.
+   */
+  leading?: ReactNode;
 }
 
 const ACCENTS = [
@@ -41,9 +48,10 @@ export default function MetricCard({
   hue = 0,
   href,
   index = 0,
+  leading,
 }: MetricCardProps) {
   const dir = deltaDir(deltaPct);
-  const body = (
+  const inner = (
     <>
       <span className="ds-metric-card__label">{label}</span>
       <span className="ds-metric-card__value">
@@ -64,6 +72,19 @@ export default function MetricCard({
         )}
       </span>
     </>
+  );
+
+  // With a leading visual the card becomes a row: [visual][stacked text].
+  // The text keeps its own column layout so label/value/foot still stack.
+  const body = leading ? (
+    <span style={{ display: "flex", alignItems: "center", gap: "var(--ds-space-4)", minWidth: 0 }}>
+      {leading}
+      <span style={{ display: "flex", flexDirection: "column", gap: "var(--ds-space-1)", minWidth: 0 }}>
+        {inner}
+      </span>
+    </span>
+  ) : (
+    inner
   );
 
   const style = {

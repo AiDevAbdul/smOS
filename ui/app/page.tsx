@@ -121,7 +121,7 @@ export default async function Overview() {
       <div className="ds-page">
         <div className="ds-sec">
           <div>
-            <h1 className="ds-sec__title">Portfolio</h1>
+            <h1 className="ds-page-title">Portfolio</h1>
             <p className="ds-sec__sub">{verdict}</p>
           </div>
           <div className="ds-sec__actions">

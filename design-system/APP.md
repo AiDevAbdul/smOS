@@ -32,7 +32,19 @@ content), `--shell` (the always-dark chrome). Wash: `.ds-aurora` + three
 
 **Contrast note:** `--ds-faint` (#8695a5) is ~2.9:1 on white — fine for a hairline or a
 decorative glyph, below AA for text. Small captions in this layer use `--ds-muted`
-(~5.6:1). Verified by a Lighthouse pass (accessibility 100 on `/`).
+(~5.6:1).
+
+**`--ds-faint` is not a text color (enforced 2026-09-09).** Phase F stated the rule but
+only applied it where it had been noticed; a Lighthouse pass on the Profile screen then
+failed on `.ds-kv__key` at 3.06:1. Every meaning-carrying text rule was moved to
+`--ds-muted` — in this file `.ds-kv__key`, `.ds-grid thead th`, `.ds-nav-group`,
+`.ds-palette__hint`, `.ds-tool-call__dur`, `.ds-field__hint`,
+`.ds-metric-card__delta--flat`, `.ds-client-card__slug` and both card `*-label`s; in
+`smos-design-system.css` `.ds-table-wrap thead th` (so reports inherit it too),
+`.ds-step.is-pending .ds-step-num` and the report footer. It legitimately remains on
+borders, the `.ds-empty` glyph, placeholders and `[disabled]` fills. **If you are writing
+`color: var(--ds-faint)` on text, that is the bug.** Verified: accessibility 100 on `/`,
+`/runs`, `/approvals`, `/settings`, `/clients/<slug>/{pipeline,data,reports,profile}`.
 
 ## Charts (added 2026-09-09)
 
@@ -98,7 +110,8 @@ shift layout), `TrendChart`, `RankBar`, `DonutStat`, `FunnelBar`, `Gauge`, `Spar
 | `ds-btn--danger/--icon/--sm/--lg/--on-shell`, `.is-loading` | Button variants beyond Ledger's default/`--ghost`. `--on-shell` re-tones ghost for the dark chrome, where the light-surface ghost reads as a solid white pill |
 | `ds-glass`, `--strong`, `--shell` | The one blur mixin — chrome and overlays only |
 | `ds-aurora`, `ds-aurora__blob` | Ambient drifting wash; what makes blur read as glass |
-| `ds-page`, `ds-band`, `ds-duo` | Screen content wrapper (`.ds-main` is a bare scroll container), main+side band, two-up grid. `.ds-page > * { min-width: 0 }` is what lets `auto-fit` grids actually reflow on a phone |
+| `ds-page`, `ds-band`, `ds-duo` | Screen content wrapper (`.ds-main` is a bare scroll container), main+side band, two-up grid. `min-width: 0` is set on the children of all three — without it a wide child (a chart with long labels) inflates its track and `auto-fit` silently drops a column |
+| `ds-split`, `__a`, `__handle`, `__b` | List/detail split. The handle is a real `role="separator"` with arrow-key resize, not drag-only; below 860px the split stacks and the handle hides |
 | `ds-sec`, `__title`, `__sub`, `__actions` | Section header with a right-aligned controls slot |
 | `ds-metric-grid`, `ds-metric-card` (+`__label/__value/__unit/__foot/__delta--up|down|flat/__note/__spark`) | Opaque KPI card; `--ds-metric-accent` sets the top hairline |
 | `ds-chart-card` (+`__head/__title/__unit/__actions/__body/__foot/__table`) | Chart container; `--ds-chart-h` reserves height |
@@ -114,6 +127,9 @@ shift layout), `TrendChart`, `RankBar`, `DonutStat`, `FunnelBar`, `Gauge`, `Spar
 | `ds-palette__group/__empty/__hint` | Palette section headings, empty state, keyboard legend |
 | `ds-stagger` | Entrance stagger for a card group; set `--ds-i` per child |
 | `ds-sr-only` | Visually hidden but announced |
+| `ds-page-title` | Page-level `h1` (26px). Needed because `ds-verdict` is 22px and `ds-sec__title` 20px, so an h1 using the section style was outranked by the sentence under it. Scale: page 26 > verdict 22 > section 20 |
+| `ds-grid-wrap` (`--flush`) | **Required around every `.ds-grid`.** A table cannot reflow, so it scrolls in its own box. (`ds-grid-demo`, used by early screens, is a hook in `preview/index.html` with no styles — it never did this, and `overflow:hidden` clipped the far columns instead) |
+| `ds-report-card` (+`__shot/__frame/__meta/__type/__sub/__links`) | Report thumbnail. The preview is the real report in an iframe laid out at 400% and scaled to .25 — no screenshot pipeline — and is inert (`pointer-events:none`, `tabIndex=-1`) so the click lands on the card |
 
 ## Icons
 `icons.svg` is a stroke-based sprite (`currentColor`, 24×24 viewBox). **`preview/index.html`
@@ -144,3 +160,10 @@ server). Status is never icon-color-only: pair with a `ds-badge` or text label.
 - [ ] Theme flipped with a chart on screen — the plot repainted (didn't keep stale hues)
 - [ ] Small captions use `--ds-muted`, not `--ds-faint` (AA)
 - [ ] Lighthouse accessibility pass on the changed screen
+- [ ] Headings descend without skipping — one `h1.ds-page-title` per screen, sections
+      `h2`, cards inside a section `h3` (`ChartCard`'s `headingLevel`). Lighthouse's
+      `heading-order` catches this and it is a real failure, not untidy markup
+- [ ] Every `.ds-grid` sits in a `.ds-grid-wrap`; nothing makes the page scroll sideways
+- [ ] Badge variant is one of `--good/--warn/--bad/--info/--neutral`. There is no
+      `--caution` or `--action` (the tokens are named that way, the classes are not) —
+      a wrong name renders an unstyled badge with no error

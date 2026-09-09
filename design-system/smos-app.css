@@ -305,6 +305,11 @@
   gap: var(--ds-space-4);
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
+/* Grid/flex children default to min-width:auto, so a wide child (a chart with
+   long category labels, a table) inflates its track and makes auto-fit drop a
+   column — three 320px-capable cards were laying out as two. `.ds-page > *`
+   fixes only direct page children; these grids nest deeper. */
+.ds-duo > *, .ds-band > * { min-width: 0; }
 
 .ds-panel {
   background: var(--ds-surface);
@@ -484,7 +489,7 @@
 /* Section headings inside the palette (Skills / Clients / Recent runs) */
 .ds-palette__group {
   font-family: var(--ds-font-mono); font-size: 10.5px; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--ds-faint);
+  text-transform: uppercase; color: var(--ds-muted);
   padding: var(--ds-space-3) var(--ds-space-3) var(--ds-space-1);
 }
 .ds-palette__item svg { width: var(--ds-icon); height: var(--ds-icon); flex: none; color: var(--ds-muted); }
@@ -496,7 +501,7 @@
   display: flex; gap: var(--ds-space-4); align-items: center;
   padding: var(--ds-space-2) var(--ds-space-4);
   border-top: 1px solid var(--ds-glass-line);
-  font-family: var(--ds-font-mono); font-size: 10.5px; color: var(--ds-faint);
+  font-family: var(--ds-font-mono); font-size: 10.5px; color: var(--ds-muted);
 }
 .ds-palette__input {
   width: 100%; border: 0; outline: 0; background: transparent;
@@ -526,13 +531,27 @@
 }
 
 /* ------------------------------------------------------------------ Data -- */
+/* Every .ds-grid needs one of these around it. A table is the one thing that
+   cannot reflow, so it scrolls inside its own box — otherwise it forces the
+   whole page to scroll sideways on a phone, which MASTER.md forbids.
+   (`ds-grid-demo`, used by some early screens, is a hook in preview/index.html
+   with no styles of its own — it never provided this.) */
+.ds-grid-wrap {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  background: var(--ds-surface);
+}
+.ds-grid-wrap--flush { border: 0; border-radius: 0; }
+
 .ds-grid { width: 100%; border-collapse: collapse; font-size: 13px; }
 .ds-grid thead th {
   position: sticky; top: 0; z-index: 1;
   background: var(--ds-surface); text-align: left;
   padding: var(--ds-space-2) var(--ds-space-3);
   font-family: var(--ds-font-mono); font-size: 10.5px; font-weight: 600;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--ds-faint);
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ds-muted);
   border-bottom: 1.5px solid var(--ds-line-strong);
   cursor: pointer; user-select: none;
   white-space: nowrap;
@@ -559,7 +578,7 @@
 .ds-kv__row:first-child { border-top: none; }
 .ds-kv__key {
   font-family: var(--ds-font-mono); font-size: 11px; letter-spacing: .06em;
-  text-transform: uppercase; color: var(--ds-faint);
+  text-transform: uppercase; color: var(--ds-muted);
 }
 .ds-kv__val { font-size: 13.5px; color: var(--ds-ink-2); word-break: break-word; }
 
@@ -650,7 +669,24 @@
 .ds-run-list__row:hover { background: var(--ds-surface-2); }
 .ds-run-list__row.is-selected { background: var(--ds-blue-tint); }
 .ds-run-list__row:focus-visible { outline: none; box-shadow: inset var(--ds-focus); }
-.ds-run-list__meta { margin-left: auto; font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-faint); }
+/* --ds-muted, not --ds-faint: this is 11px text carrying the run's duration
+   and cost, and --ds-faint is ~2.9:1 on white (below AA). */
+.ds-run-list__meta {
+  margin-left: auto;
+  padding-left: var(--ds-space-2);
+  font-family: var(--ds-font-mono);
+  font-size: 11px;
+  color: var(--ds-muted);
+  white-space: nowrap;
+}
+
+/* The split is two panes side by side only where there is room for both;
+   below that it stacks, with the list capped so the detail stays reachable. */
+@media (max-width: 860px) {
+  .ds-split { flex-direction: column; }
+  .ds-split__a { width: auto !important; flex: 0 0 auto !important; max-height: 40vh; }
+  .ds-split__handle { display: none; }
+}
 
 .ds-stream {
   padding: var(--ds-space-4);
@@ -658,6 +694,11 @@
   line-height: 1.65;
   white-space: pre-wrap;
   word-break: break-word;
+  /* A transcript grows without bound, so it scrolls inside its own box
+     instead of pushing the page (and the run controls) off-screen. */
+  max-height: 60vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .ds-stream p { margin: 0 0 .8em; }
 .ds-stream code { font-family: var(--ds-font-mono); background: var(--ds-ink-tint); border-radius: 4px; padding: 1px 5px; }
@@ -678,7 +719,7 @@
 .ds-tool-call__head:hover { background: var(--ds-surface); }
 .ds-tool-call__head:focus-visible { outline: none; box-shadow: inset var(--ds-focus); }
 .ds-tool-call__name { font-weight: 600; color: var(--ds-blue-strong); }
-.ds-tool-call__dur { margin-left: auto; color: var(--ds-faint); }
+.ds-tool-call__dur { margin-left: auto; color: var(--ds-muted); }
 .ds-tool-call__body {
   padding: var(--ds-space-3); border-top: 1px solid var(--ds-line);
   font-family: var(--ds-font-mono); font-size: 12px; white-space: pre-wrap;
@@ -719,7 +760,7 @@
 /* ---------------------------------------------------------------- Forms --- */
 .ds-field { display: flex; flex-direction: column; gap: var(--ds-space-1); margin: var(--ds-space-3) 0; }
 .ds-field__label { font-family: var(--ds-font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ds-muted); }
-.ds-field__hint { font-size: 12px; color: var(--ds-faint); }
+.ds-field__hint { font-size: 12px; color: var(--ds-muted); }
 .ds-field__error { font-size: 12px; color: var(--ds-red-ink); }
 .ds-form-row { display: flex; gap: var(--ds-space-3); flex-wrap: wrap; }
 
@@ -858,6 +899,15 @@
   font-size: 20px; line-height: 1.15; margin: 0; color: var(--ds-ink);
 }
 .ds-sec__sub { font-size: 13px; color: var(--ds-muted); margin: 2px 0 0; }
+/* Page-level h1. Needed because `ds-verdict` (the Ledger lede) is 22px and
+   `ds-sec__title` is 20px — a screen whose h1 used the section style was
+   visually outranked by the sentence underneath it. Scale is now
+   page title 26 > verdict 22 > section 20. */
+.ds-page-title {
+  font-family: var(--ds-font-display); font-weight: 700;
+  font-size: 26px; line-height: 1.12; letter-spacing: -.01em;
+  margin: 0; color: var(--ds-ink);
+}
 .ds-sec__actions { margin-left: auto; display: flex; align-items: center; gap: var(--ds-space-2); }
 /* Console-only: button labels never wrap mid-word into a squeezed column.
    (This file is loaded by ui/ alone — reports keep Ledger's .ds-btn as-is.) */
@@ -913,7 +963,7 @@ a.ds-metric-card:focus-visible, .ds-metric-card[tabindex]:focus-visible {
 .ds-metric-card__delta--up::before { content: "\2191 "; }
 .ds-metric-card__delta--down { color: var(--ds-red-ink); }
 .ds-metric-card__delta--down::before { content: "\2193 "; }
-.ds-metric-card__delta--flat { color: var(--ds-faint); }
+.ds-metric-card__delta--flat { color: var(--ds-muted); }
 .ds-metric-card__delta--flat::before { content: "\2192 "; }
 .ds-metric-card__note { font-size: 11.5px; color: var(--ds-muted); }
 .ds-metric-card__spark { margin-left: auto; width: 76px; height: 24px; flex: none; }
@@ -1068,7 +1118,7 @@ a.ds-metric-card:focus-visible, .ds-metric-card[tabindex]:focus-visible {
   font-family: var(--ds-font-display); font-weight: 700; font-size: 16px;
   line-height: 1.15; color: var(--ds-ink);
 }
-.ds-client-card__slug { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-faint); }
+.ds-client-card__slug { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-muted); }
 .ds-client-card__metrics {
   display: flex; align-items: flex-end; gap: var(--ds-space-4);
   padding-top: var(--ds-space-1);
@@ -1076,7 +1126,7 @@ a.ds-metric-card:focus-visible, .ds-metric-card[tabindex]:focus-visible {
 .ds-client-card__metric { display: flex; flex-direction: column; gap: 1px; }
 .ds-client-card__metric-label {
   font-family: var(--ds-font-mono); font-size: 9.5px; letter-spacing: .07em;
-  text-transform: uppercase; color: var(--ds-faint);
+  text-transform: uppercase; color: var(--ds-muted);
 }
 .ds-client-card__metric-value {
   font-family: var(--ds-font-display); font-weight: 700; font-size: 18px;
@@ -1090,7 +1140,55 @@ a.ds-metric-card:focus-visible, .ds-metric-card[tabindex]:focus-visible {
 }
 .ds-client-card__next-label {
   font-family: var(--ds-font-mono); font-size: 9.5px; letter-spacing: .07em;
-  text-transform: uppercase; color: var(--ds-faint); flex: none;
+  text-transform: uppercase; color: var(--ds-muted); flex: none;
+}
+
+/* ---- Report gallery ---------------------------------------------------- */
+/* The thumbnail is the real report in a scaled iframe, not a screenshot. The
+   iframe is laid out at 4x the frame's box and scaled down, which is what
+   makes a full-width A4-ish document legible as a card-sized preview. */
+.ds-report-card {
+  display: flex; flex-direction: column;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  box-shadow: var(--ds-shadow-sm);
+  overflow: hidden;
+  transition: box-shadow var(--ds-dur) var(--ds-ease), transform var(--ds-dur) var(--ds-ease);
+}
+.ds-report-card:hover { box-shadow: var(--ds-shadow); transform: translateY(-2px); }
+.ds-report-card__shot {
+  display: block; padding: 0; border: none; cursor: pointer;
+  background: var(--ds-surface-2);
+  border-bottom: 1px solid var(--ds-line);
+  height: 180px; overflow: hidden; position: relative;
+}
+.ds-report-card__shot:focus-visible { outline: none; box-shadow: inset var(--ds-focus); }
+.ds-report-card__frame {
+  display: block; position: absolute; inset: 0;
+  /* Inert: the preview must never steal the click or the tab stop. */
+  pointer-events: none;
+}
+.ds-report-card__frame iframe {
+  width: 400%; height: 400%; border: 0;
+  transform: scale(.25); transform-origin: 0 0;
+  background: var(--ds-paper, var(--ds-surface));
+}
+.ds-report-card__meta {
+  display: flex; align-items: center; gap: var(--ds-space-2);
+  padding: var(--ds-space-3) var(--ds-space-4);
+}
+.ds-report-card__type {
+  font-family: var(--ds-font-display); font-weight: 600; font-size: 14px; color: var(--ds-ink);
+}
+.ds-report-card__sub {
+  font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-muted);
+}
+.ds-report-card__links { margin-left: auto; font-size: 11.5px; }
+.ds-report-card__links a { color: var(--ds-blue-strong); text-decoration: none; font-weight: 600; }
+.ds-report-card__links a:hover { text-decoration: underline; }
+@media (prefers-reduced-motion: reduce) {
+  .ds-report-card, .ds-report-card:hover { transition: none; transform: none; }
 }
 
 /* ---- Attention list (what needs a human today) ------------------------- */

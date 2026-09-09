@@ -526,6 +526,74 @@
     </div>
   </div>
 
+  <div class="pv-section">
+    <div class="pv-h">13 — Type scale: page title > verdict > section (Phase G)</div>
+    <div class="pv-card">
+      <h1 class="ds-page-title">Blue Rose Auto Care &amp; Repair Services</h1>
+      <div class="ds-verdict">17 of 24 pipeline steps complete · 1 blocked.</div>
+      <div class="ds-sec">
+        <div>
+          <h2 class="ds-sec__title">Agency / CRM</h2>
+          <p class="ds-sec__sub">A section heading sits below the lede, not above it.</p>
+        </div>
+      </div>
+      <div class="pv-note">
+        <code>ds-page-title</code> (26px) exists because <code>ds-verdict</code> is 22px and
+        <code>ds-sec__title</code> 20px — a screen whose <code>h1</code> used the section
+        style was visually outranked by the sentence underneath it. One
+        <code>h1.ds-page-title</code> per screen; sections <code>h2</code>; cards inside a
+        section <code>h3</code>. Skipping a level is a Lighthouse
+        <code>heading-order</code> failure.
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-h">14 — Badge variants: these five, and only these five (Phase G)</div>
+    <div class="pv-card">
+      <div class="pv-row">
+        <span class="ds-badge ds-badge--good">good</span>
+        <span class="ds-badge ds-badge--warn">warn</span>
+        <span class="ds-badge ds-badge--bad">bad</span>
+        <span class="ds-badge ds-badge--info">info</span>
+        <span class="ds-badge ds-badge--neutral">neutral</span>
+        <span class="ds-badge ds-badge--caution">caution &larr; not a real class</span>
+        <span class="ds-badge ds-badge--action">action &larr; not a real class</span>
+      </div>
+      <div class="pv-note">
+        The last two render <strong>unstyled, with no error</strong>. The semantic
+        <em>tokens</em> are named pass / caution / action (see
+        <code>--ds-green/--ds-amber/--ds-red</code>), but the badge <em>classes</em> are
+        <code>--good/--warn/--bad</code>. Screens had been using the token names as class
+        names; Phase G corrected every call site.
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-h">15 — Tables always scroll in a <code>ds-grid-wrap</code> (Phase G)</div>
+    <div class="pv-card">
+      <div class="ds-grid-wrap">
+        <table class="ds-grid">
+          <thead>
+            <tr><th scope="col">Event</th><th scope="col">Matcher</th><th scope="col">Hook</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>PreToolUse</td><td><code>mcp__meta__create_campaign</code></td><td>naming-check</td></tr>
+            <tr><td>PreToolUse</td><td><code>mcp__meta__create_ad</code></td><td>ai-disclosure, brand-compliance</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pv-note">
+        A table cannot reflow, so it scrolls inside its own box rather than making the page
+        scroll sideways. <code>ds-grid-demo</code> — used by some early screens — is a hook
+        defined only in this preview file and has no styles of its own; it never provided a
+        scroll container, and <code>overflow:hidden</code> clipped the far columns instead
+        of revealing them.
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>

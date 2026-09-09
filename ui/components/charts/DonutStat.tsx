@@ -85,7 +85,7 @@ export default function DonutStat({ data, centerLabel, centerValue, format }: Do
                 fontSize: 10,
                 letterSpacing: ".07em",
                 textTransform: "uppercase",
-                color: "var(--ds-faint)",
+                color: "var(--ds-muted)",
               }}
             >
               {centerLabel}

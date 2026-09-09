@@ -75,7 +75,7 @@ export default function HeatCalendar({ data, weeks = 12, hue = 0 }: HeatCalendar
                 lineHeight: "13px",
                 fontFamily: "var(--ds-font-mono)",
                 fontSize: 8.5,
-                color: "var(--ds-faint)",
+                color: "var(--ds-muted)",
                 width: 9,
               }}
             >
@@ -91,7 +91,7 @@ export default function HeatCalendar({ data, weeks = 12, hue = 0 }: HeatCalendar
                 height: 12,
                 fontFamily: "var(--ds-font-mono)",
                 fontSize: 8.5,
-                color: "var(--ds-faint)",
+                color: "var(--ds-muted)",
                 whiteSpace: "nowrap",
               }}
             >
@@ -128,7 +128,7 @@ export default function HeatCalendar({ data, weeks = 12, hue = 0 }: HeatCalendar
           marginTop: "var(--ds-space-3)",
           fontFamily: "var(--ds-font-mono)",
           fontSize: 9.5,
-          color: "var(--ds-faint)",
+          color: "var(--ds-muted)",
         }}
       >
         <span>none</span>

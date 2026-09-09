@@ -1,7 +1,31 @@
 import { AppShell } from "../../components/AppShell";
+import MetricCard from "../../components/MetricCard";
 import { getHealth } from "../../lib/health";
+import { fmtNumber } from "../../lib/format";
 
 export const dynamic = "force-dynamic";
+
+function Section({
+  title,
+  sub,
+  children,
+}: {
+  title: string;
+  sub?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section>
+      <div className="ds-sec">
+        <div>
+          <h2 className="ds-sec__title">{title}</h2>
+          {sub && <p className="ds-sec__sub">{sub}</p>}
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
 
 export default function SettingsPage() {
   const health = getHealth();
@@ -10,57 +34,71 @@ export default function SettingsPage() {
   return (
     <AppShell breadcrumb={[{ label: "Overview", href: "/" }, { label: "Settings" }]}>
       <div className="ds-page">
-      <div className="ds-verdict" style={{ marginTop: 0 }}>
-        Local environment health — read-only, best-effort. Never shows secret values, only
-        whether an env key is present.
-      </div>
-
-      <div className="ds-panel" style={{ marginTop: "var(--ds-space-5)" }}>
-        <div className="ds-nav-group">Claude Code</div>
-        <div className="ds-kv">
-          <div className="ds-kv__row">
-            <span className="ds-kv__key">claude --version</span>
-            <span className="ds-kv__val">
-              {claudeVersion.version ?? (
-                <span className="ds-badge ds-badge--bad">unavailable</span>
-              )}
-            </span>
+        <div className="ds-sec">
+          <div>
+            <h1 className="ds-page-title">Environment</h1>
+            <p className="ds-sec__sub">
+              Read-only and best-effort. Env keys are reported by name only — no value is ever read
+              or displayed, and nothing here is a live connection check.
+            </p>
           </div>
-          {claudeVersion.error && (
-            <div className="ds-kv__row">
-              <span className="ds-kv__key">Error</span>
-              <span className="ds-kv__val">{claudeVersion.error}</span>
-            </div>
-          )}
         </div>
-      </div>
 
-      <div className="ds-panel" style={{ marginTop: "var(--ds-space-5)" }}>
-        <div className="ds-nav-group">Hooks loaded (hooks/hooks.json)</div>
-        {!hooksLoaded.ok && (
-          <p className="ds-field__hint">
-            <span className="ds-badge ds-badge--bad">error</span>&nbsp;{hooksLoaded.error}
-          </p>
-        )}
-        {hooksLoaded.ok && (
-          <>
-            <div className="ds-kv">
-              <div className="ds-kv__row">
-                <span className="ds-kv__key">Matchers</span>
-                <span className="ds-kv__val">{hooksLoaded.totalMatchers}</span>
-              </div>
-              <div className="ds-kv__row">
-                <span className="ds-kv__key">Hook commands</span>
-                <span className="ds-kv__val">{hooksLoaded.totalHookCommands}</span>
-              </div>
+        <div className="ds-metric-grid ds-stagger">
+          <MetricCard
+            index={0}
+            label="Claude Code"
+            value={claudeVersion.version ?? "unavailable"}
+            note={claudeVersion.error ? claudeVersion.error.slice(0, 60) : "runs are spawned with this CLI"}
+            hue={claudeVersion.version ? 1 : 3}
+          />
+          <MetricCard
+            index={1}
+            label="Hook commands"
+            value={hooksLoaded.ok ? fmtNumber(hooksLoaded.totalHookCommands) : "—"}
+            note={
+              hooksLoaded.ok
+                ? `${fmtNumber(hooksLoaded.totalMatchers)} matchers in hooks/hooks.json`
+                : "hooks.json unreadable"
+            }
+            hue={hooksLoaded.ok ? 0 : 3}
+          />
+          <MetricCard
+            index={2}
+            label="Env keys present"
+            value={fmtNumber(envKeysPresent.length)}
+            note="allowlisted prefixes only"
+            hue={4}
+          />
+          <MetricCard
+            index={3}
+            label="MCP servers on disk"
+            value={fmtNumber(mcpServers.length)}
+            note="discovered, not connected"
+            hue={5}
+          />
+        </div>
+
+        <Section
+          title="Hooks"
+          sub="What hooks/hooks.json wires up — the guardrails (naming-check, ai-disclosure, brand-compliance) run through these."
+        >
+          {!hooksLoaded.ok ? (
+            <div className="ds-inline-error" role="alert">
+              {hooksLoaded.error}
             </div>
-            <div className="ds-grid-demo" style={{ marginTop: "var(--ds-space-3)" }}>
+          ) : hooksLoaded.totalMatchers === 0 ? (
+            <div className="ds-panel ds-empty" style={{ minHeight: 120 }}>
+              <p className="ds-empty__title">No hook matchers configured</p>
+            </div>
+          ) : (
+            <div className="ds-grid-wrap">
               <table className="ds-grid">
                 <thead>
                   <tr>
-                    <th>Event</th>
-                    <th>Matcher</th>
-                    <th>Hook scripts</th>
+                    <th scope="col">Event</th>
+                    <th scope="col">Matcher</th>
+                    <th scope="col">Hook scripts</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -75,79 +113,66 @@ export default function SettingsPage() {
                       </tr>
                     ))
                   )}
-                  {hooksLoaded.totalMatchers === 0 && (
-                    <tr>
-                      <td colSpan={3} className="ds-empty">
-                        No hook matchers configured.
-                      </td>
-                    </tr>
-                  )}
                 </tbody>
               </table>
             </div>
-          </>
-        )}
-      </div>
+          )}
+        </Section>
 
-      <div className="ds-panel" style={{ marginTop: "var(--ds-space-5)" }}>
-        <div className="ds-nav-group">Env keys present ({envKeysPresent.length})</div>
-        <p className="ds-field__hint">
-          Key names only — values are never read or displayed. Allowlisted prefixes: META_,
-          SUPABASE_, DISCORD_, STRIPE_, ANTHROPIC_, SMOS_.
-        </p>
-        {envKeysPresent.length === 0 && <p className="ds-empty">No allowlisted env keys present.</p>}
-        {envKeysPresent.length > 0 && (
-          <div className="ds-grid-demo">
-            <table className="ds-grid">
-              <thead>
-                <tr>
-                  <th>Key</th>
-                </tr>
-              </thead>
-              <tbody>
-                {envKeysPresent.map((k) => (
-                  <tr key={k}>
-                    <td>
-                      <code>{k}</code>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+        <div className="ds-duo">
+          <Section
+            title="Env keys"
+            sub="Names only. Prefixes: META_, SUPABASE_, DISCORD_, STRIPE_, ANTHROPIC_, SMOS_."
+          >
+            {envKeysPresent.length === 0 ? (
+              <div className="ds-panel ds-empty" style={{ minHeight: 120 }}>
+                <p className="ds-empty__title">No allowlisted env keys present</p>
+                <p style={{ fontSize: 12.5, color: "var(--ds-muted)", margin: 0 }}>
+                  Live Meta and Supabase calls will fail closed until these are set.
+                </p>
+              </div>
+            ) : (
+              <div className="ds-panel" style={{ padding: "var(--ds-space-4)" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--ds-space-2)" }}>
+                  {envKeysPresent.map((k) => (
+                    <code key={k} className="ds-file-chip">
+                      {k}
+                    </code>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Section>
 
-      <div className="ds-panel" style={{ marginTop: "var(--ds-space-5)" }}>
-        <div className="ds-nav-group">MCP servers on disk ({mcpServers.length})</div>
-        <p className="ds-field__hint">
-          Discovered from a root <code>.mcp.json</code> and <code>mcp/*/package.json</code> —
-          not a live connection check.
-        </p>
-        {mcpServers.length === 0 && <p className="ds-empty">No MCP servers found on disk.</p>}
-        {mcpServers.length > 0 && (
-          <div className="ds-grid-demo">
-            <table className="ds-grid">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Source</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mcpServers.map((s) => (
-                  <tr key={`${s.name}-${s.source}`}>
-                    <td>{s.name}</td>
-                    <td>
-                      <code>{s.source}</code>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+          <Section title="MCP servers" sub="From the root .mcp.json and mcp/*/package.json.">
+            {mcpServers.length === 0 ? (
+              <div className="ds-panel ds-empty" style={{ minHeight: 120 }}>
+                <p className="ds-empty__title">No MCP servers found on disk</p>
+              </div>
+            ) : (
+              <div className="ds-grid-wrap">
+                <table className="ds-grid">
+                  <thead>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Source</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {mcpServers.map((s) => (
+                      <tr key={`${s.name}-${s.source}`}>
+                        <td>{s.name}</td>
+                        <td>
+                          <code>{s.source}</code>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Section>
+        </div>
       </div>
     </AppShell>
   );

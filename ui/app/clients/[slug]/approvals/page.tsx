@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { fmtDateTime } from "../../../../lib/format";
+import ApprovalCard from "../../../../components/approvals/ApprovalCard";
 import { listApprovals } from "../../../../lib/approvals";
 
 export const dynamic = "force-dynamic";
@@ -11,53 +11,35 @@ export default async function ClientApprovals({
 }) {
   const { slug } = await params;
   const approvals = listApprovals({ slug });
+  const pending = approvals.filter((a) => a.status === "pending");
 
   return (
     <div>
-      <div className="ds-verdict" style={{ marginTop: 0, fontSize: 15 }}>
-        Decide from the global <Link href="/approvals">Approvals inbox →</Link>
+      <div className="ds-verdict" style={{ marginTop: 0 }}>
+        {pending.length
+          ? `${pending.length} approval${pending.length === 1 ? "" : "s"} pending for ${slug}.`
+          : `Nothing pending for ${slug}.`}{" "}
+        {/* One decision surface, not two: deciding lives in the global inbox so
+            the role/TTL flow has a single implementation. */}
+        <Link href="/approvals">Decide in the Approvals inbox →</Link>
       </div>
-      <div className="ds-grid-demo">
-        <table className="ds-grid">
-          <thead>
-            <tr>
-              <th>Action</th>
-              <th>Summary</th>
-              <th>Status</th>
-              <th>Requested</th>
-            </tr>
-          </thead>
-          <tbody>
-            {approvals.map((a) => (
-              <tr key={a.id}>
-                <td>{a.action}</td>
-                <td>{a.summary}</td>
-                <td>
-                  <span
-                    className={`ds-badge ${
-                      a.status === "approved"
-                        ? "ds-badge--good"
-                        : a.status === "pending"
-                        ? "ds-badge--caution"
-                        : "ds-badge--neutral"
-                    }`}
-                  >
-                    {a.status}
-                  </span>
-                </td>
-                <td>{fmtDateTime(a.requestedAt)}</td>
-              </tr>
-            ))}
-            {approvals.length === 0 && (
-              <tr>
-                <td colSpan={4} className="ds-empty">
-                  No approval records for {slug}.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+
+      {approvals.length ? (
+        approvals.map((a) => (
+          <ApprovalCard key={a.id} record={a} showSlug={false} decidable={false} />
+        ))
+      ) : (
+        <div className="ds-panel ds-empty" style={{ minHeight: 180 }}>
+          <svg aria-hidden="true">
+            <use href="/icons.svg#i-check" />
+          </svg>
+          <p className="ds-empty__title">No approval records for {slug}</p>
+          <p style={{ fontSize: 12.5, color: "var(--ds-muted)", margin: 0, maxWidth: "48ch" }}>
+            Guarded actions file a record here — a budget increase over $500/day, a targeting
+            change, or anything destructive.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

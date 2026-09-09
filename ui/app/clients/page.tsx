@@ -28,7 +28,7 @@ export default function ClientsTable() {
       <div className="ds-page">
         <div className="ds-sec">
           <div>
-            <h1 className="ds-sec__title">All clients</h1>
+            <h1 className="ds-page-title">All clients</h1>
             <p className="ds-sec__sub">
               {portfolio.clients.length} on file · {portfolio.activeCount} active. Pipeline state is read
               live from <code>clients/**</code> on every load.
@@ -36,7 +36,9 @@ export default function ClientsTable() {
           </div>
         </div>
 
-        <div className="ds-panel" style={{ overflow: "hidden" }}>
+        {/* overflow-x, not overflow:hidden — hidden clipped the right-hand
+            columns on a narrow viewport with no way to reach them. */}
+        <div className="ds-grid-wrap">
           <table className="ds-grid">
             <thead>
               <tr>
@@ -57,7 +59,7 @@ export default function ClientsTable() {
                   <tr key={c.slug}>
                     <td>
                       <Link href={`/clients/${c.slug}/pipeline`}>{c.name}</Link>
-                      <div style={{ fontFamily: "var(--ds-font-mono)", fontSize: 10.5, color: "var(--ds-faint)" }}>
+                      <div style={{ fontFamily: "var(--ds-font-mono)", fontSize: 10.5, color: "var(--ds-muted)" }}>
                         {c.slug}
                       </div>
                     </td>
@@ -90,7 +92,7 @@ export default function ClientsTable() {
                       )}
                     </td>
                     <td style={{ maxWidth: 280 }}>
-                      {c.nextAction ?? <span style={{ color: "var(--ds-faint)" }}>all steps complete</span>}
+                      {c.nextAction ?? <span style={{ color: "var(--ds-muted)" }}>all steps complete</span>}
                     </td>
                     <td className="ds-num">
                       {pending > 0 ? (

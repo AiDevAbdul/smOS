@@ -22,6 +22,13 @@ export default async function ClientLayout({
     >
       <div className="ds-page">
         <ClientTabs slug={slug} />
+        {/* Every client tab needs a document heading it can nest under.
+            Without it the tab bodies started at h2/h3, so each page was a
+            heading hierarchy with no top — and the tab content's own sections
+            read as top-level. */}
+        <h1 className="ds-page-title">
+          {clientDisplayName(slug)}
+        </h1>
         <div>{children}</div>
       </div>
     </AppShell>

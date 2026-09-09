@@ -37,6 +37,8 @@ test/.tmp/
 
 # Operator UI (ui/) — Next.js build output, local only, not deployed
 ui/.next/
+# tsc --noEmit incremental cache; a local artifact, not source
+ui/tsconfig.tsbuildinfo
 ui/next-env.d.ts
 
 # Claude Code isolated worktrees (parallel-agent scratch checkouts)

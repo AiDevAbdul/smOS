@@ -1,17 +1,13 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { getClientStatus } from "../../../../lib/status";
+import { getSkillIndex } from "../../../../lib/skills-manifest";
+import PipelineSection from "../../../../components/pipeline/PipelineSection";
+import Ring from "../../../../components/Ring";
+import MetricCard from "../../../../components/MetricCard";
+import { fmtNumber, fmtPercent, prettifyDetail } from "../../../../lib/format";
 
 export const dynamic = "force-dynamic";
-
-// ds-badge variant + display label for each status.ts step status. "done"/
-// "missing"/"blocked"/"partial" are the known values; anything else (a
-// future status string) falls back to a neutral badge showing itself.
-const STATUS_BADGE: Record<string, { variant: string; label: string }> = {
-  done: { variant: "good", label: "Done" },
-  partial: { variant: "warn", label: "Partial" },
-  blocked: { variant: "bad", label: "Blocked" },
-  missing: { variant: "neutral", label: "Not started" },
-};
 
 export default async function ClientPipeline({
   params,
@@ -22,35 +18,112 @@ export default async function ClientPipeline({
   const status = getClientStatus(slug);
   if (!status) notFound();
 
+  const steps = status.sections.flatMap((s) => s.steps);
+  const done = steps.filter((s) => s.status === "done").length;
+  const blocked = steps.filter((s) => s.status === "blocked").length;
+  const partial = steps.filter((s) => s.status === "partial").length;
+  const pct = steps.length ? (done / steps.length) * 100 : 0;
+
+  // Only offer to launch a step that maps to a skill actually bundled here —
+  // a "Run /x" button for a skill that isn't installed is a dead end.
+  const launchable = new Set(
+    getSkillIndex()
+      .filter((e) => e.available && e.slug)
+      .map((e) => e.slug as string)
+  );
+
   return (
-    <>
+    <div>
+      {/* The lede states the next action; its detail goes underneath rather
+          than inside the sentence, which turned into nested parentheses
+          wrapped around a raw ISO timestamp. */}
       <div className="ds-verdict" style={{ marginTop: 0 }}>
         {status.next_action
-          ? `Next: ${status.next_action.section} — ${status.next_action.step}`
+          ? `Next: ${status.next_action.step}`
           : "All pipeline steps complete."}
       </div>
-      {status.sections.map((section) => (
-        <div key={section.key} className="ds-panel" style={{ marginBottom: "var(--ds-space-6)" }}>
-          <div className="pv-h" style={{ marginBottom: "var(--ds-space-3)" }}>
-            {section.label}
-          </div>
-          <div className="ds-sheet">
-            {section.steps.map((step) => {
-              const badge = STATUS_BADGE[step.status] ?? { variant: "neutral", label: step.status };
-              return (
-                <div key={step.id} className="ds-sheet__row">
-                  <span className="ds-sheet__metric">{step.label}</span>
-                  <span className="ds-sheet__read">{step.detail ?? "—"}</span>
-                  <span className={`ds-badge ds-badge--${badge.variant}`}>{badge.label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+      {status.next_action && (
+        <p
+          style={{
+            margin: "0 0 var(--ds-space-5)",
+            fontSize: 13,
+            color: "var(--ds-muted)",
+            maxWidth: "80ch",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: "var(--ds-font-mono)",
+              fontSize: 10.5,
+              textTransform: "uppercase",
+              letterSpacing: ".08em",
+              marginRight: "var(--ds-space-2)",
+            }}
+          >
+            {status.next_action.section}
+          </span>
+          {prettifyDetail(status.next_action.detail) ?? "No blocking detail recorded."}
+        </p>
+      )}
+
+      <div className="ds-metric-grid ds-stagger" style={{ marginBottom: "var(--ds-space-6)" }}>
+        <MetricCard
+          index={0}
+          label="Pipeline complete"
+          value={fmtPercent(pct, 0)}
+          note={`${fmtNumber(done)} of ${fmtNumber(steps.length)} steps`}
+          hue={0}
+          leading={
+            <Ring
+              pct={pct}
+              size={64}
+              stroke={6}
+              tone={pct === 100 ? "good" : pct >= 50 ? "blue" : "warn"}
+              title={`${Math.round(pct)}% of pipeline steps complete`}
+            />
+          }
+        />
+        <MetricCard
+          index={1}
+          label="Blocked"
+          value={fmtNumber(blocked)}
+          note={blocked ? "a prerequisite is unmet" : "nothing blocked"}
+          hue={blocked ? 3 : 2}
+        />
+        <MetricCard
+          index={2}
+          label="Partial"
+          value={fmtNumber(partial)}
+          note={partial ? "started, not finished" : "nothing half-done"}
+          hue={partial ? 2 : 4}
+        />
+        <MetricCard
+          index={3}
+          label="Engagement"
+          value={status.is_zero_start ? "Zero-start" : "Established"}
+          note={status.crm_stage ? `CRM stage: ${status.crm_stage}` : "no CRM deal on file"}
+          hue={5}
+        />
+      </div>
+
+      {status.sections.map((section, i) => (
+        <PipelineSection
+          key={section.key}
+          section={section}
+          index={i}
+          slug={slug}
+          nextStepLabel={status.next_action?.step ?? null}
+          launchable={launchable}
+        />
       ))}
-      <a className="ds-btn ds-btn--primary" href={`/clients/${encodeURIComponent(slug)}/runs`}>
-        Run a skill for {slug}
-      </a>
-    </>
+
+      <div className="ds-sec" style={{ marginTop: "var(--ds-space-6)" }}>
+        <div className="ds-sec__actions">
+          <Link className="ds-btn" href={`/clients/${encodeURIComponent(slug)}/runs`}>
+            Run a skill for {slug}
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }

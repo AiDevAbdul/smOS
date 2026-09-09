@@ -79,7 +79,7 @@ export default function ClientCard({ client, index = 0 }: { client: PortfolioCli
         ) : (
           <span className="ds-client-card__metric">
             <span className="ds-client-card__metric-label">Paid</span>
-            <span style={{ fontSize: 12.5, color: "var(--ds-faint)" }}>
+            <span style={{ fontSize: 12.5, color: "var(--ds-muted)" }}>
               no /analyze data yet
             </span>
           </span>

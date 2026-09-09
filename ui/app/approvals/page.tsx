@@ -1,72 +1,125 @@
 import { AppShell } from "../../components/AppShell";
-import { fmtDateTime } from "../../lib/format";
+import MetricCard from "../../components/MetricCard";
+import ApprovalCard from "../../components/approvals/ApprovalCard";
 import { listApprovals } from "../../lib/approvals";
-import { ApprovalDecision } from "../../components/ApprovalDecision";
+import { fmtNumber } from "../../lib/format";
 
 export const dynamic = "force-dynamic";
 
 export default function ApprovalsInbox() {
   const approvals = listApprovals();
-  const pendingCount = approvals.filter((a) => a.status === "pending").length;
+  const pending = approvals.filter((a) => a.status === "pending");
+  const decided = approvals.filter((a) => a.status !== "pending");
+  const owner = pending.filter((a) => a.requiredRole === "owner");
+  // An expired-but-still-pending record can never be approved — the store's
+  // decide() is fail-closed on TTL — so it is surfaced separately rather than
+  // sitting in the queue looking actionable.
+  const now = Date.now();
+  const stale = pending.filter((a) => a.expiresAt && new Date(a.expiresAt).getTime() < now);
+  const live = pending.filter((a) => !stale.includes(a));
 
   return (
     <AppShell breadcrumb={[{ label: "Overview", href: "/" }, { label: "Approvals" }]}>
       <div className="ds-page">
-      <div className="ds-verdict" style={{ marginTop: 0 }}>
-        {pendingCount} pending across all clients. Approve or deny directly below — decisions
-        go through the fail-closed approvals state machine (role checks, TTL expiry, audit log).
-      </div>
-      <div className="ds-grid-demo">
-        <table className="ds-grid">
-          <thead>
-            <tr>
-              <th>Client</th>
-              <th>Action</th>
-              <th>Summary</th>
-              <th>Status</th>
-              <th>Requested</th>
-              {pendingCount > 0 && <th>Action</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {approvals.map((a) => (
-              <tr key={a.id}>
-                <td>{a.slug ?? "—"}</td>
-                <td>{a.action}</td>
-                <td>{a.summary}</td>
-                <td>
-                  <span
-                    className={`ds-badge ${
-                      a.status === "approved"
-                        ? "ds-badge--good"
-                        : a.status === "pending"
-                        ? "ds-badge--warn"
-                        : "ds-badge--neutral"
-                    }`}
-                  >
-                    {a.status}
-                  </span>
-                </td>
-                <td>{fmtDateTime(a.requestedAt)}</td>
-                {pendingCount > 0 && (
-                  <td>
-                    {a.status === "pending" ? (
-                      <ApprovalDecision id={a.id} requiredRole={a.requiredRole} />
-                    ) : null}
-                  </td>
-                )}
-              </tr>
+        <div className="ds-sec">
+          <div>
+            <h1 className="ds-page-title">Approvals</h1>
+            <p className="ds-sec__sub">
+              Decisions go through the fail-closed approvals state machine — role checks, TTL expiry
+              and an audit log. Nothing here is executed by this screen; approving unblocks the run
+              that asked.
+            </p>
+          </div>
+        </div>
+
+        <div className="ds-metric-grid ds-stagger">
+          <MetricCard
+            index={0}
+            label="Awaiting decision"
+            value={fmtNumber(live.length)}
+            note={live.length ? "across all clients" : "queue is clear"}
+            hue={live.length ? 2 : 1}
+          />
+          <MetricCard
+            index={1}
+            label="Owner-level"
+            value={fmtNumber(owner.length)}
+            note={owner.length ? "destructive or go-live" : "none pending"}
+            hue={owner.length ? 3 : 4}
+          />
+          <MetricCard
+            index={2}
+            label="Expired unactioned"
+            value={fmtNumber(stale.length)}
+            note={stale.length ? "past TTL — must be re-requested" : "none lapsed"}
+            hue={stale.length ? 3 : 6}
+          />
+          <MetricCard
+            index={3}
+            label="Decided"
+            value={fmtNumber(decided.length)}
+            note="on file"
+            hue={5}
+          />
+        </div>
+
+        <section>
+          <div className="ds-sec">
+            <div>
+              <h2 className="ds-sec__title">Waiting on you</h2>
+              <p className="ds-sec__sub">
+                {live.length
+                  ? "Expand a card's payload to see exactly what would execute."
+                  : "Nothing is waiting."}
+              </p>
+            </div>
+          </div>
+          {live.length ? (
+            live.map((a) => <ApprovalCard key={a.id} record={a} />)
+          ) : (
+            <div className="ds-panel ds-empty" style={{ minHeight: 160 }}>
+              <svg aria-hidden="true">
+                <use href="/icons.svg#i-check" />
+              </svg>
+              <p className="ds-empty__title">No pending approvals</p>
+              <p style={{ fontSize: 12.5, color: "var(--ds-muted)", margin: 0 }}>
+                A guarded action (budget over $500/day, targeting change, destructive op) files a
+                record here when a run hits it.
+              </p>
+            </div>
+          )}
+        </section>
+
+        {stale.length > 0 && (
+          <section>
+            <div className="ds-sec">
+              <div>
+                <h2 className="ds-sec__title">Lapsed</h2>
+                <p className="ds-sec__sub">
+                  Past their TTL. The store refuses these even if approved now — the run has to ask
+                  again.
+                </p>
+              </div>
+            </div>
+            {stale.map((a) => (
+              <ApprovalCard key={a.id} record={a} decidable={false} />
             ))}
-            {approvals.length === 0 && (
-              <tr>
-                <td colSpan={pendingCount > 0 ? 6 : 5} className="ds-empty">
-                  No approval records on file.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+          </section>
+        )}
+
+        {decided.length > 0 && (
+          <section>
+            <div className="ds-sec">
+              <div>
+                <h2 className="ds-sec__title">History</h2>
+                <p className="ds-sec__sub">{decided.length} decided records.</p>
+              </div>
+            </div>
+            {decided.map((a) => (
+              <ApprovalCard key={a.id} record={a} decidable={false} />
+            ))}
+          </section>
+        )}
       </div>
     </AppShell>
   );

@@ -121,7 +121,7 @@ export default function FunnelBar({ stages, currency = "USD" }: FunnelBarProps) 
               style={{
                 fontFamily: "var(--ds-font-mono)",
                 fontSize: 10.5,
-                color: drop && drop > 0 ? "var(--ds-red-ink)" : "var(--ds-faint)",
+                color: drop && drop > 0 ? "var(--ds-red-ink)" : "var(--ds-muted)",
                 width: 54,
                 textAlign: "right",
                 flex: "none",

@@ -1,10 +1,73 @@
 # smOS Operator UI — Research, Reasoning & Plan (Step 1: Design System)
 
 **Status:** Phases A–E shipped 2026-09-08. **Phase F (Aurora visual pass) shipped
-2026-09-09** — see below. Remaining: real-world verification of the
-`--permission-prompt-tool` schema assumption in `mcp/ui-permission-bridge/`.
-(Phase E's open item — wiring `skills/manifest.json` into the palette — closed in Phase F.)
+2026-09-09. Phase G (retrofit of the remaining 10 screens) shipped 2026-09-09** — see
+below. Remaining: real-world verification of the `--permission-prompt-tool` schema
+assumption in `mcp/ui-permission-bridge/`, and per-skill argument forms in the launcher
+(the palette reads `manifest.json`'s args but still dispatches raw text).
 **Date:** 2026-09-08 · **Owner:** Abdul
+
+## Phase G — remaining screens retrofitted, shipped 2026-09-09
+
+Phase F left `/` and `/clients` on the new primitives and the other ten screens as they
+shipped in Phase C — the client Pipeline a 24-row flat checklist, `/runs` a bare launcher
+in a panel, client Runs 14 lines, Approvals two plain tables.
+
+**Run history is now durable.** The registry was in-process only and never read the CLI's
+`result` event, so the cost/duration/turn numbers it reports were being thrown away and
+every restart wiped the run list. `lib/registry.ts` now parses `result` into a typed
+`RunResult`, keeps the last assistant message, and appends finished runs to
+`logs/ui-runs.jsonl` (gitignored); `listRunsWithHistory()` merges live and archived, live
+winning. `lib/runs.ts` is the serializable view (a `RunRecord` holds a ChildProcess and a
+Set, neither of which crosses to a Client Component) plus the aggregates.
+
+**Screens.** Pipeline → per-section `ds-step` work-order cards with a `ds-track` spine,
+completion ring, the three Phase 0 human gates labelled as gates (a run cannot clear
+them), and a "Run /x" deep link per unmet step, offered only for skills actually in
+`manifest.json`. Runs and client Runs → `ds-split` list/detail with cost-per-day and
+duration-by-skill charts, plus a shared `RunStream` (extracted from `RunConsole`, which
+had the only stream parser) whose tool calls collapse by default and whose tail-follow
+stops when you scroll up. Reports → thumbnail gallery grouped by date, each preview the
+real report in a scaled iframe. Data → searchable file list with facet charts derived
+from each file's actual shape, selection held in `?file=` so only the chosen file's JSON
+is shipped. Approvals ×2 → `ds-approval-card` with the payload that would execute, split
+into waiting / lapsed / history. Profile → account-gate sheet against
+`checkZeroStartPrereqs`, KPI targets, and the voice `avoid` list the brand-compliance
+guard enforces. Settings → KPI row + section structure. (`/clients/[slug]` is a redirect,
+not a screen.)
+
+**Defects found and fixed — all pre-existing, none cosmetic:**
+- `ds-badge--caution` / `ds-badge--action` **do not exist**. The CSS defines
+  `--good/--warn/--bad/--info/--neutral`; the semantic *tokens* are named
+  pass/caution/action, and screens had been using the token names as class names, so those
+  badges rendered unstyled with no error. All call sites corrected.
+- `ds-grid-demo`, wrapped around three tables, is a hook in `preview/index.html` with **no
+  styles of its own** — those tables had no scroll container, and the clients board used
+  `overflow:hidden`, which clipped the right-hand columns with no way to reach them. Added
+  `ds-grid-wrap`.
+- `--ds-faint` was still the text colour of 13 rules. Lighthouse failed Profile at 3.06:1
+  on `.ds-kv__key`. Fixed system-wide (including the Ledger layer, so reports inherit it).
+- The client layout had **no `h1`**, so every client tab was a heading tree with no root;
+  `/runs` jumped h1→h3. Both fixed, and `ds-page-title` added because `ds-verdict` (22px)
+  outranked an h1 using `ds-sec__title` (20px).
+- `min-width: auto` on grid children again: `.ds-duo`/`.ds-band` children now get
+  `min-width: 0`, without which a wide chart silently costs the grid a column.
+- `.ds-stream` grew unbounded, pushing the run controls off-screen; now scrolls itself.
+- `ds-split` had a `col-resize` handle since Phase A that nothing implemented, and no
+  mobile behaviour. Now keyboard-resizable and stacks under 860px.
+- The Data screen's default file was the first in `DATA_FILES` (`baseline_snapshot.json`,
+  which has no record array), so the landing view read "nothing to chart" for clients with
+  a full calendar and inbox. It now opens the most informative file. Facets where every
+  value occurs once are dropped — an identifier charted as a row of 1s says nothing — and
+  neutral distributions no longer use the amber/red slots of the palette.
+- Pipeline details rendered raw ISO timestamps mid-sentence (`prettifyDetail`).
+
+**Verified:** `npm test` 370/370 · `npm run build --workspace ui` clean · Lighthouse
+accessibility **100** on `/`, `/runs`, `/clients`, `/approvals`, `/settings`, and client
+`pipeline` / `data` / `reports` / `profile` · no console errors · 375 and 1440 in light
+and dark, no horizontal page scroll · archived-run replay, report open, facet charts and
+run selection each exercised in the browser. The 3 Turbopack "dynamic filesystem access"
+warnings are pre-existing, from `scripts/lib/approvals.js` via the decide route.
 
 ## Phase F — "Aurora" visual pass, shipped 2026-09-09
 
@@ -63,10 +126,7 @@ progress rings and a flags column.
 375/1440 in light and dark · style guide sections 09–12 added to
 `design-system/preview/index.html`.
 
-**Phase G (not done):** retrofit the remaining 10 screens on these primitives — client
-Pipeline (24-row checklist → `ds-track` spine + gate cards), Runs (`ds-split` list/detail
-+ cost/turn/duration charts from the CLI `result` event), Reports (thumbnail gallery),
-Data (searchable tree + per-file charts), Approvals, Profile, Settings.
+**Phase G:** shipped 2026-09-09 — see the Phase G section above.
 
 ## Phase C/D/E — shipped 2026-09-08 (built in parallel, three isolated worktree agents)
 - **Phase C (screens):** every client now has real tabs —
@@ -359,7 +419,7 @@ approval before any screen is coded. This is the "August Inspection" moment for 
 | D. Permission + approvals bridge | stdio MCP `--permission-prompt-tool`, `approvals.decide()` UI, hooks → local event POST | B | **Done** 2026-09-08 — the `--permission-prompt-tool` schema is best-effort and needs real-world verification; hooks→event-POST wiring not done (out of scope for this pass) |
 | E. Skill launcher forms | Needs a `skills/manifest.json` (or `args:` frontmatter) since companions have no shared arg parser; until then the palette sends raw `/skill slug` text | C | **Done** 2026-09-09 (Phase F) — `CommandPalette.tsx` reads `skills/manifest.json` via `ui/lib/skills-manifest.ts` and searches clients alongside skills. `ui/lib/skill-routes.ts` is retained on purpose as the fallback for the external, not-bundled skills that have no manifest entry. Still raw-text dispatch: per-skill positional/flag **input forms** are not built |
 | F. "Aurora" visual pass | Glass/ambient design layer, Recharts chart kit through `ChartCard`, `ui/lib/metrics.ts` loaders, Server-Component `AppShell` + rail/switcher/theme/density, new Overview + `/clients` | A–E | **Done** 2026-09-09 — see § Phase F above |
-| G. Retrofit remaining screens | Put the Phase F primitives on the other 10 screens: client Pipeline (24-row checklist → `ds-track` spine + gate cards), Runs and client Runs (`ds-split` list/detail + cost/turn/duration charts off the CLI `result` event), Reports (thumbnail gallery), Data (searchable tree + per-file charts), Approvals ×2, Profile, Settings, client index | F | **Not started** — only `/` and `/clients` use the new primitives today |
+| G. Retrofit remaining screens | Put the Phase F primitives on the other screens: client Pipeline (`ds-track` spine + gate cards), Runs and client Runs (`ds-split` list/detail + cost/duration charts off the CLI `result` event, now archived to `logs/ui-runs.jsonl`), Reports (thumbnail gallery), Data (searchable list + per-file facet charts), Approvals ×2, Profile, Settings | F | **Done** 2026-09-09 — see § Phase G. Also fixed 9 pre-existing defects it surfaced (undefined badge variants, unstyled `ds-grid-demo` table wrapper, `--ds-faint` text contrast, missing client-layout `h1`) |
 
 Deliberate exclusions: no Tailwind/shadcn (would fight Ledger tokens), no separate API
 server (Next.js route handlers + Server Actions cover it), no Electron/Tauri (browser +
