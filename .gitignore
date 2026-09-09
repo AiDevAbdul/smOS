@@ -24,6 +24,11 @@ proposals/
 contracts/
 .vercel
 
+# Agency operations dashboard (Group D5). NOT committed and NOT published to
+# public/reports/: this page carries whole-book MRR, per-client margin and
+# receivables. mrr_snapshots.json is local operating history, not source.
+agency/
+
 # Test-run artifacts / fixtures
 logs/
 clients/__*/

@@ -77,12 +77,35 @@ export function agingReport(invoices, now = new Date().toISOString()) {
   items.sort((a, b) => (b.days_overdue ?? 0) - (a.days_overdue ?? 0));
   const outstanding = Math.round(items.reduce((s, i) => s + i.total, 0) * 100) / 100;
   const overdue = items.filter((i) => i.bucket !== "current");
+
+  // Per-currency breakdown. A single client's ledger is one currency in practice,
+  // so the flat `outstanding` above is right for `/billing <slug> aging`. But the
+  // agency-wide roll-up (D5) sums many clients' ledgers, and this book holds USD,
+  // EUR and PKR — a blended total there is arithmetic on incommensurable units.
+  // Callers spanning clients MUST read `by_currency`, not `outstanding`.
+  const byCurrency = {};
+  for (const i of items) {
+    const c = i.currency || "USD";
+    byCurrency[c] = byCurrency[c] || { outstanding: 0, overdue_total: 0, overdue_count: 0, count: 0 };
+    byCurrency[c].outstanding = Math.round((byCurrency[c].outstanding + i.total) * 100) / 100;
+    byCurrency[c].count += 1;
+    if (i.bucket !== "current") {
+      byCurrency[c].overdue_total = Math.round((byCurrency[c].overdue_total + i.total) * 100) / 100;
+      byCurrency[c].overdue_count += 1;
+    }
+  }
+  const currencies = Object.keys(byCurrency);
+
   return {
     as_of: now,
     outstanding,
     overdue_total: Math.round(overdue.reduce((s, i) => s + i.total, 0) * 100) / 100,
     overdue_count: overdue.length,
     buckets,
+    by_currency: byCurrency,
+    // True when the flat totals above blend currencies and must not be quoted.
+    mixed_currency: currencies.length > 1,
+    currencies,
     items,
   };
 }

@@ -114,6 +114,21 @@
       ]
     },
     {
+      "slug": "agency-ops",
+      "command": "/agency-ops",
+      "description": "The agency's OWN operating dashboard — MRR/NRR/churn/win-rate/velocity, AR aging, per-client margin, health + renewals, delivery capacity. Internal, not client-facing.",
+      "companion": "skills/agency-ops/agency-ops.js",
+      "args": [],
+      "flags": [
+        { "name": "--month", "type": "string", "description": "YYYY-MM period for margin + capacity (default: current)" },
+        { "name": "--since", "type": "string", "description": "YYYY-MM-DD window start for the rate metrics" },
+        { "name": "--json", "type": "boolean", "description": "print the data only, skip the HTML/PDF render" },
+        { "name": "--share", "type": "boolean", "description": "mint a signed expiring share token (needs SMOS_SHARE_SECRET)" },
+        { "name": "--ttl", "type": "number", "description": "share token lifetime in days (default 14)" },
+        { "name": "--no-snapshot", "type": "boolean", "description": "do not record today's MRR snapshot" }
+      ]
+    },
+    {
       "slug": "intake",
       "command": "/intake",
       "description": "New client onboarding — conversational Q&A materialized into client_profile.json + per-client CLAUDE.md.",
