@@ -4,6 +4,7 @@ import RunsWorkspace from "../../components/runs/RunsWorkspace";
 import RunAnalytics from "../../components/runs/RunAnalytics";
 import { RunConsole } from "./RunConsole";
 import { computeRunStats, listRunSummaries } from "../../lib/runs";
+import { getSkillIndex } from "../../lib/skills-manifest";
 import { fmtCost, fmtDuration, fmtNumber, fmtPercent } from "../../lib/format";
 
 export const dynamic = "force-dynamic";
@@ -11,10 +12,11 @@ export const dynamic = "force-dynamic";
 export default async function RunsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ slug?: string; prompt?: string }>;
+  searchParams: Promise<{ slug?: string; prompt?: string; skill?: string }>;
 }) {
-  const { slug, prompt } = await searchParams;
+  const { slug, prompt, skill } = await searchParams;
   const runs = listRunSummaries();
+  const skills = getSkillIndex();
   const stats = computeRunStats(runs);
   const failRate = stats.total ? (stats.failed / stats.total) * 100 : null;
 
@@ -81,7 +83,14 @@ export default async function RunsPage({
           </div>
           <RunsWorkspace
             runs={runs}
-            launcher={<RunConsole initialSlug={slug ?? ""} initialPrompt={prompt ?? ""} />}
+            launcher={
+              <RunConsole
+                initialSlug={slug ?? ""}
+                initialPrompt={prompt ?? ""}
+                initialSkill={skill ?? ""}
+                skills={skills}
+              />
+            }
           />
         </div>
       </div>

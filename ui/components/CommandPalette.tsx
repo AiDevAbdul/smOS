@@ -173,7 +173,24 @@ export function CommandPalette({
     const slug = guessSlug(trimmed);
     const params = new URLSearchParams();
     if (slug) params.set("slug", slug);
-    params.set("prompt", trimmed);
+
+    // Hand off to the launcher's per-skill form when the operator has picked a
+    // bundled skill and typed nothing past its slug — the form knows the
+    // skill's args and flags from the manifest, so it's a better next step
+    // than shipping a bare `/skill slug` prompt. If they typed more than that
+    // (flags, extra positionals, free text), respect it verbatim instead.
+    const tokens = trimmed.split(/\s+/).filter(Boolean);
+    const picked = skills.find(
+      (s) => s.available && s.command.toLowerCase() === firstToken.toLowerCase()
+    );
+    const onlyCommandAndSlug = tokens.length === 1 || (tokens.length === 2 && slug !== null);
+    if (picked?.slug && onlyCommandAndSlug && (picked.args?.length || picked.flags?.length)) {
+      // The slug, not the command — /image-gen is the command for two entries.
+      params.set("skill", picked.slug);
+    } else {
+      params.set("prompt", trimmed);
+    }
+
     router.push(`/runs?${params.toString()}`);
     close();
   }

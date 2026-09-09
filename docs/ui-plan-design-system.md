@@ -1,11 +1,79 @@
 # smOS Operator UI — Research, Reasoning & Plan (Step 1: Design System)
 
 **Status:** Phases A–E shipped 2026-09-08. **Phase F (Aurora visual pass) shipped
-2026-09-09. Phase G (retrofit of the remaining 10 screens) shipped 2026-09-09** — see
-below. Remaining: real-world verification of the `--permission-prompt-tool` schema
-assumption in `mcp/ui-permission-bridge/`, and per-skill argument forms in the launcher
-(the palette reads `manifest.json`'s args but still dispatches raw text).
+2026-09-09. Phase G (retrofit of the remaining 10 screens) shipped 2026-09-09.
+Phase H (permission-bridge verification + per-skill launcher forms) shipped
+2026-09-09** — see below. Remaining: hooks → local event POST (the last unbuilt
+item from Phase D).
 **Date:** 2026-09-08 · **Owner:** Abdul
+
+## Phase H — permission bridge verified, launcher forms built, shipped 2026-09-09
+
+The two items Phases D–G left open, closed together.
+
+### 1. `--permission-prompt-tool` schema — verified, not assumed
+
+The bridge was written against the *documented* shape and carried a header comment
+saying so. It is now verified against the installed CLI (**2.1.265**) two ways: by
+reading the validator strings out of the binary, and by running a probe MCP server
+through a real `claude -p` run on both the allow and the deny path.
+
+What the CLI actually sends and expects:
+
+| | Contract |
+|---|---|
+| Call arguments | `{ tool_name, input, tool_use_id }`, plus `params._meta` carrying `claudecode/toolUseId` and a `progressToken` |
+| Result | Exactly ONE text block; anything else is rejected with *"Expected a single text block param with type=\"text\" and a string text value."* |
+| Result payload | `text` is a JSON string of `{behavior:"allow", updatedInput?:object}` or `{behavior:"deny", message:string}` |
+| Omitting `updatedInput` | Allowed, but logs *"updatedInput is missing or empty, falling back to original tool input"* — so the bridge always passes the input through |
+| Deny | `message` is surfaced verbatim as the tool_result the model sees, and the call appears in the run's final `result` event under `permission_denials` |
+
+The implementation matched on every point, so no protocol change was needed. Three
+things did change:
+
+- **`tool_use_id` is now captured** and forwarded to `/api/permissions`. The CLI can
+  re-issue a check for the same tool call (its own logs call this `reExecuted`);
+  `lib/permissions.ts` now reuses the still-pending record for a repeated
+  `tool_use_id`, so the operator sees one banner and one decision instead of a stack.
+- **Registration is automated.** The bridge previously required a human to run
+  `claude mcp add` or add a repo-root `.mcp.json` — and neither existed, so ticking the
+  checkbox would have failed with *"MCP tool … not found"*. `registry.ts` now passes an
+  inline `--mcp-config` declaring the server for that run only. `--strict-mcp-config` is
+  deliberately NOT passed, so the repo's own MCP servers still load.
+- **The bridge's dependency is installed.** `mcp/ui-permission-bridge/` declared
+  `@modelcontextprotocol/sdk` but had no `node_modules` (it is outside the root
+  workspaces), so the server could not have started at all.
+
+Two constraints worth remembering: the flag only works with `--print` (registry always
+spawns with `-p`), and the tool is only consulted for calls that would genuinely prompt
+— a sandbox-approved `echo` or an allowlisted command never reaches the bridge.
+
+### 2. Per-skill launcher forms
+
+`ui/components/runs/SkillForm.tsx` renders a manifest entry as a real form: positional
+args (enum → `<select>`), boolean flags → `ds-switch`, value flags → typed input, with
+long flag lists collapsed behind a disclosure that never hides a flag already set. The
+composed invocation is always shown under **Will run**, and a `Skill / Free text`
+segmented control keeps the raw textarea one click away.
+
+The composition rules are NOT in the component — they are in
+`scripts/lib/skill_command.js` (plain, unit-tested JS, imported by the component the
+same way `ui/` already imports `scripts/lib/approvals.js`), covered by
+`test/skill-command.test.js` including assertions against the real manifest, so a
+manifest edit that would break the launcher fails a test first.
+
+Two defects found and fixed while building it:
+
+- **`/image-gen` is the command for two manifest entries** (`image-gen` organic,
+  `image-gen-ads` paid). A command-keyed `<select>` collapsed them, making the paid
+  variant unreachable. The picker is now keyed on the unique `slug`, and where a command
+  is shared the composed prompt names the companion script
+  (`… (run skills/image-gen/image-gen-ads.js)`) so the choice is not silently
+  meaningless. `ambiguousCommands()` is asserted against the manifest, so a *new*
+  collision fails a test rather than shipping.
+- **Flag labels were being uppercased** by `.ds-field__label`'s `text-transform`,
+  rendering `--business` as `--BUSINESS` for a case-sensitive CLI flag. Added
+  `.ds-field__label--code` for labels that are literal tokens.
 
 ## Phase G — remaining screens retrofitted, shipped 2026-09-09
 
@@ -158,23 +226,18 @@ progress rings and a flags column.
   tool-use permission checks to a human in the UI instead of the CLI's
   default headless behavior — opt-in per run via a checkbox in the Run
   console (`usePermissionBridge`, default off, existing callers unaffected).
-  Registering the bridge with Claude Code (`claude mcp add` or a
-  `.mcp.json` entry) is documented in the server's header comment, not
-  automated. **The exact `--permission-prompt-tool` call/response schema is
-  a best-effort implementation, flagged as needing real-world verification
-  against the installed CLI version** — see the comment block at the top of
-  `mcp/ui-permission-bridge/index.js`.
+  Registration is automatic as of Phase H (`ui/lib/registry.ts` passes an
+  inline `--mcp-config` per run). **The `--permission-prompt-tool`
+  call/response schema was verified against the real CLI in Phase H** — see
+  the comment block at the top of `mcp/ui-permission-bridge/index.js`.
 - **Phase E (skill manifest):** `skills/manifest.json` — a 42-entry
   machine-readable catalog of every bundled skill's companion CLI (slug,
   `/command`, description, positional args incl. sub-action enums like
   billing's `invoice|list|mark-paid`, flags), built by inspecting each
   companion's `process.argv` handling and cross-referencing CLAUDE.md.
   `skills/MANIFEST.md` documents how it was generated and that it needs
-  hand-updating when a skill's flags change (no automated sync). **Not yet
-  wired into the command palette** — the palette still uses the simpler,
-  independently-authored `ui/lib/skill-routes.ts`; a follow-up should make
-  the palette read `manifest.json` instead so launcher forms can render real
-  positional/flag inputs per skill rather than a raw text line.
+  hand-updating when a skill's flags change (no automated sync). Wired into
+  the palette in Phase F and into real per-skill launcher forms in Phase H.
 - **How this landed:** four subagents ran in parallel, each in an isolated
   git worktree with a disjoint file-ownership scope to avoid collisions.
   Three of the four had branched before this session's Phase B commit
@@ -233,7 +296,7 @@ progress rings and a flags column.
 - Not done yet (Phase C/D/E per § 4): full tab set per client, dense data
   grid over `DATA_FILES`, ⌘K command palette, Settings/Health screen,
   `--permission-prompt-tool` bridge, approvals decide-from-UI, skill launcher
-  forms (needs `skills/manifest.json`).
+  forms (needs `skills/manifest.json`) — all three shipped; see Phase H.
 
 ## Phase A — shipped 2026-09-08
 - `design-system/smos-design-system.css` — additive application tokens (spacing, control, focus, z-layer, run-state, shell completions, density), non-breaking to existing reports.
@@ -416,8 +479,8 @@ approval before any screen is coded. This is the "August Inspection" moment for 
 |---|---|---|---|
 | B. Next.js scaffold + runner | `ui/` App Router app: layout shell, server-side data loaders (status/clients/data/reports), `app/api/runs` spawner with stream-json → SSE, process registry, session resume | A | **Done** 2026-09-08 |
 | C. Screens 1–7 | App Router routes `/`, `/clients/[slug]/(pipeline\|runs\|reports\|data\|approvals\|profile)`, `/approvals`, `/settings`; Client Components only where interactive; everything styled with `ds-*` | A, B | **Done** 2026-09-08 |
-| D. Permission + approvals bridge | stdio MCP `--permission-prompt-tool`, `approvals.decide()` UI, hooks → local event POST | B | **Done** 2026-09-08 — the `--permission-prompt-tool` schema is best-effort and needs real-world verification; hooks→event-POST wiring not done (out of scope for this pass) |
-| E. Skill launcher forms | Needs a `skills/manifest.json` (or `args:` frontmatter) since companions have no shared arg parser; until then the palette sends raw `/skill slug` text | C | **Done** 2026-09-09 (Phase F) — `CommandPalette.tsx` reads `skills/manifest.json` via `ui/lib/skills-manifest.ts` and searches clients alongside skills. `ui/lib/skill-routes.ts` is retained on purpose as the fallback for the external, not-bundled skills that have no manifest entry. Still raw-text dispatch: per-skill positional/flag **input forms** are not built |
+| D. Permission + approvals bridge | stdio MCP `--permission-prompt-tool`, `approvals.decide()` UI, hooks → local event POST | B | **Done** 2026-09-08; schema verified + registration automated in Phase H (2026-09-09). hooks→event-POST wiring still not done (out of scope for both passes) |
+| E. Skill launcher forms | Needs a `skills/manifest.json` (or `args:` frontmatter) since companions have no shared arg parser; until then the palette sends raw `/skill slug` text | C | **Done** 2026-09-09 (Phase F palette, Phase H forms) — `CommandPalette.tsx` reads `skills/manifest.json` via `ui/lib/skills-manifest.ts`; `ui/components/runs/SkillForm.tsx` renders each skill's positional args and flags and composes the invocation. `ui/lib/skill-routes.ts` is retained on purpose as the fallback for the external, not-bundled skills that have no manifest entry |
 | F. "Aurora" visual pass | Glass/ambient design layer, Recharts chart kit through `ChartCard`, `ui/lib/metrics.ts` loaders, Server-Component `AppShell` + rail/switcher/theme/density, new Overview + `/clients` | A–E | **Done** 2026-09-09 — see § Phase F above |
 | G. Retrofit remaining screens | Put the Phase F primitives on the other screens: client Pipeline (`ds-track` spine + gate cards), Runs and client Runs (`ds-split` list/detail + cost/duration charts off the CLI `result` event, now archived to `logs/ui-runs.jsonl`), Reports (thumbnail gallery), Data (searchable list + per-file facet charts), Approvals ×2, Profile, Settings | F | **Done** 2026-09-09 — see § Phase G. Also fixed 9 pre-existing defects it surfaced (undefined badge variants, unstyled `ds-grid-demo` table wrapper, `--ds-faint` text contrast, missing client-layout `h1`) |
 

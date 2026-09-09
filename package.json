@@ -4,7 +4,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "smOS — autonomous social media operating system for Meta",
-  "workspaces": ["ui"],
+  "workspaces": ["ui", "mcp/ui-permission-bridge"],
   "scripts": {
     "audit": "node skills/audit/audit.js",
     "report": "node skills/report/report.js",

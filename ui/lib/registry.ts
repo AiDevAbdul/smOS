@@ -28,6 +28,15 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
  */
 const HISTORY_FILE = resolve(REPO_ROOT, "logs", "ui-runs.jsonl");
 
+/**
+ * Where the permission bridge should POST its approval requests — i.e. this
+ * server. `next dev`/`next start` put the chosen port in PORT; fall back to
+ * Next's default so the common case needs no configuration. Only used when a
+ * run opts into the bridge.
+ */
+const UI_BASE_URL =
+  process.env.SMOS_UI_BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
+
 export type RunStatus = "running" | "done" | "failed";
 
 /**
@@ -203,7 +212,26 @@ export function startRun(opts: {
   const args = ["-p", opts.prompt, "--output-format", "stream-json", "--verbose"];
   if (opts.resumeSessionId) args.push("--resume", opts.resumeSessionId);
   if (opts.usePermissionBridge) {
-    args.push("--permission-prompt-tool", "mcp__ui-permission-bridge__approve");
+    // Register the bridge inline for this run only. Without this the CLI
+    // exits with "MCP tool mcp__ui-permission-bridge__approve (passed via
+    // --permission-prompt-tool) not found", since nothing else in the repo
+    // declares the server. An inline --mcp-config needs no `claude mcp add`
+    // and no interactive confirmation; and because --strict-mcp-config is
+    // deliberately NOT passed, the repo's own MCP servers still load.
+    args.push(
+      "--mcp-config",
+      JSON.stringify({
+        mcpServers: {
+          "ui-permission-bridge": {
+            command: process.execPath,
+            args: [resolve(REPO_ROOT, "mcp", "ui-permission-bridge", "index.js")],
+            env: { SMOS_UI_RUN_ID: runId, SMOS_UI_BASE_URL: UI_BASE_URL },
+          },
+        },
+      }),
+      "--permission-prompt-tool",
+      "mcp__ui-permission-bridge__approve"
+    );
   }
 
   // ~/.config/smos/.env (loaded into process.env by instrumentation.ts for

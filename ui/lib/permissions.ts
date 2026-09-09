@@ -25,6 +25,10 @@ export interface PermissionRequestRecord {
   runId: string | null;
   toolName: string;
   input: unknown;
+  /** The `tool_use_id` the CLI sends with every permission check (verified
+   *  against Claude Code 2.1.265). Used to collapse a re-check of the same
+   *  tool call onto one banner instead of stacking duplicates. */
+  toolUseId: string | null;
   status: "pending" | "decided" | "timeout";
   createdAt: string;
   decision: PermissionDecision | null;
@@ -50,13 +54,35 @@ export function createRequest(opts: {
   runId?: string | null;
   toolName: string;
   input: unknown;
+  toolUseId?: string | null;
 }): PermissionRequestRecord {
+  const runId = opts.runId ?? null;
+  const toolUseId = opts.toolUseId ?? null;
+
+  // The CLI can re-issue a permission check for the same tool_use_id (its own
+  // logs call this "reExecuted"). Reuse the still-pending record so the
+  // operator sees one banner and one decision, not a growing stack of
+  // identical ones — and so the bridge's poll on the original id still
+  // resolves.
+  if (toolUseId) {
+    for (const existing of getRegistry().requests.values()) {
+      if (
+        existing.status === "pending" &&
+        existing.toolUseId === toolUseId &&
+        existing.runId === runId
+      ) {
+        return existing;
+      }
+    }
+  }
+
   const id = randomUUID();
   const record: PermissionRequestRecord = {
     id,
-    runId: opts.runId ?? null,
+    runId,
     toolName: opts.toolName,
     input: opts.input ?? null,
+    toolUseId,
     status: "pending",
     createdAt: new Date().toISOString(),
     decision: null,

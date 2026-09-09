@@ -36,6 +36,10 @@ export interface SkillEntry {
   available: boolean;
   note?: string;
   slug?: string;
+  /** The skill's companion script, per the manifest. Used to disambiguate the
+   *  two entries that share a command (`/image-gen` → image-gen.js for
+   *  organic, image-gen-ads.js for paid). */
+  companion?: string;
   args?: SkillArg[];
   flags?: SkillFlag[];
   /** True when the skill's first positional arg is a client slug — lets the
@@ -48,6 +52,7 @@ interface RawManifest {
     slug: string;
     command: string;
     description?: string;
+    companion?: string;
     args?: SkillArg[];
     flags?: SkillFlag[];
   }>;
@@ -82,6 +87,7 @@ export function getSkillIndex(): SkillEntry[] {
           label: toLabel(s.description, s.slug),
           available: true,
           slug: s.slug,
+          companion: s.companion,
           args: s.args ?? [],
           flags: s.flags ?? [],
           takesSlug: /slug/i.test(first?.name ?? ""),

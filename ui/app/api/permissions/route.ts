@@ -1,6 +1,6 @@
 // POST /api/permissions — the mcp/ui-permission-bridge server calls this on
-// every tool-use permission check, with {runId, toolName, input}. Returns
-// {id} for the bridge to poll via GET /api/permissions/:id.
+// every tool-use permission check, with {runId, toolName, input, toolUseId}.
+// Returns {id} for the bridge to poll via GET /api/permissions/:id.
 // GET  /api/permissions?runId=<id> — pending requests (optionally scoped to
 // one run) for the RunConsole banner to poll and render Allow/Deny for.
 export const runtime = "nodejs";
@@ -16,8 +16,9 @@ export async function POST(req: NextRequest) {
   }
   const runId = typeof body?.runId === "string" ? body.runId : null;
   const input = body?.input ?? null;
+  const toolUseId = typeof body?.toolUseId === "string" ? body.toolUseId : null;
 
-  const record = createRequest({ runId, toolName, input });
+  const record = createRequest({ runId, toolName, input, toolUseId });
   return NextResponse.json({ id: record.id, status: record.status });
 }
 

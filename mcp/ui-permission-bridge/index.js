@@ -14,39 +14,55 @@
 // server named "ui-permission-bridge" exposing one tool named "approve" for
 // that tool path (mcp__<server-name>__<tool-name>) to resolve.
 //
-// ── Registering this server (operator does this once, out of band) ─────
-// This script does NOT self-register — Claude Code must already know about
-// it before a run passes --permission-prompt-tool. Either:
-//   claude mcp add ui-permission-bridge -- node mcp/ui-permission-bridge/index.js
-// (run from the repo root, so the relative path resolves) or a `.mcp.json`
-// entry at the repo root:
-//   {
-//     "mcpServers": {
-//       "ui-permission-bridge": {
-//         "command": "node",
-//         "args": ["mcp/ui-permission-bridge/index.js"]
-//       }
-//     }
-//   }
-// `claude mcp add` requires one-time interactive confirmation the same way
-// meta-official does (see CLAUDE.md) — cannot be scripted from a
-// non-interactive run, and this file must never attempt to run that command
-// itself.
+// ── Registering this server ────────────────────────────────────────────
+// ui/lib/registry.ts registers this server *per run*, by passing an inline
+// `--mcp-config '{"mcpServers":{"ui-permission-bridge":{...}}}'` alongside
+// --permission-prompt-tool. That needs no `claude mcp add`, no repo-root
+// `.mcp.json`, and no one-time interactive confirmation — an inline
+// --mcp-config server is available to the run that declares it and nothing
+// else. Note registry.ts deliberately does NOT pass --strict-mcp-config, so
+// the repo's own MCP servers (meta, tavily, …) still load for the run.
 //
-// ── The permission-prompt-tool schema (BEST-EFFORT — verify against your
-//    installed Claude Code version; this is the documented shape as of the
-//    2.1.x CLI, may need real-world correction) ─────────────────────────
-// Claude Code calls the tool with input:
-//   { tool_name: string, input: object, ...maybe more fields }
-// and expects the CallTool result's content[0].text to be a JSON string of
-// EITHER:
+// This script still does NOT self-register: if you want it available to
+// interactive sessions too, that is a separate, human-run
+// `claude mcp add ui-permission-bridge -- node mcp/ui-permission-bridge/index.js`
+// (from the repo root) — and this file must never attempt to run it itself.
+//
+// ── The permission-prompt-tool schema (VERIFIED against Claude Code
+//    2.1.265 on 2026-09-09 — probe MCP server + real `claude -p` run,
+//    both the allow and the deny path) ──────────────────────────────────
+// Claude Code calls the tool with arguments:
+//   { tool_name: string, input: object, tool_use_id: string }
+// plus a `_meta` sibling on params carrying `claudecode/toolUseId` and a
+// `progressToken`. Observed frame, verbatim:
+//   { "method": "tools/call", "params": {
+//       "name": "approve",
+//       "arguments": { "tool_name": "Write",
+//                      "input": { "file_path": "…", "content": "probe\n" },
+//                      "tool_use_id": "toolu_01RHKtPfNikXqKqjF3ZsbTih" },
+//       "_meta": { "claudecode/toolUseId": "toolu_01RHK…", "progressToken": 2 } } }
+// The result must be a SINGLE text block — the CLI rejects anything else with
+// "Permission prompt tool returned an invalid result. Expected a single text
+// block param with type=\"text\" and a string text value." — whose `text` is
+// a JSON string of EITHER:
 //   { "behavior": "allow", "updatedInput": <object> }   — proceed, optionally
-//     with a modified tool input (we always pass the input straight through
-//     unmodified since the UI only decides yes/no, never edits args)
-//   { "behavior": "deny", "message": <string> }         — block, with a
-//     human-readable reason surfaced back to the model/transcript
-// We implement exactly that shape. If your Claude Code version expects a
-// different envelope, this is the one place to adjust it.
+//     with a modified tool input. `updatedInput` is optional, but omitting it
+//     logs "updatedInput is missing or empty, falling back to original tool
+//     input", so we always pass the input straight through unmodified (the UI
+//     only decides yes/no, never edits args).
+//   { "behavior": "deny", "message": <string> }         — block; `message` is
+//     surfaced verbatim as the tool_result the model sees, and the call is
+//     listed in the run's final `result` event under `permission_denials`.
+// The CLI's own validator string confirms the contract: "Expected {behavior:
+// 'allow', updatedInput?: object} or {behavior: 'deny', message: string}."
+//
+// Two constraints worth remembering:
+//   - `--permission-prompt-tool` only works with `--print` (`-p`). registry.ts
+//     always spawns with `-p`, so this holds.
+//   - The tool is only consulted for calls that would actually prompt. Bash
+//     commands the sandbox auto-approves (a bare `echo`) and anything matching
+//     a settings allowlist never reach this bridge — that is the CLI deciding
+//     before the permission handler, not a bug here.
 //
 // ── The bridge loop ──────────────────────────────────────────────────────
 // On each call: POST {runId, toolName, input} to the UI server's
@@ -81,13 +97,13 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function requestPermission(toolName, input) {
+async function requestPermission(toolName, input, toolUseId) {
   let created;
   try {
     const res = await fetch(`${UI_BASE_URL}/api/permissions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ runId: RUN_ID, toolName, input }),
+      body: JSON.stringify({ runId: RUN_ID, toolName, input, toolUseId }),
     });
     if (!res.ok) {
       return denyResult(`ui-permission-bridge: /api/permissions returned ${res.status} — denying closed`);
@@ -136,11 +152,19 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       name: "approve",
       description:
         "Permission-prompt-tool target: routes a Claude Code tool-use permission check to the smOS operator UI and blocks until a human clicks Allow or Deny (or the request times out and is denied closed).",
+      // Mirrors the wire the CLI actually sends (see the header comment).
+      // `additionalProperties` is left open on purpose: the CLI may add
+      // fields, and an over-strict schema here would break every run.
       inputSchema: {
         type: "object",
         properties: {
           tool_name: { type: "string", description: "Name of the tool Claude Code wants to invoke" },
           input: { type: "object", description: "The proposed input/arguments for that tool call" },
+          tool_use_id: {
+            type: "string",
+            description:
+              "Id of the tool_use block being checked; used to correlate/de-duplicate the request in the UI",
+          },
         },
         required: ["tool_name", "input"],
       },
@@ -149,13 +173,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
+  const { name, arguments: args, _meta: meta } = request.params;
   if (name !== "approve") {
     return denyResult(`ui-permission-bridge: unknown tool "${name}" — denying closed`);
   }
   const toolName = args?.tool_name ?? args?.toolName ?? "unknown";
   const input = args?.input ?? {};
-  return requestPermission(toolName, input);
+  // The CLI sends the id both as an argument and on params._meta; prefer the
+  // argument and fall back, so a change to either surface keeps working.
+  const toolUseId = args?.tool_use_id ?? meta?.["claudecode/toolUseId"] ?? null;
+  return requestPermission(toolName, input, toolUseId);
 });
 
 const transport = new StdioServerTransport();

@@ -762,6 +762,10 @@
 .ds-field__label { font-family: var(--ds-font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ds-muted); }
 .ds-field__hint { font-size: 12px; color: var(--ds-muted); }
 .ds-field__error { font-size: 12px; color: var(--ds-red-ink); }
+/* For labels that ARE a literal token — a CLI flag, a filename, an env var.
+   The base label uppercases, which would misrepresent a case-sensitive name
+   (`--business` is not `--BUSINESS`). */
+.ds-field__label--code { text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--ds-ink); }
 .ds-form-row { display: flex; gap: var(--ds-space-3); flex-wrap: wrap; }
 
 .ds-input, .ds-select, .ds-textarea {
@@ -781,6 +785,23 @@
 }
 .ds-input.is-invalid, .ds-textarea.is-invalid { border-color: var(--ds-red); }
 .ds-input::placeholder, .ds-textarea::placeholder { color: var(--ds-faint); }
+
+/* A row of boolean controls (skill launcher flags): each cell is its own
+   label + switch pair, wrapping like .ds-form-row but tighter, since a
+   switch is much narrower than a text input. */
+.ds-toggle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--ds-space-3); }
+.ds-toggle { display: flex; align-items: flex-start; gap: var(--ds-space-2); }
+.ds-toggle__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ds-toggle__name { font-family: var(--ds-font-mono); font-size: 12px; color: var(--ds-ink); }
+
+/* Read-only echo of the exact command a form composed — the operator should
+   always be able to see what will actually run. */
+.ds-cmd-preview {
+  display: block; font-family: var(--ds-font-mono); font-size: 13px; color: var(--ds-ink);
+  background: var(--ds-surface-2); border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r-sm); padding: var(--ds-space-2) var(--ds-space-3);
+  overflow-x: auto; white-space: pre;
+}
 
 .ds-switch {
   position: relative; display: inline-block; width: 38px; height: 22px; flex: none;

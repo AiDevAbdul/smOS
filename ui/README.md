@@ -7,7 +7,7 @@ wanted. See `docs/ui-plan-design-system.md` for the full research/plan.
 ## Run it
 
 ```sh
-npm install        # from the repo root (workspaces: ["ui"])
+npm install        # from the repo root (workspaces: ui, mcp/ui-permission-bridge)
 npm run ui         # next dev, http://localhost:3000
 ```
 
@@ -45,14 +45,21 @@ responses, connectors disabled) — unset it before starting the dev server.
   replays from any `since` offset instead of losing or duplicating output.
   An opt-in checkbox routes the run's tool-use permission checks through the
   UI (`components/PermissionBanner.tsx` polls and renders Allow/Deny) via a
-  headless permission-prompt bridge — see below.
+  headless permission-prompt bridge — see below. The launcher itself has two
+  modes: **Skill** renders the selected skill's real positional args and flags
+  from `skills/manifest.json` (`components/runs/SkillForm.tsx`) and shows the
+  exact invocation it composes, and **Free text** is the original textarea.
 - `app/settings/page.tsx` + `lib/health.ts` — `claude --version`
   (best-effort), a read-only summary of `hooks/hooks.json`, env var **names**
   present under an allowlist (never values), and MCP servers found on disk.
 - `components/CommandPalette.tsx` — ⌘K/Ctrl+K overlay backed by
-  `lib/skill-routes.ts` (mirrors CLAUDE.md's Workflow Routing table; external
-  /not-bundled skills show as unavailable rather than pretending to run).
-  Hands off to `/runs?slug=&prompt=`.
+  `lib/skills-manifest.ts` (generated from `skills/manifest.json`, so it can't
+  drift from the skills themselves; `lib/skill-routes.ts` remains the fallback
+  for the external /not-bundled skills, which show as unavailable rather than
+  pretending to run). Clients are searchable alongside skills. Picking a
+  bundled skill hands off to its launcher form via
+  `/runs?skill=<slug>&slug=<client>`; anything typed beyond the command and a
+  slug is passed through verbatim as `/runs?prompt=` instead.
 - `app/api/reports/[...path]` — serves rendered report HTML/PDF for the
   Reports tab's iframe viewer, from `clients/<slug>/reports/<date>/<file>`
   or `public/reports/<slug>/<file>` (path-traversal guarded).
@@ -60,11 +67,13 @@ responses, connectors disabled) — unset it before starting the dev server.
   stdio MCP server implementing Claude Code's `--permission-prompt-tool`
   contract: bridges a run's tool-use permission requests to
   `app/api/permissions` and blocks until a human decides in the UI. Opt-in
-  per run (default off — existing runs are unaffected). **The exact
-  request/response schema is a best-effort implementation** (see the header
-  comment in `index.js`) and needs verification against the installed CLI.
-  Registering it with Claude Code (`claude mcp add` or a `.mcp.json` entry)
-  is documented there too — not auto-registered.
+  per run (default off — existing runs are unaffected). **The request/response
+  schema is verified against Claude Code 2.1.265** — probe MCP server plus a
+  real `claude -p` run on both the allow and deny path; the header comment in
+  `index.js` records the exact wire. `lib/registry.ts` registers the server
+  per run via an inline `--mcp-config`, so no `claude mcp add` or `.mcp.json`
+  is needed. It is a root workspace, so its `@modelcontextprotocol/sdk`
+  dependency is installed by the repo-root `npm install` along with `ui`.
 
 ## Design system
 
@@ -77,11 +86,11 @@ custom properties, no raw hex/inline styles beyond CSS-variable references.
 
 ## Not yet built (see docs/ui-plan-design-system.md § 4)
 
-- `skills/manifest.json` (Phase E's data layer, 42 entries) exists but isn't
-  wired into `CommandPalette.tsx` yet — the palette still uses the simpler,
-  independently-authored `lib/skill-routes.ts` and sends raw prompt text
-  rather than rendering a real per-skill args/flags form.
 - Hooks → local event POST (part of Phase D) — hooks still run exactly as
   they do from the terminal; they don't push lifecycle events into the UI.
-- Real-world verification of the permission-prompt-tool bridge's request/
-  response schema (see `mcp/ui-permission-bridge/index.js`'s header comment).
+
+One manifest quirk the launcher works around: `/image-gen` is the command for
+**two** entries (`image-gen` organic, `image-gen-ads` paid), so the skill
+picker is keyed on the unique `slug`, and a shared command composes a prompt
+that names the companion script. `test/skill-command.test.js` asserts
+`/image-gen` is the only such collision — a new one fails there first.
