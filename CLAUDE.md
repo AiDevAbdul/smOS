@@ -18,7 +18,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Client status — what's done, what's remaining** | `/smos-status` |
 | **Generate a client proposal / pitch** | `/proposal` |
 | **Generate service agreement + e-sign** | `/contract` |
-| **Issue retainer invoices (Stripe)** | `/billing` |
+| **Issue retainer invoices + recurring subscriptions (Stripe)** | `/billing` |
 | New client onboarding | `/intake` |
 | **Zero-start — brand strategy + positioning** | `/brand-strategy` |
 | **Zero-start — name + verbal identity (3-gate screen)** | `/brand-name` |
@@ -215,6 +215,8 @@ The `naming-check` hook enforces this before any create_campaign, create_adset, 
 - Any action outside normal operating hours (9 PM – 6 AM client timezone)
 - Any audience exclusion being removed
 - Any campaign targeting change (not just budget/status)
+- **Creating a Stripe subscription** (`/billing {slug} subscribe --stripe`) — it hands Stripe standing authority to bill the client every period
+- **Issuing an invoice to a live Stripe customer** (`/billing … invoice --send`) — the client receives a real payable invoice
 
 ### Auto-executes (no approval needed)
 - Pausing ads below KPI thresholds (after minimum spend reached)
@@ -222,6 +224,18 @@ The `naming-check` hook enforces this before any create_campaign, create_adset, 
 - Generating reports and sending them
 - Saving data to Supabase
 - Sending Discord digest messages
+- Generating a **local** invoice (HTML+PDF, no `--send`) and recording it in the ledger
+- Recording a subscription as `invoice_manual` (no Stripe authority granted)
+
+### Money-moving automation
+
+`scripts/billing-cron.js` (scheduled `smos-billing-monthly`, 1st of the month 07:00)
+auto-issues each active subscription's invoice for the period. It is **dry-run by
+default** — it prints its plan and writes nothing without `--commit`, and the scheduled
+entry passes `--commit` but *not* `--send`, so invoices are generated locally and a
+human still decides when a client is actually charged. It never issues for a client
+whose subscription is `stripe_subscription` (Stripe bills those itself; issuing locally
+too would double-bill), and never reissues a period already in the ledger.
 
 ### Absolute blocks (never do these without explicit written instruction)
 - Delete any campaign, adset, or ad (archive instead)

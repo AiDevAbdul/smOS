@@ -29,11 +29,22 @@ fi
 NEW_ENTRIES=""
 while IFS= read -r entry; do
   name="$(echo "$entry" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8').trim(); const o=JSON.parse(d); process.stdout.write(o.name)")"
-  agent="$(echo "$entry" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8').trim(); const o=JSON.parse(d); process.stdout.write(o.agent)")"
+  agent="$(echo "$entry" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8').trim(); const o=JSON.parse(d); process.stdout.write(o.agent||'')")"
+  command="$(echo "$entry" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8').trim(); const o=JSON.parse(d); process.stdout.write(o.command||'')")"
   cron_expr="$(echo "$entry" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8').trim(); const o=JSON.parse(d); process.stdout.write(o.cron)")"
   desc="$(echo "$entry" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8').trim(); const o=JSON.parse(d); process.stdout.write(o.description)")"
 
-  line="${cron_expr} bash ${RUNNER} ${agent} $MARKER (${name}: ${desc})"
+  # An entry declares either an agent (spawned via run-agent.sh) or a plain
+  # command run from the repo root. Neither is a definition bug, so fail loudly
+  # rather than installing a cron line that runs nothing.
+  if [[ -n "$command" ]]; then
+    line="${cron_expr} cd ${SMOS_DIR} && ${command} $MARKER (${name}: ${desc})"
+  elif [[ -n "$agent" ]]; then
+    line="${cron_expr} bash ${RUNNER} ${agent} $MARKER (${name}: ${desc})"
+  else
+    echo "ERROR: schedule \"${name}\" declares neither \`agent\` nor \`command\`." >&2
+    exit 1
+  fi
   NEW_ENTRIES="${NEW_ENTRIES}${line}\n"
 done < <(echo "$SCHEDULES_JSON" | node -e "
   const data = require('fs').readFileSync('/dev/stdin','utf8');

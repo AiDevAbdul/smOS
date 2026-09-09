@@ -25,21 +25,28 @@ import { fileURLToPath } from "node:url";
 import { loadEnv } from "../../scripts/lib/load-env.js";
 import { deal as dealSchema } from "../../schemas/index.js";
 import { upsert, supabaseConfigured } from "../../scripts/lib/supabase.js";
+import { crmPipeline } from "../../scripts/lib/paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
 loadEnv();
 
-const PIPELINE = resolve(ROOT, "crm", "pipeline.json");
+// Via paths.js so this honors SMOS_DATA_ROOT, and resolved per call so a value set
+// after import still applies. NOTE: these two functions duplicate
+// scripts/lib/crm-store.js's loadPipeline/savePipeline — both must keep pointing at
+// this same helper, or /crm and /billing would read different pipelines.
+const PIPELINE = () => crmPipeline();
 const nowIso = () => new Date().toISOString();
 
 function loadPipeline() {
-  if (!existsSync(PIPELINE)) return [];
-  try { return JSON.parse(readFileSync(PIPELINE, "utf8")).map(dealSchema.normalize); } catch { return []; }
+  const p = PIPELINE();
+  if (!existsSync(p)) return [];
+  try { return JSON.parse(readFileSync(p, "utf8")).map(dealSchema.normalize); } catch { return []; }
 }
 function savePipeline(deals) {
-  mkdirSync(dirname(PIPELINE), { recursive: true });
-  writeFileSync(PIPELINE, JSON.stringify(deals.map(dealSchema.normalize), null, 2));
+  const p = PIPELINE();
+  mkdirSync(dirname(p), { recursive: true });
+  writeFileSync(p, JSON.stringify(deals.map(dealSchema.normalize), null, 2));
 }
 function findDeal(deals, slug) { return deals.find((d) => d.slug === slug); }
 

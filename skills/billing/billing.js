@@ -9,10 +9,20 @@
  * error) it produces the local invoice and marks it manual — never charges silently,
  * never claims a send it didn't make.
  *
+ * Group D1 adds the recurring half. Before it, "recurring retainer" was a number on
+ * the deal plus a human remembering to run `invoice` every month; now a client has an
+ * explicit subscription record (schemas/subscription.js) that states what they pay,
+ * from which period, and whether Stripe is collecting it — and `scripts/billing-cron.js`
+ * issues each period automatically off that record.
+ *
  * Usage:
  *   node skills/billing/billing.js <slug> invoice [--period 2026-06] [--ad-spend 500] [--no-setup] [--send] [--force]
  *   node skills/billing/billing.js <slug> list
  *   node skills/billing/billing.js <slug> mark-paid --period 2026-06
+ *   node skills/billing/billing.js <slug> subscribe [--amount 3000] [--interval month|year]
+ *                                                   [--start 2026-09] [--end 2027-08] [--stripe]
+ *   node skills/billing/billing.js <slug> subscription
+ *   node skills/billing/billing.js <slug> unsubscribe [--reason "..."]
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -21,7 +31,9 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { heroHeader } from "../../scripts/lib/design_system.js";
 import { docShell, writeDocHtmlAndPdf, escHtml } from "../../scripts/lib/client_doc.js";
 import { getDeal, upsertDeal } from "../../scripts/lib/crm-store.js";
-import { listInvoices, getInvoice, saveInvoice } from "../../scripts/lib/billing-store.js";
+import { listInvoices, getInvoice, saveInvoice, getSubscription, saveSubscription } from "../../scripts/lib/billing-store.js";
+import { stripeConfigured, stripePost, ensureCustomer, createSubscription, cancelSubscription, idempotencyKey, toCents } from "../../scripts/lib/stripe.js";
+import { subscription as subSchema } from "../../schemas/index.js";
 import { loadCatalog, pickPackage } from "../proposal/proposal.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -121,25 +133,29 @@ export function buildInvoiceHtml(inv, agency, { paymentTerms = "" } = {}) {
   return docShell({ title: `Invoice ${inv.id}`, extraCss: invoiceCss(), body, date: inv.issued_at.slice(0, 10) });
 }
 
-// Stripe (best-effort). form-encoded; cents at the boundary. Unverified against live —
-// any non-2xx / throw returns a manual result rather than a false success.
-async function stripeSend(inv, deal) {
-  const key = process.env.STRIPE_API_KEY;
-  if (!key) return { sent: false, mode: "manual", reason: "No STRIPE_API_KEY — invoice generated locally; send/collect manually." };
+// Stripe send (best-effort, fail-closed). Every mutating call now carries a
+// deterministic Idempotency-Key scoped to the invoice id (see scripts/lib/stripe.js),
+// so a retried run — cron double-fire, crash between Stripe and the ledger write, an
+// operator re-running `--send` — replays instead of billing the client twice. Any
+// non-2xx / throw returns a manual result rather than a false success.
+export async function stripeSend(inv, deal, opts = {}) {
+  if (!stripeConfigured()) return { sent: false, mode: "manual", reason: "No STRIPE_API_KEY — invoice generated locally; send/collect manually." };
   if (!deal.contact.email) return { sent: false, mode: "manual", reason: "No client email on the deal — set it before a Stripe send." };
-  const auth = { Authorization: `Bearer ${key}`, "Content-Type": "application/x-www-form-urlencoded" };
-  const post = async (path, params) => {
-    const res = await fetch(`https://api.stripe.com/v1/${path}`, { method: "POST", headers: auth, body: new URLSearchParams(params) });
-    if (!res.ok) throw new Error(`Stripe ${path} ${res.status}: ${(await res.text()).slice(0, 160)}`);
-    return res.json();
-  };
   try {
-    const cust = await post("customers", { email: deal.contact.email, name: inv.company });
-    for (const l of inv.line_items) {
-      await post("invoiceitems", { customer: cust.id, amount: String(Math.round(l.amount * 100)), currency: inv.currency.toLowerCase(), description: l.description });
+    const cust = await ensureCustomer({ slug: inv.slug, email: deal.contact.email, name: inv.company }, opts);
+    // Line index is part of the key: two lines with the same description and amount
+    // are legitimately two charges, so they must not collapse into one.
+    for (const [i, l] of inv.line_items.entries()) {
+      await stripePost("invoiceitems", {
+        customer: cust.id, amount: String(toCents(l.amount)),
+        currency: inv.currency.toLowerCase(), description: l.description,
+      }, { ...opts, idempotency: idempotencyKey(inv.id, `item-${i}`) });
     }
-    const si = await post("invoices", { customer: cust.id, collection_method: "send_invoice", days_until_due: "7", auto_advance: "true" });
-    const final = await post(`invoices/${si.id}/finalize`, {});
+    const si = await stripePost("invoices", {
+      customer: cust.id, collection_method: "send_invoice", days_until_due: "7", auto_advance: "true",
+      "metadata[smos_slug]": inv.slug, "metadata[smos_invoice_id]": inv.id, "metadata[smos_period]": inv.period,
+    }, { ...opts, idempotency: idempotencyKey(inv.id, "invoice") });
+    const final = await stripePost(`invoices/${si.id}/finalize`, {}, { ...opts, idempotency: idempotencyKey(inv.id, "finalize") });
     return { sent: true, mode: "stripe", customer_id: cust.id, invoice_id: si.id, hosted_url: final.hosted_invoice_url || null };
   } catch (e) {
     return { sent: false, mode: "manual", reason: `Stripe send failed (${e.message}) — invoice generated locally.` };
@@ -148,7 +164,7 @@ async function stripeSend(inv, deal) {
 
 async function main() {
   const [slug, cmd, ...rest] = process.argv.slice(2);
-  if (!slug || !cmd) { console.error("Usage: billing.js <slug> <invoice|list|mark-paid> [flags]"); process.exit(1); }
+  if (!slug || !cmd) { console.error("Usage: billing.js <slug> <invoice|list|mark-paid|subscribe|subscription|unsubscribe> [flags]"); process.exit(1); }
   const flag = (name) => { const i = rest.indexOf(`--${name}`); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith("--") ? rest[i + 1] : true) : undefined; };
 
   const deal = getDeal(slug);
@@ -159,6 +175,100 @@ async function main() {
     const issued = invs.reduce((s, i) => s + i.total, 0);
     const paid = invs.filter((i) => i.status === "paid").reduce((s, i) => s + i.total, 0);
     console.log(JSON.stringify({ slug, count: invs.length, issued, paid, outstanding: issued - paid, invoices: invs.map((i) => ({ id: i.id, period: i.period, total: i.total, status: i.status })) }, null, 2));
+    return;
+  }
+
+  if (cmd === "subscription") {
+    const sub = getSubscription(slug);
+    if (!sub) { console.error(`No subscription for "${slug}". Create one with: /billing ${slug} subscribe`); process.exit(6); }
+    console.log(JSON.stringify({ slug, subscription: sub, mrr: subSchema.mrr(sub), annual: subSchema.annualValue(sub) }, null, 2));
+    return;
+  }
+
+  if (cmd === "subscribe") {
+    if (deal.stage !== "won" && !flag("force")) {
+      console.error(`Deal "${slug}" is "${deal.stage}", not won. Sign the contract first, or --force.`); process.exit(4);
+    }
+    const existing = getSubscription(slug);
+    if (existing && existing.status !== "canceled" && !flag("force")) {
+      console.error(`"${slug}" already has a ${existing.status} subscription (${existing.currency} ${existing.amount}/${existing.interval}). Use --force to replace it.`);
+      process.exit(7);
+    }
+    const amount = Number(flag("amount")) || deal.deal.monthly_retainer;
+    if (!(amount > 0)) {
+      console.error(`No retainer amount: the deal has monthly_retainer=0 and no --amount was given. Halting rather than guessing.`);
+      process.exit(8);
+    }
+    const interval = String(flag("interval") || "month");
+    // Default the first billed period to now, not to the engagement start: back-dating
+    // would make the cron issue invoices for months already settled by hand.
+    const startPeriod = String(flag("start") || currentPeriod());
+    const endPeriod = flag("end") ? String(flag("end")) : null;
+    const at = nowIso();
+
+    let stripeInfo = null;
+    let collectionMode = "invoice_manual";
+    let stripeNote = "Not attempted — add --stripe to have Stripe own the recurring charge.";
+    if (flag("stripe")) {
+      if (!stripeConfigured()) {
+        stripeNote = "No STRIPE_API_KEY — recorded as invoice_manual; smOS will issue each period locally.";
+      } else if (!deal.contact.email) {
+        stripeNote = "No client email on the deal — recorded as invoice_manual; set the email and re-run with --stripe.";
+      } else {
+        try {
+          stripeInfo = await createSubscription({
+            slug, email: deal.contact.email, company: deal.company_name,
+            amount, currency: deal.deal.currency || "USD", interval,
+          });
+          collectionMode = "stripe_subscription";
+          stripeNote = `Stripe subscription ${stripeInfo.subscription_id} created.`;
+        } catch (e) {
+          // Fail closed to manual rather than recording a Stripe mode with no id —
+          // the schema would reject that anyway.
+          stripeNote = `Stripe subscription failed (${e.message}) — recorded as invoice_manual.`;
+        }
+      }
+    }
+
+    const sub = await saveSubscription(slug, {
+      slug, company: deal.company_name, amount, currency: deal.deal.currency || "USD",
+      interval, status: "active", collection_mode: collectionMode,
+      start_period: startPeriod, end_period: endPeriod,
+      created_at: existing?.created_at || at, updated_at: at, stripe: stripeInfo,
+    });
+    await upsertDeal(slug, { activities: [...(deal.activities || []), { at, type: "note", note: `subscription active — ${sub.currency} ${sub.amount}/${sub.interval} from ${sub.start_period} (${sub.collection_mode})` }] });
+
+    console.log(JSON.stringify({
+      slug, subscription: sub, mrr: subSchema.mrr(sub), annual: subSchema.annualValue(sub),
+      stripe: stripeNote,
+      next: collectionMode === "stripe_subscription"
+        ? "Stripe issues each period; run `/billing <slug> reconcile` to pull payment status into the ledger."
+        : `smOS issues each period — the monthly cron (scripts/billing-cron.js) will do it, or run: /billing ${slug} invoice`,
+    }, null, 2));
+    return;
+  }
+
+  if (cmd === "unsubscribe") {
+    const sub = getSubscription(slug);
+    if (!sub) { console.error(`No subscription for "${slug}".`); process.exit(6); }
+    if (sub.status === "canceled") { console.log(JSON.stringify({ slug, status: "canceled", note: "Already canceled." }, null, 2)); return; }
+    const at = nowIso();
+    let stripeNote = "No Stripe subscription to cancel.";
+    if (sub.stripe?.subscription_id && stripeConfigured()) {
+      try {
+        await cancelSubscription(sub.stripe.subscription_id);
+        stripeNote = `Stripe subscription ${sub.stripe.subscription_id} set to cancel at period end.`;
+      } catch (e) {
+        // Say so loudly: a local cancel with a live Stripe subscription still bills.
+        stripeNote = `WARNING — Stripe cancel FAILED (${e.message}). The Stripe subscription may still bill; cancel it in the Stripe dashboard.`;
+      }
+    } else if (sub.stripe?.subscription_id) {
+      stripeNote = `WARNING — subscription ${sub.stripe.subscription_id} exists in Stripe but STRIPE_API_KEY is not set; it was NOT canceled there.`;
+    }
+    const saved = await saveSubscription(slug, { ...sub, status: "canceled", canceled_at: at, updated_at: at });
+    const reason = flag("reason");
+    await upsertDeal(slug, { activities: [...(deal.activities || []), { at, type: "note", note: `subscription canceled${reason && reason !== true ? ` — ${reason}` : ""}` }] });
+    console.log(JSON.stringify({ slug, subscription: saved, stripe: stripeNote }, null, 2));
     return;
   }
 
@@ -220,7 +330,7 @@ async function main() {
     return;
   }
 
-  console.error(`Unknown command "${cmd}". Use invoice | list | mark-paid.`);
+  console.error(`Unknown command "${cmd}". Use invoice | list | mark-paid | subscribe | subscription | unsubscribe.`);
   process.exit(1);
 }
 

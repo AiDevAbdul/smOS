@@ -84,8 +84,19 @@ export const prospectDeliverable = (slug, artifact, ext) =>
 
 // Per-client invoice ledgers live under the data root (so test fixtures land in
 // test/.tmp/billing, not the real billing/ tree).
+// The agency sales pipeline. Under the data root like every other writable
+// artifact, so a test run (or a `SMOS_DATA_ROOT=` scratch run) cannot append
+// activities to the real crm/pipeline.json — which it could before Group D1,
+// because crm-store.js resolved this against the repo root directly.
+export const crmDir = () => resolve(dataRoot(), "crm");
+export const crmPipeline = () => resolve(crmDir(), "pipeline.json");
+
 export const billingDir = (slug) => resolve(dataRoot(), "billing", slug);
 export const billingLedger = (slug) => resolve(billingDir(slug), "ledger.json");
+// The recurring-retainer record (schemas/subscription.js). Separate from the ledger:
+// the ledger is the append-only history of issued invoices, this is the single
+// current state of the client's recurring billing arrangement.
+export const billingSubscription = (slug) => resolve(billingDir(slug), "subscription.json");
 
 export const researchCacheDir = () => resolve(ROOT, "data", "research-cache");
 export const researchCache = (file) => resolve(researchCacheDir(), file);

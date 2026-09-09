@@ -4,9 +4,11 @@
 // This script declares the schedule; the actual cron registration is performed
 // by `claude scheduler sync` reading the SCHEDULES export below.
 //
-// Each entry maps to an agent in agents/ and a cron expression in the
-// optimizer's / reporter's client timezone. For multi-tenant runs the agent
-// itself iterates active clients — the scheduler fires once globally.
+// Each entry maps to a cron expression plus EITHER an `agent` in agents/ (spawned
+// through run-agent.sh) OR a `command` — a plain shell command run from the repo
+// root, for deterministic work that needs no model in the loop. For multi-tenant
+// runs the agent/script itself iterates active clients; the scheduler fires once
+// globally.
 //
 // Cron format: `m h dom mon dow` in the server's TZ (UTC by default).
 
@@ -34,6 +36,16 @@ export const SCHEDULES = [
     description: "Monthly structural health audit — naming, overlap, fatigue, pixel, allocation, zombies",
     args: {},
     timeout_minutes: 60,
+  },
+  {
+    name: "smos-billing-monthly",
+    // No agent: issuing a retainer invoice is deterministic bookkeeping off the
+    // subscription record, so it runs as a plain script. Nothing to reason about.
+    command: "node scripts/billing-cron.js --commit",
+    cron: "0 7 1 * *",                 // 1st of the month, 07:00
+    description: "Auto-issue the month's retainer invoices for every active subscription",
+    args: {},
+    timeout_minutes: 20,
   },
 ];
 

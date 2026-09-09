@@ -40,9 +40,15 @@ Never store cents in the ledger; never send major units to Stripe.
 
 ## Idempotency
 
-For safe retries, attach `Idempotency-Key: INV-{slug}-{period}` to the customer/invoice POSTs
-so a network retry cannot double-create. See the Idempotent requests doc below. (The local
-ledger period-check is the first line of defense; idempotency keys protect the Stripe side.)
+**Implemented as of Group D1** in `scripts/lib/stripe.js` — every mutating POST carries a
+deterministic `Idempotency-Key` of the form `smos:{scope}:{op}`, where `scope` is the
+invoice id / slug and `op` is the single operation (`customer`, `item-0`, `item-1`,
+`invoice`, `finalize`, `price`, `subscription`). Deterministic is the point: a random key
+would make every retry a fresh, chargeable request. Line index is part of the key, so two
+identical line items stay two charges rather than collapsing into one.
+
+(The local ledger period-check is the first line of defense; idempotency keys protect the
+Stripe side.) See the Idempotent requests doc below.
 
 ## Rate limits
 
@@ -59,7 +65,7 @@ surfaces as a thrown error → manual fallback, which is safe (no partial charge
 | Invoices | https://docs.stripe.com/api/invoices | `collection_method`, `days_until_due`, `auto_advance`, finalize, `hosted_invoice_url` |
 | Invoice Items | https://docs.stripe.com/api/invoiceitems | `amount` (cents), `currency`, `description`, `customer` |
 | Customers | https://docs.stripe.com/api/customers | `email`, `name` |
-| Subscriptions | https://docs.stripe.com/api/subscriptions | Recurring retainer (future automation) |
+| Subscriptions | https://docs.stripe.com/api/subscriptions | Recurring retainer — implemented in Group D1 (`createSubscription`) |
 | Idempotent requests | https://docs.stripe.com/api/idempotent_requests | `Idempotency-Key` header semantics |
 
 Fetch the official doc before changing any field name or enum. Cross-check the canonical map

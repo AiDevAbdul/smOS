@@ -21,6 +21,7 @@ export * as clientProfile from "./client_profile.js";
 export * as brandProfile from "./brand_profile.js";
 export * as deal from "./deal.js";
 export * as invoice from "./invoice.js";
+export * as subscription from "./subscription.js";
 export * as baselineSnapshot from "./baseline_snapshot.js";
 export * as competitorIntel from "./competitor_intel.js";
 export * as launchPlan from "./launch_plan.js";

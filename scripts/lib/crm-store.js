@@ -10,14 +10,19 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { deal as dealSchema } from "../../schemas/index.js";
 import { upsert, supabaseConfigured } from "./supabase.js";
+import { crmPipeline } from "./paths.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
-const PIPELINE = resolve(ROOT, "crm", "pipeline.json");
+// Resolved per call, not once at import: SMOS_DATA_ROOT can be set by a test after
+// this module is loaded, and a module-level constant would ignore it and write to
+// the real pipeline.
+const PIPELINE = () => crmPipeline();
 
 export function loadPipeline() {
-  if (!existsSync(PIPELINE)) return [];
-  try { return JSON.parse(readFileSync(PIPELINE, "utf8")).map(dealSchema.normalize); } catch { return []; }
+  const p = PIPELINE();
+  if (!existsSync(p)) return [];
+  try { return JSON.parse(readFileSync(p, "utf8")).map(dealSchema.normalize); } catch { return []; }
 }
 
 export function getDeal(slug) {
@@ -25,8 +30,9 @@ export function getDeal(slug) {
 }
 
 export function savePipeline(deals) {
-  mkdirSync(dirname(PIPELINE), { recursive: true });
-  writeFileSync(PIPELINE, JSON.stringify(deals.map(dealSchema.normalize), null, 2));
+  const p = PIPELINE();
+  mkdirSync(dirname(p), { recursive: true });
+  writeFileSync(p, JSON.stringify(deals.map(dealSchema.normalize), null, 2));
 }
 
 async function mirror(d) {

@@ -1,6 +1,6 @@
 ---
 name: billing
-description: Use this skill to issue monthly retainer invoices for a won/active client and track them in a per-client ledger. This skill should be used when issuing, listing, or marking paid an agency retainer invoice (typically via `/billing {slug} invoice`, `/billing {slug} list`, or `/billing {slug} mark-paid`). It builds an invoice (retainer + first-month setup fee + optional ad-spend pass-through) as HTML+PDF, enforces per-period idempotency to prevent double-billing, optionally sends via Stripe (fail-closed to a local/manual invoice), and logs the activity to the CRM deal.
+description: Use this skill to issue monthly retainer invoices for a won/active client and track them in a per-client ledger. This skill should be used when issuing, listing, or marking paid an agency retainer invoice, or when setting up / inspecting / canceling a client's recurring retainer subscription (typically via `/billing {slug} invoice`, `list`, `mark-paid`, `subscribe`, `subscription`, `unsubscribe`). It builds an invoice (retainer + first-month setup fee + optional ad-spend pass-through) as HTML+PDF, enforces per-period idempotency to prevent double-billing, optionally sends via Stripe (fail-closed to a local/manual invoice), and logs the activity to the CRM deal.
 ---
 
 # /billing — Retainer Invoicing (Phase 5 · Agency OS)
@@ -24,6 +24,7 @@ The Markdown twin (`invoiceMarkdown`) is kept for portability only. Template exe
 - Optionally send via Stripe (`--send`): create customer + invoice items + invoice, finalize, return the hosted pay link. Fail-closed to a local/manual invoice on any error or missing key.
 - Maintain a per-client ledger (`billing/{slug}/ledger.json`) and emit invoice HTML + PDF.
 - List the ledger (`list`) with issued / paid / outstanding totals; record payment (`mark-paid`).
+- Record the client's recurring retainer as an explicit subscription (`subscribe`) — amount, interval, first billed period, optional fixed term — and optionally hand the recurring charge to Stripe (`--stripe`). Inspect with `subscription`, end with `unsubscribe`.
 - Log a billing activity onto the CRM deal.
 
 ## What This Skill Does NOT Do
@@ -52,7 +53,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 > never ask the user for invoice math, setup-fee rules, or Stripe field shapes.
 
 **Required (must resolve before running):**
-1. Which client `{slug}` and which subcommand (`invoice` / `list` / `mark-paid`).
+1. Which client `{slug}` and which subcommand (`invoice` / `list` / `mark-paid` / `subscribe` / `subscription` / `unsubscribe`).
 
 **Optional (ask only if relevant):**
 2. Billing period if not the current month (`--period YYYY-MM`).
@@ -68,11 +69,13 @@ Gather context before acting (do not ask the user for what is discoverable):
 4. If `--send`: call `stripeSend`; on success set status `sent` and attach `stripe` ids + hosted URL; on any failure keep it local/manual.
 5. Save via `saveInvoice` (validates against `schemas/invoice.js`, including the totals check), render Markdown → HTML → PDF, and append a billing activity to the deal via `upsertDeal`.
 6. For `list`: print issued / paid / outstanding totals. For `mark-paid`: set the period's invoice `paid`.
+7. For `subscribe`: require `won` (or `--force`); take the amount from `--amount` or `deal.deal.monthly_retainer` (halt if both are 0 — never guess a price); default `start_period` to the CURRENT period, never the engagement start, so the cron cannot invoice months already settled by hand; with `--stripe` call `createSubscription` and record `collection_mode: "stripe_subscription"` — on any failure fall back to `invoice_manual` rather than recording a Stripe mode with no id.
+8. For `unsubscribe`: cancel at period end in Stripe if a subscription id exists, then mark the record `canceled`. If the Stripe cancel fails or no key is set, say so as a WARNING — a local-only cancel leaves Stripe still billing.
 
 ## Input / Output Specification
 
-**Inputs:** `billing.js <slug> <invoice|list|mark-paid> [--period YYYY-MM] [--ad-spend N] [--no-setup] [--send] [--force]`; reads `crm/pipeline.json`, `config/services.json`; env `STRIPE_API_KEY` (optional).
-**Outputs:** `billing/{slug}/ledger.json` (`schemas/invoice.js`), `billing/{slug}/invoice-{period}.md` + `.html` + `.pdf`; a billing activity on the CRM deal; best-effort Supabase `invoices` mirror; a JSON result to stdout.
+**Inputs:** `billing.js <slug> <invoice|list|mark-paid|subscribe|subscription|unsubscribe> [--period YYYY-MM] [--ad-spend N] [--no-setup] [--send] [--force] [--amount N] [--interval month|year] [--start YYYY-MM] [--end YYYY-MM] [--stripe] [--reason "..."]`; reads `crm/pipeline.json`, `config/services.json`; env `STRIPE_API_KEY` (optional).
+**Outputs:** `billing/{slug}/ledger.json` (`schemas/invoice.js`), `billing/{slug}/subscription.json` (`schemas/subscription.js`), `billing/{slug}/invoice-{period}.md` + `.html` + `.pdf`; a billing activity on the CRM deal; best-effort Supabase `invoices` + `subscriptions` mirrors; a JSON result to stdout.
 (Full schemas, flag table, exit codes, and example payloads: `references/io-contract.md`.)
 
 ## Variability Analysis
@@ -120,6 +123,11 @@ Gather context before acting (do not ask the user for what is discoverable):
 | Stripe non-2xx or thrown error | Catch, return `mode: "manual"` with the error string — never a false success |
 | Invoice fails schema/totals validation | `saveInvoice` throws; do not persist a drifting invoice |
 | PDF render fails (no playwright) | Continue; report PDF as skipped |
+| `subscription` / `unsubscribe` with no subscription record | Error naming the `subscribe` command, exit 6 |
+| `subscribe` when an active subscription exists, no `--force` | Error naming the existing terms, exit 7 |
+| `subscribe` with no `--amount` and `monthly_retainer` of 0 | Error — halt rather than guess a price, exit 8 |
+| `subscribe --stripe` with no key / no contact email / Stripe error | Record `invoice_manual` with the reason — never claim Stripe is collecting |
+| `unsubscribe` when the Stripe cancel fails | Mark local record canceled but report a WARNING that Stripe may still bill |
 | Unknown subcommand | Error, exit 1 |
 
 ## Dependencies & Security
@@ -137,7 +145,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 | Stripe Versioning | https://docs.stripe.com/api/versioning | `Stripe-Version` header (current `2026-05-27.dahlia`) |
 | Stripe Invoices | https://docs.stripe.com/api/invoices | Create / finalize / send retainer invoices |
 | Stripe Customers | https://docs.stripe.com/api/customers | Create the client as a Customer |
-| Stripe Subscriptions | https://docs.stripe.com/api/subscriptions | Recurring monthly retainer (future automation) |
+| Stripe Subscriptions | https://docs.stripe.com/api/subscriptions | Recurring monthly retainer — implemented in Group D1 |
 | Stripe Idempotent requests | https://docs.stripe.com/api/idempotent_requests | `Idempotency-Key` so retries never double-bill |
 
 For patterns not covered here, fetch the official docs above, then apply the same

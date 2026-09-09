@@ -86,18 +86,24 @@
     {
       "slug": "billing",
       "command": "/billing",
-      "description": "Issue retainer invoices (Stripe) for a won/active client and track them in a per-client ledger.",
+      "description": "Issue retainer invoices (Stripe), manage the client's recurring retainer subscription, and track both in a per-client ledger.",
       "companion": "skills/billing/billing.js",
       "args": [
         { "name": "slug", "required": true, "description": "client slug" },
-        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["invoice", "list", "mark-paid"] }
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["invoice", "list", "mark-paid", "subscribe", "subscription", "unsubscribe"] }
       ],
       "flags": [
         { "name": "--period", "type": "string", "description": "billing period, e.g. 2026-06 (invoice/mark-paid)" },
         { "name": "--ad-spend", "type": "number", "description": "ad-spend pass-through amount (invoice)" },
         { "name": "--no-setup", "type": "boolean", "description": "omit first-month setup fee (invoice)" },
         { "name": "--send", "type": "boolean", "description": "send via Stripe (fail-closed to local/manual)" },
-        { "name": "--force", "type": "boolean", "description": "bypass per-period idempotency check" }
+        { "name": "--force", "type": "boolean", "description": "bypass per-period idempotency check" },
+        { "name": "--amount", "type": "number", "description": "retainer amount, major units (subscribe; defaults to the deal's monthly_retainer)" },
+        { "name": "--interval", "type": "string", "description": "billing interval: month|year (subscribe)" },
+        { "name": "--start", "type": "string", "description": "first billed period YYYY-MM (subscribe; defaults to the current period)" },
+        { "name": "--end", "type": "string", "description": "last billed period YYYY-MM for a fixed term (subscribe)" },
+        { "name": "--stripe", "type": "boolean", "description": "let Stripe own the recurring charge (subscribe; fail-closed to invoice_manual)" },
+        { "name": "--reason", "type": "string", "description": "cancellation reason logged to the deal (unsubscribe)" }
       ]
     },
     {
