@@ -1,5 +1,6 @@
 import { AppShell } from "../../../components/AppShell";
 import { ClientTabs } from "../../../components/ClientTabs";
+import { clientDisplayName } from "../../../lib/client-name";
 
 export default async function ClientLayout({
   params,
@@ -11,9 +12,18 @@ export default async function ClientLayout({
   const { slug } = await params;
 
   return (
-    <AppShell breadcrumb={[{ label: "Clients", href: "/" }, { label: slug }]}>
-      <ClientTabs slug={slug} />
-      <div style={{ marginTop: "var(--ds-space-5)" }}>{children}</div>
+    <AppShell
+      clientSlug={slug}
+      breadcrumb={[
+        { label: "Overview", href: "/" },
+        { label: "Clients", href: "/clients" },
+        { label: clientDisplayName(slug) },
+      ]}
+    >
+      <div className="ds-page">
+        <ClientTabs slug={slug} />
+        <div>{children}</div>
+      </div>
     </AppShell>
   );
 }

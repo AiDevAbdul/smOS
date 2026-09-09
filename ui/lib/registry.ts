@@ -90,11 +90,20 @@ export function startRun(opts: {
     args.push("--permission-prompt-tool", "mcp__ui-permission-bridge__approve");
   }
 
+  // ~/.config/smos/.env (loaded into process.env by instrumentation.ts for
+  // route handlers that need META_*/SUPABASE_* config) may carry an
+  // ANTHROPIC_API_KEY placeholder for the /research and /pre-audit LLM
+  // classifier. That must never reach this spawned `claude` process — an
+  // API-key auth source (even an invalid placeholder) takes precedence over
+  // subscription OAuth login and breaks every UI-launched run. Strip it.
+  const childEnv = { ...process.env };
+  delete childEnv.ANTHROPIC_API_KEY;
+  delete childEnv.ANTHROPIC_AUTH_TOKEN;
+  if (opts.usePermissionBridge) childEnv.SMOS_UI_RUN_ID = runId;
+
   const child = spawn("claude", args, {
     cwd: REPO_ROOT,
-    env: opts.usePermissionBridge
-      ? { ...process.env, SMOS_UI_RUN_ID: runId }
-      : process.env,
+    env: childEnv,
     stdio: ["ignore", "pipe", "pipe"],
   });
 

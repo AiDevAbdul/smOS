@@ -8,9 +8,11 @@ export default async function RunsPage({
 }) {
   const { slug, prompt } = await searchParams;
   return (
-    <AppShell breadcrumb={[{ label: "Runs" }]}>
+    <AppShell breadcrumb={[{ label: "Overview", href: "/" }, { label: "Runs" }]}>
+      <div className="ds-page">
       <div className="ds-panel">
         <RunConsole initialSlug={slug ?? ""} initialPrompt={prompt ?? ""} />
+      </div>
       </div>
     </AppShell>
   );

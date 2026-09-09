@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { fmtDateTime } from "../../../../lib/format";
 import { listApprovals } from "../../../../lib/approvals";
 
 export const dynamic = "force-dynamic";
@@ -44,7 +45,7 @@ export default async function ClientApprovals({
                     {a.status}
                   </span>
                 </td>
-                <td>{new Date(a.requestedAt).toLocaleString()}</td>
+                <td>{fmtDateTime(a.requestedAt)}</td>
               </tr>
             ))}
             {approvals.length === 0 && (

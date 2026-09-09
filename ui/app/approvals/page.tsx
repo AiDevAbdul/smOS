@@ -1,4 +1,5 @@
 import { AppShell } from "../../components/AppShell";
+import { fmtDateTime } from "../../lib/format";
 import { listApprovals } from "../../lib/approvals";
 import { ApprovalDecision } from "../../components/ApprovalDecision";
 
@@ -9,7 +10,8 @@ export default function ApprovalsInbox() {
   const pendingCount = approvals.filter((a) => a.status === "pending").length;
 
   return (
-    <AppShell breadcrumb={[{ label: "Approvals" }]}>
+    <AppShell breadcrumb={[{ label: "Overview", href: "/" }, { label: "Approvals" }]}>
+      <div className="ds-page">
       <div className="ds-verdict" style={{ marginTop: 0 }}>
         {pendingCount} pending across all clients. Approve or deny directly below — decisions
         go through the fail-closed approvals state machine (role checks, TTL expiry, audit log).
@@ -38,14 +40,14 @@ export default function ApprovalsInbox() {
                       a.status === "approved"
                         ? "ds-badge--good"
                         : a.status === "pending"
-                        ? "ds-badge--caution"
+                        ? "ds-badge--warn"
                         : "ds-badge--neutral"
                     }`}
                   >
                     {a.status}
                   </span>
                 </td>
-                <td>{new Date(a.requestedAt).toLocaleString()}</td>
+                <td>{fmtDateTime(a.requestedAt)}</td>
                 {pendingCount > 0 && (
                   <td>
                     {a.status === "pending" ? (
@@ -64,6 +66,7 @@ export default function ApprovalsInbox() {
             )}
           </tbody>
         </table>
+      </div>
       </div>
     </AppShell>
   );

@@ -184,7 +184,19 @@ Living style guide / review gate: **[`preview/index.html`](./preview/index.html)
 - Enforced by `test/ui-no-raw-hex.test.js` (mirrors `hero-uniform.test.js`):
   no literal hex besides `#fff`, no font-family outside `--ds-font*`.
 - Icon sprite: `icons.svg` (stroke, `currentColor`, 24×24) — status is always
-  color **+** text via `ds-badge`, never icon color alone.
+  color **+** text via `ds-badge`, never icon color alone. `preview/index.html`
+  inlines a copy of the sprite, so a new symbol must be pasted there too.
+- **"Aurora" (2026-09-09)** — the Console's glass finish, additive on the same
+  `--ds-shell*` family. Frosted chrome (rail, topbar, statusbar, ⌘K palette,
+  dialogs, toasts, inspector, tooltips) over a drifting ambient wash; **data
+  surfaces stay opaque** so a number never sits on a shifting background. Glass
+  tokens (`--ds-glass-*`, `--ds-shell-glass-*`, `--ds-aurora-*`) and the chart
+  palette (`--ds-chart-1…7`, aliases of the semantic hues, ordered to match
+  `CHART_PALETTE` in `design_system.py`) live in the core stylesheet; reports
+  never reference them. Details and the pre-screen checklist: `APP.md`.
+- Console charts are **Recharts** (`ui/` only — reports keep Chart.js), all
+  routed through `ChartCard`, which owns the loading/empty/error/"Show table"
+  states so none can ship without them.
 
 ## Light / dark mode
 

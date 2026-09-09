@@ -8,7 +8,8 @@ export default function SettingsPage() {
   const { claudeVersion, hooksLoaded, envKeysPresent, mcpServers } = health;
 
   return (
-    <AppShell breadcrumb={[{ label: "Settings" }]}>
+    <AppShell breadcrumb={[{ label: "Overview", href: "/" }, { label: "Settings" }]}>
+      <div className="ds-page">
       <div className="ds-verdict" style={{ marginTop: 0 }}>
         Local environment health — read-only, best-effort. Never shows secret values, only
         whether an env key is present.
@@ -146,6 +147,7 @@ export default function SettingsPage() {
             </table>
           </div>
         )}
+      </div>
       </div>
     </AppShell>
   );

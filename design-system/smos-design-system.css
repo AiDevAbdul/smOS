@@ -160,6 +160,46 @@
   --ds-shell-selected: #1d5dbf;
   --ds-shell-accent:   #5b93e8;
   --ds-shell-focus:    0 0 0 2px var(--ds-shell), 0 0 0 4px var(--ds-shell-accent);
+
+  /* ---- "Aurora" glass finish (Console chrome only — rail, topbar, palette,
+     dialogs, toasts, inspector, tooltips. Data surfaces stay opaque so
+     numbers never sit on a shifting background). --ds-glass above is the
+     translucent fill; these complete the set. ---- */
+  --ds-glass-bg:        var(--ds-glass);
+  --ds-glass-bg-strong: rgba(255,255,255,.86);
+  --ds-glass-line:      rgba(23,34,46,.10);
+  --ds-glass-highlight: rgba(255,255,255,.65);
+  --ds-glass-blur:      18px;
+  --ds-glass-sat:       140%;
+  /* Shell glass — the chrome (rail/topbar/statusbar) is dark in BOTH themes,
+     like /bundle's hub, so these are theme-independent by design. */
+  --ds-shell-glass:      rgba(21,29,39,.72);
+  --ds-shell-glass-2:    rgba(21,29,39,.88);
+  --ds-shell-glass-line: rgba(255,255,255,.08);
+  --ds-shell-glass-hi:   rgba(255,255,255,.10);
+  /* Dark ambient wash behind the chrome so its translucency has something to
+     pick up. Same hues as --ds-aurora-*, tuned for the near-black shell. */
+  --ds-shell-aurora-1: rgba(45,110,205,.20);
+  --ds-shell-aurora-2: rgba(34,128,141,.14);
+  /* Ambient wash behind the main area: what makes backdrop-filter read as
+     glass at all. Alphas stay 6–10% so text contrast is unaffected. */
+  --ds-aurora-1: rgba(29,93,191,.15);
+  --ds-aurora-2: rgba(34,128,141,.13);
+  --ds-aurora-3: rgba(109,79,163,.11);
+
+  /* ---- Chart palette. Aliases, not new colors: each follows its semantic
+     token through every theme, so a theme flip repaints plots for free.
+     Order mirrors CHART_PALETTE in scripts/lib/design_system.py — keep the
+     two in step. ---- */
+  --ds-chart-1: var(--ds-blue);
+  --ds-chart-2: var(--ds-green);
+  --ds-chart-3: var(--ds-amber);
+  --ds-chart-4: var(--ds-red);
+  --ds-chart-5: var(--ds-teal);
+  --ds-chart-6: var(--ds-purple);
+  --ds-chart-7: var(--ds-faint);
+  --ds-chart-grid: var(--ds-line);
+  --ds-chart-axis: var(--ds-muted);
 }
 
 /* Density: compact is the default (operator console = dense by design).
@@ -185,6 +225,12 @@
     --ds-surface:   #182130;
     --ds-surface-2: #141c28;
     --ds-glass:     rgba(24,33,48,.72);
+    --ds-glass-bg-strong: rgba(24,33,48,.88);
+    --ds-glass-line:      rgba(255,255,255,.10);
+    --ds-glass-highlight: rgba(255,255,255,.12);
+    --ds-aurora-1: rgba(91,147,232,.13);
+    --ds-aurora-2: rgba(92,182,196,.10);
+    --ds-aurora-3: rgba(169,143,214,.10);
 
     --ds-ink:    #e8edf3;
     --ds-ink-2:  #c8d3de;
@@ -224,6 +270,12 @@
   --ds-surface:   #182130;
   --ds-surface-2: #141c28;
   --ds-glass:     rgba(24,33,48,.72);
+  --ds-glass-bg-strong: rgba(24,33,48,.88);
+  --ds-glass-line:      rgba(255,255,255,.10);
+  --ds-glass-highlight: rgba(255,255,255,.12);
+  --ds-aurora-1: rgba(91,147,232,.13);
+  --ds-aurora-2: rgba(92,182,196,.10);
+  --ds-aurora-3: rgba(169,143,214,.10);
 
   --ds-ink:    #e8edf3;
   --ds-ink-2:  #c8d3de;

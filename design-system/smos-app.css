@@ -14,6 +14,89 @@
      introduce a third file or inline colors in ui/ components.
    ============================================================================ */
 
+/* ============================================================== Aurora ====
+   The Console's glass finish. Three rules, in order of importance:
+
+   1. Glass goes on CHROME and OVERLAYS only — rail, topbar, statusbar,
+      palette, dialogs, toasts, inspector, chart tooltips, sticky headers.
+   2. DATA stays opaque. Cards, tables and chart plots sit on --ds-surface so
+      a number never sits on a shifting background and contrast is provable.
+   3. Blur needs something behind it. backdrop-filter over a flat fill renders
+      nothing, so the ambient wash below is load-bearing, not decoration.
+   ========================================================================= */
+
+.ds-glass {
+  background: var(--ds-glass-bg);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  border: 1px solid var(--ds-glass-line);
+  /* The 1px inner top highlight is what sells a pane as glass rather than
+     as flat translucency — it reads as the lit edge of a physical sheet. */
+  box-shadow: inset 0 1px 0 var(--ds-glass-highlight), var(--ds-shadow);
+}
+/* --strong: for overlays that carry text over arbitrary page content, where
+   .72 alpha would not hold 4.5:1. */
+.ds-glass--strong { background: var(--ds-glass-bg-strong); }
+/* --shell: glass on the dark chrome, which stays dark in both themes. */
+.ds-glass--shell {
+  background: var(--ds-shell-glass);
+  border-color: var(--ds-shell-glass-line);
+  box-shadow: inset 0 1px 0 var(--ds-shell-glass-hi);
+}
+
+/* Ambient wash. Fixed, non-interactive, painted behind content inside a
+   positioned ancestor. Drift is slow enough to be felt, not watched. */
+.ds-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ds-aurora__blob {
+  position: absolute;
+  width: 52vw;
+  height: 52vw;
+  min-width: 420px;
+  min-height: 420px;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+}
+.ds-aurora__blob:nth-child(1) {
+  top: -18vw; left: -10vw;
+  background: radial-gradient(circle at 50% 50%, var(--ds-aurora-1), transparent 70%);
+  animation: ds-drift-a 46s var(--ds-ease) infinite alternate;
+}
+.ds-aurora__blob:nth-child(2) {
+  top: 20vh; right: -16vw;
+  background: radial-gradient(circle at 50% 50%, var(--ds-aurora-2), transparent 70%);
+  animation: ds-drift-b 58s var(--ds-ease) infinite alternate;
+}
+.ds-aurora__blob:nth-child(3) {
+  bottom: -22vw; left: 28vw;
+  background: radial-gradient(circle at 50% 50%, var(--ds-aurora-3), transparent 70%);
+  animation: ds-drift-c 52s var(--ds-ease) infinite alternate;
+}
+@keyframes ds-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(6vw, 8vh, 0) scale(1.12); }
+}
+@keyframes ds-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.08); }
+  to   { transform: translate3d(-7vw, -6vh, 0) scale(1); }
+}
+@keyframes ds-drift-c {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(4vw, -7vh, 0) scale(1.15); }
+}
+/* Content must clear the wash. */
+.ds-main > * { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-aurora__blob { animation: none; }
+}
+
 /* ------------------------------------------------------------ App shell --- */
 .ds-app {
   height: 100dvh;
@@ -24,7 +107,12 @@
     "rail topbar"
     "rail main"
     "rail statusbar";
-  background: var(--ds-shell);
+  /* Dark ambient gradient, not a flat fill — this is what the chrome's
+     translucency picks up. */
+  background:
+    radial-gradient(120% 90% at 0% 0%, var(--ds-shell-aurora-1), transparent 60%),
+    radial-gradient(90% 80% at 100% 100%, var(--ds-shell-aurora-2), transparent 60%),
+    var(--ds-shell);
   color: var(--ds-shell-ink);
   overflow: hidden;
 }
@@ -37,12 +125,57 @@
   flex-direction: column;
   gap: var(--ds-space-1);
   padding: var(--ds-space-4) var(--ds-space-3);
-  background: var(--ds-shell-2);
-  border-right: 1px solid var(--ds-shell-line);
+  background: var(--ds-shell-glass);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  border-right: 1px solid var(--ds-shell-glass-line);
+  box-shadow: inset -1px 0 0 var(--ds-shell-glass-hi);
   overflow-y: auto;
+  transition: width var(--ds-dur) var(--ds-ease);
 }
 .ds-rail[data-collapsed="true"] { width: 64px; }
-.ds-rail[data-collapsed="true"] .ds-nav-item__label { display: none; }
+.ds-rail[data-collapsed="true"] .ds-nav-item__label,
+.ds-rail[data-collapsed="true"] .ds-nav-group,
+.ds-rail[data-collapsed="true"] .ds-rail__brand-name { display: none; }
+.ds-rail[data-collapsed="true"] .ds-nav-item { justify-content: center; }
+
+/* Rail header: brand mark + collapse toggle */
+.ds-rail__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  height: var(--ds-control-md);
+  padding: 0 var(--ds-space-2);
+  margin-bottom: var(--ds-space-3);
+  color: var(--ds-shell-ink);
+}
+.ds-rail__brand-mark {
+  width: 22px; height: 22px; flex: none;
+  border-radius: var(--ds-r-sm);
+  background: var(--ds-grad-brand);
+  box-shadow: inset 0 1px 0 var(--ds-shell-glass-hi);
+}
+.ds-rail__brand-name {
+  font-family: var(--ds-font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .01em;
+}
+.ds-rail__collapse {
+  margin-left: auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--ds-control-sm); height: var(--ds-control-sm);
+  border: 1px solid transparent;
+  border-radius: var(--ds-r-sm);
+  background: none;
+  color: var(--ds-shell-mut);
+  cursor: pointer;
+  transition: background var(--ds-dur-fast) var(--ds-ease), color var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-rail__collapse svg { width: var(--ds-icon); height: var(--ds-icon); }
+.ds-rail__collapse:hover { background: var(--ds-shell-hover); color: var(--ds-shell-ink); }
+.ds-rail__collapse:focus-visible { outline: none; box-shadow: var(--ds-shell-focus); }
+.ds-rail[data-collapsed="true"] .ds-rail__collapse { margin-left: 0; }
 
 .ds-topbar {
   grid-area: topbar;
@@ -52,8 +185,11 @@
   gap: var(--ds-space-4);
   padding: 0 var(--ds-space-5);
   height: var(--ds-control-lg);
-  background: var(--ds-shell-2);
-  border-bottom: 1px solid var(--ds-shell-line);
+  background: var(--ds-shell-glass);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  border-bottom: 1px solid var(--ds-shell-glass-line);
+  box-shadow: inset 0 1px 0 var(--ds-shell-glass-hi);
 }
 .ds-topbar__title {
   font-family: var(--ds-font-display);
@@ -63,6 +199,49 @@
   margin: 0;
 }
 .ds-topbar__spacer { flex: 1 1 auto; }
+
+/* Palette opener, styled as a search field rather than a button — it reads as
+   "type here", which is what ⌘K actually does. */
+.ds-topbar__search {
+  display: inline-flex; align-items: center; gap: var(--ds-space-2);
+  height: var(--ds-control-sm); padding: 0 var(--ds-space-2) 0 var(--ds-space-3);
+  min-width: 240px;
+  border: 1px solid var(--ds-shell-glass-line);
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-shell-glass-2);
+  color: var(--ds-shell-mut);
+  font-family: var(--ds-font); font-size: 12.5px; text-align: left;
+  cursor: pointer;
+  transition: border-color var(--ds-dur-fast) var(--ds-ease), color var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-topbar__search span { flex: 1 1 auto; }
+.ds-topbar__search:hover { border-color: var(--ds-shell-accent); color: var(--ds-shell-ink); }
+.ds-topbar__search:focus-visible { outline: none; box-shadow: var(--ds-shell-focus); }
+.ds-topbar__kbd {
+  font-family: var(--ds-font-mono); font-size: 10.5px;
+  padding: 1px var(--ds-space-2); border-radius: var(--ds-r-sm);
+  background: var(--ds-shell-3); color: var(--ds-shell-mut);
+  border: 1px solid var(--ds-shell-glass-line);
+}
+/* Mobile-only rail trigger. */
+.ds-topbar__menu { display: none; }
+@media (max-width: 900px) {
+  .ds-topbar__menu { display: inline-flex; }
+  .ds-topbar__search { min-width: 0; }
+  /* Visually hidden, not display:none — the label is this button's accessible
+     name, and removing it from the tree would leave an unnamed icon button. */
+  .ds-topbar__search span {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  /* The topbar can't fit breadcrumb + switcher + both toggles at 375px.
+     Wayfinding is already in the rail drawer and the page title, so the
+     breadcrumb and the density toggle are the two that go. */
+  .ds-topbar { gap: var(--ds-space-2); padding: 0 var(--ds-space-3); }
+  .ds-topbar .ds-breadcrumb { display: none; }
+  .ds-topbar .ds-btn--sm.ds-btn--on-shell { display: none; }
+  .ds-client-switcher { max-width: 44vw; overflow: hidden; white-space: nowrap; }
+}
 
 .ds-main {
   grid-area: main;
@@ -75,16 +254,56 @@
 
 .ds-statusbar {
   grid-area: statusbar;
+  z-index: var(--ds-z-rail);
   display: flex;
   align-items: center;
   gap: var(--ds-space-4);
   padding: 0 var(--ds-space-5);
   height: 28px;
-  background: var(--ds-shell-2);
-  border-top: 1px solid var(--ds-shell-line);
+  background: var(--ds-shell-glass);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  border-top: 1px solid var(--ds-shell-glass-line);
+  box-shadow: inset 0 1px 0 var(--ds-shell-glass-hi);
   font-family: var(--ds-font-mono);
   font-size: 11px;
   color: var(--ds-shell-mut);
+}
+
+/* Every screen's content wrapper. .ds-main is a bare scroll container, so
+   without this pages ran flush to the viewport edge. */
+.ds-page {
+  padding: var(--ds-space-6) var(--ds-space-7) var(--ds-space-9);
+  max-width: 1560px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-6);
+  min-width: 0;
+}
+/* Flex items default to min-width:auto, so a grid of cards inside .ds-page
+   refuses to shrink below its min-content width and gets clipped on a phone.
+   This is what lets auto-fit actually reflow. */
+.ds-page > * { min-width: 0; }
+@media (max-width: 860px) {
+  .ds-page { padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-8); gap: var(--ds-space-5); }
+}
+
+/* Two-column content band: main column + a fixed-width side rail that
+   collapses under the main column on narrow screens. */
+.ds-band {
+  display: grid;
+  gap: var(--ds-space-4);
+  grid-template-columns: minmax(0, 1fr) 340px;
+  align-items: start;
+}
+@media (max-width: 1180px) {
+  .ds-band { grid-template-columns: minmax(0, 1fr); }
+}
+
+.ds-duo {
+  display: grid;
+  gap: var(--ds-space-4);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
 .ds-panel {
@@ -108,8 +327,11 @@
 
 .ds-inspector {
   z-index: var(--ds-z-panel);
-  border-left: 1px solid var(--ds-line);
-  background: var(--ds-surface);
+  border-left: 1px solid var(--ds-glass-line);
+  background: var(--ds-glass-bg);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  box-shadow: inset 1px 0 0 var(--ds-glass-highlight);
   overflow-y: auto;
 }
 
@@ -128,7 +350,28 @@
     inset: 0 auto 0 0;
     z-index: var(--ds-z-overlay);
     height: 100dvh;
+    animation: ds-drawer-in var(--ds-dur) var(--ds-ease-out) both;
   }
+  /* Scrim behind the drawer: tap-outside dismiss plus enough dimming that the
+     drawer's own glass has clear figure/ground separation. */
+  .ds-rail__scrim {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--ds-z-overlay) - 1);
+    background: rgba(12,17,23,.45);
+  }
+}
+@keyframes ds-drawer-in {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-rail[data-mobile-open="true"] { animation: none; }
+}
+/* Never rendered outside the mobile breakpoint (RailNav mounts it only while
+   the drawer is open), but keep it inert if it ever leaks onto a wide screen. */
+@media (min-width: 901px) {
+  .ds-rail__scrim { display: none; }
 }
 
 /* --------------------------------------------------------- Navigation ----- */
@@ -220,11 +463,40 @@
 .ds-palette {
   z-index: var(--ds-z-palette);
   position: fixed; left: 50%; top: 14vh; transform: translateX(-50%);
-  width: min(560px, 92vw);
-  background: var(--ds-surface); color: var(--ds-ink);
-  border: 1px solid var(--ds-line-strong); border-radius: var(--ds-r-lg);
-  box-shadow: var(--ds-shadow-lg);
+  width: min(620px, 92vw);
+  color: var(--ds-ink);
+  /* --strong alpha: this pane carries text over arbitrary page content. */
+  background: var(--ds-glass-bg-strong);
+  -webkit-backdrop-filter: blur(28px) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(28px) saturate(var(--ds-glass-sat));
+  border: 1px solid var(--ds-glass-line); border-radius: var(--ds-r-lg);
+  box-shadow: inset 0 1px 0 var(--ds-glass-highlight), var(--ds-shadow-lg);
   overflow: hidden;
+  animation: ds-palette-in var(--ds-dur) var(--ds-ease-out) both;
+}
+@keyframes ds-palette-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px) scale(.98); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-palette { animation: none; }
+}
+/* Section headings inside the palette (Skills / Clients / Recent runs) */
+.ds-palette__group {
+  font-family: var(--ds-font-mono); font-size: 10.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ds-faint);
+  padding: var(--ds-space-3) var(--ds-space-3) var(--ds-space-1);
+}
+.ds-palette__item svg { width: var(--ds-icon); height: var(--ds-icon); flex: none; color: var(--ds-muted); }
+.ds-palette__item[aria-disabled="true"] { opacity: .45; cursor: default; }
+.ds-palette__empty {
+  padding: var(--ds-space-5); text-align: center; font-size: 13px; color: var(--ds-muted);
+}
+.ds-palette__hint {
+  display: flex; gap: var(--ds-space-4); align-items: center;
+  padding: var(--ds-space-2) var(--ds-space-4);
+  border-top: 1px solid var(--ds-glass-line);
+  font-family: var(--ds-font-mono); font-size: 10.5px; color: var(--ds-faint);
 }
 .ds-palette__input {
   width: 100%; border: 0; outline: 0; background: transparent;
@@ -244,9 +516,13 @@
   margin-left: auto;
 }
 .ds-palette__item.is-active, .ds-palette__item:hover { background: var(--ds-blue-tint); }
+/* Scrim strong enough to isolate the palette (HIG: 40–60%), plus a light
+   blur so the page reads as "pushed back" rather than merely dimmed. */
 .ds-palette__overlay {
   position: fixed; inset: 0; z-index: calc(var(--ds-z-palette) - 1);
   background: rgba(12,17,23,.55);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
 }
 
 /* ------------------------------------------------------------------ Data -- */
@@ -491,9 +767,13 @@
 }
 .ds-toast {
   display: flex; align-items: flex-start; gap: var(--ds-space-2);
-  background: var(--ds-surface); color: var(--ds-ink);
-  border: 1px solid var(--ds-line-strong); border-radius: var(--ds-r);
-  padding: var(--ds-space-3) var(--ds-space-4); box-shadow: var(--ds-shadow-lg);
+  color: var(--ds-ink);
+  background: var(--ds-glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  border: 1px solid var(--ds-glass-line); border-radius: var(--ds-r);
+  padding: var(--ds-space-3) var(--ds-space-4);
+  box-shadow: inset 0 1px 0 var(--ds-glass-highlight), var(--ds-shadow-lg);
   animation: ds-rise .22s var(--ds-ease-out) both;
 }
 .ds-toast--good { border-left: 3px solid var(--ds-green); }
@@ -507,7 +787,11 @@
   box-shadow: var(--ds-shadow-lg); padding: 0; max-width: min(480px, 92vw);
   color: var(--ds-ink); background: var(--ds-surface);
 }
-.ds-dialog::backdrop { background: rgba(12,17,23,.55); }
+.ds-dialog::backdrop {
+  background: rgba(12,17,23,.55);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
 .ds-dialog__head { padding: var(--ds-space-5) var(--ds-space-5) var(--ds-space-2); }
 .ds-dialog__title { font-family: var(--ds-font-display); font-weight: 700; font-size: 18px; margin: 0; }
 .ds-dialog__body { padding: 0 var(--ds-space-5) var(--ds-space-4); font-size: 14px; color: var(--ds-muted); }
@@ -530,6 +814,21 @@
 .ds-btn--sm { height: var(--ds-control-sm); padding: 0 var(--ds-space-3); font-size: 12.5px; }
 .ds-btn--lg { height: var(--ds-control-lg); padding: 0 var(--ds-space-5); font-size: 15px; }
 .ds-btn:focus-visible { outline: none; box-shadow: var(--ds-focus); }
+/* Icons inside buttons follow the icon token — without this an inline <svg>
+   with no width/height renders at the UA default 300×150 and blows the
+   button apart. */
+.ds-btn svg { width: var(--ds-icon); height: var(--ds-icon); flex: none; }
+.ds-btn--lg svg { width: var(--ds-icon-lg); height: var(--ds-icon-lg); }
+
+/* On the dark topbar/rail, the light-surface ghost styling reads as a solid
+   white pill. --on-shell re-tones it to the shell family. */
+.ds-btn--on-shell {
+  background: transparent;
+  color: var(--ds-shell-mut);
+  border: 1px solid var(--ds-shell-glass-line);
+}
+.ds-btn--on-shell:hover { background: var(--ds-shell-hover); color: var(--ds-shell-ink); }
+.ds-btn--on-shell:active { background: var(--ds-shell-3); }
 .ds-btn--on-shell:focus-visible { box-shadow: var(--ds-shell-focus); }
 .ds-btn.is-loading { color: transparent; pointer-events: none; position: relative; }
 .ds-btn.is-loading::after {
@@ -539,9 +838,314 @@
 }
 .ds-btn--ghost.is-loading::after { border-color: var(--ds-line-strong); border-top-color: var(--ds-blue); }
 
+/* --ds-faint (#8695a5) sits at ~2.9:1 on white — fine for a hairline or a
+   decorative glyph, below AA for text. Small captions in this layer therefore
+   use --ds-muted (~5.6:1). Verified with a Lighthouse accessibility pass. */
+
+/* ====================================================== Data display =====
+   Charts and metrics. Deliberately OPAQUE (--ds-surface): per the Aurora
+   rules above, glass never goes behind a number. Distinct from Ledger's
+   .ds-chart / .ds-kpi, which stay as the report vocabulary.
+   ========================================================================= */
+
+/* ---- Section header: eyebrow + title + right-aligned controls slot ------ */
+.ds-sec {
+  display: flex; align-items: flex-end; gap: var(--ds-space-4);
+  margin: 0 0 var(--ds-space-4);
+}
+.ds-sec__title {
+  font-family: var(--ds-font-display); font-weight: 700;
+  font-size: 20px; line-height: 1.15; margin: 0; color: var(--ds-ink);
+}
+.ds-sec__sub { font-size: 13px; color: var(--ds-muted); margin: 2px 0 0; }
+.ds-sec__actions { margin-left: auto; display: flex; align-items: center; gap: var(--ds-space-2); }
+/* Console-only: button labels never wrap mid-word into a squeezed column.
+   (This file is loaded by ui/ alone — reports keep Ledger's .ds-btn as-is.) */
+.ds-btn { white-space: nowrap; }
+@media (max-width: 860px) {
+  .ds-sec { flex-wrap: wrap; align-items: flex-start; gap: var(--ds-space-3); }
+  .ds-sec__actions { margin-left: 0; width: 100%; }
+}
+
+/* ---- Metric card: label / big tabular value / delta / sparkline slot ---- */
+.ds-metric-grid {
+  display: grid; gap: var(--ds-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.ds-metric-card {
+  display: flex; flex-direction: column; gap: var(--ds-space-1);
+  padding: var(--ds-space-4);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  box-shadow: var(--ds-shadow-sm);
+  /* The accent hairline is the only chrome; the number does the talking. */
+  border-top: 2px solid var(--ds-metric-accent, var(--ds-blue));
+  transition: box-shadow var(--ds-dur) var(--ds-ease), transform var(--ds-dur) var(--ds-ease);
+}
+a.ds-metric-card, .ds-metric-card[tabindex] { cursor: pointer; text-decoration: none; }
+a.ds-metric-card:hover, .ds-metric-card[tabindex]:hover {
+  box-shadow: var(--ds-shadow); transform: translateY(-1px);
+}
+a.ds-metric-card:focus-visible, .ds-metric-card[tabindex]:focus-visible {
+  outline: none; box-shadow: var(--ds-focus);
+}
+.ds-metric-card__label {
+  font-family: var(--ds-font-mono); font-size: 10.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--ds-muted);
+}
+.ds-metric-card__value {
+  font-family: var(--ds-font-display); font-weight: 700;
+  font-size: 30px; line-height: 1; color: var(--ds-ink);
+  font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1;
+}
+.ds-metric-card__unit { font-size: 15px; font-weight: 600; color: var(--ds-muted); margin-left: 2px; }
+.ds-metric-card__foot {
+  display: flex; align-items: center; gap: var(--ds-space-2);
+  margin-top: var(--ds-space-1); min-height: 18px;
+}
+/* Delta carries an arrow glyph as well as color — never color alone. */
+.ds-metric-card__delta {
+  font-family: var(--ds-font-mono); font-size: 11.5px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ds-metric-card__delta--up { color: var(--ds-green-ink); }
+.ds-metric-card__delta--up::before { content: "\2191 "; }
+.ds-metric-card__delta--down { color: var(--ds-red-ink); }
+.ds-metric-card__delta--down::before { content: "\2193 "; }
+.ds-metric-card__delta--flat { color: var(--ds-faint); }
+.ds-metric-card__delta--flat::before { content: "\2192 "; }
+.ds-metric-card__note { font-size: 11.5px; color: var(--ds-muted); }
+.ds-metric-card__spark { margin-left: auto; width: 76px; height: 24px; flex: none; }
+
+/* ---- Chart card --------------------------------------------------------- */
+.ds-chart-card {
+  display: flex; flex-direction: column;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  box-shadow: var(--ds-shadow-sm);
+  overflow: hidden;
+}
+.ds-chart-card__head {
+  display: flex; align-items: center; gap: var(--ds-space-3);
+  padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-2);
+  flex-wrap: wrap;
+}
+.ds-chart-card__title {
+  font-family: var(--ds-font-display); font-weight: 700; font-size: 15px;
+  margin: 0; color: var(--ds-ink);
+}
+.ds-chart-card__unit {
+  font-family: var(--ds-font-mono); font-size: 10.5px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ds-muted);
+}
+.ds-chart-card__actions { margin-left: auto; display: flex; align-items: center; gap: var(--ds-space-2); }
+/* Height is reserved by the wrapper, not the chart, so async data cannot
+   shift layout (CLS). */
+.ds-chart-card__body {
+  position: relative; padding: 0 var(--ds-space-2) var(--ds-space-2);
+  min-height: var(--ds-chart-h, 240px);
+}
+.ds-chart-card__foot {
+  display: flex; align-items: center; gap: var(--ds-space-3);
+  padding: var(--ds-space-2) var(--ds-space-4) var(--ds-space-3);
+  border-top: 1px solid var(--ds-line);
+  font-size: 11.5px; color: var(--ds-muted);
+}
+.ds-chart-card__table { border-top: 1px solid var(--ds-line); max-height: 260px; overflow: auto; }
+
+/* Provenance chip — states whether a series is real daily data or windowed
+   snapshots. A chart that cannot say where its numbers came from is a lie. */
+.ds-source-chip {
+  display: inline-flex; align-items: center; gap: var(--ds-space-1);
+  font-family: var(--ds-font-mono); font-size: 10px; letter-spacing: .06em;
+  text-transform: uppercase; padding: 2px var(--ds-space-2);
+  border-radius: var(--ds-r-pill); border: 1px solid var(--ds-line);
+  color: var(--ds-muted); background: var(--ds-surface-2);
+}
+.ds-source-chip--live { color: var(--ds-green-ink); border-color: var(--ds-green); background: var(--ds-green-tint); }
+.ds-source-chip--approx { color: var(--ds-amber-ink); border-color: var(--ds-amber); background: var(--ds-amber-tint); }
+
+/* Glass tooltip for Recharts / any hover readout */
+.ds-tooltip-glass {
+  background: var(--ds-glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  backdrop-filter: blur(var(--ds-glass-blur)) saturate(var(--ds-glass-sat));
+  border: 1px solid var(--ds-glass-line); border-radius: var(--ds-r-sm);
+  box-shadow: inset 0 1px 0 var(--ds-glass-highlight), var(--ds-shadow-lg);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  font-size: 12px; color: var(--ds-ink); pointer-events: none;
+  min-width: 140px;
+}
+.ds-tooltip-glass__label {
+  font-family: var(--ds-font-mono); font-size: 10.5px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ds-muted);
+  padding-bottom: var(--ds-space-1); margin-bottom: var(--ds-space-1);
+  border-bottom: 1px solid var(--ds-glass-line);
+}
+.ds-tooltip-glass__row { display: flex; align-items: center; gap: var(--ds-space-2); line-height: 1.7; }
+.ds-tooltip-glass__swatch { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.ds-tooltip-glass__val { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.ds-sparkline { display: block; width: 100%; height: 100%; }
+
+/* Recharts internals: keep grid quiet and focus rings visible. */
+.ds-chart-card .recharts-cartesian-grid line { stroke: var(--ds-chart-grid); }
+.ds-chart-card .recharts-surface:focus-visible,
+.ds-chart-card .recharts-wrapper:focus-visible { outline: none; box-shadow: var(--ds-focus); }
+.ds-chart-card .recharts-legend-item-text { color: var(--ds-muted) !important; font-size: 12px; }
+
+/* ---- Segmented control (7d / 14d / 30d / 90d) --------------------------- */
+.ds-segmented {
+  display: inline-flex; padding: 2px; gap: 2px;
+  background: var(--ds-ink-tint); border-radius: var(--ds-r-pill);
+  border: 1px solid var(--ds-line);
+}
+.ds-segmented__btn {
+  appearance: none; border: 0; background: none; cursor: pointer;
+  height: var(--ds-control-sm); padding: 0 var(--ds-space-3);
+  border-radius: var(--ds-r-pill);
+  font-family: var(--ds-font-mono); font-size: 11.5px; font-weight: 600;
+  color: var(--ds-muted);
+  transition: background var(--ds-dur-fast) var(--ds-ease), color var(--ds-dur-fast) var(--ds-ease);
+}
+.ds-segmented__btn:hover { color: var(--ds-ink); }
+.ds-segmented__btn:focus-visible { outline: none; box-shadow: var(--ds-focus); }
+.ds-segmented__btn[aria-selected="true"] {
+  background: var(--ds-surface); color: var(--ds-blue-strong);
+  box-shadow: var(--ds-shadow-sm);
+}
+.ds-segmented__btn[disabled] { opacity: .4; cursor: not-allowed; }
+
+/* ---- Completion ring (status.js: 24 steps × done/blocked/missing) ------- */
+.ds-ring { display: block; flex: none; transform: rotate(-90deg); }
+.ds-ring__track { fill: none; stroke: var(--ds-line); }
+.ds-ring__fill {
+  fill: none; stroke: var(--ds-blue); stroke-linecap: round;
+  transition: stroke-dashoffset var(--ds-dur) var(--ds-ease);
+}
+.ds-ring__fill--good { stroke: var(--ds-green); }
+.ds-ring__fill--warn { stroke: var(--ds-amber); }
+.ds-ring-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.ds-ring-wrap__label {
+  position: absolute; font-family: var(--ds-font-mono); font-size: 11px;
+  font-weight: 600; color: var(--ds-ink-2); font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-ring__fill { transition: none; }
+}
+
+/* ---- Client card (the Overview grid) ----------------------------------- */
+.ds-card-grid {
+  display: grid; gap: var(--ds-space-3);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.ds-client-card {
+  display: flex; flex-direction: column; gap: var(--ds-space-3);
+  padding: var(--ds-space-4);
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r);
+  box-shadow: var(--ds-shadow-sm);
+  color: inherit; text-decoration: none;
+  transition: box-shadow var(--ds-dur) var(--ds-ease), transform var(--ds-dur) var(--ds-ease),
+              border-color var(--ds-dur) var(--ds-ease);
+}
+.ds-client-card:hover {
+  box-shadow: var(--ds-shadow); transform: translateY(-2px);
+  border-color: var(--ds-line-strong); text-decoration: none;
+}
+.ds-client-card:focus-visible { outline: none; box-shadow: var(--ds-focus); }
+.ds-client-card__head { display: flex; align-items: center; gap: var(--ds-space-3); }
+.ds-client-card__avatar {
+  width: 34px; height: 34px; flex: none; border-radius: var(--ds-r-sm);
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ds-grad-brand); color: #fff;
+  font-family: var(--ds-font-display); font-weight: 700; font-size: 15px;
+}
+.ds-client-card__name {
+  font-family: var(--ds-font-display); font-weight: 700; font-size: 16px;
+  line-height: 1.15; color: var(--ds-ink);
+}
+.ds-client-card__slug { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-faint); }
+.ds-client-card__metrics {
+  display: flex; align-items: flex-end; gap: var(--ds-space-4);
+  padding-top: var(--ds-space-1);
+}
+.ds-client-card__metric { display: flex; flex-direction: column; gap: 1px; }
+.ds-client-card__metric-label {
+  font-family: var(--ds-font-mono); font-size: 9.5px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ds-faint);
+}
+.ds-client-card__metric-value {
+  font-family: var(--ds-font-display); font-weight: 700; font-size: 18px;
+  color: var(--ds-ink); font-variant-numeric: tabular-nums;
+}
+.ds-client-card__spark { margin-left: auto; width: 88px; height: 28px; flex: none; }
+.ds-client-card__next {
+  display: flex; align-items: center; gap: var(--ds-space-2);
+  padding-top: var(--ds-space-3); border-top: 1px solid var(--ds-line);
+  font-size: 12.5px; color: var(--ds-muted);
+}
+.ds-client-card__next-label {
+  font-family: var(--ds-font-mono); font-size: 9.5px; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ds-faint); flex: none;
+}
+
+/* ---- Attention list (what needs a human today) ------------------------- */
+/* Capped and self-scrolling: an unbounded list of 12 findings made the panel
+   taller than the chart beside it and stranded the rest of the column. */
+.ds-attn {
+  display: flex; flex-direction: column;
+  max-height: 340px; overflow-y: auto;
+}
+.ds-attn__row {
+  display: flex; align-items: flex-start; gap: var(--ds-space-3);
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border-top: 1px solid var(--ds-line);
+  color: inherit; text-decoration: none; font-size: 13px;
+}
+.ds-attn__row:first-child { border-top: none; }
+.ds-attn__row:hover { background: var(--ds-surface-2); text-decoration: none; }
+.ds-attn__row:focus-visible { outline: none; box-shadow: inset var(--ds-focus); }
+.ds-attn__icon { flex: none; width: var(--ds-icon); height: var(--ds-icon); margin-top: 2px; }
+.ds-attn__row--bad .ds-attn__icon { color: var(--ds-red); }
+.ds-attn__row--warn .ds-attn__icon { color: var(--ds-amber); }
+.ds-attn__row--info .ds-attn__icon { color: var(--ds-blue); }
+.ds-attn__title { font-weight: 600; color: var(--ds-ink-2); }
+.ds-attn__meta { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-muted); }
+
+/* ---- Entrance stagger. Transform+opacity only; index set inline. ------- */
+.ds-stagger > * {
+  animation: ds-rise var(--ds-dur) var(--ds-ease-out) both;
+  animation-delay: calc(var(--ds-i, 0) * 35ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-stagger > * { animation: none; }
+}
+
 /* --------------------------------------------------------- Accessibility -- */
 [role="log"] { scroll-behavior: smooth; }
 
+/* Visually hidden but announced — table captions, chart summaries, the labels
+   behind icon-only controls when a tooltip isn't enough. */
+.ds-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+  border: 0;
+}
+
+/* Charts reflow to one column and lose their reserved height on phones. */
+@media (max-width: 860px) {
+  .ds-chart-card__body { min-height: var(--ds-chart-h-sm, 200px); }
+  .ds-card-grid { grid-template-columns: 1fr; }
+  .ds-tabs { overflow-x: auto; scrollbar-width: none; }
+  .ds-tabs::-webkit-scrollbar { display: none; }
+}
+
 @media (max-width: 640px) {
   .ds-rail { width: 200px; }
+  .ds-metric-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .ds-metric-card__value { font-size: 24px; }
 }

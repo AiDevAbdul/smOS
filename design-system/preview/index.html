@@ -49,6 +49,15 @@
   <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6.5 15.5 12 9 17.5"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></symbol>
   <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5h4.5l1.5 2.5h4l1.5-2.5H20"/><path d="M6 5.5h12l2 7v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6l2-7Z"/></symbol>
+  <symbol id="i-overview" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V13.5M9.33 20V8M14.67 20v-5.5M20 20V4.5"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16.5 9 11l3.5 3.5L20 7"/><path d="M15.5 7H20v4.5"/></symbol>
+  <symbol id="i-funnel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 5h17l-6.5 7.5V20l-4-2.5v-5L3.5 5Z"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21.5 20H2.5L12 3.5Z"/><path d="M12 9.5v4.5"/><path d="M12 17.2v.1"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-panel-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M10 4.5v15"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></symbol>
 </svg>
 
 <div class="pv-page">
@@ -317,6 +326,202 @@
         <div class="ds-toast ds-toast--warn"><div><div class="ds-toast__title">Approval needed</div><div class="ds-toast__body">Budget increase exceeds $500/day.</div></div></div>
         <div class="ds-toast ds-toast--bad"><div><div class="ds-toast__title">Run failed</div><div class="ds-toast__body">Pixel not firing — launch blocked.</div></div></div>
         <div class="ds-inline-error">Session expired. <a href="#">Reconnect</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-h">09 — Aurora: glass surfaces &amp; ambient wash (chrome + overlays only, never behind a number)</div>
+    <div class="pv-card" style="position:relative;overflow:hidden">
+      <div class="ds-aurora" aria-hidden="true" style="position:absolute">
+        <span class="ds-aurora__blob"></span>
+        <span class="ds-aurora__blob"></span>
+        <span class="ds-aurora__blob"></span>
+      </div>
+      <div class="pv-row" style="position:relative;z-index:1">
+        <div class="ds-glass" style="border-radius:var(--ds-r);padding:var(--ds-space-4);min-width:200px">
+          <strong style="font-family:var(--ds-font-display)">.ds-glass</strong>
+          <div class="pv-note">Default chrome alpha (.72) + 18px blur + lit top edge.</div>
+        </div>
+        <div class="ds-glass ds-glass--strong" style="border-radius:var(--ds-r);padding:var(--ds-space-4);min-width:200px">
+          <strong style="font-family:var(--ds-font-display)">--strong</strong>
+          <div class="pv-note">.86 alpha — for overlays that carry text over page content.</div>
+        </div>
+        <div style="border-radius:var(--ds-r);padding:var(--ds-space-3);min-width:216px;background:radial-gradient(120% 90% at 0% 0%, var(--ds-shell-aurora-1), transparent 60%), var(--ds-shell)">
+          <div class="ds-glass ds-glass--shell" style="border-radius:var(--ds-r-sm);padding:var(--ds-space-4);color:var(--ds-shell-ink)">
+            <strong style="font-family:var(--ds-font-display)">--shell</strong>
+            <div style="color:var(--ds-shell-mut);font-size:12px;margin-top:var(--ds-space-2)">Dark chrome glass, shown over the shell&rsquo;s own ambient gradient — identical in light and dark themes.</div>
+          </div>
+        </div>
+        <div class="ds-tooltip-glass" style="min-width:170px">
+          <div class="ds-tooltip-glass__label">Sep 4</div>
+          <div class="ds-tooltip-glass__row"><span class="ds-tooltip-glass__swatch" style="background:var(--ds-chart-1)"></span><span>Spend</span><span class="ds-tooltip-glass__val">$88.40</span></div>
+          <div class="ds-tooltip-glass__row"><span class="ds-tooltip-glass__swatch" style="background:var(--ds-chart-2)"></span><span>ROAS</span><span class="ds-tooltip-glass__val">3.11×</span></div>
+        </div>
+      </div>
+      <div class="pv-note" style="position:relative;z-index:1">
+        The three drifting blobs behind this card are the wash. Without something
+        non-flat behind it, <code>backdrop-filter</code> renders nothing — which is why
+        the wash is load-bearing rather than decorative. Frozen under
+        <code>prefers-reduced-motion</code>.
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-h">10 — Metric cards (opaque by rule) + segmented control + completion ring</div>
+    <div class="pv-card">
+      <div class="ds-metric-grid">
+        <div class="ds-metric-card" style="--ds-metric-accent:var(--ds-chart-1)">
+          <span class="ds-metric-card__label">Spend · 7 days</span>
+          <span class="ds-metric-card__value">$626.37</span>
+          <span class="ds-metric-card__foot">
+            <span class="ds-metric-card__delta ds-metric-card__delta--up">4.2%</span>
+            <span class="ds-metric-card__note">vs prior 7d</span>
+          </span>
+        </div>
+        <div class="ds-metric-card" style="--ds-metric-accent:var(--ds-chart-2)">
+          <span class="ds-metric-card__label">Blended ROAS</span>
+          <span class="ds-metric-card__value">3.11<span class="ds-metric-card__unit">×</span></span>
+          <span class="ds-metric-card__foot">
+            <span class="ds-metric-card__delta ds-metric-card__delta--down">6.0%</span>
+            <span class="ds-metric-card__note">target 1.50×</span>
+          </span>
+        </div>
+        <div class="ds-metric-card" style="--ds-metric-accent:var(--ds-chart-3)">
+          <span class="ds-metric-card__label">Conversions</span>
+          <span class="ds-metric-card__value">24</span>
+          <span class="ds-metric-card__foot">
+            <span class="ds-metric-card__delta ds-metric-card__delta--flat">0.0%</span>
+            <span class="ds-metric-card__note">$26.10 blended CPA</span>
+          </span>
+        </div>
+        <div class="ds-metric-card" style="--ds-metric-accent:var(--ds-chart-4)">
+          <span class="ds-metric-card__label">Waiting on you</span>
+          <span class="ds-metric-card__value">3</span>
+          <span class="ds-metric-card__foot"><span class="ds-metric-card__note">2 hard approval gates</span></span>
+        </div>
+      </div>
+      <div class="pv-row" style="margin-top:var(--ds-space-5);align-items:center">
+        <div class="ds-segmented" role="tablist" aria-label="Time range">
+          <button class="ds-segmented__btn" role="tab" aria-selected="false">7d</button>
+          <button class="ds-segmented__btn" role="tab" aria-selected="false">14d</button>
+          <button class="ds-segmented__btn" role="tab" aria-selected="true">30d</button>
+          <button class="ds-segmented__btn" role="tab" aria-selected="false" disabled>90d</button>
+        </div>
+        <span class="ds-source-chip ds-source-chip--live">Supabase daily · 2 clients</span>
+        <span class="ds-source-chip ds-source-chip--approx">7/14/30-day snapshots — not daily rows</span>
+        <span class="ds-source-chip">no data</span>
+        <span class="ds-ring-wrap" style="width:44px;height:44px">
+          <svg class="ds-ring" width="44" height="44" role="img" aria-label="71% complete">
+            <circle class="ds-ring__track" cx="22" cy="22" r="20" stroke-width="4"></circle>
+            <circle class="ds-ring__fill" cx="22" cy="22" r="20" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="36.4"></circle>
+          </svg>
+          <span class="ds-ring-wrap__label">71</span>
+        </span>
+      </div>
+      <div class="pv-note">
+        Deltas pair colour with an arrow glyph, so direction survives a colourblind
+        reader and a greyscale print. Values use tabular numerals.
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-h">11 — Chart card: the four mandatory states (data / empty / loading / error)</div>
+    <div class="pv-card">
+      <div class="ds-duo">
+        <section class="ds-chart-card" style="--ds-chart-h:170px">
+          <header class="ds-chart-card__head">
+            <h2 class="ds-chart-card__title">Retainer value by client</h2>
+            <span class="ds-chart-card__unit">monthly · USD</span>
+          </header>
+          <div class="ds-chart-card__body" style="padding:var(--ds-space-4)">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="display:flex;align-items:center;gap:10px"><span style="flex:none;width:104px;font:11.5px var(--ds-font)">Ilyas General</span><span style="height:16px;border-radius:0 4px 4px 0;background:var(--ds-chart-2);width:72%"></span><span class="ds-num" style="font-size:11.5px;font-weight:600">$15,000</span></div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="flex:none;width:104px;font:11.5px var(--ds-font)">Abdul Wahab</span><span style="height:16px;border-radius:0 4px 4px 0;background:var(--ds-chart-2);width:15%"></span><span class="ds-num" style="font-size:11.5px;font-weight:600">$3,000</span></div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="flex:none;width:104px;font:11.5px var(--ds-font)">HOPE&#39;87</span><span style="height:16px;border-radius:0 4px 4px 0;background:var(--ds-chart-2);width:8%"></span><span class="ds-num" style="font-size:11.5px;font-weight:600">$1,500</span></div>
+            </div>
+          </div>
+          <footer class="ds-chart-card__foot">
+            <span>$19,800 won MRR</span>
+            <button class="ds-btn ds-btn--ghost ds-btn--sm" style="margin-left:auto" aria-expanded="false">Show table</button>
+          </footer>
+        </section>
+
+        <section class="ds-chart-card" style="--ds-chart-h:170px">
+          <header class="ds-chart-card__head">
+            <h2 class="ds-chart-card__title">Portfolio trend</h2>
+            <span class="ds-chart-card__unit">USD · per day</span>
+          </header>
+          <div class="ds-chart-card__body">
+            <div class="ds-empty" style="min-height:170px">
+              <svg aria-hidden="true"><use href="#i-trend"/></svg>
+              <p class="ds-empty__title">No spend data yet</p>
+              <p style="font-size:12.5px;color:var(--ds-muted);margin:0;max-width:42ch">
+                Run /analyze for a client with a live ad account, or configure Supabase
+                so daily rows are persisted.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="ds-chart-card" style="--ds-chart-h:170px">
+          <header class="ds-chart-card__head">
+            <h2 class="ds-chart-card__title">Placement mix</h2>
+            <span class="ds-chart-card__unit">loading</span>
+          </header>
+          <div class="ds-chart-card__body">
+            <div class="ds-skeleton" style="height:170px;border-radius:var(--ds-r-sm)" aria-busy="true"></div>
+          </div>
+        </section>
+
+        <section class="ds-chart-card" style="--ds-chart-h:170px">
+          <header class="ds-chart-card__head">
+            <h2 class="ds-chart-card__title">Inbox volume</h2>
+          </header>
+          <div class="ds-chart-card__body">
+            <div class="ds-empty" style="min-height:170px">
+              <svg aria-hidden="true"><use href="#i-alert"/></svg>
+              <p class="ds-empty__title">Couldn&rsquo;t load this chart</p>
+              <p style="font-size:12.5px;color:var(--ds-muted);margin:0">inbox.json is not valid JSON</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="pv-note">
+        Every chart goes through <code>ChartCard</code>, which owns these four states plus
+        the &ldquo;Show table&rdquo; fallback — so no chart can ship without an empty state or a
+        screen-reader equivalent. Card height is reserved by the wrapper, so async data
+        cannot shift layout.
+      </div>
+    </div>
+  </div>
+
+  <div class="pv-section">
+    <div class="pv-h">12 — Chart palette (aliases of the semantic tokens, so a theme flip repaints every plot)</div>
+    <div class="pv-card">
+      <div class="pv-row">
+        <div style="display:flex;gap:0;border-radius:var(--ds-r);overflow:hidden;box-shadow:0 0 0 1px var(--ds-line)">
+          <span style="width:78px;height:56px;background:var(--ds-chart-1)"></span>
+          <span style="width:78px;height:56px;background:var(--ds-chart-2)"></span>
+          <span style="width:78px;height:56px;background:var(--ds-chart-3)"></span>
+          <span style="width:78px;height:56px;background:var(--ds-chart-4)"></span>
+          <span style="width:78px;height:56px;background:var(--ds-chart-5)"></span>
+          <span style="width:78px;height:56px;background:var(--ds-chart-6)"></span>
+          <span style="width:78px;height:56px;background:var(--ds-chart-7)"></span>
+        </div>
+        <div style="flex:1;min-width:260px">
+          <div class="pv-note" style="margin-top:0">
+            <code>--ds-chart-1…7</code> are aliases: blue, green, amber, red, teal, purple,
+            steel. Order mirrors <code>CHART_PALETTE</code> in
+            <code>scripts/lib/design_system.py</code> so the report and Console sides cannot
+            drift. Charts resolve them at draw time via
+            <code>getComputedStyle</code> (<code>useChartTheme</code>) and re-resolve on
+            <code>smos:theme-change</code> — never baked-in hex. Flip the theme above and
+            watch these swatches move.
+          </div>
+        </div>
       </div>
     </div>
   </div>

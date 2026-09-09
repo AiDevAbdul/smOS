@@ -1,9 +1,72 @@
 # smOS Operator UI — Research, Reasoning & Plan (Step 1: Design System)
 
-**Status:** Phases A–E all shipped 2026-09-08. Remaining: real-world verification of the
-`--permission-prompt-tool` schema assumption in `mcp/ui-permission-bridge/`, and wiring
-`skills/manifest.json` into the command palette (still hand-authored `ui/lib/skill-routes.ts`).
+**Status:** Phases A–E shipped 2026-09-08. **Phase F (Aurora visual pass) shipped
+2026-09-09** — see below. Remaining: real-world verification of the
+`--permission-prompt-tool` schema assumption in `mcp/ui-permission-bridge/`.
+(Phase E's open item — wiring `skills/manifest.json` into the palette — closed in Phase F.)
 **Date:** 2026-09-08 · **Owner:** Abdul
+
+## Phase F — "Aurora" visual pass, shipped 2026-09-09
+
+Phases A–E delivered a Console that worked and looked unfinished: **zero charts anywhere**
+(no chart component, no data loader, no charting dependency), and `ds-hero`, `ds-kpi-grid`,
+`ds-chart`, `ds-track`, `ds-progress`, `ds-verdict`, `ds-inspector`, `ds-skeleton` all
+written in the CSS but referenced by no screen. The Clients board was eight rows of text
+in ~40% of a 1440×900 viewport; the client Pipeline page was a 24-row flat checklist.
+
+**Design layer — "Aurora"** (`design-system/smos-app.css`, `APP.md` §Aurora): frosted glass
+on the chrome and overlays over a drifting ambient wash, with data surfaces kept opaque.
+Additive tokens only; `test/ui-no-raw-hex.test.js` still green.
+
+**Charts** — Recharts 3.x in `ui/` (reports keep Chart.js). `ui/components/charts/`:
+`ChartCard` (owns loading/empty/error/"Show table" so no chart can skip them),
+`TrendChart`, `RankBar`, `DonutStat`, `FunnelBar`, `Gauge`, `Sparkline`, `HeatCalendar`,
+`GlassTooltip`. Colours resolve from `--ds-chart-*` at draw time via
+`ui/lib/chart-theme.ts` and re-resolve on `smos:theme-change`.
+
+**Data** — `ui/lib/metrics.ts`: `getPortfolio`, `getPerformance`, `getDailySeries`
+(Supabase `daily_metrics`, falling back to the on-disk 7/14/30 windows and *saying which*),
+`getCrmFunnel`, `getContentStats`, `getInboxStats`, `getPublishStats`, `getAttention`.
+Never throws; every loader returns a well-formed empty shape plus a `note`.
+
+**Navigation** — `AppShell` is now a Server Component that loads the client list, pending
+approval count and skill index, and delegates interactivity to `RailNav`,
+`ClientSwitcher`, `ThemeToggle`, `TopbarActions`, `CommandPalette`. Fixes: grouped rail
+(Overview / current client / System), a **corrected active-state match** (it was
+`pathname === href`, so no `/clients/<slug>/…` route highlighted anything), live approval
+badge + running-run pulse, working rail collapse, a rendered theme + density toggle (both
+were styled and bootstrapped but had no UI), real business names in the breadcrumb and
+switcher, and a mobile glass drawer with scrim. The palette now reads
+**`skills/manifest.json`** and searches clients alongside skills — closing the last open
+Phase E item.
+
+**New Overview** (`/`) — portfolio KPI row, spend/return chart with range switcher and
+provenance chip, CRM funnel with drop-off, retainer ranking, per-client cards with
+completion rings, and a "Needs you" rail (approvals, optimizer flags, publish failures,
+SLA breaches, blocked gates). The old all-clients table moved to `/clients` and gained
+progress rings and a flags column.
+
+**Honesty fixes found while building** (each a real defect, not a style choice):
+- `performance_analysis.json`'s 7/14/30-day windows are *cumulative*, so plotting them as
+  a trend drew a confident downward slope that was false. The windows fallback now
+  switches chart form to bars and labels them "cumulative totals"; sparklines are
+  suppressed on that data entirely.
+- Formatters moved to `ui/lib/format.ts` with a **pinned locale** —
+  `Intl(undefined, …)` resolved the Node locale server-side and the browser locale
+  client-side, a genuine hydration mismatch ("$19,800" vs "US$19,800").
+- `.ds-page > * { min-width: 0 }` — flex children default to `min-width: auto`, which
+  clipped the card grids at 375px instead of reflowing them.
+- `--ds-faint` is ~2.9:1 on white; small captions moved to `--ds-muted`.
+
+**Verified:** `npm run build --workspace ui` clean · `npm test` 370/370 · Lighthouse on
+`/` accessibility **100**, best-practices 100 · no console errors · checked at
+375/1440 in light and dark · style guide sections 09–12 added to
+`design-system/preview/index.html`.
+
+**Phase G (not done):** retrofit the remaining 10 screens on these primitives — client
+Pipeline (24-row checklist → `ds-track` spine + gate cards), Runs (`ds-split` list/detail
++ cost/turn/duration charts from the CLI `result` event), Reports (thumbnail gallery),
+Data (searchable tree + per-file charts), Approvals, Profile, Settings.
 
 ## Phase C/D/E — shipped 2026-09-08 (built in parallel, three isolated worktree agents)
 - **Phase C (screens):** every client now has real tabs —
