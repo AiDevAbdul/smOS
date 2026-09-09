@@ -1,0 +1,17 @@
+{
+  "_doc": "Delivery roster + capacity limits (Group D4). `deal.owner` on a CRM deal must match a member `id` here, otherwise /crm roster reports the deal as unassigned rather than silently dropping it from the load calculation. Costs are what a delivery hour COSTS the agency, not what it bills.",
+  "currency": "USD",
+  "_currency_note": "Cost rates are in ONE currency. smOS holds no FX rates, so a client whose retainer is in a different currency reports margin as null with a reason instead of inventing a conversion.",
+  "default_hourly_cost": 30,
+  "members": [
+    {
+      "id": "abdul",
+      "name": "Abdul",
+      "role": "lead",
+      "hourly_cost": 30,
+      "max_clients": 6,
+      "max_hours_per_month": 120,
+      "_note": "Owner-operator. max_hours is deliberately below a full-time 160 — sales, ops and the smOS build itself take the rest."
+    }
+  ]
+}

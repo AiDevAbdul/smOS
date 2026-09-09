@@ -31,7 +31,7 @@
       "description": "Agency sales/client pipeline (CRM) — one deal record per company from lead through won/lost/churned, plus client health + renewal tracking.",
       "companion": "skills/crm/crm.js",
       "args": [
-        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["add", "list", "show", "stage", "log", "set", "sync", "next", "health"] },
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["add", "list", "show", "stage", "log", "set", "sync", "next", "health", "effort", "margin", "roster"] },
         { "name": "slug", "required": false, "description": "client/prospect slug (required for add/show/stage/log/set; optional for health)" }
       ],
       "flags": [
@@ -43,7 +43,10 @@
         { "name": "--source", "type": "string", "description": "lead source (add)" },
         { "name": "--note", "type": "string", "description": "note text (stage/log)" },
         { "name": "--force", "type": "boolean", "description": "bypass stage-transition validation (stage)" },
-        { "name": "--type", "type": "string", "description": "activity type (log)" }
+        { "name": "--type", "type": "string", "description": "activity type (log)" },
+        { "name": "--hours", "type": "number", "description": "delivery hours worked (effort)" },
+        { "name": "--month", "type": "string", "description": "YYYY-MM period (effort/margin/roster)" },
+        { "name": "--who", "type": "string", "description": "roster member who did the work (effort)" }
       ]
     },
     {

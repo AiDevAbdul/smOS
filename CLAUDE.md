@@ -14,7 +14,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | User intent | Skill to invoke |
 |---|---|
 | Pre-sale prospect audit (no client API access) | `/pre-audit` |
-| **Agency sales/client pipeline (CRM), client health + renewals** | `/crm` |
+| **Agency sales/client pipeline (CRM), client health + renewals, cost-to-serve + capacity** | `/crm` |
 | **Client status — what's done, what's remaining** | `/smos-status` |
 | **Generate a client proposal / pitch** | `/proposal` |
 | **Generate service agreement + e-sign** | `/contract` |
@@ -184,6 +184,12 @@ produces a confident number that is wrong:
   arithmetic on incommensurable units. A won deal with `monthly_retainer: 0` means
   "terms not recorded", not "earns nothing" — it is counted as
   `clients_without_retainer` and its revenue-to-date is `null`, never `0`.
+- **Never read revenue as profit.** `/crm margin` subtracts cost-to-serve (hours ×
+  rate + tools + contractors). Unknown cost is `null`, never zero — a "100% margin"
+  default would rank the least-measured client as the most profitable. `hours_basis`
+  always says whether the number came from a timesheet (`logged`) or a budget
+  (`budgeted`). `/crm roster` reports an unowned client as **unassigned**, not as
+  zero load.
 - **Never let missing data score as good news.** `/crm health` weights five optional
   signals and removes a missing one from the *denominator* rather than scoring it
   zero. A client with no artifacts scores `null` — not 100, not 50. `confidence`

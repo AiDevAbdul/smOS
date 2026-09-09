@@ -106,6 +106,31 @@ deals with `monthly_retainer: 0`, so a total is never quietly understated.
   `confidence` reports what share of the full weighting had data. Below 50% confidence
   the band is marked `band_provisional` — a hint, not a finding.
 
+## 4c. Cost to serve, margin and capacity (Group D4)
+
+Revenue was being read as profit because nothing recorded cost. `deal.cost_to_serve`
+(`hours_per_month`, `hourly_cost`, `tool_cost`, `contractor_cost`) plus an append-only
+`deal.effort_log` make per-client margin computable, and `config/roster.json` holds the
+delivery roster with per-member `max_clients` / `max_hours_per_month`.
+
+Three rules `scripts/lib/agency-economics.js` enforces in code, because breaking any of
+them produces a confident number that is wrong:
+
+1. **Unknown cost is not zero cost.** With no logged hours and no budget, `margin` is
+   `null` — never "100% margin", which would make the least-measured client look like
+   the most profitable one in the book.
+2. **Estimate vs actual is always labelled.** `hours_basis` is `logged` when the period
+   has effort entries, `budgeted` when it falls back to `hours_per_month`, `unknown`
+   otherwise. A margin from a guess must not read like a margin from a timesheet.
+3. **No invented FX.** Cost rates are in one currency. A client billed in another gets
+   `margin: null` with a reason — smOS holds no exchange rates.
+
+`margin` also reports `loss_making`, and `portfolioMargin` totals per currency while
+counting (and explaining) every client it could not measure. `roster` reports a deal
+whose `owner` matches no roster member as **unassigned** rather than dropping it: an
+unowned client is a capacity risk, not a zero. Members' hours utilization is a FLOOR
+whenever `clients_with_unknown_hours` is non-empty.
+
 ## 5. Activity types
 
 `schemas/deal.js` `normalizeActivity` lowercases the type. Recognized values:

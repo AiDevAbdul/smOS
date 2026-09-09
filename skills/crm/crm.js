@@ -23,6 +23,12 @@
  *   node skills/crm/crm.js health [<slug>]   # client health score + renewal status
  *   node skills/crm/crm.js set <slug> engagement_start=2026-06-18 term_months=6
  *   node skills/crm/crm.js set <slug> risk_note="champion left the company"
+ *
+ * Group D4 adds cost-to-serve + capacity:
+ *   node skills/crm/crm.js effort <slug> --hours 6 [--month 2026-09] [--who abdul] [--note "..."]
+ *   node skills/crm/crm.js margin [<slug>] [--month 2026-09]   # per-client profitability
+ *   node skills/crm/crm.js roster [--month 2026-09]            # who is over capacity
+ *   node skills/crm/crm.js set <slug> hours_per_month=8 tool_cost=25 owner=abdul
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -34,6 +40,7 @@ import { crmPipeline } from "../../scripts/lib/paths.js";
 import * as P from "../../scripts/lib/paths.js";
 import { listInvoices } from "../../scripts/lib/billing-store.js";
 import { clientHealth, retentionQueue, mrrByCurrency } from "../../scripts/lib/client-health.js";
+import { clientProfitability, rosterLoad, portfolioMargin, normalizeRoster } from "../../scripts/lib/agency-economics.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -57,6 +64,18 @@ function savePipeline(deals) {
   writeFileSync(p, JSON.stringify(deals.map(dealSchema.normalize), null, 2));
 }
 function findDeal(deals, slug) { return deals.find((d) => d.slug === slug); }
+
+/**
+ * Delivery roster + capacity limits (Group D4). A missing config is not fatal —
+ * it degrades to the default hourly cost with no members, so `roster` reports
+ * every client as unassigned rather than crashing.
+ */
+function loadRoster() {
+  const p = resolve(ROOT, "config", "roster.json");
+  if (!existsSync(p)) return normalizeRoster(null);
+  try { return normalizeRoster(JSON.parse(readFileSync(p, "utf8"))); }
+  catch (e) { console.error(`[crm] config/roster.json unreadable (${e.message}) — falling back to defaults.`); return normalizeRoster(null); }
+}
 
 /**
  * Gather the artifacts a health score needs for one client, then score them
@@ -192,6 +211,48 @@ async function main() {
     return;
   }
 
+  if (cmd === "effort") {
+    // Log actual delivery hours (Group D4). Append-only: margin prefers logged
+    // hours over budgeted ones, and says which basis it used.
+    const d = findDeal(deals, slugArg);
+    if (!d) { console.error(`No deal for "${slugArg}".`); process.exit(2); }
+    const hours = Number(flags.hours);
+    if (!(hours > 0)) { console.error("effort requires --hours <positive number>."); process.exit(1); }
+    const at = nowIso();
+    const month = String(flags.month || at.slice(0, 7));
+    if (!/^\d{4}-\d{2}$/.test(month)) { console.error(`--month must be YYYY-MM, got "${month}".`); process.exit(1); }
+    d.effort_log = [...(d.effort_log || []), {
+      at, month, hours, who: flags.who || d.owner || null, note: flags.note && flags.note !== true ? String(flags.note) : "",
+    }];
+    d.updated_at = at;
+    const v = dealSchema.validate(d);
+    if (!v.ok) { console.error(`Invalid after update:\n  - ${v.errors.join("\n  - ")}`); process.exit(3); }
+    savePipeline(deals); await persist(d);
+    console.log(JSON.stringify({
+      slug: d.slug, month, logged_hours: hours,
+      month_total: dealSchema.loggedHours(d, month),
+      entries: d.effort_log.length,
+    }, null, 2));
+    return;
+  }
+
+  if (cmd === "margin") {
+    const month = String(flags.month || nowIso().slice(0, 7));
+    if (!/^\d{4}-\d{2}$/.test(month)) { console.error(`--month must be YYYY-MM, got "${month}".`); process.exit(1); }
+    const roster = loadRoster();
+    const targets = slugArg ? deals.filter((d) => d.slug === slugArg) : deals.filter((d) => d.stage === "won");
+    if (!targets.length) { console.error(slugArg ? `No deal "${slugArg}".` : "No won deals."); process.exit(2); }
+    const rows = targets.map((d) => clientProfitability(d, roster, month));
+    console.log(JSON.stringify({ month, cost_currency: roster.currency, clients: rows, portfolio: portfolioMargin(rows) }, null, 2));
+    return;
+  }
+
+  if (cmd === "roster") {
+    const month = String(flags.month || nowIso().slice(0, 7));
+    console.log(JSON.stringify(rosterLoad(deals, loadRoster(), month), null, 2));
+    return;
+  }
+
   if (cmd === "health") {
     const today = nowIso().slice(0, 10);
     const targets = slugArg
@@ -287,8 +348,12 @@ async function main() {
       // from the shell doesn't store the string "6" and fail validation.
       else if (["engagement_start", "renewal_date", "risk_note"].includes(k)) d[k] = val === "" ? null : val;
       else if (k === "term_months") d.term_months = val === "" ? null : (Number(val) || null);
+      // Cost-to-serve (D4). Stored on the nested block so schema normalize keeps it.
+      else if (["hours_per_month", "tool_cost", "contractor_cost", "hourly_cost"].includes(k)) {
+        d.cost_to_serve = { ...(d.cost_to_serve || {}), [k]: val === "" ? null : Number(val) };
+      }
       else if (k === "email") d.contact.email = val;
-      else { console.error(`Unknown field "${k}". Known: retainer, currency, email, next_action, next_action_due, owner, source, expected_close, company_name, engagement_start, term_months, renewal_date, risk_note, link.<name>`); process.exit(1); }
+      else { console.error(`Unknown field "${k}". Known: retainer, currency, email, next_action, next_action_due, owner, source, expected_close, company_name, engagement_start, term_months, renewal_date, risk_note, hours_per_month, tool_cost, contractor_cost, hourly_cost, link.<name>`); process.exit(1); }
     }
     d.updated_at = nowIso();
     const v = dealSchema.validate(d);
@@ -326,7 +391,7 @@ async function main() {
     return;
   }
 
-  console.error("Usage: crm <add|list|show|stage|log|set|sync|next|health> ... (see header)");
+  console.error("Usage: crm <add|list|show|stage|log|set|sync|next|health|effort|margin|roster> ... (see header)");
   process.exit(1);
 }
 

@@ -63,6 +63,45 @@ export function normalizeAddon(raw) {
   };
 }
 
+/**
+ * What it costs to deliver this client each month (Group D4). Amounts are in the
+ * DEAL's currency — never a mix, because there are no FX rates in smOS and a
+ * cross-currency margin would be a fabricated number.
+ *
+ * `hours_per_month` is the budgeted/expected effort. It is the fallback when a
+ * period has no logged hours, and the margin output always says which was used.
+ */
+export function normalizeCostToServe(raw) {
+  const r = raw || {};
+  const num = (k, d = 0) => {
+    const v = Number(pick(r, k));
+    return isFiniteNumber(v) ? v : d;
+  };
+  const hours = Number(pick(r, "hours_per_month", "hours"));
+  return {
+    hours_per_month: isFiniteNumber(hours) ? hours : null,
+    // Monthly tooling attributable to this client (ad-library scrapes, seats, …).
+    tool_cost: num("tool_cost"),
+    // Monthly contractor / freelance spend on this client's delivery.
+    contractor_cost: num("contractor_cost"),
+    // Overrides the roster's blended rate for this client's people, when known.
+    hourly_cost: isFiniteNumber(Number(pick(r, "hourly_cost"))) ? Number(pick(r, "hourly_cost")) : null,
+  };
+}
+
+/** One block of work actually done. `month` is YYYY-MM so a period can be summed. */
+export function normalizeEffort(raw) {
+  const r = raw || {};
+  const hours = Number(pick(r, "hours"));
+  return {
+    at: pick(r, "at", "logged_at") ?? null,
+    month: pick(r, "month") ?? (pick(r, "at") ? String(pick(r, "at")).slice(0, 7) : null),
+    hours: isFiniteNumber(hours) ? hours : 0,
+    who: pick(r, "who", "owner") ?? null,
+    note: pick(r, "note") ?? "",
+  };
+}
+
 export function normalize(raw) {
   const r = raw || {};
   const stage = (pick(r, "stage") || "lead").toLowerCase();
@@ -117,6 +156,14 @@ export function normalize(raw) {
     // Set by a human when they know something the metrics don't ("champion left").
     // The computed health score reports this alongside its own signals.
     risk_note: pick(r, "risk_note") ?? null,
+    // ── cost to serve (Group D4) ──
+    // What this client COSTS to deliver, so revenue can be read as margin rather
+    // than mistaken for profit. All amounts are in the deal's own currency.
+    cost_to_serve: normalizeCostToServe(r.cost_to_serve),
+    // Actual hours worked, appended as they happen. When a period has logged
+    // effort, margin uses it; otherwise it falls back to the budgeted
+    // hours_per_month and SAYS which one it used.
+    effort_log: asArray(pick(r, "effort_log")).map(normalizeEffort),
   };
 }
 
@@ -214,7 +261,24 @@ export function validate(obj) {
   if (d.term_months !== null && !(d.term_months > 0)) {
     errors.push("deal.term_months must be > 0 when set");
   }
+  // Cost-to-serve (D4): shape-validated, not required. A negative cost is always a
+  // data-entry error, and it would silently inflate margin.
+  const c = d.cost_to_serve;
+  if (c.hours_per_month !== null && c.hours_per_month < 0) errors.push("deal.cost_to_serve.hours_per_month must be ≥ 0");
+  if (c.hourly_cost !== null && c.hourly_cost < 0) errors.push("deal.cost_to_serve.hourly_cost must be ≥ 0");
+  if (c.tool_cost < 0) errors.push("deal.cost_to_serve.tool_cost must be ≥ 0");
+  if (c.contractor_cost < 0) errors.push("deal.cost_to_serve.contractor_cost must be ≥ 0");
+  d.effort_log.forEach((e, i) => {
+    if (!isNonEmptyString(e.month) || !/^\d{4}-\d{2}$/.test(e.month)) errors.push(`deal.effort_log[${i}].month must be YYYY-MM`);
+    if (e.hours < 0) errors.push(`deal.effort_log[${i}].hours must be ≥ 0`);
+  });
   return result(errors);
+}
+
+/** Hours actually logged for one YYYY-MM period. */
+export function loggedHours(d, month) {
+  const n = normalize(d);
+  return Math.round(n.effort_log.filter((e) => e.month === month).reduce((s, e) => s + e.hours, 0) * 100) / 100;
 }
 
 /** Weighted value of a deal for the pipeline forecast (annualized retainer × prob). */
