@@ -87,7 +87,39 @@ C6. **Content approval workflow:** draft → internal review → client-approved
 
 ---
 
-## GROUP D — Make it a real agency business (retention economics; ~4 days)
+## GROUP D — ✅ DONE (2026-09-09). Retention economics
+
+All five items shipped. What landed, and the three things worth remembering:
+
+- **D1** `schemas/subscription.js` + `scripts/lib/stripe.js` + `scripts/billing-cron.js`.
+  Recurring retainers are now an explicit record, every mutating Stripe POST carries a
+  deterministic `Idempotency-Key`, and the monthly cron is dry-run by default and never
+  issues locally for a Stripe-collected subscription (that would double-bill).
+- **D2** `scripts/lib/reconcile.js` + `ar.js` + `scripts/stripe-webhook.js`. One writer
+  for invoice status that refuses to reopen a settled invoice on an out-of-order event;
+  AR aging and a dunning ladder that drafts but never sends, and never auto-pauses a
+  client's service. Webhook signature verification is mandatory and fail-closed.
+- **D3** `scripts/lib/client-health.js` + retention fields on the deal. A missing signal
+  is removed from the *denominator*, never scored zero — a client with no artifacts
+  scores `null`, and `confidence` says what share of the weighting had data.
+- **D4** `scripts/lib/agency-economics.js` + `config/roster.json`. Per-client margin
+  against cost-to-serve; unknown cost is `null`, never a 100% margin; `hours_basis`
+  always labels logged vs budgeted; no invented FX.
+- **D5** `skills/agency-ops/` + `agency-metrics.js` + `share-token.js`. The whole-book
+  dashboard, MRR snapshots (which is what makes NRR possible at all), and signed
+  expiring share links replacing guessable public paths.
+
+Three cross-cutting fixes fell out of it, all now enforced in CLAUDE.md:
+never blend currencies; never let missing data score as good news; never read revenue as
+profit. Also fixed: `SMOS_DATA_ROOT` didn't isolate `crm/pipeline.json` (a scratch run
+could append to real data), and a placeholder `STRIPE_API_KEY=FILL_IN` counted as
+configured.
+
+Suite went 505 → 572 across the group (386 at the start of the session).
+
+---
+
+## GROUP D (original spec) — Make it a real agency business (retention economics; ~4 days)
 D1. **Stripe Subscriptions + auto-issue** in `skills/billing/billing.js` + `scripts/lib/billing-store.js`: real recurring retainers, a scheduled monthly issue (cron via `scripts/scheduler.js`), and send the `Idempotency-Key` header the SKILL references but omits.
 
 D2. **Stripe webhook reconciler:** flip ledger invoices to `paid`/`void` from webhooks; add overdue/AR-aging + dunning. Removes the manual `mark-paid` drift.
@@ -116,7 +148,11 @@ E6. **Engineering hardening:** split the DELETE guard by resource class (allow o
 ---
 
 ## Suggested order
-A (cleanup) → B1+B2 (ASC + MER, biggest paid wins) → C1+C2 (real content production + publish) → D1+D2+D3 (recurring revenue + retention) → E (brand/measurement/hardening). Each task: branch, implement, add tests, run the full suite in a writable copy, keep it green.
+A (cleanup) → B1+B2 (ASC + MER, biggest paid wins) → C1+C2 (real content production + publish) → D1+D2+D3 (recurring revenue + retention) → E (brand/measurement/hardening).
+
+**Status 2026-09-09:** A, B, C0 and **all of D** are done. C1–C6 stay deferred by client
+direction (AI content is opt-in and nobody has opted in). **Group E is what's next** — E6
+(engineering hardening) is the cheapest high-value slice, E1/E2 the most visible. Each task: branch, implement, add tests, run the full suite in a writable copy, keep it green.
 
 ## Definition of done (per task)
 1. Code uses `paths.js` (no hardcoded client paths) and obeys `CLAUDE.md`.
