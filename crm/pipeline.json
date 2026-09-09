@@ -44,7 +44,11 @@
     "next_action_due": null,
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "abdulwahab",
@@ -86,7 +90,11 @@
     "next_action_due": null,
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "hope87",
@@ -177,7 +185,7 @@
         }
       ]
     },
-    "updated_at": "2026-07-31T06:28:43.401Z",
+    "updated_at": "2026-09-09T06:33:55.697Z",
     "id": "hope87",
     "contact": {
       "name": null,
@@ -192,7 +200,11 @@
     "next_action_due": null,
     "won_at": "2026-07-31T05:44:20.902Z",
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": "2026-07-31",
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "abdulwahabai",
@@ -274,7 +286,11 @@
     ],
     "won_at": "2026-07-16T16:54:50.028Z",
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "actiondigital",
@@ -316,13 +332,17 @@
     ],
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "blue-rose-auto",
     "company_name": "Blue Rose Auto Care & Repair Services",
     "created_at": "2026-07-14T05:27:41.652Z",
-    "updated_at": "2026-08-09T07:32:32.352Z",
+    "updated_at": "2026-09-09T06:33:52.885Z",
     "stage": "won",
     "source": "pre-audit",
     "links": {
@@ -363,7 +383,11 @@
     ],
     "won_at": "2026-08-09T07:32:32.350Z",
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": "2026-06-18",
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "gsc-store",
@@ -410,7 +434,11 @@
     ],
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "ttelgo",
@@ -446,7 +474,11 @@
     "activities": [],
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "port-co",
@@ -493,7 +525,11 @@
     },
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "bacreation",
@@ -555,7 +591,11 @@
     "next_action_due": null,
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "habibpizza",
@@ -612,7 +652,11 @@
     "next_action_due": null,
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "healthncare",
@@ -632,7 +676,7 @@
     },
     "owner": null,
     "created_at": "2026-08-06T08:32:21.633Z",
-    "updated_at": "2026-08-06T09:03:42.589Z",
+    "updated_at": "2026-09-09T06:33:58.476Z",
     "activities": [
       {
         "at": "2026-08-06T08:32:21.634Z",
@@ -679,7 +723,11 @@
     },
     "won_at": "2026-08-06T09:03:26.684Z",
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": "2026-08-05",
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "ilyas-general-hospital",
@@ -761,7 +809,11 @@
     "next_action_due": null,
     "won_at": "2026-09-08T10:43:02.455Z",
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   },
   {
     "slug": "pearl-securities",
@@ -803,6 +855,10 @@
     "next_action_due": null,
     "won_at": null,
     "lost_at": null,
-    "lost_reason": null
+    "lost_reason": null,
+    "engagement_start": null,
+    "term_months": null,
+    "renewal_date": null,
+    "risk_note": null
   }
 ]

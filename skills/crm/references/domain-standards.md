@@ -82,8 +82,29 @@ From `summarize()` in `crm.js` and `weightedValue()` in `schemas/deal.js`.
   `lost`/`churned`). This is the agency's forward revenue dashboard.
 - **Active MRR** = Σ `monthly_retainer` over all `won` deals. Current recurring revenue.
 
-`crm list` returns: `total`, `by_stage` (count per stage), `weighted_pipeline_annual`,
-and `active_mrr`.
+**Both are reported PER CURRENCY** (changed in Group D3). The portfolio holds EUR, USD
+and PKR retainers, so a single blended total was arithmetic on incommensurable units —
+a meaningless headline number. `_blended` is retained only for backward compatibility
+and is explicitly labelled as not a real amount. `clients_without_retainer` counts won
+deals with `monthly_retainer: 0`, so a total is never quietly understated.
+
+`crm list` returns: `total`, `by_stage` (count per stage), `weighted_pipeline_annual`
+(per currency), `active_mrr` (per currency), `clients_without_retainer`, and `_blended`.
+
+## 4b. Retention (Group D3)
+
+- **Renewal date** = explicit `deal.renewal_date`, else `engagement_start + term_months`.
+  When neither is known it is `null`, and the renewal status is `"unknown"` — which is a
+  distinct state from "not due". Never let an unset term read as "nothing to do".
+- **Tenure** = whole elapsed months since `engagement_start` (falling back to `won_at`).
+- **Revenue to date** = retainer × tenure, or `null` when the retainer is unrecorded.
+  `0` would assert we have earned nothing; `null` says we don't know the terms.
+- **Health score** (`scripts/lib/client-health.js`) is a weighted blend of five optional
+  signals — performance (35), payment (25), delivery (15), engagement (15), tenure (10).
+  A missing signal is removed from the DENOMINATOR, never scored as zero: absence of
+  evidence is not evidence of trouble. A client with no artifacts scores `null`, and
+  `confidence` reports what share of the full weighting had data. Below 50% confidence
+  the band is marked `band_provisional` — a hint, not a finding.
 
 ## 5. Activity types
 

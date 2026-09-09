@@ -105,7 +105,85 @@ export function normalize(raw) {
     won_at: pick(r, "won_at") ?? null,
     lost_at: pick(r, "lost_at") ?? null,
     lost_reason: pick(r, "lost_reason") ?? null,
+    // ── retention layer (Group D3) ──
+    // The pipeline tracked acquisition well and retention not at all: a won deal
+    // had no term, no renewal date, and no way to notice a client going quiet.
+    // Dates are YYYY-MM-DD (a term boundary is a date, not an instant).
+    engagement_start: pick(r, "engagement_start") ?? null,
+    term_months: isFiniteNumber(Number(pick(r, "term_months"))) ? Number(pick(r, "term_months")) : null,
+    // Explicit when set; otherwise derived from engagement_start + term_months by
+    // renewalDate() below, so the two can never disagree in storage.
+    renewal_date: pick(r, "renewal_date") ?? null,
+    // Set by a human when they know something the metrics don't ("champion left").
+    // The computed health score reports this alongside its own signals.
+    risk_note: pick(r, "risk_note") ?? null,
   };
+}
+
+/** ISO date `n` months after `start` (YYYY-MM-DD in, YYYY-MM-DD out). */
+export function addMonths(start, months) {
+  if (!start || !isFiniteNumber(Number(months))) return null;
+  const d = new Date(`${String(start).slice(0, 10)}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return null;
+  const targetMonth = d.getUTCMonth() + Number(months);
+  const day = d.getUTCDate();
+  d.setUTCDate(1);
+  d.setUTCMonth(targetMonth);
+  // Clamp to the last day of the target month, so a Jan-31 start + 1 month is
+  // Feb-28, not a silent roll into March.
+  const lastDay = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  d.setUTCDate(Math.min(day, lastDay));
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * When this engagement comes up for renewal: the explicit date if set, else
+ * derived from engagement_start + term_months. null when neither is known — an
+ * unknown renewal date must read as unknown, never as "not due".
+ */
+export function renewalDate(d) {
+  const n = normalize(d);
+  if (isNonEmptyString(n.renewal_date)) return String(n.renewal_date).slice(0, 10);
+  if (n.engagement_start && n.term_months) return addMonths(n.engagement_start, n.term_months);
+  return null;
+}
+
+/** Whole days until renewal (negative = overdue). null when unknown. */
+export function daysToRenewal(d, today = new Date().toISOString().slice(0, 10)) {
+  const r = renewalDate(d);
+  if (!r) return null;
+  const ms = new Date(`${r}T00:00:00Z`).getTime() - new Date(`${String(today).slice(0, 10)}T00:00:00Z`).getTime();
+  return Number.isFinite(ms) ? Math.round(ms / 86400000) : null;
+}
+
+/** Whole months the client has been engaged. null when the start is unknown. */
+export function tenureMonths(d, today = new Date().toISOString().slice(0, 10)) {
+  const n = normalize(d);
+  const start = n.engagement_start || (n.won_at ? String(n.won_at).slice(0, 10) : null);
+  if (!start) return null;
+  const a = new Date(`${String(start).slice(0, 10)}T00:00:00Z`);
+  const b = new Date(`${String(today).slice(0, 10)}T00:00:00Z`);
+  if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
+  let months = (b.getUTCFullYear() - a.getUTCFullYear()) * 12 + (b.getUTCMonth() - a.getUTCMonth());
+  if (b.getUTCDate() < a.getUTCDate()) months -= 1;
+  return Math.max(0, months);
+}
+
+/**
+ * Lifetime revenue booked so far, at the current retainer. Feeds LTV (D5).
+ *
+ * Returns null — not 0 — when the retainer is unrecorded. A won deal carrying
+ * `monthly_retainer: 0` almost always means nobody entered the terms (blue-rose-auto
+ * was onboarded outside the formal /proposal flow and is exactly this case), and
+ * "we have earned 0 from this client" is a very different claim from "we don't
+ * know what this client pays".
+ */
+export function revenueToDate(d, today = new Date().toISOString().slice(0, 10)) {
+  const n = normalize(d);
+  const t = tenureMonths(n, today);
+  if (t === null) return null;
+  if (!(n.deal.monthly_retainer > 0)) return null;
+  return Math.round(n.deal.monthly_retainer * t * 100) / 100;
 }
 
 export function validate(obj) {
@@ -124,6 +202,17 @@ export function validate(obj) {
   // A won deal must carry the artifacts that justify the win.
   if (d.stage === "won" && !isNonEmptyString(d.links.proposal)) {
     errors.push("deal.stage=won requires links.proposal (run /proposal before marking won)");
+  }
+  // Retention fields (D3): validate shape when present. Deliberately NOT required —
+  // five clients were won before these existed, and failing them closed would break
+  // every existing pipeline read for no safety gain.
+  for (const [field, val] of [["engagement_start", d.engagement_start], ["renewal_date", d.renewal_date]]) {
+    if (val !== null && !/^\d{4}-\d{2}-\d{2}/.test(String(val))) {
+      errors.push(`deal.${field} must be YYYY-MM-DD when set (got "${val}")`);
+    }
+  }
+  if (d.term_months !== null && !(d.term_months > 0)) {
+    errors.push("deal.term_months must be > 0 when set");
   }
   return result(errors);
 }

@@ -100,13 +100,15 @@ fail-closed and returns `{ ok, errors[] }`.
 ```json
 { "added": "acme", "stage": "lead",
   "pipeline": { "total": 1, "by_stage": { "lead": 1, ... },
-                "weighted_pipeline_annual": 3000, "active_mrr": 0 } }
+                "weighted_pipeline_annual": { "USD": 3000 }, "active_mrr": {},
+                "clients_without_retainer": 0 } }
 ```
 
 **`crm list`**
 ```json
 { "pipeline": { "total": 3, "by_stage": {...},
-                "weighted_pipeline_annual": 48600, "active_mrr": 2500 },
+                "weighted_pipeline_annual": { "USD": 48600 },
+                "active_mrr": { "USD": 2500 }, "clients_without_retainer": 0 },
   "deals": [ { "slug": "acme", "company": "Acme Co", "stage": "proposed",
                "prob": 55, "retainer": "USD 2500", "next": "send deck" } ] }
 ```
@@ -154,3 +156,27 @@ Output: `{ "synced": true, "added": <n>, "pipeline": {…summary…} }`.
 - **`sync` of a signed client with no proposal** → created at `won` with a placeholder `links.proposal` (the client dir) so the gate passes — review and replace with the real artifact.
 - **Supabase unset** → `persist()` returns `{ skipped: true }`; local write is unaffected.
 - **Supabase error** → returned as `{ error }` but never thrown; pipeline write already committed.
+
+**`crm health [<slug>]`** (Group D3)
+```json
+{ "as_of": "2026-09-09",
+  "clients": [ { "slug": "acme", "score": 78, "band": "healthy",
+                 "band_provisional": false, "confidence": 100,
+                 "signals": { "performance": 85, "payment": 95, "delivery": 95,
+                              "engagement": 90, "tenure": 85 },
+                 "missing": [], "reasons": [],
+                 "tenure_months": 6, "mrr": 3000, "currency": "USD",
+                 "retainer_recorded": true, "revenue_to_date": 18000,
+                 "renewal": { "date": "2027-03-09", "days_away": 181,
+                              "status": "scheduled" } } ],
+  "portfolio": { "scored": 1, "unscoreable": 0, "mean_score": 78,
+                 "by_band": { "healthy": 1 },
+                 "mrr": { "by_currency": { "USD": 3000 },
+                          "clients_without_retainer": 0 },
+                 "mrr_at_risk": { "by_currency": {}, "clients_without_retainer": 0 } } }
+```
+`score` is `null` (and `band` `null`, `confidence` 0) when NO signal had data — never a
+default. Exit 2 when the named slug has no deal, or when no won deals exist.
+
+**`crm next`** also returns a `retention` block: `at_risk_or_due` plus the prioritized
+clients (renewal overdue/due outranks health band alone).

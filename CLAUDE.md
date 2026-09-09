@@ -14,7 +14,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | User intent | Skill to invoke |
 |---|---|
 | Pre-sale prospect audit (no client API access) | `/pre-audit` |
-| **Agency sales/client pipeline (CRM)** | `/crm` |
+| **Agency sales/client pipeline (CRM), client health + renewals** | `/crm` |
 | **Client status — what's done, what's remaining** | `/smos-status` |
 | **Generate a client proposal / pitch** | `/proposal` |
 | **Generate service agreement + e-sign** | `/contract` |
@@ -171,6 +171,25 @@ cryptic null-halt.
 - **Brand compliance:** the `brand-compliance` guard (in `scripts/lib/guards.js`) fail-closed blocks ad creatives that use off-brand language (`client.voice.avoid` / `brand.verbal.voice.dont`) and, for locked brands (`SMOS_REQUIRE_BRAND_KIT=1` or `brand.visual.brand_kit_locked`), AI-generated visuals that don't declare a `brand_kit` matching the approved palette/logo. Enforces the *client's* brand, beyond Meta policy.
 - **Per-client tokens:** organic actions (publish, inbox, threads) resolve a per-client token via `scripts/lib/tokens.js` (`META_PAGE_TOKEN_<SLUG>` etc.) — never assume the global page token in a multi-client setup.
 - **Two Meta MCP servers, different roles.** `meta` (`mcp/meta-server/`) is smOS's own 13-module server — it wraps every write with our guardrails, naming conventions, per-client tokens, and Supabase logging, and is the ONLY server allowed to perform writes (create/update campaigns, adsets, ads, budgets). `meta-official` (added 2026-07-22, `https://mcp.facebook.com/ads`) is Meta's own hosted MCP — 29 generic tools, Business OAuth auth, everything it creates lands PAUSED at Meta's end too. Treat it as **read-only / comparison use** (reporting, diagnostics, cross-checking numbers) until it's explicitly wrapped the same way the custom server is — it has no awareness of our naming conventions or `guards.js` checks, so routing writes through it bypasses brand-compliance, AI-disclosure, and audit logging. Requires one-time human OAuth authorization (`/mcp` in an interactive session) — cannot be authorized from a non-interactive run.
+
+---
+
+## Reporting Money and Health Honestly
+
+Two rules the retention/billing layer enforces in code, because breaking either one
+produces a confident number that is wrong:
+
+- **Never blend currencies.** The portfolio holds EUR, USD and PKR retainers. `/crm`
+  reports MRR and weighted pipeline **per currency**; any single blended total is
+  arithmetic on incommensurable units. A won deal with `monthly_retainer: 0` means
+  "terms not recorded", not "earns nothing" — it is counted as
+  `clients_without_retainer` and its revenue-to-date is `null`, never `0`.
+- **Never let missing data score as good news.** `/crm health` weights five optional
+  signals and removes a missing one from the *denominator* rather than scoring it
+  zero. A client with no artifacts scores `null` — not 100, not 50. `confidence`
+  states what share of the weighting had data, and under 50% the band is flagged
+  `band_provisional`: a hint, not a finding. An unknown renewal date reports
+  `status: "unknown"`, which is a distinct state from "not due".
 
 ---
 

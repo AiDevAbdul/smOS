@@ -17,7 +17,12 @@
  *   node skills/crm/crm.js log <slug> --type call --note "left voicemail"
  *   node skills/crm/crm.js set <slug> next_action="send deck" next_action_due=2026-06-25
  *   node skills/crm/crm.js sync     # import existing prospects/ + clients/ into the pipeline
- *   node skills/crm/crm.js next     # deals needing attention (due/overdue next actions)
+ *   node skills/crm/crm.js next     # deals needing attention (next actions + retention risk)
+ *
+ * Group D3 adds the retention layer:
+ *   node skills/crm/crm.js health [<slug>]   # client health score + renewal status
+ *   node skills/crm/crm.js set <slug> engagement_start=2026-06-18 term_months=6
+ *   node skills/crm/crm.js set <slug> risk_note="champion left the company"
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -26,6 +31,9 @@ import { loadEnv } from "../../scripts/lib/load-env.js";
 import { deal as dealSchema } from "../../schemas/index.js";
 import { upsert, supabaseConfigured } from "../../scripts/lib/supabase.js";
 import { crmPipeline } from "../../scripts/lib/paths.js";
+import * as P from "../../scripts/lib/paths.js";
+import { listInvoices } from "../../scripts/lib/billing-store.js";
+import { clientHealth, retentionQueue, mrrByCurrency } from "../../scripts/lib/client-health.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -49,6 +57,41 @@ function savePipeline(deals) {
   writeFileSync(p, JSON.stringify(deals.map(dealSchema.normalize), null, 2));
 }
 function findDeal(deals, slug) { return deals.find((d) => d.slug === slug); }
+
+/**
+ * Gather the artifacts a health score needs for one client, then score them
+ * (Group D3). Every lookup is best-effort: a missing artifact becomes a MISSING
+ * SIGNAL that lowers the reported confidence, never a zero that fakes bad news.
+ */
+function healthFor(d, today) {
+  // Latest /monthly-review trends, if one has ever run.
+  let trends = null;
+  try {
+    const reportsRoot = P.clientReportsRoot(d.slug);
+    if (existsSync(reportsRoot)) {
+      const dates = readdirSync(reportsRoot).filter((x) => /^\d{4}-\d{2}/.test(x)).sort().reverse();
+      for (const date of dates) {
+        const raw = P.clientReport(d.slug, date, "monthly-review", "raw.json");
+        if (existsSync(raw)) { trends = JSON.parse(readFileSync(raw, "utf8")).trends || null; break; }
+      }
+    }
+  } catch { /* leave trends null — reported as a missing signal */ }
+
+  // Most recent report of any kind actually delivered to the client.
+  let lastReport = null;
+  try {
+    const reportsRoot = P.clientReportsRoot(d.slug);
+    if (existsSync(reportsRoot)) {
+      const dates = readdirSync(reportsRoot).filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x)).sort();
+      lastReport = dates.length ? dates[dates.length - 1] : null;
+    }
+  } catch { /* null */ }
+
+  let invoices = [];
+  try { invoices = listInvoices(d.slug); } catch { /* [] */ }
+
+  return clientHealth({ deal: d, trends, invoices, lastReport, today });
+}
 
 // Parse --flag value pairs and key=value pairs from argv tail.
 function parseFlags(args) {
@@ -79,10 +122,31 @@ function summarize(deals) {
   const active = deals.filter((d) => !["lost", "churned"].includes(d.stage));
   const byStage = {};
   for (const s of dealSchema.STAGES) byStage[s] = deals.filter((d) => d.stage === s).length;
-  const weighted = active.reduce((sum, d) => sum + dealSchema.weightedValue(d), 0);
   const won = deals.filter((d) => d.stage === "won");
-  const mrr = won.reduce((s, d) => s + d.deal.monthly_retainer, 0);
-  return { total: deals.length, by_stage: byStage, weighted_pipeline_annual: weighted, active_mrr: mrr };
+  // Both of these used to be single blended numbers summed across EUR, USD and PKR
+  // deals — arithmetic on incommensurable units, so the headline figure was
+  // meaningless. Reported per currency now. `_blended` is kept only so an existing
+  // reader doesn't break, and is explicitly labelled as not a real amount.
+  const perCurrency = (list, value) => {
+    const by = {};
+    for (const d of list) {
+      const c = d.deal.currency || "USD";
+      by[c] = Math.round(((by[c] || 0) + value(d)) * 100) / 100;
+    }
+    return by;
+  };
+  const weightedBy = perCurrency(active, (d) => dealSchema.weightedValue(d));
+  const mrrBy = perCurrency(won, (d) => d.deal.monthly_retainer);
+  const blend = (by) => Math.round(Object.values(by).reduce((a, b) => a + b, 0) * 100) / 100;
+  return {
+    total: deals.length,
+    by_stage: byStage,
+    weighted_pipeline_annual: weightedBy,
+    active_mrr: mrrBy,
+    clients_without_retainer: won.filter((d) => !(d.deal.monthly_retainer > 0)).length,
+    _blended_note: "weighted_pipeline_annual and active_mrr are per-currency. Do not add them together — these deals are in different currencies.",
+    _blended: { weighted_pipeline_annual: blend(weightedBy), active_mrr: blend(mrrBy) },
+  };
 }
 
 async function main() {
@@ -110,7 +174,50 @@ async function main() {
       .filter((d) => !["lost", "churned"].includes(d.stage) && d.next_action)
       .map((d) => ({ slug: d.slug, stage: d.stage, action: d.next_action, due: d.next_action_due, overdue: d.next_action_due ? d.next_action_due < today : false }))
       .sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999"));
-    console.log(JSON.stringify({ today, needs_attention: due }, null, 2));
+
+    // Retention (D3): a pipeline that only surfaces sales next-actions will let a
+    // paying client churn quietly. Won deals are scored and the risky ones listed.
+    const queue = retentionQueue(deals.filter((d) => d.stage === "won").map((d) => healthFor(d, today)));
+    console.log(JSON.stringify({
+      today,
+      needs_attention: due,
+      retention: {
+        at_risk_or_due: queue.length,
+        clients: queue.map((h) => ({
+          slug: h.slug, score: h.score, band: h.band, provisional: h.band_provisional, confidence: `${h.confidence}%`,
+          renewal: h.renewal, mrr: h.mrr, reasons: h.reasons,
+        })),
+      },
+    }, null, 2));
+    return;
+  }
+
+  if (cmd === "health") {
+    const today = nowIso().slice(0, 10);
+    const targets = slugArg
+      ? deals.filter((d) => d.slug === slugArg)
+      : deals.filter((d) => d.stage === "won");
+    if (!targets.length) {
+      console.error(slugArg ? `No deal "${slugArg}".` : "No won deals to score.");
+      process.exit(2);
+    }
+    const healths = targets.map((d) => healthFor(d, today));
+    const scored = healths.filter((h) => h.score !== null);
+    console.log(JSON.stringify({
+      as_of: today,
+      clients: healths,
+      // Only average what was actually scored — an unscoreable client must not be
+      // silently counted as average.
+      portfolio: {
+        scored: scored.length,
+        unscoreable: healths.length - scored.length,
+        mean_score: scored.length ? Math.round(scored.reduce((s, h) => s + h.score, 0) / scored.length) : null,
+        by_band: healths.reduce((acc, h) => { const k = h.band || "unscoreable"; acc[k] = (acc[k] || 0) + 1; return acc; }, {}),
+        // Per currency, never blended: this portfolio has EUR, USD and PKR retainers.
+        mrr: mrrByCurrency(healths),
+        mrr_at_risk: mrrByCurrency(healths.filter((h) => ["at_risk", "critical"].includes(h.band))),
+      },
+    }, null, 2));
     return;
   }
 
@@ -176,8 +283,12 @@ async function main() {
       else if (k === "retainer") d.deal.monthly_retainer = Number(val) || 0;
       else if (k === "currency") d.deal.currency = val;
       else if (["next_action", "next_action_due", "owner", "source", "expected_close", "company_name"].includes(k)) d[k] = val;
+      // Retention layer (D3). term_months is coerced to a number so `term_months=6`
+      // from the shell doesn't store the string "6" and fail validation.
+      else if (["engagement_start", "renewal_date", "risk_note"].includes(k)) d[k] = val === "" ? null : val;
+      else if (k === "term_months") d.term_months = val === "" ? null : (Number(val) || null);
       else if (k === "email") d.contact.email = val;
-      else { console.error(`Unknown field "${k}"`); process.exit(1); }
+      else { console.error(`Unknown field "${k}". Known: retainer, currency, email, next_action, next_action_due, owner, source, expected_close, company_name, engagement_start, term_months, renewal_date, risk_note, link.<name>`); process.exit(1); }
     }
     d.updated_at = nowIso();
     const v = dealSchema.validate(d);
@@ -215,7 +326,7 @@ async function main() {
     return;
   }
 
-  console.error("Usage: crm <add|list|show|stage|log|set|sync|next> ... (see header)");
+  console.error("Usage: crm <add|list|show|stage|log|set|sync|next|health> ... (see header)");
   process.exit(1);
 }
 

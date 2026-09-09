@@ -28,11 +28,11 @@
     {
       "slug": "crm",
       "command": "/crm",
-      "description": "Agency sales/client pipeline (CRM) — one deal record per company from lead through won/lost/churned.",
+      "description": "Agency sales/client pipeline (CRM) — one deal record per company from lead through won/lost/churned, plus client health + renewal tracking.",
       "companion": "skills/crm/crm.js",
       "args": [
-        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["add", "list", "show", "stage", "log", "set", "sync", "next"] },
-        { "name": "slug", "required": false, "description": "client/prospect slug (required for add/show/stage/log/set)" }
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["add", "list", "show", "stage", "log", "set", "sync", "next", "health"] },
+        { "name": "slug", "required": false, "description": "client/prospect slug (required for add/show/stage/log/set; optional for health)" }
       ],
       "flags": [
         { "name": "--name", "type": "string", "description": "company name (add)" },
