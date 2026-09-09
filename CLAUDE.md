@@ -18,7 +18,7 @@ You manage real ad accounts with real budgets. Every action you take that touche
 | **Client status — what's done, what's remaining** | `/smos-status` |
 | **Generate a client proposal / pitch** | `/proposal` |
 | **Generate service agreement + e-sign** | `/contract` |
-| **Issue retainer invoices + recurring subscriptions (Stripe)** | `/billing` |
+| **Issue retainer invoices + recurring subscriptions, reconcile payments, AR aging + dunning (Stripe)** | `/billing` |
 | New client onboarding | `/intake` |
 | **Zero-start — brand strategy + positioning** | `/brand-strategy` |
 | **Zero-start — name + verbal identity (3-gate screen)** | `/brand-name` |
@@ -226,6 +226,21 @@ The `naming-check` hook enforces this before any create_campaign, create_adset, 
 - Sending Discord digest messages
 - Generating a **local** invoice (HTML+PDF, no `--send`) and recording it in the ledger
 - Recording a subscription as `invoice_manual` (no Stripe authority granted)
+- Reconciling the ledger against Stripe (`/billing … reconcile`) — read-only against Stripe
+- Producing AR aging and the dunning queue (drafting a chase is safe; **sending** it is not automated)
+
+### Collections posture
+
+`/billing … dunning` **drafts and queues** reminders; it never sends one. A human sends
+it and then records it (`--invoice <id> --send-level <n>`), which is what stops the same
+level being chased twice. Level 4 (60+ days) returns `action: "escalate"` and explicitly
+requires a human — **smOS never pauses a client's service delivery for non-payment.**
+
+Ledger status is reconciled, not asserted: `reconcile` (poll) and
+`scripts/stripe-webhook.js` (signed events) both funnel through one writer that refuses
+to reopen a settled invoice on an out-of-order event and refuses to guess at a Stripe
+status it doesn't recognize. Webhook signature verification is mandatory —
+`--insecure-skip-verify` exists for local replay only and warns loudly.
 
 ### Money-moving automation
 

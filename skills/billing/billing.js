@@ -23,6 +23,12 @@
  *                                                   [--start 2026-09] [--end 2027-08] [--stripe]
  *   node skills/billing/billing.js <slug> subscription
  *   node skills/billing/billing.js <slug> unsubscribe [--reason "..."]
+ *
+ * Group D2 closes the collections loop:
+ *   node skills/billing/billing.js <slug> reconcile        # pull real status from Stripe
+ *   node skills/billing/billing.js <slug> aging            # AR aging buckets
+ *   node skills/billing/billing.js <slug> dunning          # what to chase, and how hard
+ *   node skills/billing/billing.js <slug> dunning --invoice INV-x-2026-09 --send-level 2
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -32,7 +38,9 @@ import { heroHeader } from "../../scripts/lib/design_system.js";
 import { docShell, writeDocHtmlAndPdf, escHtml } from "../../scripts/lib/client_doc.js";
 import { getDeal, upsertDeal } from "../../scripts/lib/crm-store.js";
 import { listInvoices, getInvoice, saveInvoice, getSubscription, saveSubscription } from "../../scripts/lib/billing-store.js";
-import { stripeConfigured, stripePost, ensureCustomer, createSubscription, cancelSubscription, idempotencyKey, toCents } from "../../scripts/lib/stripe.js";
+import { stripeConfigured, stripePost, ensureCustomer, createSubscription, cancelSubscription, idempotencyKey, toCents, fetchInvoice } from "../../scripts/lib/stripe.js";
+import { applyStatus, recordReminder } from "../../scripts/lib/reconcile.js";
+import { agingReport, dunningQueue, DUNNING_SCHEDULE } from "../../scripts/lib/ar.js";
 import { subscription as subSchema } from "../../schemas/index.js";
 import { loadCatalog, pickPackage } from "../proposal/proposal.js";
 
@@ -164,7 +172,7 @@ export async function stripeSend(inv, deal, opts = {}) {
 
 async function main() {
   const [slug, cmd, ...rest] = process.argv.slice(2);
-  if (!slug || !cmd) { console.error("Usage: billing.js <slug> <invoice|list|mark-paid|subscribe|subscription|unsubscribe> [flags]"); process.exit(1); }
+  if (!slug || !cmd) { console.error("Usage: billing.js <slug> <invoice|list|mark-paid|subscribe|subscription|unsubscribe|aging|dunning|reconcile> [flags]"); process.exit(1); }
   const flag = (name) => { const i = rest.indexOf(`--${name}`); return i >= 0 ? (rest[i + 1] && !rest[i + 1].startsWith("--") ? rest[i + 1] : true) : undefined; };
 
   const deal = getDeal(slug);
@@ -276,9 +284,92 @@ async function main() {
     const period = flag("period") || currentPeriod();
     const inv = getInvoice(slug, period);
     if (!inv) { console.error(`No invoice for ${slug} ${period}.`); process.exit(3); }
-    inv.status = "paid";
-    await saveInvoice(slug, inv);
-    console.log(JSON.stringify({ slug, period, status: "paid", total: inv.total }, null, 2));
+    const at = nowIso();
+    // paid_at + reconciled_via are required now (D2): AR aging and collected-revenue
+    // reporting both need to know WHEN, and a report should be able to tell a
+    // human's assertion apart from a Stripe-confirmed payment.
+    const saved = await saveInvoice(slug, {
+      ...inv, status: "paid",
+      paid_at: inv.paid_at || (flag("at") && flag("at") !== true ? String(flag("at")) : at),
+      amount_paid: Number(flag("amount")) || inv.total,
+      reconciled_via: "manual", reconciled_at: at,
+    });
+    console.log(JSON.stringify({
+      slug, period, status: saved.status, total: saved.total, paid_at: saved.paid_at,
+      note: saved.stripe?.invoice_id
+        ? "Marked paid by hand on an invoice Stripe also tracks — prefer `reconcile` so Stripe stays the source of truth."
+        : undefined,
+    }, null, 2));
+    return;
+  }
+
+  if (cmd === "aging") {
+    // AR aging for one client. Money owed, bucketed by how late it is.
+    const report = agingReport(listInvoices(slug), nowIso());
+    console.log(JSON.stringify({ slug, ...report }, null, 2));
+    return;
+  }
+
+  if (cmd === "dunning") {
+    const invs = listInvoices(slug);
+    const queue = dunningQueue(invs, nowIso());
+    const send = flag("send-level");
+    if (send !== undefined) {
+      // Recording a reminder is deliberately separate from generating the queue:
+      // smOS drafts the chase, a human sends it, then records that it went out.
+      const level = Number(send);
+      const target = flag("invoice");
+      if (!target || target === true) { console.error("--send-level requires --invoice <id>."); process.exit(9); }
+      if (!(level >= 1)) { console.error("--send-level must be ≥ 1."); process.exit(9); }
+      const r = await recordReminder(slug, String(target), { level, channel: String(flag("channel") || "manual"), note: String(flag("note") || "") });
+      if (!r.ok) { console.error(r.detail); process.exit(3); }
+      console.log(JSON.stringify({ slug, invoice: String(target), recorded_level: level, reminders: r.reminders }, null, 2));
+      return;
+    }
+    console.log(JSON.stringify({
+      slug, as_of: nowIso(), schedule: DUNNING_SCHEDULE,
+      actionable: queue.length, queue,
+      note: queue.some((q) => q.action === "escalate")
+        ? "One or more invoices are at escalation level — service pause is a human decision, never automatic."
+        : undefined,
+      next: queue.length
+        ? `Send the drafted reminder, then record it: /billing ${slug} dunning --invoice <id> --send-level <n>`
+        : "Nothing to chase.",
+    }, null, 2));
+    return;
+  }
+
+  if (cmd === "reconcile") {
+    // Pull authoritative status from Stripe into the ledger. Replaces the manual
+    // `mark-paid` drift: a client who paid without telling anyone is now visible.
+    if (!stripeConfigured()) { console.error("No STRIPE_API_KEY — cannot reconcile against Stripe. Use `mark-paid` to record a payment by hand."); process.exit(10); }
+    const invs = listInvoices(slug).filter((i) => i.stripe?.invoice_id);
+    if (!invs.length) {
+      console.log(JSON.stringify({ slug, reconciled: 0, note: "No ledger invoices carry a Stripe invoice id — nothing Stripe can confirm. These were generated locally; record payment with `mark-paid`." }, null, 2));
+      return;
+    }
+    const results = [];
+    for (const inv of invs) {
+      try {
+        const si = await fetchInvoice(inv.stripe.invoice_id);
+        const r = await applyStatus(slug, inv.id, {
+          stripeStatus: si.status, via: "stripe_poll",
+          amountPaid: Number.isFinite(si.amount_paid) ? si.amount_paid / 100 : null,
+          stripeInvoiceId: si.id, hostedUrl: si.hosted_invoice_url || null,
+        });
+        results.push({ invoice: inv.id, ...r });
+      } catch (e) {
+        results.push({ invoice: inv.id, changed: false, outcome: "error", detail: e.message });
+      }
+    }
+    const conflicts = results.filter((r) => r.outcome === "conflict");
+    console.log(JSON.stringify({
+      slug, checked: results.length,
+      updated: results.filter((r) => r.changed).length,
+      conflicts: conflicts.length, results,
+      ...(conflicts.length ? { note: "Conflicts were NOT auto-resolved — the ledger and Stripe disagree on a settled invoice. Resolve by hand." } : {}),
+    }, null, 2));
+    if (conflicts.length) process.exit(11);
     return;
   }
 
@@ -330,7 +421,7 @@ async function main() {
     return;
   }
 
-  console.error(`Unknown command "${cmd}". Use invoice | list | mark-paid | subscribe | subscription | unsubscribe.`);
+  console.error(`Unknown command "${cmd}". Use invoice | list | mark-paid | subscribe | subscription | unsubscribe | aging | dunning | reconcile.`);
   process.exit(1);
 }
 

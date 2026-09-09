@@ -21,10 +21,25 @@
 //    local/manual invoice — matching CLAUDE.md's fail-closed posture. Amounts
 //    arrive in MAJOR units and are converted to cents at this boundary only.
 
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 const API = "https://api.stripe.com/v1";
 
+// `.env` ships with `STRIPE_API_KEY=FILL_IN`-style placeholders, and a truthiness
+// check treats those as configured — so `/billing reconcile` reported "checked 1"
+// and fired a doomed 401 at Stripe instead of saying it wasn't set up. A real
+// Stripe secret key is `sk_live_…` / `sk_test_…` (or a restricted `rk_…`);
+// anything else is a placeholder, not a credential.
+const PLACEHOLDER = /^(fill[_-]?in|todo|changeme|your[_-]|xxx+|<.*>|none|n\/a|placeholder)/i;
+
+export function stripeKey() {
+  const k = (process.env.STRIPE_API_KEY || "").trim();
+  if (!k || PLACEHOLDER.test(k)) return null;
+  return k;
+}
+
 export function stripeConfigured() {
-  return Boolean(process.env.STRIPE_API_KEY);
+  return stripeKey() !== null;
 }
 
 /** Major units → integer cents. Stripe rejects fractional cents. */
@@ -60,8 +75,8 @@ class StripeError extends Error {
  * without touching the network.
  */
 export async function stripePost(path, params, { idempotency, fetchImpl = globalThis.fetch } = {}) {
-  const key = process.env.STRIPE_API_KEY;
-  if (!key) throw new Error("STRIPE_API_KEY is not set");
+  const key = stripeKey();
+  if (!key) throw new Error("STRIPE_API_KEY is not set (or is still a placeholder)");
   const headers = {
     Authorization: `Bearer ${key}`,
     "Content-Type": "application/x-www-form-urlencoded",
@@ -77,8 +92,8 @@ export async function stripePost(path, params, { idempotency, fetchImpl = global
 }
 
 export async function stripeGet(path, { fetchImpl = globalThis.fetch } = {}) {
-  const key = process.env.STRIPE_API_KEY;
-  if (!key) throw new Error("STRIPE_API_KEY is not set");
+  const key = stripeKey();
+  if (!key) throw new Error("STRIPE_API_KEY is not set (or is still a placeholder)");
   const res = await fetchImpl(`${API}/${path}`, {
     method: "GET",
     headers: { Authorization: `Bearer ${key}` },
@@ -131,6 +146,83 @@ export async function cancelSubscription(subscriptionId, opts = {}) {
   return stripePost(`subscriptions/${subscriptionId}`, { cancel_at_period_end: "true" }, {
     ...opts, idempotency: idempotencyKey(subscriptionId, "cancel"),
   });
+}
+
+// ──────────────────── reconciliation (Group D2) ────────────────────
+//
+// Two ways to learn that an invoice was paid, both landing in the same applier:
+//   POLL    — `/billing <slug> reconcile` fetches each invoice's current Stripe
+//             status. Needs no public URL, so it works on a laptop today.
+//   WEBHOOK — `scripts/stripe-webhook.js` verifies a signed event and applies it.
+//             Lower latency, but only once an endpoint exists.
+// Both replace the old manual `mark-paid`, which drifted from reality the moment a
+// client paid without anyone telling smOS.
+
+/** Fetch one Stripe invoice (for the polling reconciler). */
+export async function fetchInvoice(stripeInvoiceId, opts = {}) {
+  return stripeGet(`invoices/${stripeInvoiceId}`, opts);
+}
+
+/**
+ * Map Stripe's invoice status onto ours. Stripe's vocabulary is wider than the
+ * ledger's, so this is explicit rather than a cast: anything unrecognized returns
+ * null and the caller leaves the ledger ALONE rather than guessing.
+ *
+ * Stripe: draft | open | paid | uncollectible | void
+ */
+export function mapInvoiceStatus(stripeStatus) {
+  switch (String(stripeStatus)) {
+    case "paid": return "paid";
+    case "open": return "sent";
+    case "draft": return "draft";
+    case "void": return "void";
+    // Written off as uncollectible is a real accounting outcome, not a payment.
+    case "uncollectible": return "void";
+    default: return null;
+  }
+}
+
+// The Stripe events worth acting on. Anything else is acknowledged and ignored —
+// a webhook endpoint that errors on unknown events makes Stripe retry forever.
+export const HANDLED_EVENTS = [
+  "invoice.paid",
+  "invoice.payment_succeeded",
+  "invoice.payment_failed",
+  "invoice.voided",
+  "invoice.marked_uncollectible",
+  "customer.subscription.deleted",
+];
+
+/**
+ * Verify a Stripe webhook signature (the `Stripe-Signature` header).
+ *
+ * Implemented directly rather than pulling the Stripe SDK for one function. Two
+ * properties that matter and are easy to get wrong:
+ *   - the signed payload is `${timestamp}.${rawBody}` — the RAW body, so a caller
+ *     must not JSON.parse-and-restringify before verifying;
+ *   - the comparison is timing-safe, and a timestamp older than `toleranceSec`
+ *     is rejected so a captured request can't be replayed later.
+ * Returns { ok, reason? }. Fail-closed: no secret configured means not verified.
+ */
+export function verifyWebhookSignature(rawBody, signatureHeader, { secret = process.env.STRIPE_WEBHOOK_SECRET, toleranceSec = 300, now = Date.now() } = {}) {
+  if (!secret) return { ok: false, reason: "STRIPE_WEBHOOK_SECRET is not set" };
+  if (!signatureHeader) return { ok: false, reason: "missing Stripe-Signature header" };
+  const parts = String(signatureHeader).split(",").map((p) => p.trim().split("="));
+  const timestamp = parts.find((p) => p[0] === "t")?.[1];
+  const signatures = parts.filter((p) => p[0] === "v1").map((p) => p[1]);
+  if (!timestamp || !signatures.length) return { ok: false, reason: "malformed Stripe-Signature header" };
+
+  const ageSec = Math.abs(Math.floor(now / 1000) - Number(timestamp));
+  if (!Number.isFinite(ageSec)) return { ok: false, reason: "malformed signature timestamp" };
+  if (ageSec > toleranceSec) return { ok: false, reason: `signature timestamp outside tolerance (${ageSec}s > ${toleranceSec}s)` };
+
+  const expected = createHmac("sha256", secret).update(`${timestamp}.${rawBody}`).digest("hex");
+  const expectedBuf = Buffer.from(expected, "utf8");
+  const match = signatures.some((sig) => {
+    const sigBuf = Buffer.from(String(sig), "utf8");
+    return sigBuf.length === expectedBuf.length && timingSafeEqual(sigBuf, expectedBuf);
+  });
+  return match ? { ok: true } : { ok: false, reason: "signature mismatch" };
 }
 
 export { StripeError };

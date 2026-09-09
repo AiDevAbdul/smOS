@@ -90,7 +90,7 @@
       "companion": "skills/billing/billing.js",
       "args": [
         { "name": "slug", "required": true, "description": "client slug" },
-        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["invoice", "list", "mark-paid", "subscribe", "subscription", "unsubscribe"] }
+        { "name": "cmd", "required": true, "description": "subcommand", "enum": ["invoice", "list", "mark-paid", "subscribe", "subscription", "unsubscribe", "reconcile", "aging", "dunning"] }
       ],
       "flags": [
         { "name": "--period", "type": "string", "description": "billing period, e.g. 2026-06 (invoice/mark-paid)" },
@@ -103,7 +103,11 @@
         { "name": "--start", "type": "string", "description": "first billed period YYYY-MM (subscribe; defaults to the current period)" },
         { "name": "--end", "type": "string", "description": "last billed period YYYY-MM for a fixed term (subscribe)" },
         { "name": "--stripe", "type": "boolean", "description": "let Stripe own the recurring charge (subscribe; fail-closed to invoice_manual)" },
-        { "name": "--reason", "type": "string", "description": "cancellation reason logged to the deal (unsubscribe)" }
+        { "name": "--reason", "type": "string", "description": "cancellation reason logged to the deal (unsubscribe)" },
+        { "name": "--invoice", "type": "string", "description": "ledger invoice id (dunning --send-level)" },
+        { "name": "--send-level", "type": "number", "description": "record that a dunning reminder of this level was sent (dunning)" },
+        { "name": "--channel", "type": "string", "description": "how the reminder went out: manual|email|stripe (dunning)" },
+        { "name": "--note", "type": "string", "description": "note stored with the recorded reminder (dunning)" }
       ]
     },
     {

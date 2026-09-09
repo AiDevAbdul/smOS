@@ -19,7 +19,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 if (!process.env.SMOS_DATA_ROOT) process.env.SMOS_DATA_ROOT = resolve(ROOT, "test", ".tmp");
 
 const { subscription: sub } = await import("../schemas/index.js");
-const { idempotencyKey, toCents, stripePost, createSubscription } = await import("../scripts/lib/stripe.js");
+const { idempotencyKey, toCents, stripePost, createSubscription, stripeConfigured, stripeKey } = await import("../scripts/lib/stripe.js");
 const { planClient, currentPeriod } = await import("../scripts/billing-cron.js");
 
 const base = {
@@ -243,6 +243,37 @@ describe("stripe boundary — idempotency and cents", () => {
     assert.equal(out.customer_id, "cus_existing");
     assert.ok(!calls.includes("customers"), "must not create a second customer for the same slug");
     delete process.env.STRIPE_API_KEY;
+  });
+});
+
+describe("a placeholder key is not a credential", () => {
+  // Found by running `reconcile` for real: `.env` ships STRIPE_API_KEY=FILL_IN, and
+  // a truthiness check called that configured — so smOS reported "checked 1" and
+  // fired a doomed 401 at Stripe instead of saying it wasn't set up.
+  const saved = process.env.STRIPE_API_KEY;
+
+  test("placeholder values read as unconfigured", () => {
+    for (const v of ["FILL_IN", "fill-in", "TODO", "changeme", "your_key_here", "xxxx", "<your key>", "", "   ", "none", "n/a", "placeholder"]) {
+      process.env.STRIPE_API_KEY = v;
+      assert.equal(stripeConfigured(), false, `"${v}" must not count as a Stripe key`);
+      assert.equal(stripeKey(), null);
+    }
+  });
+
+  test("a real-looking key is accepted and trimmed", () => {
+    process.env.STRIPE_API_KEY = "  sk_test_abc123  ";
+    assert.equal(stripeConfigured(), true);
+    assert.equal(stripeKey(), "sk_test_abc123");
+  });
+
+  test("an unset key is unconfigured", () => {
+    delete process.env.STRIPE_API_KEY;
+    assert.equal(stripeConfigured(), false);
+  });
+
+  test("restore env", () => {
+    if (saved === undefined) delete process.env.STRIPE_API_KEY;
+    else process.env.STRIPE_API_KEY = saved;
   });
 });
 
