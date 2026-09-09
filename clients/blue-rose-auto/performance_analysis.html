@@ -4,102 +4,221 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Blue Rose Auto Care &amp; Repair Services — Performance Analysis</title>
 <script>(function(){try{var t=localStorage.getItem("smos-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>/* ============================================================================
-   smOS Design System — "Cupertino"
+   smOS Design System — "Ledger"
    Single source of truth for every client-facing report & template.
-   Apple / iOS visual language: SF Pro system type, #f5f5f7 canvas, #1d1d1f ink,
-   system semantic colors, soft elevation, generous radii, 8pt rhythm.
+
+   The visual language of a precision work order: an inspection sheet a client
+   already knows how to read. Steel-blue palette, engineered type (Barlow
+   Semi Condensed display / Barlow body / IBM Plex Mono data), hairline rules,
+   status chips, tabular numerals. Evolved 2026-09-02 from the "Cupertino"
+   system — every token name and ds-* class is contract-stable, so all wired
+   renderers inherited the new language without code changes.
 
    DO NOT fork this per report. Renderers read this file at render time via
    scripts/lib/design_system.js (Node) and scripts/lib/design_system.py (Python)
    and inline it. Edit here once; every deliverable inherits it.
+
+   Fonts load from Google Fonts via reportHead()/report_head(); every face has
+   a system fallback stack so offline HTML stays legible and render_pdf.py
+   (networkidle) embeds the real faces in PDFs.
    ============================================================================ */
 
 :root {
   color-scheme: light;
 
-  /* ---- Surfaces (Apple light-gray system) ---- */
-  --ds-bg:        #f5f5f7;   /* page canvas */
+  /* ---- Surfaces (cool steel-white, biased toward the brand blue) ---- */
+  --ds-bg:        #f3f5f7;   /* page canvas */
   --ds-surface:   #ffffff;   /* cards, tables, sheets */
-  --ds-surface-2: #fbfbfd;   /* zebra rows, subtle fills */
+  --ds-surface-2: #f8fafc;   /* zebra rows, subtle fills */
   --ds-glass:     rgba(255,255,255,.72);
 
-  /* ---- Ink / text ---- */
-  --ds-ink:    #1d1d1f;      /* primary text */
-  --ds-ink-2:  #3a3a3c;      /* strong secondary */
-  --ds-muted:  #6e6e73;      /* secondary / captions (Apple gray) */
-  --ds-faint:  #8e8e93;      /* tertiary / footnotes */
+  /* ---- Ink / text (deep blue-black, steel grays) ---- */
+  --ds-ink:    #17222e;      /* primary text */
+  --ds-ink-2:  #2e3d4d;      /* strong secondary */
+  --ds-muted:  #5a6b7c;      /* secondary / captions */
+  --ds-faint:  #8695a5;      /* tertiary / footnotes */
 
-  /* ---- Lines ---- */
-  --ds-line:        #e2e2e7;
-  --ds-line-strong: #d2d2d7;
+  /* ---- Lines (hairline rules — the ledger's skeleton) ---- */
+  --ds-line:        #dde4ea;
+  --ds-line-strong: #c9d3dc;
 
-  /* ---- Brand + iOS system semantic colors ---- */
-  --ds-blue:        #0071e3;  /* primary action (Apple keynote blue) */
-  --ds-blue-strong: #0066cc;
-  --ds-indigo:      #5e5ce6;
-  --ds-green:       #34c759;  /* systemGreen — success / scale */
-  --ds-amber:       #ff9f0a;  /* systemOrange — at risk / warn */
-  --ds-red:         #ff3b30;  /* systemRed — critical / pause */
-  --ds-purple:      #af52de;  /* systemPurple */
-  --ds-teal:        #5ac8fa;  /* systemTeal */
-  --ds-pink:        #ff375f;  /* systemPink */
+  /* ---- Brand + semantic status colors (inspection sheet: pass/caution/action) ---- */
+  --ds-blue:        #1d5dbf;  /* brand accent — steel blue */
+  --ds-blue-strong: #174a99;
+  --ds-indigo:      #4257b2;
+  --ds-green:       #1d8a4e;  /* pass / scale */
+  --ds-amber:       #b57a0a;  /* caution / warn */
+  --ds-red:         #c0392f;  /* action needed / pause */
+  --ds-purple:      #6d4fa3;
+  --ds-teal:        #22808d;
+  --ds-pink:        #b23a5f;
 
-  /* ---- Soft tints for callouts / pills (light) ---- */
-  --ds-blue-tint:  #eef5ff;
-  --ds-green-tint: #e7f9ed;
-  --ds-amber-tint: #fff5e6;
-  --ds-red-tint:   #ffece9;
-  --ds-ink-tint:   #f2f2f7;
+  /* ---- Soft tints for callouts / chips (light) ---- */
+  --ds-blue-tint:  #e9f0fb;
+  --ds-green-tint: #e6f4ec;
+  --ds-amber-tint: #faf1de;
+  --ds-red-tint:   #faeae8;
+  --ds-ink-tint:   #eef2f5;
 
-  /* ---- On-tint text (badges/callouts) — darker than the base semantic color
-     for AA contrast on the light pastel tint; swap to a lighter shade in dark
-     mode where the tint itself is a low-opacity dark fill. ---- */
-  --ds-green-ink: #1c7a3e;
-  --ds-amber-ink: #9a5b00;
-  --ds-red-ink:   #b3261e;
+  /* ---- On-tint text (chips/callouts) — dark enough for AA on the tint;
+     swapped to lighter shades in dark mode where tints are dark fills. ---- */
+  --ds-green-ink: #177140;
+  --ds-amber-ink: #92620a;
+  --ds-red-ink:   #a03329;
 
-  /* ---- Type ---- */
-  --ds-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-             "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --ds-font-mono: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* ---- Type: engineered trio.
+     Display (headlines, big numbers) / body / mono (data, labels, eyebrows). */
+  --ds-font: "Barlow", -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+             Helvetica, Arial, sans-serif;
+  --ds-font-display: "Barlow Semi Condensed", "Arial Narrow", "Helvetica Neue",
+             Arial, sans-serif;
+  --ds-font-mono: "IBM Plex Mono", "SF Mono", ui-monospace, SFMono-Regular,
+             Menlo, Consolas, monospace;
 
-  /* ---- Radius ---- */
-  --ds-r-sm: 10px;
-  --ds-r:    14px;
-  --ds-r-lg: 20px;
-  --ds-r-xl: 28px;
+  /* ---- Radius (tighter than Cupertino — work-order crispness) ---- */
+  --ds-r-sm: 6px;
+  --ds-r:    10px;
+  --ds-r-lg: 14px;
+  --ds-r-xl: 18px;
   --ds-r-pill: 980px;
 
-  /* ---- Elevation (low-contrast, Apple-soft) ---- */
-  --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.04), 0 1px 3px rgba(0,0,0,.06);
-  --ds-shadow:    0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06);
-  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.10);
+  /* ---- Elevation (cool-tinted, restrained) ---- */
+  --ds-shadow-sm: 0 1px 2px rgba(23,34,46,.05), 0 1px 3px rgba(23,34,46,.06);
+  --ds-shadow:    0 1px 2px rgba(23,34,46,.05), 0 6px 20px rgba(23,34,46,.07);
+  --ds-shadow-lg: 0 4px 14px rgba(23,34,46,.09), 0 18px 44px rgba(23,34,46,.11);
 
   /* ---- Gradients ---- */
-  --ds-grad-blue: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%);
-  --ds-grad-ink:  linear-gradient(135deg, #2c2c2e 0%, #1d1d1f 100%);
-  /* Signature aurora — blue → indigo → violet. Used ONLY on the progress spine,
-     active states, and hero accent. The one place boldness is spent. */
-  --ds-grad-brand: linear-gradient(135deg, #06251c 0%, #0e5c3f 55%, #16a973 100%);
+  --ds-grad-blue: linear-gradient(135deg, #2b6fd4 0%, #174a99 100%);
+  --ds-grad-ink:  linear-gradient(135deg, #223140 0%, #17222e 100%);
+  /* Signature spine — deep steel → brand blue. Used ONLY on the progress
+     spine, active states, and accent moments. The one place boldness is spent. */
+  --ds-grad-brand: linear-gradient(135deg, #123a75 0%, #1d5dbf 60%, #3f7fd9 100%);
 
   /* ---- "Operating system" shell (dark hub chrome that frames light reports) ---- */
-  --ds-shell:     #0b0b10;   /* console canvas (cool near-black) */
-  --ds-shell-2:   #16161d;   /* raised shell surface: bars, chips */
-  --ds-shell-3:   #20212a;   /* chip hover / hairline fills */
-  --ds-shell-ink: #f5f5f7;   /* primary text on shell */
-  --ds-shell-mut: #a1a1ab;   /* secondary text on shell */
-  --ds-shell-line:#2a2b35;   /* borders on shell */
+  --ds-shell:     #0c1117;   /* console canvas (cool near-black) */
+  --ds-shell-2:   #151d27;   /* raised shell surface: bars, chips */
+  --ds-shell-3:   #1f2937;   /* chip hover / hairline fills */
+  --ds-shell-ink: #eef2f5;   /* primary text on shell */
+  --ds-shell-mut: #9aa8b6;   /* secondary text on shell */
+  --ds-shell-line:#2a3644;   /* borders on shell */
 
   /* ---- Display type scale ---- */
-  --ds-fs-display: clamp(30px, 4.2vw, 46px);
+  --ds-fs-display: clamp(28px, 4vw, 42px);
 
   /* ---- Motion ---- */
   --ds-ease:       cubic-bezier(.4, 0, .2, 1);
   --ds-ease-out:   cubic-bezier(.16, 1, .3, 1);  /* expressive ease-out for entrances */
   --ds-dur:        220ms;
   --ds-dur-fast:   140ms;
+
+  /* ================================================================
+     Application layer ("Console") — additive tokens for the smOS
+     operator UI (ui/). Reports never use these; the Console (dense
+     nav, forms, live agent runs) does. Kept in the same file so both
+     layers draw from one palette — never fork a second stylesheet's
+     worth of raw color. See design-system/smos-app.css for components
+     and design-system/APP.md for the reference. ================== */
+
+  /* ---- 4-pt spacing scale ---- */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-7: 32px;
+  --ds-space-8: 40px;
+  --ds-space-9: 48px;
+  --ds-space-10: 64px;
+
+  /* ---- Control metrics (compact density default; see [data-density]) ---- */
+  --ds-control-sm: 28px;
+  --ds-control-md: 36px;
+  --ds-control-lg: 44px;
+  --ds-input-pad: 0 var(--ds-space-3);
+  --ds-icon: 16px;
+  --ds-icon-lg: 20px;
+
+  /* ---- Focus rings (2px accent + 2px offset; shell variant for dark chrome) ---- */
+  --ds-focus: 0 0 0 2px var(--ds-surface), 0 0 0 4px var(--ds-blue);
+  --ds-focus-shell: 0 0 0 2px var(--ds-shell), 0 0 0 4px var(--ds-blue);
+
+  /* ---- Z-layers ---- */
+  --ds-z-rail: 10;
+  --ds-z-panel: 20;
+  --ds-z-overlay: 30;
+  --ds-z-toast: 40;
+  --ds-z-palette: 50;
+
+  /* ---- Run/session state colors (map onto existing semantic hues —
+     no new colors introduced) ---- */
+  --ds-run-queued:  var(--ds-faint);
+  --ds-run-running: var(--ds-blue);
+  --ds-run-done:    var(--ds-green);
+  --ds-run-failed:  var(--ds-red);
+  --ds-run-waiting: var(--ds-amber);
+
+  /* ---- Shell family completions (hover/selected/accent/focus on the
+     dark console chrome; --ds-shell/-2/-3/-ink/-mut/-line already
+     existed for /bundle) ---- */
+  --ds-shell-hover:    #232f3d;
+  --ds-shell-selected: #1d5dbf;
+  --ds-shell-accent:   #5b93e8;
+  --ds-shell-focus:    0 0 0 2px var(--ds-shell), 0 0 0 4px var(--ds-shell-accent);
+
+  /* ---- "Aurora" glass finish (Console chrome only — rail, topbar, palette,
+     dialogs, toasts, inspector, tooltips. Data surfaces stay opaque so
+     numbers never sit on a shifting background). --ds-glass above is the
+     translucent fill; these complete the set. ---- */
+  --ds-glass-bg:        var(--ds-glass);
+  --ds-glass-bg-strong: rgba(255,255,255,.86);
+  --ds-glass-line:      rgba(23,34,46,.10);
+  --ds-glass-highlight: rgba(255,255,255,.65);
+  --ds-glass-blur:      18px;
+  --ds-glass-sat:       140%;
+  /* Shell glass — the chrome (rail/topbar/statusbar) is dark in BOTH themes,
+     like /bundle's hub, so these are theme-independent by design. */
+  --ds-shell-glass:      rgba(21,29,39,.72);
+  --ds-shell-glass-2:    rgba(21,29,39,.88);
+  --ds-shell-glass-line: rgba(255,255,255,.08);
+  --ds-shell-glass-hi:   rgba(255,255,255,.10);
+  /* Dark ambient wash behind the chrome so its translucency has something to
+     pick up. Same hues as --ds-aurora-*, tuned for the near-black shell. */
+  --ds-shell-aurora-1: rgba(45,110,205,.20);
+  --ds-shell-aurora-2: rgba(34,128,141,.14);
+  /* Ambient wash behind the main area: what makes backdrop-filter read as
+     glass at all. Alphas stay 6–10% so text contrast is unaffected. */
+  --ds-aurora-1: rgba(29,93,191,.15);
+  --ds-aurora-2: rgba(34,128,141,.13);
+  --ds-aurora-3: rgba(109,79,163,.11);
+
+  /* ---- Chart palette. Aliases, not new colors: each follows its semantic
+     token through every theme, so a theme flip repaints plots for free.
+     Order mirrors CHART_PALETTE in scripts/lib/design_system.py — keep the
+     two in step. ---- */
+  --ds-chart-1: var(--ds-blue);
+  --ds-chart-2: var(--ds-green);
+  --ds-chart-3: var(--ds-amber);
+  --ds-chart-4: var(--ds-red);
+  --ds-chart-5: var(--ds-teal);
+  --ds-chart-6: var(--ds-purple);
+  --ds-chart-7: var(--ds-faint);
+  --ds-chart-grid: var(--ds-line);
+  --ds-chart-axis: var(--ds-muted);
+}
+
+/* Density: compact is the default (operator console = dense by design).
+   [data-density="comfortable"] widens the same scale for touch/readability. */
+[data-density="comfortable"] {
+  --ds-control-sm: 32px;
+  --ds-control-md: 40px;
+  --ds-control-lg: 48px;
+  --ds-space-3: 14px;
+  --ds-space-4: 20px;
 }
 
 /* ------------------------------------------------------ Dark mode tokens ---
@@ -111,141 +230,156 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) { color-scheme: dark; }
   :root:not([data-theme="light"]) {
-    --ds-bg:        #000000;
-    --ds-surface:   #1c1c1e;
-    --ds-surface-2: #232326;
-    --ds-glass:     rgba(28,28,30,.72);
+    --ds-bg:        #0f151c;
+    --ds-surface:   #182130;
+    --ds-surface-2: #141c28;
+    --ds-glass:     rgba(24,33,48,.72);
+    --ds-glass-bg-strong: rgba(24,33,48,.88);
+    --ds-glass-line:      rgba(255,255,255,.10);
+    --ds-glass-highlight: rgba(255,255,255,.12);
+    --ds-aurora-1: rgba(91,147,232,.13);
+    --ds-aurora-2: rgba(92,182,196,.10);
+    --ds-aurora-3: rgba(169,143,214,.10);
 
-    --ds-ink:    #f5f5f7;
-    --ds-ink-2:  #e5e5e7;
-    --ds-muted:  #98989d;
-    --ds-faint:  #6e6e73;
+    --ds-ink:    #e8edf3;
+    --ds-ink-2:  #c8d3de;
+    --ds-muted:  #93a3b4;
+    --ds-faint:  #6b7c8e;
 
-    --ds-line:        #38383a;
-    --ds-line-strong: #48484a;
+    --ds-line:        #283443;
+    --ds-line-strong: #35455a;
 
-    --ds-blue:   #0a84ff;
-    --ds-indigo: #7d7aff;
-    --ds-green:  #30d158;
-    --ds-amber:  #ff9f0a;
-    --ds-red:    #ff453a;
-    --ds-purple: #bf5af2;
-    --ds-teal:   #64d2ff;
-    --ds-pink:   #ff375f;
+    --ds-blue:        #5b93e8;
+    --ds-blue-strong: #8bb3f0;
+    --ds-indigo:      #8d9ce8;
+    --ds-green:       #4cbc7f;
+    --ds-amber:       #e0a33a;
+    --ds-red:         #e26a5f;
+    --ds-purple:      #a98fd6;
+    --ds-teal:        #5cb6c4;
+    --ds-pink:        #d97a99;
 
-    --ds-blue-tint:  rgba(10,132,255,.16);
-    --ds-green-tint: rgba(48,209,88,.16);
-    --ds-amber-tint: rgba(255,159,10,.16);
-    --ds-red-tint:   rgba(255,69,58,.16);
-    --ds-ink-tint:   #2c2c2e;
-    --ds-green-ink: #63d986;
-    --ds-amber-ink: #ffc46b;
-    --ds-red-ink:   #ff8a80;
+    --ds-blue-tint:  #1c2c45;
+    --ds-green-tint: #16311f;
+    --ds-amber-tint: #382a10;
+    --ds-red-tint:   #3a1c17;
+    --ds-ink-tint:   #20293a;
+    --ds-green-ink: #6fd39c;
+    --ds-amber-ink: #ecb964;
+    --ds-red-ink:   #ef968c;
 
     --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
-    --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
-    --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
+    --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.5);
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ds-bg:        #000000;
-  --ds-surface:   #1c1c1e;
-  --ds-surface-2: #232326;
-  --ds-glass:     rgba(28,28,30,.72);
+  --ds-bg:        #0f151c;
+  --ds-surface:   #182130;
+  --ds-surface-2: #141c28;
+  --ds-glass:     rgba(24,33,48,.72);
+  --ds-glass-bg-strong: rgba(24,33,48,.88);
+  --ds-glass-line:      rgba(255,255,255,.10);
+  --ds-glass-highlight: rgba(255,255,255,.12);
+  --ds-aurora-1: rgba(91,147,232,.13);
+  --ds-aurora-2: rgba(92,182,196,.10);
+  --ds-aurora-3: rgba(169,143,214,.10);
 
-  --ds-ink:    #f5f5f7;
-  --ds-ink-2:  #e5e5e7;
-  --ds-muted:  #98989d;
-  --ds-faint:  #6e6e73;
+  --ds-ink:    #e8edf3;
+  --ds-ink-2:  #c8d3de;
+  --ds-muted:  #93a3b4;
+  --ds-faint:  #6b7c8e;
 
-  --ds-line:        #38383a;
-  --ds-line-strong: #48484a;
+  --ds-line:        #283443;
+  --ds-line-strong: #35455a;
 
-  --ds-blue:   #0a84ff;
-  --ds-indigo: #7d7aff;
-  --ds-green:  #30d158;
-  --ds-amber:  #ff9f0a;
-  --ds-red:    #ff453a;
-  --ds-purple: #bf5af2;
-  --ds-teal:   #64d2ff;
-  --ds-pink:   #ff375f;
+  --ds-blue:        #5b93e8;
+  --ds-blue-strong: #8bb3f0;
+  --ds-indigo:      #8d9ce8;
+  --ds-green:       #4cbc7f;
+  --ds-amber:       #e0a33a;
+  --ds-red:         #e26a5f;
+  --ds-purple:      #a98fd6;
+  --ds-teal:        #5cb6c4;
+  --ds-pink:        #d97a99;
 
-  --ds-blue-tint:  rgba(10,132,255,.16);
-  --ds-green-tint: rgba(48,209,88,.16);
-  --ds-amber-tint: rgba(255,159,10,.16);
-  --ds-red-tint:   rgba(255,69,58,.16);
-  --ds-ink-tint:   #2c2c2e;
-  --ds-green-ink: #63d986;
-  --ds-amber-ink: #ffc46b;
-  --ds-red-ink:   #ff8a80;
+  --ds-blue-tint:  #1c2c45;
+  --ds-green-tint: #16311f;
+  --ds-amber-tint: #382a10;
+  --ds-red-tint:   #3a1c17;
+  --ds-ink-tint:   #20293a;
+  --ds-green-ink: #6fd39c;
+  --ds-amber-ink: #ecb964;
+  --ds-red-ink:   #ef968c;
 
   --ds-shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
-  --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.4);
-  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.55);
+  --ds-shadow:    0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  --ds-shadow-lg: 0 4px 16px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.5);
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --ds-green-ink: #1c7a3e;
-  --ds-amber-ink: #9a5b00;
-  --ds-red-ink:   #b3261e;
+  --ds-green-ink: #177140;
+  --ds-amber-ink: #92620a;
+  --ds-red-ink:   #a03329;
 }
 
 @media print {
   :root, :root[data-theme="dark"] {
     color-scheme: light !important;
-    --ds-bg:        #f5f5f7 !important;
+    --ds-bg:        #ffffff !important;
     --ds-surface:   #ffffff !important;
-    --ds-surface-2: #fbfbfd !important;
-    --ds-ink:       #1d1d1f !important;
-    --ds-ink-2:     #3a3a3c !important;
-    --ds-muted:     #6e6e73 !important;
-    --ds-faint:     #8e8e93 !important;
-    --ds-line:        #e2e2e7 !important;
-    --ds-line-strong: #d2d2d7 !important;
-    --ds-blue:   #0071e3 !important;
-    --ds-indigo: #5e5ce6 !important;
-    --ds-green:  #34c759 !important;
-    --ds-amber:  #ff9f0a !important;
-    --ds-red:    #ff3b30 !important;
-    --ds-purple: #af52de !important;
-    --ds-teal:   #5ac8fa !important;
-    --ds-pink:   #ff375f !important;
-    --ds-blue-tint:  #eef5ff !important;
-    --ds-green-tint: #e7f9ed !important;
-    --ds-amber-tint: #fff5e6 !important;
-    --ds-red-tint:   #ffece9 !important;
-    --ds-ink-tint:   #f2f2f7 !important;
-    --ds-green-ink: #1c7a3e !important;
-    --ds-amber-ink: #9a5b00 !important;
-    --ds-red-ink:   #b3261e !important;
+    --ds-surface-2: #f8fafc !important;
+    --ds-ink:       #17222e !important;
+    --ds-ink-2:     #2e3d4d !important;
+    --ds-muted:     #5a6b7c !important;
+    --ds-faint:     #8695a5 !important;
+    --ds-line:        #dde4ea !important;
+    --ds-line-strong: #c9d3dc !important;
+    --ds-blue:        #1d5dbf !important;
+    --ds-blue-strong: #174a99 !important;
+    --ds-indigo: #4257b2 !important;
+    --ds-green:  #1d8a4e !important;
+    --ds-amber:  #b57a0a !important;
+    --ds-red:    #c0392f !important;
+    --ds-purple: #6d4fa3 !important;
+    --ds-teal:   #22808d !important;
+    --ds-pink:   #b23a5f !important;
+    --ds-blue-tint:  #e9f0fb !important;
+    --ds-green-tint: #e6f4ec !important;
+    --ds-amber-tint: #faf1de !important;
+    --ds-red-tint:   #faeae8 !important;
+    --ds-ink-tint:   #eef2f5 !important;
+    --ds-green-ink: #177140 !important;
+    --ds-amber-ink: #92620a !important;
+    --ds-red-ink:   #a03329 !important;
   }
   .ds-theme-toggle { display: none !important; }
 }
 
-/* ---- Theme toggle (sun/moon icon button, top-right of the hero) ---- */
+/* ---- Theme toggle (sun/moon icon button, top-right of the masthead) ---- */
 .ds-theme-toggle {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 18px;
+  right: 18px;
   z-index: 2;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.28);
-  background: rgba(255,255,255,.14);
-  color: #fff;
+  border: 1px solid var(--ds-line-strong);
+  background: var(--ds-surface-2);
+  color: var(--ds-muted);
   cursor: pointer;
-  transition: background var(--ds-dur) var(--ds-ease);
+  transition: background var(--ds-dur) var(--ds-ease), color var(--ds-dur) var(--ds-ease);
 }
-.ds-theme-toggle:hover { background: rgba(255,255,255,.24); }
+.ds-theme-toggle:hover { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
 .ds-theme-toggle:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--ds-blue);
   outline-offset: 2px;
 }
-.ds-theme-toggle svg { width: 18px; height: 18px; fill: currentColor; }
+.ds-theme-toggle svg { width: 17px; height: 17px; fill: currentColor; }
 .ds-theme-toggle .ds-theme-toggle__moon { display: none; }
 :root[data-theme="dark"] .ds-theme-toggle .ds-theme-toggle__sun { display: none; }
 :root[data-theme="dark"] .ds-theme-toggle .ds-theme-toggle__moon { display: block; }
@@ -263,7 +397,7 @@ body {
   margin: 0;
   font-family: var(--ds-font);
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--ds-ink);
   background: var(--ds-bg);
   -webkit-font-smoothing: antialiased;
@@ -273,28 +407,32 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--ds-font-display);
   color: var(--ds-ink);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  letter-spacing: 0;
   margin: 0 0 .5em;
-  font-weight: 600;
+  font-weight: 700;
+  text-wrap: balance;
 }
-h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.022em; }
-h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.018em; }
-h3 { font-size: 19px; }
-h4 { font-size: 16px; }
+h1 { font-size: 32px; }
+h2 { font-size: 23px; margin-top: 1.6em; }
+h3 { font-size: 18px; font-weight: 600; margin-top: 1.4em; }
+h4 { font-size: 15.5px; font-weight: 600; }
 
 p  { margin: .65em 0; }
-a  { color: var(--ds-blue-strong); text-decoration: none; }
+a  { color: var(--ds-blue); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 small, .ds-caption { color: var(--ds-muted); font-size: 13px; }
 
+strong { color: var(--ds-ink); }
+
 code, kbd, samp {
   font-family: var(--ds-font-mono);
-  font-size: 88%;
+  font-size: 86%;
   background: var(--ds-ink-tint);
-  border-radius: 5px;
+  border-radius: 4px;
   padding: 1px 6px;
 }
 
@@ -312,7 +450,7 @@ li { margin: 4px 0; }
 
 /* ------------------------------------------------------------- Layout ---- */
 .ds-wrap {
-  max-width: 960px;
+  max-width: 940px;
   margin: 0 auto;
   padding: 40px 24px 72px;
 }
@@ -321,104 +459,119 @@ li { margin: 4px 0; }
 .ds-section { margin: 36px 0; }
 
 /* -------------------------------------------------------------- Hero ------ */
-/* ONE canonical report hero. Every client-facing report MUST render this exact
-   structure via heroHeader() (JS) / hero_header() (Py) — never fork it.
-   Structure: .ds-hero > .ds-hero__inner > (.ds-hero__main + optional .ds-hero__aside) */
+/* ONE canonical report hero — the work-order MASTHEAD. Every client-facing
+   report MUST render this exact structure via heroHeader() (JS) /
+   hero_header() (Py) — never fork it.
+   Structure: .ds-hero > .ds-hero__inner > (.ds-hero__main + optional .ds-hero__aside)
+   A bordered statement header on the light surface — not a gradient banner. The
+   left spine carries the one bold accent (--ds-grad-brand). */
 .ds-hero {
   position: relative;
   overflow: hidden;
-  background: var(--ds-grad-brand);
-  color: #fff;
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  border: 1.5px solid var(--ds-line-strong);
   border-radius: var(--ds-r-lg);
-  padding: 44px 40px;
+  padding: 34px 36px 30px;
   margin-bottom: 28px;
-  box-shadow: 0 12px 32px rgba(14,92,63,.35);
+  box-shadow: var(--ds-shadow);
 }
-/* Subtle radial glow for depth (Stripe-style). Behind content, non-interactive. */
+/* Accent spine — the masthead's signature. */
 .ds-hero::before {
   content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 78% 30%, rgba(255,255,255,.18) 0%, transparent 70%);
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+  background: var(--ds-grad-brand);
   pointer-events: none;
 }
 .ds-hero > * { position: relative; z-index: 1; }
 .ds-hero__inner {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 40px;
+  gap: 32px;
   align-items: center;
 }
 .ds-hero__inner.has-aside { grid-template-columns: 1fr auto; }
-.ds-hero h1 { color: #fff; margin: 0; font-size: var(--ds-fs-display); letter-spacing: -0.026em; line-height: 1.08; }
-.ds-hero .ds-meta { margin-top: 10px; font-size: 14px; color: rgba(255,255,255,.82); }
-.ds-hero__headline { margin-top: 12px; font-size: 15px; line-height: 1.55; max-width: 560px; color: rgba(255,255,255,.78); }
+.ds-hero h1 {
+  color: var(--ds-ink);
+  margin: 0;
+  font-size: var(--ds-fs-display);
+  line-height: 1.06;
+}
+.ds-hero .ds-meta {
+  margin-top: 10px;
+  font-family: var(--ds-font-mono);
+  font-size: 12.5px;
+  color: var(--ds-muted);
+}
+.ds-hero__headline { margin-top: 12px; font-size: 15px; line-height: 1.55; max-width: 60ch; color: var(--ds-muted); }
 
-/* Eyebrow promoted to a badge pill with a status dot. */
+/* Eyebrow promoted to an inspection stamp: mono caps, accent border. */
 .ds-hero__badge {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  margin-bottom: 16px;
-  padding: 5px 13px;
-  border-radius: 20px;
-  background: rgba(255,255,255,.14);
-  border: 1px solid rgba(255,255,255,.26);
-  color: #fff;
-  font-size: 11px;
+  margin-bottom: 14px;
+  padding: 6px 12px;
+  border-radius: var(--ds-r-sm);
+  background: var(--ds-blue-tint);
+  border: 1.5px solid var(--ds-blue);
+  color: var(--ds-blue-strong);
+  font-family: var(--ds-font-mono);
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
-.ds-hero__badge::before {
-  content: "";
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 8px rgba(255,255,255,.8);
-}
 
-/* Optional pill row (snapshot stats). */
-.ds-hero__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+/* Optional pill row (snapshot stats) — mono data chips. */
+.ds-hero__pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .ds-hero__pill {
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 20px;
-  padding: 4px 12px;
-  font-size: 12px;
+  background: var(--ds-surface-2);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r-sm);
+  padding: 5px 11px;
+  font-family: var(--ds-font-mono);
+  font-size: 11.5px;
   font-weight: 500;
-  color: #fff;
+  color: var(--ds-ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
 /* Optional right-hand executive column: score ring + a single hero stat. */
 .ds-hero__aside { text-align: center; flex-shrink: 0; }
-.ds-hero__stat { margin-top: 18px; }
+.ds-hero__stat { margin-top: 16px; }
 .ds-hero__stat-label {
+  font-family: var(--ds-font-mono);
   font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-  color: rgba(255,255,255,.72); margin-top: 8px;
+  color: var(--ds-muted); margin-top: 8px;
 }
 .ds-hero__aside .ds-hero__band {
   display: inline-block;
-  font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-  color: #fff; margin-top: 12px; padding: 6px 16px; border-radius: 999px;
-  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+  font-family: var(--ds-font-mono);
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ds-blue-strong); margin-top: 12px; padding: 6px 14px; border-radius: var(--ds-r-sm);
+  background: var(--ds-blue-tint); border: 1.5px solid var(--ds-blue);
 }
-.ds-hero__stat-value { font-size: 32px; font-weight: 700; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
-.ds-hero__stat-caption { font-size: 11px; color: rgba(255,255,255,.7); margin-top: 4px; max-width: 200px; }
+.ds-hero__stat-value {
+  font-family: var(--ds-font-display);
+  font-size: 34px; font-weight: 700; line-height: 1;
+  color: var(--ds-ink); font-variant-numeric: tabular-nums;
+}
+.ds-hero__stat-caption { font-size: 11.5px; color: var(--ds-muted); margin-top: 4px; max-width: 200px; }
 @media (max-width: 720px) {
   .ds-hero__inner.has-aside { grid-template-columns: 1fr; }
   .ds-hero__aside { text-align: left; }
 }
 
-/* Scored hero variant — pre-audit's one true header: centered identity block
-   on top, then a big score gauge + verdict headline side-by-side below.
-   Scoped under .ds-hero--scored so it never affects the default .ds-hero
-   used by /audit, /report, /analyze, /before-after, /monthly-review. */
+/* Scored hero variant — centered identity block on top, then a big score
+   gauge + verdict headline side-by-side below. Scoped under .ds-hero--scored. */
 .ds-hero--scored .ds-hero__center { text-align: center; }
 .ds-hero--scored .ds-hero__center h1 { font-size: var(--ds-fs-display); }
 .ds-hero--scored .ds-hero__center .ds-meta { margin: 10px 0 0; }
 .ds-hero__score-row {
-  margin-top: 36px;
+  margin-top: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -428,17 +581,18 @@ li { margin: 4px 0; }
 .ds-hero__gauge { flex-shrink: 0; text-align: center; }
 .ds-hero__gauge .ds-hero__band {
   display: inline-block;
-  font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-  color: #fff; margin-top: 14px; padding: 6px 16px; border-radius: 999px;
-  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28);
+  font-family: var(--ds-font-mono);
+  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ds-blue-strong); margin-top: 14px; padding: 6px 14px; border-radius: var(--ds-r-sm);
+  background: var(--ds-blue-tint); border: 1.5px solid var(--ds-blue);
 }
-.ds-hero__verdict { max-width: 420px; text-align: left; }
+.ds-hero__verdict { max-width: 440px; text-align: left; }
 .ds-hero__verdict-headline {
-  font-size: 22px; font-weight: 650; line-height: 1.32; color: #fff;
-  letter-spacing: -0.01em;
+  font-family: var(--ds-font-display);
+  font-size: 22px; font-weight: 600; line-height: 1.3; color: var(--ds-ink);
 }
 .ds-hero__verdict-sub {
-  margin-top: 14px; font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.78);
+  margin-top: 12px; font-size: 13.5px; line-height: 1.6; color: var(--ds-muted);
 }
 @media (max-width: 720px) {
   .ds-hero__score-row { flex-direction: column; text-align: center; }
@@ -446,9 +600,10 @@ li { margin: 4px 0; }
 }
 
 .ds-eyebrow {
+  font-family: var(--ds-font-mono);
   text-transform: uppercase;
-  letter-spacing: .08em;
-  font-size: 12px;
+  letter-spacing: .12em;
+  font-size: 11px;
   font-weight: 600;
   color: var(--ds-muted);
   margin-bottom: 6px;
@@ -462,49 +617,54 @@ li { margin: 4px 0; }
   padding: 22px 24px;
   box-shadow: var(--ds-shadow-sm);
 }
-.ds-card + .ds-card { margin-top: 16px; }
+.ds-card + .ds-card { margin-top: 14px; }
 
-/* --------------------------------------------------------- KPI cards ------ */
+/* ------------------------------------------- KPI cards (counters) --------- */
 .ds-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
   margin: 20px 0;
 }
 .ds-kpi {
   background: var(--ds-surface);
   border: 1px solid var(--ds-line);
   border-radius: var(--ds-r);
-  padding: 18px 20px;
+  padding: 16px 18px 15px;
   box-shadow: var(--ds-shadow-sm);
 }
 .ds-kpi__label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: .04em;
+  font-family: var(--ds-font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: .12em;
   text-transform: uppercase;
   color: var(--ds-muted);
 }
 .ds-kpi__value {
-  font-size: 30px;
+  font-family: var(--ds-font-display);
+  font-size: 32px;
   font-weight: 700;
-  letter-spacing: -0.02em;
   margin: 6px 0 2px;
 }
-.ds-kpi__delta { font-size: 13px; font-weight: 500; }
+.ds-kpi__delta { font-family: var(--ds-font-mono); font-size: 12px; font-weight: 500; }
 .ds-kpi__delta--up   { color: var(--ds-green); }
 .ds-kpi__delta--down { color: var(--ds-red); }
 
-/* --------------------------------------------------------- Badges --------- */
+/* --------------------------------------- Badges (inspection chips) -------- */
 .ds-badge {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-family: var(--ds-font-mono);
+  font-size: 10.5px;
   font-weight: 600;
-  padding: 4px 11px;
-  border-radius: var(--ds-r-pill);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: var(--ds-r-sm);
   line-height: 1.3;
+  white-space: nowrap;
 }
 .ds-badge--good { background: var(--ds-green-tint); color: var(--ds-green-ink); }
 .ds-badge--warn { background: var(--ds-amber-tint); color: var(--ds-amber-ink); }
@@ -512,19 +672,20 @@ li { margin: 4px 0; }
 .ds-badge--info { background: var(--ds-blue-tint);  color: var(--ds-blue-strong); }
 .ds-badge--neutral { background: var(--ds-ink-tint); color: var(--ds-ink-2); }
 
-/* --------------------------------------------------------- Callouts ------- */
+/* --------------------------------------- Callouts (the fine print) -------- */
 .ds-callout {
-  border-radius: var(--ds-r);
-  padding: 16px 18px;
+  border-radius: 0 var(--ds-r) var(--ds-r) 0;
+  padding: 15px 18px;
   margin: 18px 0;
-  border-left: 4px solid var(--ds-blue);
+  border-left: 3px solid var(--ds-blue);
   background: var(--ds-blue-tint);
+  font-size: 14.5px;
 }
 .ds-callout--good { border-left-color: var(--ds-green); background: var(--ds-green-tint); }
 .ds-callout--warn { border-left-color: var(--ds-amber); background: var(--ds-amber-tint); }
 .ds-callout--bad  { border-left-color: var(--ds-red);   background: var(--ds-red-tint); }
 
-/* ---------------------------------------------------------- Tables -------- */
+/* --------------------------------------------- Tables (the ledger) -------- */
 .ds-table-wrap {
   overflow-x: auto;
   margin: 18px 0;
@@ -539,17 +700,24 @@ table.ds-table, .ds-table-wrap table {
   font-size: 14px;
 }
 .ds-table-wrap thead th, table.ds-table thead th {
-  background: var(--ds-grad-ink);
-  color: #fff;
+  background: var(--ds-surface);
+  color: var(--ds-faint);
   text-align: left;
   padding: 12px 16px;
+  font-family: var(--ds-font-mono);
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: .01em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid var(--ds-line-strong);
 }
 .ds-table-wrap tbody td, table.ds-table tbody td {
   padding: 11px 16px;
   border-top: 1px solid var(--ds-line);
+  color: var(--ds-ink-2);
 }
+.ds-table-wrap tbody tr:first-child td,
+table.ds-table tbody tr:first-child td { border-top: 0; }
 .ds-table-wrap tbody tr:nth-child(even),
 table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 
@@ -563,7 +731,10 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   box-shadow: var(--ds-shadow-sm);
   margin: 18px 0;
 }
-.ds-chart__title { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+.ds-chart__title {
+  font-family: var(--ds-font-display);
+  font-size: 16px; font-weight: 600; margin-bottom: 14px;
+}
 
 /* --------------------------------------------------------- Buttons -------- */
 .ds-btn {
@@ -575,7 +746,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   font-weight: 600;
   line-height: 1;
   padding: 11px 18px;
-  border-radius: var(--ds-r-pill);
+  border-radius: var(--ds-r-sm);
   border: 1px solid transparent;
   background: var(--ds-blue);
   color: #fff;
@@ -587,7 +758,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 .ds-btn:active { transform: translateY(1px); }
 .ds-btn--ghost {
   background: var(--ds-surface);
-  color: var(--ds-blue-strong);
+  color: var(--ds-blue);
   border-color: var(--ds-line-strong);
 }
 .ds-btn--ghost:hover { background: var(--ds-ink-tint); }
@@ -599,6 +770,87 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   cursor: default;
   pointer-events: none;
 }
+
+/* -------------------------------------- Inspection sheet (NEW) ------------
+   Status-checked metric rows — the multi-point inspection a client already
+   knows how to read. Pair each row's status with a ds-badge chip.
+   <div class="ds-sheet">
+     <div class="ds-sheet__row">
+       <span class="ds-sheet__metric">Cost per lead</span>
+       <span class="ds-sheet__read">$46.39 vs $35 target …</span>
+       <span class="ds-badge ds-badge--warn">Caution</span>
+     </div> … </div>                                                          */
+.ds-sheet { display: flex; flex-direction: column; }
+.ds-sheet__row {
+  display: grid;
+  grid-template-columns: 130px 1fr auto;
+  gap: 18px;
+  align-items: baseline;
+  padding: 13px 4px;
+  border-top: 1px solid var(--ds-line);
+}
+.ds-sheet__row:first-child { border-top: none; }
+.ds-sheet__metric {
+  font-family: var(--ds-font-display);
+  font-weight: 600; font-size: 14.5px; color: var(--ds-ink-2);
+}
+.ds-sheet__read { font-size: 14.5px; color: var(--ds-muted); }
+.ds-sheet__read b, .ds-sheet__read strong { color: var(--ds-ink); font-weight: 600; }
+.ds-sheet__row .ds-badge { justify-self: end; }
+@media (max-width: 640px) {
+  .ds-sheet__row { grid-template-columns: 1fr auto; gap: 8px; }
+  .ds-sheet__read { grid-column: 1 / -1; }
+}
+
+/* ------------------------------------------- Work order (NEW) -------------
+   Numbered action rows with a right-aligned impact figure. The numbering IS
+   information (execution order / priority).
+   <div class="ds-wo">
+     <div class="ds-wo__row">
+       <span class="ds-wo__num">01</span>
+       <div><p class="ds-wo__title">…</p><p class="ds-wo__desc">…</p></div>
+       <div class="ds-wo__impact"><b>+$242/mo</b>reclaimed</div>
+     </div> … </div>                                                          */
+.ds-wo { display: flex; flex-direction: column; }
+.ds-wo__row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  gap: 16px;
+  padding: 15px 4px;
+  border-top: 1px solid var(--ds-line);
+  align-items: start;
+}
+.ds-wo__row:first-child { border-top: none; }
+.ds-wo__num {
+  font-family: var(--ds-font-display);
+  font-weight: 700; font-size: 19px; line-height: 1.25;
+  color: var(--ds-blue-strong); font-variant-numeric: tabular-nums;
+}
+.ds-wo__title { font-weight: 600; font-size: 15px; color: var(--ds-ink); margin: 0; }
+.ds-wo__desc  { font-size: 14px; color: var(--ds-muted); margin: 2px 0 0; max-width: 62ch; }
+.ds-wo__impact {
+  font-family: var(--ds-font-mono);
+  font-size: 11.5px; font-weight: 500; white-space: nowrap;
+  text-align: right; color: var(--ds-muted);
+}
+.ds-wo__impact b { display: block; font-size: 13.5px; color: var(--ds-green); }
+.ds-wo__impact b.is-neutral { color: var(--ds-muted); }
+.ds-wo__net {
+  padding: 15px 4px;
+  border-top: 1.5px solid var(--ds-line-strong);
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+}
+.ds-wo__net-label { font-family: var(--ds-font-display); font-weight: 600; font-size: 15px; }
+.ds-wo__net-value { font-family: var(--ds-font-mono); font-weight: 600; font-size: 13.5px; color: var(--ds-green); }
+
+/* ------------------------------------------------ Verdict lede (NEW) ------
+   The one-paragraph "month in a sentence" between masthead and counters.    */
+.ds-verdict {
+  font-family: var(--ds-font-display);
+  font-size: 22px; font-weight: 600; line-height: 1.35;
+  color: var(--ds-ink); max-width: 64ch; margin: 24px 0;
+}
+.ds-verdict em { font-style: normal; color: var(--ds-blue-strong); }
 
 /* -------------------------------------------------------- Roadmap --------- */
 /* Vertical journey of numbered steps. Each step = a bold circular badge + a
@@ -612,7 +864,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   gap: 18px;
   padding-bottom: 24px;
 }
-/* connector spine — aurora gradient on delivered steps, grey on pending */
+/* connector spine — brand gradient on delivered steps, grey on pending */
 .ds-step:not(:last-child)::before {
   content: "";
   position: absolute;
@@ -631,13 +883,14 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   border-radius: 50%;
   background-image: var(--ds-grad-brand);
   color: #fff;
+  font-family: var(--ds-font-display);
   font-weight: 700;
   font-size: 19px;
   font-variant-numeric: tabular-nums;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(14,92,63,.4);
+  box-shadow: 0 4px 12px rgba(29,93,191,.35);
 }
 .ds-step.is-pending .ds-step-num {
   background: var(--ds-surface);
@@ -661,9 +914,9 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   box-shadow: none;
 }
 .ds-step-title {
+  font-family: var(--ds-font-display);
   font-size: 17px;
   font-weight: 700;
-  letter-spacing: -0.01em;
   margin: 0 0 4px;
 }
 .ds-step-desc { color: var(--ds-muted); font-size: 14px; margin: 0 0 14px; }
@@ -696,7 +949,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-skip:focus { top: 12px; text-decoration: none; }
 
-/* Header = the hero. Client name + agency + a live progress meter. */
+/* Header = the hero. Client name + a live progress meter. */
 .ds-hub__head {
   padding: 22px 24px 16px; display: flex; flex-wrap: wrap;
   align-items: flex-end; justify-content: space-between; gap: 16px 24px;
@@ -704,21 +957,24 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 .ds-hub__id { min-width: 0; }
 .ds-hub__eyebrow {
-  font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  font-family: var(--ds-font-mono);
+  font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ds-shell-mut); margin-bottom: 8px;
 }
 .ds-hub__title {
-  font-size: var(--ds-fs-display); font-weight: 700; letter-spacing: -0.028em;
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-fs-display); font-weight: 700;
   line-height: 1.02; margin: 0; color: #fff;
-  background: linear-gradient(180deg, #ffffff 60%, #c9c9d6); -webkit-background-clip: text; background-clip: text;
+  background: linear-gradient(180deg, #ffffff 60%, #c3ceda); -webkit-background-clip: text; background-clip: text;
 }
 .ds-hub__sub { color: var(--ds-shell-mut); font-size: 13.5px; margin-top: 8px; }
 
-/* Progress meter — segmented bar with the aurora gradient on delivered phases. */
+/* Progress meter — segmented bar with the brand gradient on delivered phases. */
 .ds-progress { min-width: 220px; flex: 0 1 320px; }
 .ds-progress__label {
   display: flex; justify-content: space-between; align-items: baseline;
-  font-size: 12px; color: var(--ds-shell-mut); margin-bottom: 8px;
+  font-family: var(--ds-font-mono);
+  font-size: 11.5px; color: var(--ds-shell-mut); margin-bottom: 8px;
 }
 .ds-progress__count { font-variant-numeric: tabular-nums; color: var(--ds-shell-ink); font-weight: 600; }
 .ds-progress__track { display: flex; gap: 5px; }
@@ -731,7 +987,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
    mobile (see media query below). Scrolls independently of the viewer. */
 .ds-hubnav {
   flex: 0 0 264px; width: 264px; display: flex; flex-direction: column; gap: 4px;
-  padding: 16px 14px; background: rgba(11,11,16,.72);
+  padding: 16px 14px; background: rgba(12,17,23,.72);
   backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
   border-right: 1px solid var(--ds-shell-line);
   overflow-y: auto; scrollbar-width: thin;
@@ -739,7 +995,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 .ds-hubnav__btn {
   display: flex; align-items: center; gap: 8px; white-space: nowrap;
   font-family: var(--ds-font); font-size: 13px; font-weight: 600; line-height: 1;
-  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-pill);
+  padding: 9px 15px 9px 9px; border-radius: var(--ds-r-sm);
   background: var(--ds-shell-2); color: var(--ds-shell-ink);
   border: 1px solid var(--ds-shell-line); cursor: pointer;
   transition: background var(--ds-dur-fast) var(--ds-ease), border-color var(--ds-dur-fast) var(--ds-ease),
@@ -749,7 +1005,8 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
   display: inline-flex; align-items: center; justify-content: center;
   width: 21px; height: 21px; border-radius: 50%;
   background: var(--ds-shell-3); color: var(--ds-shell-ink);
-  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
+  font-family: var(--ds-font-mono);
+  font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; flex: none;
 }
 .ds-hubnav__btn:hover { background: var(--ds-shell-3); transform: translateY(-1px); }
 .ds-hubnav__btn.is-active { border-color: transparent; background-image: var(--ds-grad-brand); color: #fff; }
@@ -799,14 +1056,13 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 }
 
 /* --------------------------------------------------------- Footer --------- */
-
-/* --------------------------------------------------------- Footer --------- */
 .ds-footer {
   margin-top: 48px;
   padding-top: 20px;
   border-top: 1px solid var(--ds-line);
   color: var(--ds-faint);
-  font-size: 12px;
+  font-family: var(--ds-font-mono);
+  font-size: 11.5px;
   text-align: center;
 }
 
@@ -820,7 +1076,7 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 /* --------------------------------------------------------- Print ---------- */
 @page { size: Letter; margin: 14mm; }
 @media print {
-  body { background: #fff; }
+  body { background: #fff; font-size: 13px; }
   .ds-card, .ds-kpi, .ds-table-wrap, .ds-chart { box-shadow: none; }
   .ds-hero { box-shadow: none; }
   .ds-section, .ds-card, .ds-kpi, .ds-chart, .ds-table-wrap { break-inside: avoid; }
@@ -830,9 +1086,9 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 /* --------------------------------------------------------- Responsive ----- */
 @media (max-width: 640px) {
   .ds-wrap { padding: 24px 16px 56px; }
-  .ds-hero { padding: 28px 22px; }
+  .ds-hero { padding: 26px 20px 24px; }
   h1 { font-size: 26px; }
-  .ds-kpi__value { font-size: 26px; }
+  .ds-kpi__value { font-size: 27px; }
 }
 </style>
 </head>
@@ -854,26 +1110,28 @@ table.ds-table tbody tr:nth-child(even) { background: var(--ds-surface-2); }
 </div>
 </header>
 <script>(function(){function apply(){var b=document.querySelector(".ds-theme-toggle");if(!b)return;b.addEventListener("click",function(){var root=document.documentElement;var current=root.getAttribute("data-theme")||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");var next=current==="dark"?"light":"dark";root.setAttribute("data-theme",next);try{localStorage.setItem("smos-theme",next);}catch(e){}b.setAttribute("aria-pressed",String(next==="dark"));});}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply);else apply();})();</script>
-<h1>Performance Analysis — Blue Rose Auto Care &amp; Repair Services</h1>
 <p>_7-day window · 9 campaigns · 28 adsets · 28 ads_</p>
-<h2>Opportunity Score: 0/100</h2>
+<h2>Opportunity Score: 27/100</h2>
 <ul>
-<li>No major structural opportunity detected this window — maintain and monitor.</li>
+<li>Scale $308.88/7d of proven winners (1 adset).</li>
+<li>Reclaim $345.85/7d bleeding on 1 pause candidate.</li>
 </ul>
 <h2>Last 7 days</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Spend</td><td>$613.38</td></tr><tr><td>ROAS</td><td>14.6728</td></tr><tr><td>CPA</td><td>25.56</td></tr><tr><td>Link CTR</td><td>—%</td></tr><tr><td>Conversions</td><td>24</td></tr></tbody></table></div>
+<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Spend</td><td>$954.62</td></tr><tr><td>ROAS</td><td>9.4278</td></tr><tr><td>CPA</td><td>39.78</td></tr><tr><td>Link CTR</td><td>—%</td></tr><tr><td>Conversions</td><td>24</td></tr></tbody></table></div>
 <h2>Account economics</h2>
-<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Blended MER</td><td>14.67×</td></tr><tr><td>Breakeven ROAS</td><td>—</td></tr><tr><td>Target ROAS</td><td>—</td></tr><tr><td>Gross margin</td><td>—</td></tr><tr><td>Gross profit (ad-driven)</td><td>—</td></tr><tr><td>Profit after ad spend</td><td>—</td></tr><tr><td>New-customer CAC</td><td>USD 25.56 _(all conversions)_</td></tr></tbody></table></div>
-<h2>Flags (4)</h2>
+<div class="ds-table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Blended MER</td><td>9.43×</td></tr><tr><td>Breakeven ROAS</td><td>—</td></tr><tr><td>Target ROAS</td><td>—</td></tr><tr><td>Gross margin</td><td>—</td></tr><tr><td>Gross profit (ad-driven)</td><td>—</td></tr><tr><td>Profit after ad spend</td><td>—</td></tr><tr><td>New-customer CAC</td><td>USD 39.78 _(all conversions)_</td></tr></tbody></table></div>
+<h2>Flags (5)</h2>
 <ul>
 <li><strong>ANOMALY_spend_spike</strong>: 1</li>
+<li><strong>PAUSE_CANDIDATE_CPA</strong>: 1</li>
 <li><strong>ANOMALY_attribution</strong>: 1</li>
-<li><strong>SCALE_WATCH</strong>: 2</li>
+<li><strong>SCALE_CANDIDATE</strong>: 1</li>
+<li><strong>SCALE_WATCH</strong>: 1</li>
 </ul>
 <h2>Winners</h2>
 <ul>
 <li>New Leads Ad — ROAS —</li>
 <li>New Leads ad — ROAS —</li>
 </ul>
-<footer class="ds-footer">Generated by Abdul · 2026-08-31</footer>
+<footer class="ds-footer">Prepared by smOS · 2026-09-09</footer>
 </div></body></html>

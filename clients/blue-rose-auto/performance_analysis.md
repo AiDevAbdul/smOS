@@ -2,17 +2,18 @@
 
 _7-day window · 9 campaigns · 28 adsets · 28 ads_
 
-## Opportunity Score: 0/100
+## Opportunity Score: 27/100
 
-- No major structural opportunity detected this window — maintain and monitor.
+- Scale $308.88/7d of proven winners (1 adset).
+- Reclaim $345.85/7d bleeding on 1 pause candidate.
 
 ## Last 7 days
 
 | Metric | Value |
 |---|---|
-| Spend | $613.38 |
-| ROAS | 14.6728 |
-| CPA | 25.56 |
+| Spend | $954.62 |
+| ROAS | 9.4278 |
+| CPA | 39.78 |
 | Link CTR | —% |
 | Conversions | 24 |
 
@@ -20,19 +21,21 @@ _7-day window · 9 campaigns · 28 adsets · 28 ads_
 
 | Metric | Value |
 |---|---|
-| Blended MER | 14.67× |
+| Blended MER | 9.43× |
 | Breakeven ROAS | — |
 | Target ROAS | — |
 | Gross margin | — |
 | Gross profit (ad-driven) | — |
 | Profit after ad spend | — |
-| New-customer CAC | USD 25.56 _(all conversions)_ |
+| New-customer CAC | USD 39.78 _(all conversions)_ |
 
-## Flags (4)
+## Flags (5)
 
 - **ANOMALY_spend_spike**: 1
+- **PAUSE_CANDIDATE_CPA**: 1
 - **ANOMALY_attribution**: 1
-- **SCALE_WATCH**: 2
+- **SCALE_CANDIDATE**: 1
+- **SCALE_WATCH**: 1
 
 ## Winners
 
