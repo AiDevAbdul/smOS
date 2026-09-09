@@ -243,19 +243,26 @@ CREATE TABLE inbox_items (
   client_id    uuid REFERENCES clients (id) ON DELETE CASCADE,
   slug         text,
   platform     text,                            -- facebook | instagram | threads
-  type         text,                            -- comment | dm | mention | ...
+  type         text,                            -- comment | dm | mention | story_reply | ad_comment
   external_id  text,
   conversation_id text,
+  parent_id    text,
   author       jsonb DEFAULT '{}',
   text         text,
+  object_ref   text,
   received_at  timestamptz,
   state        text DEFAULT 'unread',
+  sentiment    text,
   first_reply_due_at  timestamptz,
   replied_at          timestamptz,
   reply_latency_seconds int,
   thread_depth int DEFAULT 0,
   assignee     text,
-  raw          jsonb DEFAULT '{}'
+  draft_reply  text,
+  auto_reply   boolean DEFAULT false,
+  raw          jsonb DEFAULT '{}',
+  created_at   timestamptz DEFAULT now(),
+  updated_at   timestamptz DEFAULT now()
 );
 CREATE INDEX idx_inbox_client_state ON inbox_items (client_id, state);
 CREATE INDEX idx_inbox_sla ON inbox_items (first_reply_due_at) WHERE state NOT IN ('replied','closed');

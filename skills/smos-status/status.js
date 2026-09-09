@@ -133,7 +133,14 @@ function checkAgency(slug, deal) {
   return [
     step("crm", "CRM deal on file", !!deal, deal ? `stage: ${deal.stage}` : "no deal record — run /crm add"),
     step("proposal", "/proposal — sent", !!deal?.links?.proposal),
-    step("contract", "/contract — signed", !!deal?.links?.contract, deal?.won_at ? `won ${deal.won_at}` : null),
+    step(
+      "contract",
+      "/contract — signed",
+      !!deal?.links?.contract,
+      deal?.links?.contract
+        ? (deal?.won_at ? `won ${deal.won_at}` : null)
+        : (deal?.won_at ? `deal won ${deal.won_at} — no /contract artifact on file (bypassed formal flow?)` : null)
+    ),
     step("billing", "/billing — invoicing active", hasLedger),
   ];
 }
