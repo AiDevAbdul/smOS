@@ -88,6 +88,12 @@ export const prospectDeliverable = (slug, artifact, ext) =>
 // artifact, so a test run (or a `SMOS_DATA_ROOT=` scratch run) cannot append
 // activities to the real crm/pipeline.json — which it could before Group D1,
 // because crm-store.js resolved this against the repo root directly.
+// Engine-wide bookkeeping that isn't scoped to one client (e.g. the IG publish
+// idempotency ledger). Same data-root rules as everything else, so a test run
+// never touches the real state.
+export const globalStateDir = () => resolve(dataRoot(), "state");
+export const globalState = (file) => resolve(globalStateDir(), file);
+
 export const crmDir = () => resolve(dataRoot(), "crm");
 export const crmPipeline = () => resolve(crmDir(), "pipeline.json");
 

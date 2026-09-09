@@ -214,7 +214,9 @@ export async function handle(toolName, args, client) {
 
     case "delete_rule": {
       const { rule_id } = args;
-      return client.delete(`/${rule_id}`);
+      // Declared so the destructive guard blocks with the real reason (an
+      // automated rule governs live spend) rather than "unclassified".
+      return client.delete(`/${rule_id}`, undefined, { resource: "ad_rule" });
     }
 
     default:

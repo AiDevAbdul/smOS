@@ -13,7 +13,8 @@ Deliver a visual **system, not a logo**. This skill produces moodboard direction
 - Design a logo suite for the chosen route: primary lockup, mark/icon, wordmark, monochrome, white-reversed, plus clear-space and min-size rules (prefer a true vector SVG primary).
 - Finalize the color palette (primary/secondary/accent + neutrals, HEX, 60-30-10, WCAG AA contrast) and typography (heading + body + scale) *after* the logo locks.
 - Define imagery style and iconography derived from the locked logo + color + type.
-- Persist the visual layer via `brand-visual.js --in visual.json` (fail-closed schema validation).
+- Render the logo suite to real SVG+PNG files (`--render`) from the approved name/palette/type.
+- Persist the visual layer via `brand-visual.js --in visual.json` (fail-closed schema validation + WCAG contrast gate).
 - Stamp the human logo gate via `brand-visual.js --approve-logo` (explicit operator action only).
 
 ## What This Skill Does NOT Do
@@ -23,7 +24,7 @@ Deliver a visual **system, not a logo**. This skill produces moodboard direction
 - Does NOT assemble brand guidelines HTML/PDF — owned by `/brand-book` (runs after the logo gate).
 - Does NOT produce profile pictures, covers, highlight covers, or bios — owned by `/brand-social`.
 - Does NOT write ad creative — owned by `/creative`.
-- Does NOT generate the actual image files — Claude produces assets; this skill records their URLs/paths and validates the contract.
+- Does NOT design bespoke logo ART. With `--render` it *does* generate real files (a deterministic monogram identity system — see below); commissioned artwork is supplied by a designer and its paths recorded here.
 
 ## Before Implementation
 
@@ -55,17 +56,44 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 1. Verify the precondition: `brand_profile.json → verbal.name_approved_at` is set. If not, halt — the name must be approved in `/brand-name` first.
 2. Present 2–3 moodboard/concept directions tied to the archetype/positioning; get the human to pick one (skipping this causes endless logo revisions).
-3. Design the logo suite for the chosen direction (primary, mark, wordmark, mono, reverse, SVG) with clear-space + min-size. Save asset files under `clients/{slug}/brand/`.
+3. Design the logo suite for the chosen direction (primary, mark, wordmark, mono, reverse, SVG) with clear-space + min-size.
+   - **Commissioned/bespoke art:** put the designer's files in place and reference them in `visual.json`.
+   - **Generated starter identity:** run with `--render` and smOS renders the whole suite itself (see below).
 4. Present logo options for human approval — this is the gate. Do not self-approve.
 5. After the logo locks: finalize color palette (60-30-10, WCAG AA) and typography (heading/body/scale).
 6. Define imagery style + iconography from the locked logo/color/type.
-7. Write `visual.json` (shape: `references/io-contract.md`) and persist: `node skills/brand-visual/brand-visual.js {slug} --in visual.json`.
+7. Write `visual.json` (shape: `references/io-contract.md`) and persist: `node skills/brand-visual/brand-visual.js {slug} --in visual.json [--render]`.
 8. On human logo approval only: `node skills/brand-visual/brand-visual.js {slug} --approve-logo`.
+
+## Real asset rendering (`--render`)
+
+`--render` produces **actual files**, not recorded paths. `scripts/lib/brand_render.js`
+renders a geometric **monogram identity system** — primary lockup, mark, wordmark, mono
+and reverse variants — from the approved name, palette and typography, via Satori (flexbox
+→ SVG with the bundled brand fonts embedded as glyph paths) → resvg (SVG → PNG). Output
+lands in `clients/{slug}/deliverables/brand-assets/` and the paths are written into
+`visual.logo.*`.
+
+It is deterministic (same brand → identical bytes), offline, and uses no GenAI, so
+`ai_generated` stays false for a `--render` suite. **Be honest about what it is:** a clean,
+usable starter identity — not bespoke designed logo art. A client who commissions custom
+artwork replaces `logo.primary_url` with the designer's file and re-runs `--in` without
+`--render`.
+
+## Contrast gate (fail-closed)
+
+Before anything is written, the merged palette runs through `checkBrandContrast`
+(`scripts/lib/contrast.js`). A `colors.primary` that cannot reach **4.5:1 against any
+neutral in its own palette** exits **4** and persists nothing — an unreadable primary is
+inherited silently by the brand book, social templates, poster layer and every ad.
+`secondary`/`accent` are reported as warnings (they legitimately exist as fills that never
+carry text). Override, for a brand whose primary is genuinely never text:
+`SMOS_ALLOW_LOW_CONTRAST=1` (the run says so in stderr and in the JSON summary).
 
 ## Input / Output Specification
 
-**Inputs:** `{slug}` (arg 0, required); `--in visual.json` (path to the visual layer) OR `--approve-logo`. `--in` supplies the input path ONLY — it never bypasses the name gate.
-**Outputs:** `clients/{slug}/brand_profile.json` (merged `visual` layer; `status: visual_approved` after gate). Logo/asset files under `clients/{slug}/brand/`. JSON summary to stdout.
+**Inputs:** `{slug}` (arg 0, required); `--in visual.json` (path to the visual layer) and/or `--render`, OR `--approve-logo`. `--in` supplies the input path ONLY — it never bypasses the name gate.
+**Outputs:** `clients/{slug}/brand_profile.json` (merged `visual` layer; `status: visual_approved` after gate). Rendered asset files under `clients/{slug}/deliverables/brand-assets/`. JSON summary to stdout (includes `contrast` + `rendered_files`).
 (Full schemas, example payloads, and exit codes: `references/io-contract.md`.)
 
 ## Variability Analysis
@@ -82,9 +110,9 @@ Gather context before acting (do not ask the user for what is discoverable):
 ### Must Follow
 - [ ] Confirm `verbal.name_approved_at` is set before persisting (the code enforces this; exit 3 otherwise).
 - [ ] Get the moodboard direction chosen by a human before drawing logos.
-- [ ] Deliver the full logo suite (primary, mark, wordmark, mono, reverse) with clear-space + min-size; prefer SVG primary.
+- [ ] Deliver the full logo suite (primary, mark, wordmark, mono, reverse) with clear-space + min-size; prefer SVG primary. `--render` produces all six from the palette.
 - [ ] Finalize color + type only after the logo locks.
-- [ ] Verify color pairings meet WCAG AA (4.5:1 normal, 3:1 large) — see `references/domain-standards.md`.
+- [ ] Verify color pairings meet WCAG AA (4.5:1 normal, 3:1 large) — the code now enforces this on `primary` and exits 4 otherwise; see `references/domain-standards.md`.
 - [ ] Set `ai_generated: true` whenever any visual uses GenAI imagery.
 - [ ] Stamp the logo gate via `--approve-logo` ONLY on explicit human approval.
 
@@ -97,7 +125,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ### Output Checklist (verify before delivery)
 - [ ] `visual.json` validates against the `visual` stage (logo.primary_url, colors.primary, typography.heading all present).
-- [ ] All five logo variants + clear-space + min-size captured.
+- [ ] All five logo variants + clear-space + min-size captured, and every recorded url points at a file that EXISTS.
 - [ ] Palette has primary/secondary/accent + neutrals; pairings pass WCAG AA.
 - [ ] `ai_generated` reflects reality.
 - [ ] Logo gate stamped only after human approval; `status: visual_approved`.
@@ -108,7 +136,9 @@ Gather context before acting (do not ask the user for what is discoverable):
 |----------|--------|
 | Missing `{slug}` arg | Exit 1 with usage message — never guess the client |
 | `verbal.name_approved_at` not set | Exit 3: "Name not approved. Run /brand-name and --approve-name." Fail-closed even with `--in` present |
-| Neither `--in` nor `--approve-logo` given | Exit 1: "Provide --in visual.json or --approve-logo" |
+| Neither `--in`, `--render` nor `--approve-logo` given | Exit 1: "Provide --in visual.json, --render, or --approve-logo" |
+| Palette fails WCAG 4.5:1 on every neutral | Exit 4: `contrast-guard BLOCKED` — nothing persisted. Fix the color or set `SMOS_ALLOW_LOW_CONTRAST=1` |
+| `--render` with no `colors.primary` yet | Exit 2: supply the palette with `--in` first |
 | `--in` path does not exist | Exit 2: "Input not found: <path>" |
 | `--approve-logo` but `visual.logo.primary_url` empty | Exit 3: persist `--in visual.json` first |
 | `visual.json` fails stage validation | `saveBrand` throws (fail-closed), naming every missing field — fix the input, do not bypass |

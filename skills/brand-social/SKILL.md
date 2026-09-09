@@ -22,6 +22,7 @@ Build the applied social surface — the layer that derives entirely from the lo
 - Does NOT create real accounts or upload assets to a live Page/IG — owned by `/setup-accounts`.
 - Does NOT schedule or publish content — owned by `/publish` and `/content-plan`.
 - Does NOT version assets in the DAM — owned by `/assets`.
+- Does NOT invent bespoke artwork: `--render` composes the approved logo/palette/type into platform-correct assets; it is not an illustration tool.
 
 ## Before Implementation
 
@@ -58,9 +59,19 @@ Gather context before acting (do not ask the user for what is discoverable):
 
 ## Input / Output Specification
 
-**Inputs:** `{slug}` (positional), `--in social.json` (required) where `social.json` matches `schemas/brand_profile.js → normalizeSocial`. Reads `clients/{slug}/brand_profile.json` + `clients/{slug}/client_profile.json`.
-**Run:** `node skills/brand-social/brand-social.js {slug} --in social.json`
-**Outputs:** `clients/{slug}/brand_profile.json` (merged `social` layer; `status: complete` once the whole artifact validates) + asset files under `clients/{slug}/brand/social/`. Prints a JSON summary `{slug, layer, status, profile_picture, ig_bio, complete, next}` to stdout.
+**Inputs:** `{slug}` (positional), `--in social.json` (the copy layer — bios, link-in-bio, branded hashtag; matches `schemas/brand_profile.js → normalizeSocial`) and/or `--render` (generates the asset files), plus optional `--highlights "About,Services,Reviews"`. Reads `clients/{slug}/brand_profile.json` + `clients/{slug}/client_profile.json`.
+**Run:** `node skills/brand-social/brand-social.js {slug} --in social.json --render`
+**Outputs:** `clients/{slug}/brand_profile.json` (merged `social` layer; `status: complete` once the whole artifact validates) + rendered asset files under `clients/{slug}/deliverables/brand-assets/`. Prints a JSON summary `{slug, layer, status, profile_picture, ig_bio, rendered_files, complete, next}` to stdout.
+
+### Real asset rendering (`--render`)
+
+`--render` produces the applied social surface as ACTUAL files via `scripts/lib/brand_render.js`
+(Satori → resvg, bundled brand fonts, no network, no GenAI): profile picture 1080×1080,
+Facebook cover 1640×856 (content inside the 1090×360 safe zone), one IG highlight cover per
+label at 1080×1080, and post (1080×1350) + story (1080×1920) templates — all from the
+APPROVED brand kit. Rendered paths overwrite any recorded url, because they are the ones
+that exist. Without `--render` the skill still only records paths, and you are responsible
+for the files being real.
 (Full schemas, example payloads, and exit codes: `references/io-contract.md`.)
 
 ## Variability Analysis
@@ -99,7 +110,7 @@ Gather context before acting (do not ask the user for what is discoverable):
 | Scenario | Action |
 |----------|--------|
 | Missing `{slug}` arg | Print usage, exit 1 — never guess |
-| Missing `--in` flag | Print "Provide --in social.json", exit 1 |
+| Neither `--in` nor `--render` given | Print "Provide --in social.json and/or --render", exit 1 |
 | `visual.logo_approved_at` not set | Halt: "Approve the logo in `/brand-visual` first." (exit 3) — never auto-clear the gate |
 | `--in` file not found | Print "Input not found: <path>", exit 2 |
 | `social` layer fails schema validation | `saveBrand` throws fail-closed listing every missing field; surface, do not partial-write |

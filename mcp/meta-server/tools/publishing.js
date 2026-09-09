@@ -14,6 +14,9 @@
  */
 
 import { resolveToken } from "../../../scripts/lib/tokens.js";
+import {
+  igIdempotencyKey, beginPublish, recordContainer, recordPublished, markOrphaned,
+} from "../../../scripts/lib/ig_publish_state.js";
 
 export const tools = [
   {
@@ -53,6 +56,7 @@ export const tools = [
         share_to_feed: { type: "boolean", description: "REELS only. True to also surface in main feed grid.", default: true },
         location_id: { type: "string", description: "Optional FB Page ID used as a location tag." },
         thumb_offset_ms: { type: "number", description: "VIDEO only. Frame to use as thumbnail." },
+        idempotency_nonce: { type: "string", description: "Only needed to deliberately publish the SAME media+caption a second time. Identical calls are deduped against the publish ledger; a nonce makes the call a distinct post." },
       },
       required: ["ig_user_id", "media_type"],
     },
@@ -80,6 +84,7 @@ export const tools = [
           description: "2–10 carousel slides. Each slide is IMAGE (with image_url) or VIDEO (with video_url).",
         },
         caption: { type: "string", description: "Caption applies to the whole carousel." },
+        idempotency_nonce: { type: "string", description: "Only needed to deliberately publish the same slides+caption a second time (identical calls are deduped)." },
       },
       required: ["ig_user_id", "items"],
     },
@@ -170,7 +175,7 @@ export async function handle(toolName, args, client) {
     }
 
     case "create_ig_media": {
-      const { ig_user_id, media_type, image_url, video_url, caption, cover_url, share_to_feed, location_id, thumb_offset_ms } = args;
+      const { ig_user_id, media_type, image_url, video_url, caption, cover_url, share_to_feed, location_id, thumb_offset_ms, idempotency_nonce } = args;
       const containerParams = { caption };
       if (location_id) containerParams.location_id = location_id;
 
@@ -190,55 +195,110 @@ export async function handle(toolName, args, client) {
         containerParams.share_to_feed = share_to_feed !== false;
       }
 
-      const container = await client.post(`/${ig_user_id}/media`, containerParams);
-
-      // VIDEO + REELS need to be polled until FINISHED before publishing
-      if (media_type !== "IMAGE") {
-        await pollContainerStatus(client, container.id);
+      // Idempotency: a retry of the identical post must never publish twice.
+      const key = igIdempotencyKey({
+        ig_user_id, media_type, caption,
+        urls: [image_url, video_url, cover_url],
+        nonce: idempotency_nonce,
+      });
+      const claim = beginPublish(key, { ig_user_id, media_type });
+      if (claim.action === "replay") {
+        return { container_id: claim.container_id, media_id: claim.media_id, media_type, replayed: true, idempotency_key: key };
       }
 
-      const publish = await client.post(`/${ig_user_id}/media_publish`, { creation_id: container.id });
-      return { container_id: container.id, media_id: publish.id, media_type };
+      let containerId = claim.action === "resume" ? claim.container_id : null;
+      try {
+        if (!containerId) {
+          const container = await client.post(`/${ig_user_id}/media`, containerParams);
+          containerId = container.id;
+          recordContainer(key, containerId);
+        }
+
+        // VIDEO + REELS need to be polled until FINISHED before publishing
+        if (media_type !== "IMAGE") {
+          await pollContainerStatus(client, containerId);
+        }
+
+        const publish = await client.post(`/${ig_user_id}/media_publish`, { creation_id: containerId });
+        recordPublished(key, publish.id);
+        return {
+          container_id: containerId, media_id: publish.id, media_type,
+          idempotency_key: key, resumed: claim.action === "resume" || undefined,
+        };
+      } catch (e) {
+        // The container may already exist on Meta's side; it can't be deleted
+        // via the API, so record it as an orphan (it expires in 24h) instead of
+        // losing the fact that it was created.
+        markOrphaned(key, e.message);
+        throw e;
+      }
     }
 
     case "create_ig_carousel": {
-      const { ig_user_id, items, caption } = args;
+      const { ig_user_id, items, caption, idempotency_nonce } = args;
       if (!Array.isArray(items) || items.length < 2 || items.length > 10) {
         throw new Error("create_ig_carousel: items must be 2–10 entries");
       }
 
-      // Step 1: create child containers in parallel
-      const children = await Promise.all(
-        items.map(async (item) => {
-          const params = { is_carousel_item: true };
-          if (item.media_type === "IMAGE") {
-            if (!item.image_url) throw new Error("carousel IMAGE item missing image_url");
-            params.image_url = item.image_url;
-          } else if (item.media_type === "VIDEO") {
-            if (!item.video_url) throw new Error("carousel VIDEO item missing video_url");
-            params.media_type = "VIDEO";
-            params.video_url = item.video_url;
-          } else {
-            throw new Error(`carousel items must be IMAGE or VIDEO, got ${item.media_type}`);
-          }
-          const c = await client.post(`/${ig_user_id}/media`, params);
-          // Video children must finish encoding
-          if (item.media_type === "VIDEO") await pollContainerStatus(client, c.id);
-          return c.id;
-        })
-      );
-
-      // Step 2: parent carousel container
-      const parent = await client.post(`/${ig_user_id}/media`, {
-        media_type: "CAROUSEL",
-        children: children.join(","),
-        caption,
+      const key = igIdempotencyKey({
+        ig_user_id, media_type: "CAROUSEL", caption,
+        urls: items.map((i) => i.image_url || i.video_url),
+        nonce: idempotency_nonce,
       });
-      await pollContainerStatus(client, parent.id);
+      const claim = beginPublish(key, { ig_user_id, media_type: "CAROUSEL" });
+      if (claim.action === "replay") {
+        return {
+          container_id: claim.container_id, media_id: claim.media_id, media_type: "CAROUSEL",
+          child_ids: (claim.entry.containers || []).filter((c) => c.child).map((c) => c.id),
+          replayed: true, idempotency_key: key,
+        };
+      }
 
-      // Step 3: publish
-      const publish = await client.post(`/${ig_user_id}/media_publish`, { creation_id: parent.id });
-      return { container_id: parent.id, child_ids: children, media_id: publish.id, media_type: "CAROUSEL" };
+      let children = [];
+      try {
+        // Step 1: create child containers in parallel. Each is recorded as soon
+        // as it exists, so a failure on slide 4 doesn't lose slides 1–3.
+        children = await Promise.all(
+          items.map(async (item) => {
+            const params = { is_carousel_item: true };
+            if (item.media_type === "IMAGE") {
+              if (!item.image_url) throw new Error("carousel IMAGE item missing image_url");
+              params.image_url = item.image_url;
+            } else if (item.media_type === "VIDEO") {
+              if (!item.video_url) throw new Error("carousel VIDEO item missing video_url");
+              params.media_type = "VIDEO";
+              params.video_url = item.video_url;
+            } else {
+              throw new Error(`carousel items must be IMAGE or VIDEO, got ${item.media_type}`);
+            }
+            const c = await client.post(`/${ig_user_id}/media`, params);
+            recordContainer(key, c.id, { child: true });
+            // Video children must finish encoding
+            if (item.media_type === "VIDEO") await pollContainerStatus(client, c.id);
+            return c.id;
+          })
+        );
+
+        // Step 2: parent carousel container
+        const parentId = claim.action === "resume" ? claim.container_id : (await client.post(`/${ig_user_id}/media`, {
+          media_type: "CAROUSEL",
+          children: children.join(","),
+          caption,
+        })).id;
+        recordContainer(key, parentId);
+        await pollContainerStatus(client, parentId);
+
+        // Step 3: publish
+        const publish = await client.post(`/${ig_user_id}/media_publish`, { creation_id: parentId });
+        recordPublished(key, publish.id);
+        return {
+          container_id: parentId, child_ids: children, media_id: publish.id,
+          media_type: "CAROUSEL", idempotency_key: key,
+        };
+      } catch (e) {
+        markOrphaned(key, e.message);
+        throw e;
+      }
     }
 
     case "moderate_comments": {
@@ -268,7 +328,9 @@ export async function handle(toolName, args, client) {
                 return { comment_id: a.comment_id, action: a.action, ok: true, response: r };
               }
               if (a.action === "delete") {
-                const r = await client.delete(`/${a.comment_id}`);
+                // Declare the resource class so the destructive guard allows an
+                // organic moderation delete WITHOUT unlocking ad-structure deletes.
+                const r = await client.delete(`/${a.comment_id}`, undefined, { resource: "comment" });
                 return { comment_id: a.comment_id, action: a.action, ok: true, response: r };
               }
               if (a.action === "reply") {

@@ -16,6 +16,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { clientFile } from "./paths.js";
 import { flattenStatsBuckets } from "./meta-stats.js";
+import { checkPalette } from "./contrast.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "../..");
@@ -296,6 +297,34 @@ function normalizeHexSet(arr) {
   return out;
 }
 
+/**
+ * WCAG contrast guard (E2). Fail-closed on a brand palette whose PRIMARY color
+ * cannot reach 4.5:1 against any neutral in its own palette — an unreadable
+ * brand color is inherited silently by the brand book, social templates, poster
+ * text layer and every ad creative, and nothing downstream measures it.
+ *
+ * Pure (no I/O): pass the loaded brand_profile. Enforced at the point the colors
+ * are chosen (`/brand-visual` persist) and mirrored on the MCP creative path by
+ * hooks/contrast-check.js. Override: SMOS_ALLOW_LOW_CONTRAST=1 (explicit,
+ * logged by the caller) for the rare intentional case — a display-only accent
+ * brand that never sets its primary as text.
+ */
+export function checkBrandContrast(brand, { min } = {}) {
+  const colors = brand?.visual?.colors || brand?.colors || {};
+  const r = checkPalette(colors, min ? { min } : {});
+  if (r.ok) return { ...PASS, report: r };
+  if (process.env.SMOS_ALLOW_LOW_CONTRAST === "1") {
+    return { ok: true, overridden: true, report: r, reason: `contrast-guard OVERRIDDEN (SMOS_ALLOW_LOW_CONTRAST=1): ${r.message}` };
+  }
+  return {
+    ...fail(
+      `contrast-guard BLOCKED: ${r.message}. Darken/lighten the color or add a neutral it can sit on. ` +
+      `Override with SMOS_ALLOW_LOW_CONTRAST=1 only for a brand whose primary is never used as text.`
+    ),
+    report: r,
+  };
+}
+
 export async function checkPixel(toolName, input, ctx = {}) {
   if (!toolName.includes("create_campaign")) return PASS;
   const objective = input?.objective;
@@ -373,16 +402,72 @@ export function checkAiDisclosure(toolName, input = {}) {
 }
 
 /**
+ * DELETE is not one rule — it is two (E6).
+ *
+ * The constitution's absolute block is about ADVERTISING structure: "delete any
+ * campaign, adset, or ad (archive instead)". It was implemented as a blanket
+ * DELETE block, which also blocked the ordinary organic moderation a social OS
+ * has to perform — removing a spam or abusive comment from a client's Page is a
+ * routine, reversible-in-consequence action, not a destruction of ad structure.
+ * With the blanket rule, `moderate_comments` action:"delete" could only work by
+ * setting SMOS_ALLOW_DELETE=1, which simultaneously unlocked campaign deletes.
+ *
+ * So deletes are classified by RESOURCE CLASS, and the split stays fail-closed:
+ * only classes on ORGANIC_DELETABLE are allowed, an unclassified delete is
+ * blocked (we never infer a class from a bare numeric Meta id — FB and IG ids
+ * are not distinguishable by shape, and guessing here would be guessing about a
+ * live ad account). Callers declare it: graph.delete(path, params, {resource}).
+ */
+export const ORGANIC_DELETABLE = new Set([
+  "comment",       // a comment/reply on a Page post or IG media (moderation)
+  "comment_reply", // our own reply to a comment
+]);
+
+/** Classes we block on purpose, each with the reason the block exists. */
+export const BLOCKED_DELETE_CLASSES = new Map([
+  ["campaign", "deleting ad structure is an absolute block (archive instead)"],
+  ["adset", "deleting ad structure is an absolute block (archive instead)"],
+  ["ad", "deleting ad structure is an absolute block (archive instead)"],
+  ["adcreative", "deleting ad structure is an absolute block (archive instead)"],
+  ["pixel", "removing a pixel from an ad account is an absolute block"],
+  ["dataset", "removing a dataset from an ad account is an absolute block"],
+  ["custom_audience", "an audience cannot be rebuilt from history once deleted"],
+  ["ad_rule", "an automated rule governs live spend — pause it instead of deleting it"],
+]);
+/** @deprecated kept for callers that only need the ad-structure subset. */
+export const AD_STRUCTURE_CLASSES = new Set(["campaign", "adset", "ad", "adcreative"]);
+
+/**
+ * Resolve the resource class of a DELETE. An explicit caller-declared class
+ * wins; otherwise the only inference we trust is an unambiguous path suffix
+ * (e.g. `/{id}/comments`). Everything else is "unknown" → blocked.
+ */
+export function classifyDeleteTarget({ path = "", resource = null } = {}) {
+  if (resource) return String(resource).toLowerCase();
+  const p = String(path);
+  if (/\/comments\/?$/.test(p)) return "comment";
+  if (/\/campaigns\/?$/.test(p)) return "campaign";
+  if (/\/adsets\/?$/.test(p)) return "adset";
+  if (/\/ads\/?$/.test(p)) return "ad";
+  return "unknown";
+}
+
+/**
  * Absolute blocks (CLAUDE.md "never do without explicit written instruction").
  * Fail-closed: only an explicit env override lets these through.
  */
 export function checkDestructive(ctx = {}) {
-  const { method, path = "", data = {} } = ctx;
+  const { method, path = "", data = {}, resource = null } = ctx;
   const allowDelete = process.env.SMOS_ALLOW_DELETE === "1";
 
   if (String(method).toUpperCase() === "DELETE") {
     if (allowDelete) return PASS;
-    return fail(`destructive-guard BLOCKED: DELETE ${path} is an absolute block (archive instead). Set SMOS_ALLOW_DELETE=1 with explicit written instruction to override.`);
+    const cls = classifyDeleteTarget({ path, resource });
+    if (ORGANIC_DELETABLE.has(cls)) return PASS; // organic moderation, not ad structure
+    if (BLOCKED_DELETE_CLASSES.has(cls)) {
+      return fail(`destructive-guard BLOCKED: DELETE ${path} targets a ${cls} — ${BLOCKED_DELETE_CLASSES.get(cls)}. Set SMOS_ALLOW_DELETE=1 with explicit written instruction to override.`);
+    }
+    return fail(`destructive-guard BLOCKED: DELETE ${path} has no declared resource class, so it is treated as ad structure (absolute block). Declare an organic class — graph.delete(path, params, { resource: "comment" }) — or set SMOS_ALLOW_DELETE=1 with explicit written instruction.`);
   }
 
   // Updates target an existing entity: POST to a bare numeric id (no /collection suffix).
@@ -499,14 +584,14 @@ export function classifyGraphWrite(method, path = "") {
  * The single chokepoint. Runs every applicable rule for a direct Graph write
  * and throws GuardError on the first block. Called by meta-graph.js post()/delete().
  */
-export async function guardGraphWrite({ method, path, data = {}, token } = {}) {
+export async function guardGraphWrite({ method, path, data = {}, token, resource = null } = {}) {
   const { toolName, isUpdate, isDelete, adAccountId } = classifyGraphWrite(method, path);
-  const ctx = { method, path, data, token, isUpdate, adAccountId };
+  const ctx = { method, path, data, token, isUpdate, adAccountId, resource };
 
   // 1. Absolute blocks first (fail-closed).
   let r = checkDestructive(ctx);
   if (!r.ok) throw new GuardError(r.reason, "destructive");
-  if (isDelete) return; // delete allowed via override — nothing else to check
+  if (isDelete) return; // delete permitted (organic class or explicit override) — no create rules apply
 
   // 2. Per-tool rules.
   r = checkNaming(toolName, data);

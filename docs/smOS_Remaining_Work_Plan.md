@@ -133,9 +133,44 @@ D5. **Agency ops dashboard** (sibling to `/portal`): MRR, net revenue retention,
 ---
 
 ## GROUP E — Brand production, measurement depth, hardening (~3–4 days)
-E1. **Real brand-asset rendering** in `skills/brand-visual/` + `skills/brand-social/`: SVG templating + `sharp`/Playwright raster exports for logo lockups, profile pic, cover, highlights, templates — OR relabel the skills as spec-only (today they record paths but generate no bytes).
 
-E2. **Fail-closed WCAG contrast guard:** compute relative luminance on `brand_profile.visual.colors`; reject sub-4.5:1 primary-on-neutral. Add to `scripts/lib/guards.js` + a hook.
+> **Status 2026-09-09: E1, E2 and E6 (the four hardening items) are DONE.** E3, E4, E5 and
+> E6's pre-audit benchmark table remain. Suite 572 → 615 green.
+>
+> - **E1 — real brand-asset rendering.** `scripts/lib/brand_render.js` renders an actual
+>   monogram identity system (primary lockup / mark / wordmark / mono / reverse, SVG+PNG)
+>   plus the applied social surface (profile picture 1080², FB cover 1640×856 with the
+>   1090×360 safe zone, IG highlight covers, post 1080×1350 + story 1080×1920 templates)
+>   through Satori → resvg with the bundled brand fonts — deterministic, offline, no GenAI.
+>   `/brand-visual --render` and `/brand-social --render` write into
+>   `clients/<slug>/deliverables/brand-assets/` and record only paths that exist. The skills
+>   were relabeled honestly: this is a starter identity, not bespoke logo art.
+> - **E2 — WCAG contrast guard.** `scripts/lib/contrast.js` (luminance/ratio/level) +
+>   `guards.checkBrandContrast`. Fail-closed at the point the colors are chosen
+>   (`/brand-visual` exit 4, nothing persisted) and mirrored on the MCP creative path by
+>   `hooks/contrast-check.js`. `primary` is blocking against its OWN neutrals (the pairing a
+>   designer would actually use); `secondary`/`accent` warn. `SMOS_ALLOW_LOW_CONTRAST=1`
+>   overrides and says so. All five live client palettes pass.
+> - **E6a — DELETE split by resource class.** `classifyDeleteTarget` + `ORGANIC_DELETABLE` /
+>   `BLOCKED_DELETE_CLASSES`. Comment moderation works without `SMOS_ALLOW_DELETE=1` (which
+>   previously also unlocked campaign deletes); ad structure, pixels, datasets, audiences and
+>   automated rules stay blocked, each with its own reason; an **undeclared** delete is
+>   treated as ad structure. Callers declare it: `graph.delete(path, params, {resource})`.
+> - **E6b — IG container idempotency + cleanup.** `scripts/lib/ig_publish_state.js`: a
+>   deterministic key over (account, media urls, caption) → replay an identical post without
+>   a single write, resume a mid-flight container instead of making a second one, record
+>   orphans on failure (containers can't be DELETEd via the API — they expire in 24h), prune
+>   expired entries. `idempotency_nonce` is the deliberate way to post the same asset twice.
+> - **E6c — pagination truncation is visible.** `paginate()` attaches non-enumerable
+>   `truncated`/`pageCount`/`nextCursor`, warns on stderr, and takes an `onTruncate` hook. It
+>   silently `slice`d at 500 before, so a 700-ad account looked complete.
+> - **E6d — correlation IDs.** Every request carries one (`withCorrelationId()` shares one
+>   across a flow); it lands on the thrown error and in `error_log.context` with the attempt
+>   count.
+
+E1. ✅ **DONE (2026-09-09). Real brand-asset rendering** in `skills/brand-visual/` + `skills/brand-social/`: logo lockups, profile pic, cover, highlights, templates. *Spec said `sharp`/Playwright; implemented with **Satori → resvg** instead* — the pipeline `poster_text_layer.js` already proves out, which embeds the bundled brand fonts as glyph paths so output is deterministic across hosts (Playwright would have added a headless-browser dependency for the same result). Both skills were also relabeled honestly: what they generate is a monogram starter identity, not bespoke logo art.
+
+E2. ✅ **DONE (2026-09-09). Fail-closed WCAG contrast guard:** compute relative luminance on `brand_profile.visual.colors`; reject sub-4.5:1 primary-on-neutral. Add to `scripts/lib/guards.js` + a hook.
 
 E3. **Verify, don't assume, in setup:** `skills/setup-web/` GET the landing URL (expect 200) before recording `website_url`; `skills/setup-accounts/` read-verify the IG↔Page link via the API. Strengthen the trademark knockout in `skills/brand-name/` to phonetic/similar marks; add multi-TLD + handle-consistency to the domain screen.
 
@@ -143,16 +178,18 @@ E4. **Measurement spine:** track Event Match Quality over time in `skills/capi-s
 
 E5. **Listening depth:** untagged-mention monitoring, keyword/hashtag tracking, cross-platform, share-of-voice, crisis detection in `skills/listening/`.
 
-E6. **Engineering hardening:** split the DELETE guard by resource class (allow organic comment deletes, keep campaign deletes blocked) in `guards.js`; add idempotency keys + cleanup to the multi-step IG container flow in `mcp/meta-server/tools/publishing.js`; surface `paginate` 500-row truncation in `meta-graph.js`; add correlation IDs to `logError`. Replace `/pre-audit` flat US benchmarks with a vertical/geo benchmark table.
+E6. **Engineering hardening** — ✅ the four listed items are DONE (2026-09-09); the pre-audit benchmark table below is the remainder: split the DELETE guard by resource class (allow organic comment deletes, keep campaign deletes blocked) in `guards.js`; add idempotency keys + cleanup to the multi-step IG container flow in `mcp/meta-server/tools/publishing.js`; surface `paginate` 500-row truncation in `meta-graph.js`; add correlation IDs to `logError`. Replace `/pre-audit` flat US benchmarks with a vertical/geo benchmark table.
 
 ---
 
 ## Suggested order
 A (cleanup) → B1+B2 (ASC + MER, biggest paid wins) → C1+C2 (real content production + publish) → D1+D2+D3 (recurring revenue + retention) → E (brand/measurement/hardening).
 
-**Status 2026-09-09:** A, B, C0 and **all of D** are done. C1–C6 stay deferred by client
-direction (AI content is opt-in and nobody has opted in). **Group E is what's next** — E6
-(engineering hardening) is the cheapest high-value slice, E1/E2 the most visible. Each task: branch, implement, add tests, run the full suite in a writable copy, keep it green.
+**Status 2026-09-09 (end of session):** A, B, C0, **all of D**, and **E1 + E2 + E6's four
+hardening items** are done; suite **615 green**. C1–C6 stay deferred by client direction (AI
+content is opt-in and nobody has opted in). **What remains: E3, E4, E5, and E6's last item**
+— replacing `/pre-audit`'s flat US benchmarks with a vertical/geo benchmark table. Each task:
+branch, implement, add tests, run the full suite in a writable copy, keep it green.
 
 ## Definition of done (per task)
 1. Code uses `paths.js` (no hardcoded client paths) and obeys `CLAUDE.md`.

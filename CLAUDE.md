@@ -144,6 +144,14 @@ system-user token, asset assignment, domain registration). `/setup-accounts` dri
 it records manual gates via `--done` (never fakes them) and executes the API half through
 the guarded chokepoint.
 
+**The brand skills produce real bytes, not just paths.** `/brand-visual --render` and
+`/brand-social --render` render the logo suite and the applied social surface (profile
+picture, FB cover, IG highlight covers, post/story templates) to
+`clients/<slug>/deliverables/brand-assets/` via `scripts/lib/brand_render.js` (Satori →
+resvg, bundled fonts, deterministic, offline). What they generate is an honest **monogram
+starter identity**, not bespoke designed logo art — a client who commissions artwork
+replaces `logo.primary_url` with the designer's file.
+
 **Three human gates are load-bearing and never auto-cleared:** positioning, final name
 (+ trademark attorney clearance — the knockout screen only rules names *out*), and logo.
 `schemas/brand_profile.js` enforces them fail-closed: a later stage refuses to validate
@@ -170,6 +178,10 @@ cryptic null-halt.
 - **Special ad categories:** always set to `[]` unless client profile specifies otherwise
 - **AI-content disclosure:** any ad built from GenAI imagery/video MUST set `ai_disclosed: true`. The `ai-disclosure` guard (in `scripts/lib/guards.js`) fail-closed blocks undisclosed AI creatives — Meta rejects them (since Mar 2026).
 - **Brand compliance:** the `brand-compliance` guard (in `scripts/lib/guards.js`) fail-closed blocks ad creatives that use off-brand language (`client.voice.avoid` / `brand.verbal.voice.dont`) and, for locked brands (`SMOS_REQUIRE_BRAND_KIT=1` or `brand.visual.brand_kit_locked`), AI-generated visuals that don't declare a `brand_kit` matching the approved palette/logo. Enforces the *client's* brand, beyond Meta policy.
+- **WCAG contrast:** the `contrast` guard (`scripts/lib/contrast.js` + `checkBrandContrast`) fail-closed blocks a brand palette whose `colors.primary` cannot reach **4.5:1 against any neutral in its own palette**. Enforced where the colors are chosen (`/brand-visual` persist, exit 4) and mirrored on the MCP creative path by `hooks/contrast-check.js`. Override only for a brand whose primary is never text: `SMOS_ALLOW_LOW_CONTRAST=1`.
+- **Instagram publishing is idempotent:** the multi-step container flow (`/media` → poll → `/media_publish`) runs through the ledger in `scripts/lib/ig_publish_state.js`. A repeat of an identical post replays the original `media_id` without a single write; a mid-flight retry resumes the existing container instead of creating a second one; a failed flow records its containers as `orphaned` (IG containers cannot be deleted via the API — they expire in 24h). Pass `idempotency_nonce` to deliberately post the same asset twice.
+- **Truncated pulls announce themselves:** `graph.paginate()` attaches `truncated` / `pageCount` / `nextCursor` to its result and warns when it stops at `max`. A total computed from a truncated pull is a **floor**, not the account's real total — never report it as the total.
+- **Correlation IDs:** every Graph call carries one (`graph.withCorrelationId()` shares one across a multi-step flow); it lands on the thrown error and in `error_log.context`, so one logical operation's failures can be reassembled.
 - **Per-client tokens:** organic actions (publish, inbox, threads) resolve a per-client token via `scripts/lib/tokens.js` (`META_PAGE_TOKEN_<SLUG>` etc.) — never assume the global page token in a multi-client setup.
 - **Two Meta MCP servers, different roles.** `meta` (`mcp/meta-server/`) is smOS's own 13-module server — it wraps every write with our guardrails, naming conventions, per-client tokens, and Supabase logging, and is the ONLY server allowed to perform writes (create/update campaigns, adsets, ads, budgets). `meta-official` (added 2026-07-22, `https://mcp.facebook.com/ads`) is Meta's own hosted MCP — 29 generic tools, Business OAuth auth, everything it creates lands PAUSED at Meta's end too. Treat it as **read-only / comparison use** (reporting, diagnostics, cross-checking numbers) until it's explicitly wrapped the same way the custom server is — it has no awareness of our naming conventions or `guards.js` checks, so routing writes through it bypasses brand-compliance, AI-disclosure, and audit logging. Requires one-time human OAuth authorization (`/mcp` in an interactive session) — cannot be authorized from a non-interactive run.
 
@@ -279,7 +291,13 @@ whose subscription is `stripe_subscription` (Stripe bills those itself; issuing 
 too would double-bill), and never reissues a period already in the ledger.
 
 ### Absolute blocks (never do these without explicit written instruction)
-- Delete any campaign, adset, or ad (archive instead)
+- Delete any campaign, adset, or ad (archive instead). **DELETE is classified by resource
+  class** (`classifyDeleteTarget` in `guards.js`): organic moderation — deleting a comment
+  or reply — is allowed when the caller *declares* the class
+  (`graph.delete(path, params, { resource: "comment" })`); ad structure, pixels, datasets,
+  audiences and automated rules stay absolutely blocked; an **undeclared** delete is treated
+  as ad structure and blocked. `SMOS_ALLOW_DELETE=1` still overrides everything and is
+  written instruction only.
 - Increase lifetime budget on a live campaign
 - Change campaign objective on a running campaign
 - Remove pixel from an ad account

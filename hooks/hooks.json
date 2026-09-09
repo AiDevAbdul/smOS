@@ -28,6 +28,11 @@
           "type": "command",
           "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/brand-compliance.js",
           "timeout": 15
+        },
+        {
+          "type": "command",
+          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/contrast-check.js",
+          "timeout": 15
         }
       ]
     },

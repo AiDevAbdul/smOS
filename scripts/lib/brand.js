@@ -72,6 +72,12 @@ export function stampGate(slug, gate) {
   return current;
 }
 
+/** Merge a patch onto the stored profile WITHOUT writing — for pre-save checks
+ *  (contrast) and for rendering assets from the about-to-be-saved palette. */
+export function draftBrand(slug, patch) {
+  return brandProfile.normalize(deepMerge(loadBrand(slug), patch));
+}
+
 function deepMerge(base, patch) {
   if (Array.isArray(patch)) return patch;
   if (patch && typeof patch === "object" && base && typeof base === "object" && !Array.isArray(base)) {
