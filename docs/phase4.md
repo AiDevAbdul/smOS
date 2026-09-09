@@ -1,8 +1,16 @@
 # Phase 4 — Creative & Launch
 
-**Status:** 🔲 Not started  
-**Depends on:** Phase 3 complete (approved strategy brief)  
+**Status:** ✅ Complete  
+**Completed:** 2026-06-19 (skills + creative agent landed); hardened to the validator Production bar in the later skills pass  
+**Depends on:** Phase 3 complete ✅ (approved strategy brief)  
 **Estimated in blueprint:** 2–3 days
+
+---
+
+> **This is the original blueprint, kept for history — not the current spec.** Each
+> skill below shipped as a directory (`skills/creative/SKILL.md` + `creative.js` +
+> `references/`), not the flat `skills/creative.md` the blueprint names. Read the
+> `SKILL.md` for current behavior.
 
 ---
 

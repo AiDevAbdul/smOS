@@ -1,6 +1,14 @@
 # smOS — Agency OS Roadmap & Gap-Check
 
-_Living document. Last updated 2026-06-22. Direction chosen: **Full Agency OS** — smOS should run the whole agency, not just the marketing execution._
+_Living document. Last updated 2026-09-09. Direction chosen: **Full Agency OS** — smOS should run the whole agency, not just the marketing execution._
+
+> **Reading this document (2026-09-09 reconciliation).** The gap tables below were
+> written 2026-06-22 and were not all re-marked as phases shipped. Where a table row
+> and the phase list disagree, **the phase list is current and the table is stale** —
+> § 9 Agency Operations is the known case (Phase 5 shipped CRM, proposals, contracts
+> and invoicing; the rows have now been corrected). For the authoritative open list,
+> prefer `docs/smOS_Remaining_Work_Plan.md` (Groups C–E) and
+> `docs/ui-plan-design-system.md` (operator UI), which are kept current.
 
 This is the master gap-check: what a complete 2026 agency-grade social platform includes, what smOS already has, and the prioritized path to "zero to hero." Grounded in a current-state code audit + competitive research across Sprout, Hootsuite, Later, Metricool, AgencyAnalytics, Brandwatch, GoHighLevel, Vendasta, HoneyBook, and the AI-native cohort.
 
@@ -11,7 +19,9 @@ Tier legend: **TS** table-stakes · **DIFF** differentiator · **EDGE** cutting-
 
 ## Where smOS stands
 
-smOS is **not behind on sophistication — it's narrow on coverage.** It's a deep Meta performance-marketing engine that already does what most "competitors" can't (real paid execution, not just deferring to Meta's native manager). 28/32 skills are fully built; 2 are stubs (`/pre-audit` Python-only, `/creative-agent`). It is **Meta-only** and has **no commercial back-office** — which is exactly the chosen build direction.
+smOS is **not behind on sophistication — it's narrow on coverage.** It's a deep Meta performance-marketing engine that already does what most "competitors" can't (real paid execution, not just deferring to Meta's native manager). It is **Meta-only** — which is exactly the chosen build direction.
+
+_Corrections to the June text: the two skills called out as stubs are no longer stubs — `/pre-audit` shipped a Node wrapper over the Python renderer and is a full skill, and `/creative-agent` is a built agent (`agents/creative-agent.md`). Every bundled skill was rebuilt to the validator Production bar in the later skills pass. "No commercial back-office" is also out of date: Phase 5 shipped `/crm`, `/proposal`, `/contract` and `/billing`, and real deals have run through `/pre-audit → /proposal → /contract → won`. What's still missing is the **retention** half of the back office — subscriptions, payment reconciliation, dunning, client-health and capacity (Work Plan Group D)._
 
 ### Where smOS already beats the market
 - **Real paid execution** — campaign/adset/ad creation, automated optimizer rules, CAPI setup, attribution, audience mapping. The SMM category is overwhelmingly organic-first; few do this.
@@ -104,10 +114,10 @@ _Entire untouched domain (~$32B market)._
 ### 9 · Agency Operations ← **CHOSEN PRIORITY**
 | Feature | Tier | smOS |
 |---|---|---|
-| Client CRM / pipeline | TS (all-in-ones) | ⬜ |
-| Proposals / pitch decks (AI-gen) | TS→DIFF | ⬜ |
-| Contracts / e-sign | TS | ⬜ |
-| Billing / invoicing (retainers) | TS | ⬜ |
+| Client CRM / pipeline | TS (all-in-ones) | ✅ `/crm` — state-machine stages, weighted forecast |
+| Proposals / pitch decks (AI-gen) | TS→DIFF | ✅ `/proposal` — priced from the service catalog, HTML+PDF |
+| Contracts / e-sign | TS | ✅ `/contract` — Dropbox Sign, fail-closed to manual |
+| Billing / invoicing (retainers) | TS | 🟡 `/billing` issues + tracks invoices (Stripe, fail-closed to local); **no subscriptions, webhook reconciliation, AR aging or dunning** — Group D1/D2 |
 | White-label client portal | DIFF | 🟡 `/portal` read-only |
 | No-login client approval portal | DIFF | ⬜ |
 | Roles / permissions | TS | ⬜ |

@@ -495,7 +495,7 @@ only; client-facing surfaces stay `/portal` + `/bundle` on Vercel).
 - **Framework: Next.js App Router (decided by owner, 2026-09-08).** Single app in `ui/`,
   Node runtime, TypeScript, React 19 (Next default), plain CSS from `design-system/`.
 
-## 6. Open decisions (owner)
-1. Default density: compact (recommended for an operator console) vs comfortable.
-2. Whether the operator UI should also embed a generic chat with Claude Code (yes, as the Run console's free-text mode) or only skill-routed runs.
-3. `ui/` as an npm workspace of the root `package.json` vs a fully independent package (recommended: workspace, so `npm test` at root can include the no-raw-hex UI test).
+## 6. Decisions that were open (all three settled in build; kept for the record)
+1. ~~Default density: compact vs comfortable.~~ **Compact**, as recommended — see § Phase F.
+2. ~~Whether to embed a generic chat with Claude Code or only skill-routed runs.~~ **Both**: the Run console has a `Skill / Free text` segmented control (Phase H), so skill forms and raw prompts are one click apart.
+3. ~~`ui/` as an npm workspace vs an independent package.~~ **Workspace**, as recommended — and `mcp/ui-permission-bridge` was added as a second workspace in Phase H so its SDK dependency installs from the repo root.

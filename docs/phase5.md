@@ -1,8 +1,23 @@
 # Phase 5 — Optimization Loop
 
-**Status:** 🔲 Not started  
-**Depends on:** Phase 4 complete (at least one live campaign)  
+**Status:** ✅ Complete  
+**Completed:** 2026-06-19 (skills + optimizer agent + scheduler landed); hardened to the validator Production bar in the later skills pass  
+**Depends on:** Phase 4 complete ✅ (at least one live campaign)  
 **Estimated in blueprint:** 2–3 days
+
+---
+
+> **This is the original blueprint, kept for history — not the current spec.** Three
+> things drifted: the skills shipped as directories (`skills/analyze/SKILL.md` +
+> `analyze.js` + `references/`), not the flat `skills/analyze.md` named below; the
+> digest goes to **Discord**, not Slack (see CLAUDE.md § Guardrail Rules); and the
+> Test Plan's "Uppal Pharma" is not an active client — `/analyze` is exercised
+> against **blue-rose-auto**, which has live spend. Read the `SKILL.md` files for
+> current behavior.
+>
+> Note the name collision: this Phase 5 is the *Optimization Loop*.
+> `docs/agency-os-roadmap.md`'s "Phase 5" is a different thing (Agency Ops — CRM,
+> proposals, contracts, billing).
 
 ---
 

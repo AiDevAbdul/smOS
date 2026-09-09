@@ -1,8 +1,16 @@
 # Phase 2 — Intake & Audit
 
-**Status:** 🟡 In progress  
+**Status:** ✅ Complete  
+**Completed:** 2026-06-19 (skills landed); hardened to the validator Production bar in the later skills pass  
 **Depends on:** Phase 1 complete ✅  
 **Estimated in blueprint:** 2–3 days
+
+---
+
+> **This is the original blueprint, kept for history — not the current spec.** Each
+> skill below shipped as a directory (`skills/intake/SKILL.md` + `intake.js` +
+> `references/`), not the flat `skills/intake.md` the blueprint names. Read the
+> `SKILL.md` for current behavior.
 
 ---
 

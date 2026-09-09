@@ -67,12 +67,17 @@ item gained `produced_by`. 4 tests in `test/content-optional.test.js`.
 
 ---
 
-## GROUP C — Build the organic substance (currently mostly scaffolding; ~4–5 days)
+## GROUP C (spec) — the deferred organic backlog, in detail (~4–5 days if activated)
+
+> **This is the specification for the C1–C6 items the section above defers** — it is not
+> a second, separate group. Do not start these unless a client opts into AI production.
+> Two items have partially landed anyway, as side effects of other work (noted inline).
+
 C1. **At least one real content-production skill.** Build `skills/social/` (or `facebook-posts`) that turns a `content-plan` item + pillar into finished, spec-compliant, keyword-first copy (import `scripts/lib/social_seo.js`), shaped to `skills/content-plan/references/platform-specs.md`. Then either build the other routed producers (`linkedin-posts`, `video-shorts`) or remove their routes from `CLAUDE.md` (don't route to vapor).
 
-C2. **Finish `publish.js`:** add FB video + FB Reels (the 3-phase `/video_reels` flow) and IG Stories (`media_type=STORIES`); pre-check `/content_publishing_limit`. Flip `platform-specs.md` FB Reels back to "automated" only once code exists. Tests for each flow (mock Graph).
+C2. **Finish `publish.js`** — _partially landed:_ the FB 3-phase `/video_reels` flow exists (`skills/publish/publish.js:76-92`) and IG `media_type=REELS` is handled (`:145`). **Still missing: IG Stories (`media_type=STORIES`) and the `/content_publishing_limit` pre-check.** Original scope: add FB video + FB Reels (the 3-phase `/video_reels` flow) and IG Stories (`media_type=STORIES`); pre-check `/content_publishing_limit`. Flip `platform-specs.md` FB Reels back to "automated" only once code exists. Tests for each flow (mock Graph).
 
-C3. **Sentiment + intent classifier** for `skills/inbox/inbox.js` and `skills/listening/listening.js`: populate the existing `sentiment` schema fields, triage inbox by urgency/intent, actually generate `draft_reply` copy (the SKILL claims it). Tests.
+C3. **Sentiment + intent classifier** — _partially landed:_ `scripts/lib/sentiment.js` exists and `/inbox` consumes it via a fail-closed judgment-merge (`inbox.js:25,141-159`), which reports items still needing a judgment rather than guessing. **Still missing: `/listening` integration, urgency/intent triage, and real `draft_reply` generation.** Original scope: for `skills/inbox/inbox.js` and `skills/listening/listening.js`: populate the existing `sentiment` schema fields, triage inbox by urgency/intent, actually generate `draft_reply` copy (the SKILL claims it). Tests.
 
 C4. **Organic analytics loop:** roll up post-level IG/FB Insights into `daily_metrics`, attribute by pillar, learn best-time-to-post, feed the next `content-plan`. New `skills/` or extend `content-plan`.
 

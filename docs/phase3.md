@@ -1,8 +1,16 @@
 # Phase 3 — Research & Strategy
 
-**Status:** 🔲 Not started  
-**Depends on:** Phase 2 complete  
+**Status:** ✅ Complete  
+**Completed:** 2026-06-19 (skills landed); hardened to the validator Production bar in the later skills pass  
+**Depends on:** Phase 2 complete ✅  
 **Estimated in blueprint:** 2 days
+
+---
+
+> **This is the original blueprint, kept for history — not the current spec.** Each
+> skill below shipped as a directory (`skills/research/SKILL.md` + `research.js` +
+> `references/`), not the flat `skills/research.md` the blueprint names. Read the
+> `SKILL.md` for current behavior.
 
 ---
 
